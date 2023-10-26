@@ -11,9 +11,9 @@
         </div>
       </a-layout-content>
 
-      <a-layout-footer>
+      <!-- <a-layout-footer>
         Admin Dashboard ©2023 Created by I
-      </a-layout-footer>
+      </a-layout-footer> -->
 
     </a-layout>
   </a-layout>
@@ -31,7 +31,7 @@ import NavBar from '@/components/NavBar.vue';
 .main {
   padding: 24px;
   background: #fff; 
-  min-height: 400px;
+  min-height: calc(100vh - 80px);
   margin: 16px;
   border-radius: 4px;
 }
