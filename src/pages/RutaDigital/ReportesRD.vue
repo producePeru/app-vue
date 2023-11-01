@@ -14,10 +14,11 @@
         enter-button
         @search="handleSearch"/>
       </a-col>
-      
     </a-row>
 
     <a-table 
+    bordered
+    class="ant-table-striped"
     :scroll="{ x: valueX, y: valueY }"
     :columns="columns" 
     :data-source="dataSource" 
@@ -50,7 +51,7 @@ import { ref, onMounted } from 'vue';
 const dataSource = ref([])
 const loading = ref(false)
 const valueX = ref(1000)
-const valueY = ref()
+const valueY = ref('50vh')
 const dataToSearch = ref('')
 
 const columns = [
@@ -71,7 +72,7 @@ const columns = [
 ];
 const params = ref({
   noinfo: null,
-  results: 10,
+  results: 15,
   page: 1,
   sortField: 'name',
   sortOrder: 'ascend'
@@ -108,4 +109,5 @@ onMounted(
   justify-content: flex-end;
   margin-top: 1.5rem;
 }
+
 </style>

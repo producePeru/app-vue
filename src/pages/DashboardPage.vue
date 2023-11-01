@@ -1,9 +1,9 @@
 <template>
-  <a-layout class="layout">
+  <a-layout has-sider class="layout">
   
     <Aside />
 
-    <a-layout>
+    <a-layout  :style="{ marginLeft: '200px' }">
       <a-layout-content >
         <NavBar />
         <div class="main">
@@ -20,7 +20,7 @@
 </template>
 
 <script setup>
-import Aside from '@/components/SiderRoutes.vue';
+import Aside from '@/components/SiderBar.vue';
 import NavBar from '@/components/NavBar.vue';
 </script>
 

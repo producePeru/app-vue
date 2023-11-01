@@ -31,6 +31,11 @@ const router = createRouter({
           name: 'ruta-digital',
           children: [
             {
+              path: 'indicadores',
+              name: 'indicadores',
+              component: () => import('../pages/RutaDigital/IndicadoresRD.vue')
+            },
+            {
               path: 'mailing',
               name: 'mailing',
               component: () => import('../pages/RutaDigital/MailingRD.vue')
