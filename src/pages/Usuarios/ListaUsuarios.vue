@@ -27,23 +27,32 @@
     :pagination="false"
     :loading="loading"
     size="small">
-      <template v-slot:bodyCell="{column, record, index}">
-        <template v-if="column.dataIndex == 'idx'">
-          <span>{{  `                   ${params.page}${index + 1}`   }}</span>
+      <template v-slot:bodyCell="{column, record}">
+        <template v-if="column.dataIndex == 'tipo_usuario'">
+          <template v-if="record.tipo_usuario === 1">
+            <a-tag :bordered="false" color="processing">Administrador</a-tag>
+          </template>
+          <template v-if="record.tipo_usuario === 2">
+            <a-tag :bordered="false" color="magenta">Común</a-tag>
+          </template>
+          <template v-if="record.tipo_usuario === 3">
+            <a-tag :bordered="false" color="purple">3</a-tag>
+          </template>
+          <template v-if="record.tipo_usuario === 4">
+            <a-tag :bordered="false" color="warning">4</a-tag>
+          </template>
+          <template v-if="record.tipo_usuario === 5">
+            <a-tag :bordered="false" color="cyan">5</a-tag>
+          </template>
         </template>
-
-        <template v-if="column.dataIndex == 'name'">
-          <span>
-            {{ record.name.first }}
-          </span>
-        </template>
-
-        <template v-if="column.dataIndex == 'phone'">
-          <a-tag color="green">Activo</a-tag>
-        </template>
-
-        <template v-if="column.dataIndex == 'nat'">
-          <a-tag :bordered="false" color="processing">processing</a-tag>
+        
+        <template v-if="column.dataIndex == 'estado'">
+          <template v-if="record.estado === 1">
+            <a-tag color="success">Activo</a-tag>
+          </template>
+          <template v-else>
+            <a-tag color="error">Inactivo</a-tag>
+          </template>
         </template>
 
         <template v-if="column.dataIndex == 'actions'">
@@ -53,7 +62,7 @@
               <a-menu>
                 <a-menu-item key="1">Editar</a-menu-item>
                 <a-menu-item key="2">Dar de baja / Activar</a-menu-item>
-                <a-menu-item key="3" @click="handleOpenModal"> Actualizar clave</a-menu-item>
+                <a-menu-item key="3" @click="handleOpenModal(record.idUsuario)"> Actualizar clave</a-menu-item>
               </a-menu>
             </template>
           </a-dropdown>
@@ -64,10 +73,10 @@
   </div>
 
   <div class="paginator">
-    <a-pagination size="small" :total="50" @change="handlePaginator" />
+    <a-pagination size="small"  :total="total" :pageSize="20"  @change="handlePaginator" :showSizeChanger="false" />
   </div>
 
-  <a-modal v-model:open="open" title="Actualizar contraseña" @ok="handleChangePassword">
+  <a-modal ok-text="Cambiar contraseña" v-model:open="open" title="Actualizar contraseña" @ok="handleChangePassword">
     <a-form 
       layout="vertical"
       :model="formState" 
@@ -84,37 +93,37 @@
 import { makeRequest } from '@/utils/api.js'
 import { ref, onMounted, reactive, h } from 'vue';
 import { MoreOutlined,DownloadOutlined } from '@ant-design/icons-vue';
+import { message } from 'ant-design-vue';
 
 const dataSource = ref([])
 const loading = ref(false)
 const valueX = ref(1000)
-const valueY = ref('50vh')
+const valueY = ref('60vh')
 const dataToSearch = ref('')
 const open = ref(false);
+const total = ref(0)
+const idUserSelected = ref(null)
 
 const formState = reactive({
   password: ''
 });
 
+const params = ref({
+  page: 1
+})
+
 const columns = [
-  { title: '#',               dataIndex: 'idx', fixed: 'left', width: 100 },
-  { title: 'Nombres',         dataIndex: 'name', fixed: 'left', width: 100 },
-  { title: 'Apellidos',       dataIndex: 'name' },
-  { title: 'N° documento',    dataIndex: 'name'},
-  { title: 'Usuario',         dataIndex: 'name' },
-  { title: 'Correo',          dataIndex: 'name' },
-  { title: 'Celular',         dataIndex: 'name'},
-  { title: 'Tipo de usuario', dataIndex: 'nat' },
-  { title: 'Estado',          dataIndex: 'phone' },
+  { title: 'Nombres',         dataIndex: 'nombres', fixed: 'left', width: 180 },
+  { title: 'Apellidos',       dataIndex: 'apellidos', fixed: 'left', width: 180},
+  { title: 'N° documento',    dataIndex: 'nro_documento', align: 'center'},
+  { title: 'Usuario',         dataIndex: 'usuario', align: 'center' },
+  { title: 'Correo',          dataIndex: 'correo', width: 180 },
+  { title: 'Celular',         dataIndex: 'celular', align: 'center'},
+  { title: 'Tipo de usuario', dataIndex: 'tipo_usuario', align: 'center' },
+  { title: 'Estado',          dataIndex: 'estado', align: 'center' },
   { title: '',                dataIndex: 'actions', width: '55px'}
 ];
-const params = ref({
-  noinfo: null,
-  results: 15,
-  page: 1,
-  sortField: 'name',
-  sortOrder: 'ascend'
-})
+
 
 const handleSearch = (searchValue) => {
   console.log(searchValue);
@@ -127,8 +136,9 @@ const handlePaginator = (current) =>{
 const fetchData = async() => {
   try {
     loading.value = true;
-    const data = await makeRequest({ method: 'GET', params: params.value });
-    dataSource.value = data.results
+    const data = await makeRequest({ url: '/users', method: 'GET', params:params.value });
+    dataSource.value = data.data
+    total.value = data.total;
   } catch (error) {
     console.error('Error de red:', error);
   } finally {
@@ -136,12 +146,28 @@ const fetchData = async() => {
   }
 }
 
-const handleOpenModal = () => {
+const handleOpenModal = (id) => {
   open.value = true;
+  idUserSelected.value = id;
 };
 
-const handleChangePassword = (e) => {
-  console.log("hahahaah",e);
+const handleChangePassword = async() => {
+  if(!formState.password) {
+    return message.error('El campo contraseña esta vacío');
+  }
+
+  const id = idUserSelected.value
+  const data = {
+    new_password: formState.password
+  }
+  
+  const response = await makeRequest({ url: `/user/change-password/${id}`, method: 'POST', data: data });
+
+  if(response.message) {
+    formState.password = ''
+    message.success(response.message);
+  }
+
   open.value = false;
 };
 

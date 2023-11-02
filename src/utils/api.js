@@ -1,7 +1,8 @@
 import axios from 'axios';
+const apiUrl = import.meta.env.VITE_APP_API_URL;
 
 const api = axios.create({
-  baseURL: 'https://randomuser.me/api', // Reemplaza esto con la URL de tu API
+  baseURL: apiUrl
 });
 
 // Agregar un interceptor para solicitudes

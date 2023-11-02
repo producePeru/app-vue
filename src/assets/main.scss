@@ -75,6 +75,9 @@ h1 {
     background-color: var(--primary-hover) !important;
   }
 }
+.ant-table-cell {
+  line-height: 1.2;
+}
 
 :where(.css-dev-only-do-not-override-185kyl0)
 .ant-menu-dark:not(.ant-menu-horizontal) 
