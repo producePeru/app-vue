@@ -21,7 +21,7 @@
       <a-sub-menu key="ruta-digital">
         <template #title>
           <span>
-            <user-outlined />
+            <SolutionOutlined />
             <span>Ruta Digital</span>
           </span>
         </template>
@@ -38,8 +38,9 @@
             <span>Control de usuarios</span>
           </span>
         </template>
-        <a-menu-item key="6">Team 1</a-menu-item>
-        <a-menu-item key="8">Team 2</a-menu-item>
+        <a-menu-item key="nuevo-usuario"> <router-link to="/admin/usuarios/nuevo-usuario">Nuevo usuario</router-link> </a-menu-item>
+        <a-menu-item key="lista"> <router-link to="/admin/usuarios/lista">Lista</router-link> </a-menu-item>
+        <a-menu-item key="usuario-reportes"> <router-link to="/admin/usuarios/reportes">Reportes</router-link> </a-menu-item>
       </a-sub-menu>
 
 
@@ -60,7 +61,7 @@ import { useRoute } from 'vue-router';
 import {
   PieChartOutlined,
   DesktopOutlined,
-  UserOutlined,
+  SolutionOutlined,
   TeamOutlined,
   FileOutlined,
 } from '@ant-design/icons-vue';

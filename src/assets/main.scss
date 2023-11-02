@@ -63,6 +63,11 @@ h1 {
 .mb-1 {
   margin-bottom: 1rem;
 }
+.wrapper-search {
+  display: grid;
+  grid-template-columns: 170px 1fr 270px;
+  margin: 1rem 0 1.5rem;
+}
 
 .ant-menu-item-selected {
   background-color: var(--primary) !important;
