@@ -2,8 +2,8 @@
   <div class="container">
 
     <div class="title">
-      <h1>Admin</h1>
-      <span>Loguéate para poder ingresar</span>
+      <h1>Iniciar Sesión</h1>
+      <span>Ingrese su usuario y contraseña para ingresar a la plataforma.</span>
     </div>
 
     <a-form class="form-wrapper" :model="formState" name="basic" autocomplete="off" @finish="onFinish" @finishFailed="onFinishFailed">

@@ -31,11 +31,11 @@
       </a-sub-menu>
 
 
-      <!-- <a-sub-menu key="sub2">
+      <a-sub-menu key="usuarios">
         <template #title>
           <span>
             <team-outlined />
-            <span>Team</span>
+            <span>Control de usuarios</span>
           </span>
         </template>
         <a-menu-item key="6">Team 1</a-menu-item>
@@ -43,7 +43,7 @@
       </a-sub-menu>
 
 
-      <a-menu-item key="9">
+      <!-- <a-menu-item key="9">
         <file-outlined />
         <span>File</span>
       </a-menu-item> -->
