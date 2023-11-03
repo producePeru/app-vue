@@ -11,9 +11,12 @@ import 'ant-design-vue/dist/reset.css';
 
 import './utils/api.js'
 import './utils/auth'
+
 const app = createApp(App)
 
+// app.config.globalProperties.$antd = { locale: esES };
 
 app.use(createPinia())
 app.use(router)
+
 app.use(Antd).mount('#app')

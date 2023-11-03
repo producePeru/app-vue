@@ -3,7 +3,7 @@
   
     <Aside />
 
-    <a-layout  :style="{ marginLeft: '200px' }">
+    <a-layout class="layout-content">
       <a-layout-content >
         <NavBar />
         <div class="main">
@@ -26,7 +26,10 @@ import NavBar from '@/components/NavBar.vue';
 
 <style lang="scss" scoped>
 .layout {
-  min-height: 100vh
+  min-height: 100vh;
+  &-content {
+    margin-left: 0;
+  }
 }
 .main {
   padding: 24px;
@@ -37,6 +40,14 @@ import NavBar from '@/components/NavBar.vue';
 }
 .footer {
   text-align: center;
+}
+
+@media screen and (min-width: 768px) {
+  .layout {
+    &-content {
+      margin-left: 200px;
+    }
+  }
 }
 </style>
 
