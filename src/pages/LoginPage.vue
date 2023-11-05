@@ -2,7 +2,7 @@
   <div class="container">
 
     <div class="title">
-      <h1>Iniciar Sesión</h1>
+      <h1>Iniciar Sesión test</h1>
       <span>Ingrese su usuario y contraseña para ingresar a la plataforma.</span>
     </div>
 
