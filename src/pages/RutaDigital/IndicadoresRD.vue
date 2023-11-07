@@ -5,6 +5,15 @@
 
     
       <div class="grid">
+        <h1>lalalal</h1>
+        <section>
+          <h3>Avance de MYPE registrados</h3>
+          <!-- <GaugeChart /> -->
+        </section>
+        
+        
+        
+        <!-- <GaugeChart />
         <GaugeChart />
         <GaugeChart />
         <GaugeChart />
@@ -14,9 +23,7 @@
         <GaugeChart />
         <GaugeChart />
         <GaugeChart />
-        <GaugeChart />
-        <GaugeChart />
-        <GaugeChart />
+        <GaugeChart /> -->
 
       </div>
       

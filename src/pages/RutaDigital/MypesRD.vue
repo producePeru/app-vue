@@ -1,8 +1,6 @@
 <template>
   <div>
-  
     <h3>Lista de MYPES</h3>
-
     <div class="w-search">
       <div>
         <a-button @click="handleFileUploadExcel" v-if="!selectedExcel">
@@ -13,6 +11,11 @@
         </a-button>
 
         <a-button @click="handleUploadExcel" type="primary" v-else>Cargar datos</a-button>
+
+        <a-popconfirm v-if="dataSource.length >= 1" title="¿Deseas borrar todos los registros?" @confirm="handleDropData">
+          <a-button type="primary" danger class="btn-drop">Drop base de datos</a-button>
+        </a-popconfirm>
+    
       </div>
   
       <!-- <a-input-search
@@ -92,7 +95,7 @@ import axios from 'axios';
 import { makeRequest } from '@/utils/api.js'
 import { ref, onMounted, reactive, h } from 'vue';
 import { MoreOutlined,UploadOutlined,LoadingOutlined } from '@ant-design/icons-vue';
-import { message } from 'ant-design-vue';
+import { message,notification } from 'ant-design-vue';
 
 const apiUrl = import.meta.env.VITE_APP_API_URL;
 
@@ -139,13 +142,20 @@ const handlePaginator = (current) =>{
   fetchData()
 }
 
-
 const handleFileUploadExcel = () => {
   let input = document.createElement('input');
   input.type = 'file';
   input.accept = '.xls, .xlsx';
   input.onchange = event => {
     selectedExcel.value = event.target.files[0];
+    notification.open({
+      message: '¡Alerta!',
+      description:
+        'Debes ahora de cargar los datos del excel.',
+      onClick: () => {
+        console.log('Notification Clicked!');
+      },
+    });
   };
   input.click();
 };
@@ -166,7 +176,7 @@ const handleUploadExcel = () => {
     }
   })
   .then(response => {
-    message.success(response.message);
+    message.success(response.data.message);
     fetchData()
   }).catch(error => {
     console.error('Error al subir el archivo', error);
@@ -174,6 +184,20 @@ const handleUploadExcel = () => {
     spinning.value = false;
     selectedExcel.value = null;
   })
+}
+const handleDropData = async() => {
+  try {
+    const data = await makeRequest({ url: '/digital-route/delete-excel-records', method: 'DELETE' });
+    new Promise(resolve => {
+      setTimeout(() => resolve(true), 3000);
+    });
+    if(data) {
+      message.success(data.message);
+      fetchData()
+    }
+  } catch (error) {
+    console.error('Error de red:', error);
+  }
 }
 
 const fetchData = async() => {
@@ -217,5 +241,8 @@ onMounted(
   display: flex;
   align-items: center;
   justify-content: center;
+}
+.btn-drop {
+  margin-left: 1rem;
 }
 </style>
