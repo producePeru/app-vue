@@ -119,16 +119,16 @@ const params = ref({
 
 const columns = [
   { title: 'RUC',                 dataIndex: 'ruc', fixed: 'left', width: 130},
-  { title: 'Razón social',        dataIndex: 'razon_social', fixed: 'left', width: 180},
-  { title: 'Rubro',               dataIndex: 'rubro', align: 'center'},
-  { title: 'Tipo',                dataIndex: 'tipo', align: 'center' },
+  { title: 'Razón social',        dataIndex: 'razon_social', fixed: 'left', width: 250},
+  { title: 'Rubro',               dataIndex: 'rubro', width: 200},
+  { title: 'Tipo',                dataIndex: 'tipo', align: 'center', width: 140 },
   { title: 'Departamento',        dataIndex: 'departamento', width: 140 },
-  { title: 'Distrito',            dataIndex: 'distrito', align: 'center'},
-  { title: 'Nombres y Apellidos', dataIndex: 'nombres_apellidos', align: 'center', width: 220},
-  { title: 'DNI',                 dataIndex: 'dni', align: 'center', width: 100},
+  { title: 'Distrito',            dataIndex: 'distrito', width: 130},
+  { title: 'Nombres y Apellidos', dataIndex: 'nombres_apellidos', width: 300},
+  { title: 'DNI',                 dataIndex: 'dni', align: 'center', width: 120},
   { title: 'Sexo',                dataIndex: 'sexo', align: 'center', width: 130},
-  { title: 'Teléfono',            dataIndex: 'telefono', align: 'center' },
-  { title: 'Email',               dataIndex: 'email', align: 'center' },
+  { title: 'Teléfono',            dataIndex: 'telefono', align: 'center', width: 130},
+  { title: 'Email',               dataIndex: 'email', width: 200 },
 
   // { title: '',                dataIndex: 'actions', width: '55px'}
 ];
@@ -156,6 +156,7 @@ const handleFileUploadExcel = () => {
         console.log('Notification Clicked!');
       },
     });
+
   };
   input.click();
 };
