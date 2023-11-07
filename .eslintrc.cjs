@@ -7,5 +7,8 @@ module.exports = {
   ],
   parserOptions: {
     ecmaVersion: 'latest'
+  },
+  "rules": {
+    "vue/no-setup-props-destructure": "off"
   }
 }

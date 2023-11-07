@@ -11,8 +11,8 @@ import {
   TooltipComponent,
   LegendComponent,
 } from 'echarts/components';
-import VChart, { THEME_KEY } from 'vue-echarts';
-import { ref, provide } from 'vue';
+import VChart from 'vue-echarts';
+import { ref } from 'vue';
 
 use([
   CanvasRenderer,
@@ -27,7 +27,7 @@ use([
 const gaugeData = [
   {
     value: 20,
-    name: 'Perfect',
+    name: 'Total',
     title: {
       offsetCenter: ['0%', '-20rem']
     },
@@ -35,9 +35,7 @@ const gaugeData = [
       valueAnimation: true,
       offsetCenter: ['0%', '4rem']
     }
-  },
-
- 
+  }
 ];
 
 const option = ref({
@@ -56,7 +54,7 @@ const option = ref({
         clip: false,
         itemStyle: {
           borderWidth: 1,
-          borderColor: 'red'
+          // borderColor: 'red'
         }
       },
       axisLine: {
@@ -93,74 +91,11 @@ const option = ref({
     }
   ]
 })
-
-// setInterval(function () {
-//   gaugeData[0].value = +(Math.random() * 100).toFixed(2);
-//   gaugeData[1].value = +(Math.random() * 100).toFixed(2);
-//   gaugeData[2].value = +(Math.random() * 100).toFixed(2);
-//   myChart.setOption<echarts.EChartsOption>({
-//     series: [
-//       {
-//         data: gaugeData,
-//         pointer: {
-//           show: false
-//         }
-//       }
-//     ]
-//   });
-// }, 2000);
-
-
-
-
-
-
-
-
-// const option = ref({
-//   title: {
-//     text: 'Traffic Sources',
-//     left: 'center',
-//   },
-//   tooltip: {
-//     trigger: 'item',
-//     formatter: '{a} <br/>{b} : {c} ({d}%)',
-//   },
-//   legend: {
-//     orient: 'vertical',
-//     left: 'left',
-//     data: ['Direct', 'Email', 'Ad Networks', 'Video Ads', 'Search Engines'],
-//   },
-//   series: [
-//     {
-//       name: 'Traffic Sources',
-//       type: 'pie',
-//       radius: '55%',
-//       center: ['50%', '60%'],
-//       data: [
-//         { value: 335, name: 'Direct' },
-//         { value: 310, name: 'Email' },
-//         { value: 234, name: 'Ad Networks' },
-//         { value: 135, name: 'Video Ads' },
-//         { value: 1548, name: 'Search Engines' },
-//       ],
-//       emphasis: {
-//         itemStyle: {
-//           shadowBlur: 10,
-//           shadowOffsetX: 0,
-//           shadowColor: 'rgba(0, 0, 0, 0.5)',
-//         },
-//       },
-//     },
-//   ],
-// });
-
-
 </script>
 
 <style scoped>
 .chart {
-  height: 300px;
-  border: 1px solid red                      ;
+  height: 250px;
+  border: 1px solid red;
 }
 </style>

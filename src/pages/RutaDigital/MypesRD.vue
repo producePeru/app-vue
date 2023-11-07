@@ -105,7 +105,7 @@ const selectedExcel = ref(null);
 const dataSource = ref([])
 const loading = ref(false)
 const valueX = ref(1000)
-const valueY = ref('60vh')
+// const valueY = ref('60vh')
 const dataToSearch = ref('')
 const total = ref(0)
 
