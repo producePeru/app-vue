@@ -53,7 +53,7 @@ const formState = reactive({
 
 const onFinish = (values) => {
   console.log('Success:', values);
-  router.push('/admin/ruta-digital/mailing');
+  router.push('/admin/usuarios/lista');
 };
 
 const onFinishFailed = () => {

@@ -11,7 +11,7 @@
     :model="formState"
     name="basic"
     autocomplete="off"
-    @finish="onFinish"
+    @finish="onSubmit"
     @finishFailed="onSubmitFail">
       <div class="grid-item">
         <template v-for="(el, idx) in fields" :key="idx">
@@ -34,8 +34,8 @@
           v-if="el.type === 'iSearch'"
           :name="el.name" 
           :label="el.label" 
-          :rules="[{ required: el.required, message: el.message, len: 9, formRules }]">
-            <a-input-search v-model:value="formState[el.name]" enter-button @search="handleSearchUser"/>
+          :rules="[{ required: el.required, message: el.message, len: 8 }]">
+            <a-input-search v-model:value="formState[el.name]" enter-button @search="handleSearchUser" @input="validateNumber"/>
           </a-form-item>
 
           <a-form-item
@@ -70,16 +70,16 @@
     </a-form>
 
 
-    <pre>{{ formState }}</pre>
+    <!-- <pre>{{ formState }}</pre> -->
 
     <div>
-      <h1>Seleccionar</h1>
+      <h1></h1>
     </div>
   </div>
 </template>
 
 <script setup>
-import axios from 'axios';
+// import axios from 'axios';
 import { makeRequest } from '@/utils/api.js'
 import { reactive, ref, onMounted } from 'vue';
 import { message } from 'ant-design-vue';
@@ -121,15 +121,15 @@ const geners = [
   { label: '...', value: 3 }
 ];
 const disabilities = [
-  { label: 'Si', value: 1 },
-  { label: 'No', value: 2 },
+  { label: 'Si', value: 2 },
+  { label: 'No', value: 1 },
 ];
 const typeUsers = [
-  { label: 'Administrador', value: 1 },
-  { label: 'Común', value: 2 },
-  { label: 'Prueba', value: 3 },
-  { label: 'Asesor empresarial', value: 4 },
-  { label: 'Capacitador', value: 5 }
+  { label: 'Administrador', value: '1' },
+  { label: 'Usuario', value: '2' },
+  { label: 'Invitado', value: '3' },
+  // { label: 'Asesor empresarial', value: 4 },
+  // { label: 'Capacitador', value: 5 }
 ]
 const offices = [
   { label: 'Dirección ejecutiva', value: 1 },
@@ -138,14 +138,45 @@ const offices = [
   { label: 'Unidad de gestión estratégica y entrega de resultados', value: 4 }
 ]
 
-const onFinish = values => {
-  console.log('Success:', values);
+const clearFields = () => {
+  formState.usuario = ''
+  formState.clave = ''
+  formState.tipo_documento = ''
+  formState.nro_documento = ''
+  formState.apellido_paterno = ''
+  formState.apellido_materno = ''
+  formState.nombres = ''
+  formState.pais = ''
+  formState.fecha_nacimiento = null
+  formState.genero = ''
+  formState.discapacidad = null
+  formState.correo = ''
+  formState.celular = ''
+  formState.tipo_usuario = null
+  formState.idOficina = null
+  formState.idSede = null
+}
+
+const onSubmit = async values => {
+  const idUsuarioRegistrador = 1;
+  const payload = {...values, idUsuarioRegistrador}
+  
+  loading.value = true
+  try {
+    const data = await makeRequest({ url: '/register-user', method: 'POST', data: payload });
+    clearFields()
+    message.success(data.message);
+  } catch (error) {
+    message.error('No se pudo registrar este usuario');
+  } finally {
+    loading.value = false;
+  }
 };
+
+
 const onSubmitFail = () => {
   message.error('Debes de completar todos los espacios requeridos')
 };
-
-
 
 
 
@@ -154,8 +185,6 @@ const handleSearchUser = async searchValue => {
   if(!formState.tipo_documento) return message.error('Selecciona el tipo de documento');
   if(!searchValue) return message.error('El campo número de documento esta vacío');
  
-
-
   console.log(typeof(searchValue))
 
   // try {
@@ -171,12 +200,13 @@ const handleSearchUser = async searchValue => {
 
 
 
-
-const filterOption = (input, option) => {
-  // return console.log(option.value);
-  return option.value.indexOf(input.toLowerCase()) >= 0;
+const validateNumber = () => {
+  formState.nro_documento = formState.nro_documento.replace(/\D/g, ''); 
 };
 
+const filterOption = (input, option) => {
+  // return option.value.indexOf(input.toLowerCase()) >= 0;
+};
 
 const fetchDataCountries = async() => {
   try {

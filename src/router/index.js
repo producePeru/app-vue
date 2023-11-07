@@ -46,6 +46,12 @@ const router = createRouter({
               component: () => import('../pages/RutaDigital/ReportesRD.vue'),
               meta: { requiresAuth: true, roles: ['admin', 'user'] },
             },
+            {
+              path: 'mypes',
+              name: 'mypes',
+              component: () => import('../pages/RutaDigital/MypesRD.vue'),
+              meta: { requiresAuth: true, roles: ['admin', 'user'] },
+            },
           ]
 
         },

@@ -61,14 +61,14 @@ const fields = {
     type: 'iDate',
     label: 'Fecha de nacimiento',
     name: 'fecha_nacimiento',
-    required: true,
+    required: false,
     message: 'Seleccionar país'
   },
   genero: {
     type: 'iSelect',
     label: 'Género',
     name: 'genero',
-    required: true,
+    required: false,
     message: 'Seleccionar tipo de documento',
   },
   discapacidad: {
@@ -82,7 +82,7 @@ const fields = {
     type: 'iText',
     label: 'Correo',
     name: 'correo',
-    required: true,
+    required: false,
     email: 'email',
     message: 'Escribe el correo del usuario'
   },
@@ -90,7 +90,7 @@ const fields = {
     type: 'iText',
     label: 'Celular',
     name: 'celular',
-    required: true,
+    required: false,
     message: 'Escribe el celular del usuario'
   },
   oficina: {

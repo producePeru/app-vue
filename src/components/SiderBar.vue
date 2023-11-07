@@ -25,9 +25,11 @@
             <span>Ruta Digital</span>
           </span>
         </template>
-        <a-menu-item key="indicadores"> <router-link to="/admin/ruta-digital/indicadores">Indicadores</router-link> </a-menu-item>
-        <a-menu-item key="mailing"> <router-link to="/admin/ruta-digital/mailing">Mailing</router-link> </a-menu-item>
-        <a-menu-item key="reportes"> <router-link to="/admin/ruta-digital/reportes">Reportes</router-link> </a-menu-item>
+        <!-- <a-menu-item key="indicadores"> <router-link to="/admin/ruta-digital/indicadores">Indicadores</router-link> </a-menu-item>
+        <a-menu-item key="mailing"> <router-link to="/admin/ruta-digital/mailing">Mailing</router-link> </a-menu-item> -->
+        <a-menu-item key="reportes"> <router-link to="/admin/ruta-digital/reportes">Reportes</router-link> </a-menu-item> 
+        <a-menu-item key="mypes"> <router-link to="/admin/ruta-digital/mypes">Mypes</router-link> </a-menu-item>
+
       </a-sub-menu>
 
 
@@ -40,7 +42,7 @@
         </template>
         <a-menu-item key="nuevo-usuario"> <router-link to="/admin/usuarios/nuevo-usuario">Nuevo usuario</router-link> </a-menu-item>
         <a-menu-item key="lista"> <router-link to="/admin/usuarios/lista">Lista</router-link> </a-menu-item>
-        <a-menu-item key="usuario-reportes"> <router-link to="/admin/usuarios/reportes">Reportes</router-link> </a-menu-item>
+        <!-- <a-menu-item key="usuario-reportes"> <router-link to="/admin/usuarios/reportes">Reportes</router-link> </a-menu-item> -->
       </a-sub-menu>
 
 
