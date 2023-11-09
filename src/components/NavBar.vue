@@ -1,5 +1,8 @@
 <template>
   <a-layout-header class="navbar">
+
+    <MenuOutlined class="ico-menu" />
+
     <a-dropdown>
       <a class="ant-dropdown-link" @click.prevent>
         <span class="name-user">Kinder</span>
@@ -22,7 +25,7 @@
 </template>
 
 <script setup>
-import { UserOutlined, PoweroffOutlined } from '@ant-design/icons-vue';
+import { UserOutlined, PoweroffOutlined, MenuOutlined } from '@ant-design/icons-vue';
 
 const handleMenuClick = (e) => {
   console.log('click', e);
@@ -36,10 +39,14 @@ const handleMenuClick = (e) => {
   height: 48px;
   display: flex;
   align-items: center;
-  justify-content: end;
+  justify-content: space-between;
   .name-user {
     color: var(--text-color);
     margin-right: .5rem;
+  }
+  .ico-menu {
+    cursor: pointer;
+    font-size: 16px;
   }
 }
 </style>

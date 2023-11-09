@@ -6,11 +6,25 @@
       :options="chartOptions"
       :series="series"
     ></apexchart>
+
+    <pre>::: {{ values }}</pre>
   </div>
+
 </template>
 
 <script>
 export default {
+  props: {
+    categories: {
+      type: Array,
+      // default: null
+    },
+    values: {
+      type: Array,
+      // default: []
+    }
+  },
+
   data() {
     return {
       chartOptions: {
@@ -19,7 +33,7 @@ export default {
           toolbar: {
             show: true, 
             tools: {
-              download: true, 
+              download: true,
               selection: true,
               zoom: true,
               zoomin: true,
@@ -30,7 +44,7 @@ export default {
           }
         },
         xaxis: {
-          categories: [1991, 1992, 1993, 1994, 1995, 1996],
+          categories: this.categories,
         },
         title: {
           text: 'Historical Data', 
@@ -45,12 +59,7 @@ export default {
           },
         },
       },
-      series: [
-        {
-          name: "series-1",
-          data: [30, 40, 35, 50, 49, 60],
-        },
-      ],
+      series: this.values,
     };
   },
 };

@@ -29,51 +29,20 @@
     <a-table 
     bordered
     class="ant-table-striped"
-    :scroll="{ x: valueX }"
+    :scroll="{ x: valueX, y: valueY }" 
     :columns="columns" 
     :data-source="dataSource" 
     :pagination="false"
     :loading="loading"
     size="small">
       <template v-slot:bodyCell="{column, record}">
-        <template v-if="column.dataIndex == 'tipo_usuario'">
-          <template v-if="record.tipo_usuario === 1">
-            <a-tag :bordered="false" color="processing">Administrador</a-tag>
+        <template v-if="column.dataIndex == 'tipo'">
+          <template v-if="record.tipo == 'NATURAL'">
+            <a-tag color="success">Natural</a-tag>
           </template>
-          <template v-if="record.tipo_usuario === 2">
-            <a-tag :bordered="false" color="magenta">Común</a-tag>
+          <template v-if="record.tipo == 'JURIDICA'">
+            <a-tag color="error">Jurídica</a-tag>
           </template>
-          <template v-if="record.tipo_usuario === 3">
-            <a-tag :bordered="false" color="purple">3</a-tag>
-          </template>
-          <template v-if="record.tipo_usuario === 4">
-            <a-tag :bordered="false" color="warning">4</a-tag>
-          </template>
-          <template v-if="record.tipo_usuario === 5">
-            <a-tag :bordered="false" color="cyan">5</a-tag>
-          </template>
-        </template>
-        
-        <template v-if="column.dataIndex == 'estado'">
-          <template v-if="record.estado === 1">
-            <a-tag color="success">Activo</a-tag>
-          </template>
-          <template v-else>
-            <a-tag color="error">Inactivo</a-tag>
-          </template>
-        </template>
-
-        <template v-if="column.dataIndex == 'actions'">
-          <a-dropdown :trigger="['click']">
-            <a-button @click.prevent shape="circle" size="small" :icon="h(MoreOutlined)" />
-            <template #overlay>
-              <a-menu>
-                <a-menu-item key="1">Editar</a-menu-item>
-                <a-menu-item key="2">Dar de baja / Activar</a-menu-item>
-               
-              </a-menu>
-            </template>
-          </a-dropdown>
         </template>
       </template>
       
@@ -93,7 +62,7 @@
 <script setup>
 import axios from 'axios';
 import { makeRequest } from '@/utils/api.js'
-import { ref, onMounted, reactive, h } from 'vue';
+import { ref, onMounted, reactive, h, watch } from 'vue';
 import { MoreOutlined,UploadOutlined,LoadingOutlined } from '@ant-design/icons-vue';
 import { message,notification } from 'ant-design-vue';
 
@@ -105,9 +74,23 @@ const selectedExcel = ref(null);
 const dataSource = ref([])
 const loading = ref(false)
 const valueX = ref(1200)
-// const valueY = ref('60vh')
+// const valueY = s
 const dataToSearch = ref('')
 const total = ref(0)
+
+
+const valueY = ref(null)
+
+const hanleSizeHeigth = () => {
+  return valueY.value = 150
+}
+
+// watch(hanleSizeHeigth, (new) => {
+//    console.log(new);
+// });
+
+
+
 
 const indicator = h(LoadingOutlined, {
   style: {  fontSize: '40px' },
@@ -219,7 +202,10 @@ onMounted(
 );
 </script>
 
-<style>
+<style lang="scss">
+.table-footer {
+  background-color: #fafafa;
+}
 .paginator {
   display: flex;
   justify-content: flex-end;

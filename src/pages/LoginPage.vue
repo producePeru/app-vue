@@ -12,7 +12,7 @@
 
       <a-form class="form-wrapper" :model="formState" name="basic" autocomplete="off" @finish="onFinish" @finishFailed="onFinishFailed">
 
-        <a-form-item name="username" :rules="[{ required: true, message: 'Please input your username!' }]">
+        <a-form-item name="username" :rules="[{ required: true, message: 'Ingresa tu cuenta de usuario' }]">
           <a-input v-model:value="formState.username" size="large">
             <template #prefix>
               <UserOutlined class="input-ico" />
@@ -20,7 +20,7 @@
           </a-input>
         </a-form-item>
 
-        <a-form-item name="password" :rules="[{ required: true, message: 'Please input your password!' }]">
+        <a-form-item name="password" :rules="[{ required: true, message: 'La contraseña es incorrecta' }]">
           <a-input-password v-model:value="formState.password" size="large">
             <template #prefix>
               <LockOutlined class="input-ico" />
@@ -28,14 +28,15 @@
           </a-input-password>
         </a-form-item>
 
-        <a-form-item>
+        <!-- <a-form-item>
           <a-form-item name="remember" no-style>
             <a-checkbox v-model:checked="formState.remember">Recuerdame</a-checkbox>
           </a-form-item>
-        </a-form-item>
+        </a-form-item> -->
+        <br />
 
         <a-form-item>
-          <a-button size="large" block type="primary" html-type="submit">Submit</a-button>
+          <a-button size="large" block type="primary" html-type="submit" class="btn-login">Ingresar</a-button>
         </a-form-item>
       </a-form>
     </div>
@@ -69,21 +70,39 @@ const onFinishFailed = () => {
 
 
 <style lang="scss" scoped>
-.hero {
-  max-width: 100%;
-  height: 100%;
-  object-fit: cover;
-}
+
 .container {
   display: grid;
-  grid-template-columns: 1.8fr 1fr;
+  grid-template-columns: 1fr;
   min-height: 100vh;
-
-
-  .form-wrapper {
-    width: 368px;
-    min-width: 260px;
-    margin: 0 auto;
+  .hero {
+    max-width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: none;
+  }
+  .wrapper-login {
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+    justify-content: center;
+    width: 100%;
+    height: 100%;
+    padding: 2rem;
+    .form-wrapper {
+      width: 368px;
+      min-width: 260px;
+      margin: 0 auto;
+      .btn-login {
+        background-color: var(--primary) !important;
+      }
+    }
+  }
+  @media screen and (min-width: 720px) {
+    grid-template-columns: 1.8fr 1fr;
+    .hero {
+      display: block;
+    }
   }
 }
 
@@ -117,12 +136,5 @@ const onFinishFailed = () => {
   color: var(--primary-color);
   font-size: var(--font-size-base);
 }
-.wrapper-login {
-  display: flex;
-  align-items: center;
-  flex-direction: column;
-  justify-content: center;
-  width: 100%;
-  height: 100%;
-}
+
 </style>

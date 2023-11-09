@@ -15,31 +15,21 @@ const router = createRouter({
       
 
       children: [
-        {
-          path: 'users',
-          name: 'users',
-          component: () => import('../pages/UsersPage.vue')
-        },
-        {
-          path: 'rr',
-          name: 'rr',
-          component: () => import('../pages/TelePage.vue')
-        },
+        // {
+        //   path: 'users',
+        //   name: 'users',
+        //   component: () => import('../pages/UsersPage.vue')
+        // },
+        // {
+        //   path: 'rr',
+        //   name: 'rr',
+        //   component: () => import('../pages/TelePage.vue')
+        // },
 
         {
           path: 'ruta-digital',
           name: 'ruta-digital',
           children: [
-            {
-              path: 'indicadores',
-              name: 'indicadores',
-              component: () => import('../pages/RutaDigital/IndicadoresRD.vue')
-            },
-            {
-              path: 'mailing',
-              name: 'mailing',
-              component: () => import('../pages/RutaDigital/MailingRD.vue')
-            },
             {
               path: 'reportes',
               name: 'reportes',
