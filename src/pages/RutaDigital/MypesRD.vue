@@ -29,7 +29,7 @@
     <a-table 
     bordered
     class="ant-table-striped"
-    :scroll="{ x: valueX, y: valueY }"
+    :scroll="{ x: valueX }"
     :columns="columns" 
     :data-source="dataSource" 
     :pagination="false"
@@ -104,7 +104,7 @@ const selectedExcel = ref(null);
 
 const dataSource = ref([])
 const loading = ref(false)
-const valueX = ref(1000)
+const valueX = ref(1200)
 // const valueY = ref('60vh')
 const dataToSearch = ref('')
 const total = ref(0)
@@ -118,8 +118,8 @@ const params = ref({
 })
 
 const columns = [
-  { title: 'RUC',                 dataIndex: 'ruc', fixed: 'left', width: 130},
-  { title: 'Razón social',        dataIndex: 'razon_social', fixed: 'left', width: 250},
+  { title: 'RUC',                 dataIndex: 'ruc', fixed: 'left', width: 100},
+  { title: 'Razón social',        dataIndex: 'razon_social', width: 250},
   { title: 'Rubro',               dataIndex: 'rubro', width: 200},
   { title: 'Tipo',                dataIndex: 'tipo', align: 'center', width: 140 },
   { title: 'Departamento',        dataIndex: 'departamento', width: 140 },

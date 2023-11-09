@@ -1,114 +1,38 @@
 <template>
-  <section>
-    <h3>Indicadores de Ruta Digital</h3>
-
-      <!-- https://echarts.apache.org/examples/en/index.html -->
+  <div class="reports">
     
-      <div class="grid">
-        <section class="grid-box">
-          <h3>Avance de MYPE registrados</h3>
-          <GaugeChart />
-          <div class="mapa">
-            <div>
-              <span>Meta al 2024</span>
-              <h4>5000</h4>
-            </div>
-            <div>
-              <span>Meta al 2024</span>
-              <h4>5000</h4>
-            </div>
-            <div>
-              <span>Meta al 2024</span>
-              <h4>5000</h4>
-            </div>
-          </div>
-        </section>
-
-        <section class="grid-box">
-          <h3>Avance Anual</h3>
-          <BarChart  hola="hoaoaooaoa" />
-        </section>
 
 
-        <!-- <section class="grid-box">
-          <h3>Avance mensual del año 2023</h3>
-          <BarChart />
-        </section>
-         -->
-        
-        
-        
-        
-        
-  
-
-      </div>
-      
+    <a-row>
+      <a-col :xs="24" :sm="24" :md="12" :lg="8" :xl="8"><div class="wrapper-chart">
+        <Radial /></div></a-col>
+      <a-col :xs="24" :sm="24" :md="12" :lg="8" :xl="8"><div class="wrapper-chart">
+        <Bar /></div></a-col>
+      <a-col :xs="24" :sm="24" :md="12" :lg="8" :xl="8"><div class="wrapper-chart">
+        <Bar /></div></a-col>
+    </a-row>
 
 
 
-  
 
+    
 
-
-  </section>
+  </div>
 </template>
 
+
 <script setup>
-import { ref } from 'vue';
-import GaugeChart from '../../components/charts/GaugeChart.vue';
-import BarChart from '../../components/charts/BarChart.vue';
-
-
-
-const dataByMounts = ref(
-  [
-    { name: 'Barrera 1', value: 20 },
-    { name: 'Barrera 2', value: 35 },
-    { name: 'Barrera 3', value: 15 },
-  ]
-);
-
-
-
-
-
-
-
-
+import Bar from '@/components/charts/BarChart.vue'
+import Radial from '@/components/charts/GaugeChart.vue'
 
 </script>
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-<style lang="scss" scoped>
-.grid {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  grid-gap: 1rem;
-  .grid-box {
-    border: 1px solid #0505050f;
-    border-radius: 4px;
-    padding: 1rem;
+<style lang="scss">
+  .wrapper-chart {
+    padding: 1.5rem 1.5rem 0 1.5rem;
+    border-radius: 8px;
+    border: 1px solid #f0f0f0;
+    margin: .5rem;
+    box-shadow: 0 6px 16px 0 rgba(0, 0, 0, 0.08), 0 3px 6px -4px rgba(0, 0, 0, 0.12), 0 9px 28px 8px rgba(0, 0, 0, 0.05);
   }
-  .mapa {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    
-  }
-}
 </style>

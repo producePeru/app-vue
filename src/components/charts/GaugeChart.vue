@@ -1,101 +1,101 @@
 <template>
-  <v-chart class="chart" :option="option" autoresize />
+  <div>
+    <apexchart
+     
+      height="325"
+      type="radialBar"
+      :options="chartOptions"
+      :series="series"
+    ></apexchart>
+
+    <div class="progress-info">
+      <div class="info-item">
+        <span>Meta al 2024</span>
+        <h3>5000</h3>
+        <span>100 %</span>
+      </div>
+      <div class="info-item">
+        <span>Meta al 2024</span>
+        <h3>5000</h3>
+        <span>53 %</span>
+      </div>
+      <div class="info-item">
+        <span>Meta al 2024</span>
+        <h3>5000</h3>
+        <span>53 %</span>
+      </div>
+    </div>
+  </div>
 </template>
 
-<script setup>
-import { use } from 'echarts/core';
-import { CanvasRenderer } from 'echarts/renderers';
-import { GaugeChart } from 'echarts/charts';
-import {
-  TitleComponent,
-  TooltipComponent,
-  LegendComponent,
-} from 'echarts/components';
-import VChart from 'vue-echarts';
-import { ref } from 'vue';
-
-use([
-  CanvasRenderer,
-  GaugeChart,
-  TitleComponent,
-  TooltipComponent,
-  LegendComponent,
-]);
-
-// provide(THEME_KEY, 'dark');
-
-const gaugeData = [
-  {
-    value: 20,
-    name: 'Total',
-    title: {
-      offsetCenter: ['0%', '-20rem']
-    },
-    detail: {
-      valueAnimation: true,
-      offsetCenter: ['0%', '4rem']
-    }
-  }
-];
-
-const option = ref({
-  series: [
-    {
-      type: 'gauge',
-      startAngle: 90,
-      endAngle: -270,
-      pointer: {
-        show: false
+<script>
+export default {
+  data() {
+    return {
+      chartOptions: {
+        chart: {
+          id: "vuechart-example",
+          toolbar: {
+            show: true, 
+            tools: {
+              download: true, 
+              selection: true,
+              zoom: true,
+              zoomin: true,
+              zoomout: true,
+              pan: true,
+              reset: true
+            },
+          }
+        },
+        plotOptions: {
+          radialBar: {
+            hollow: {
+              size: '70%',
+            }
+          },
+        },
+        // responsive: [{
+        //   breakpoint: 400,
+        //   options: {
+        //     chart: {
+        //       width: '90%'
+        //     }
+        //   }
+        // }],
+        labels: ['Cricket'],
+        title: {
+          text: 'Progress Chart',
+          align: 'center',
+          margin: 10,
+          offsetX: 0,
+          offsetY: 0,
+          floating: false,
+          style: {
+            fontSize: '20px',
+            color: '#333'
+          },
+        },
       },
-      progress: {
-        show: true,
-        overlap: false,
-        roundCap: true,
-        clip: false,
-        itemStyle: {
-          borderWidth: 1,
-          // borderColor: 'red'
-        }
-      },
-      axisLine: {
-        lineStyle: {
-          width: 20
-        }
-      },
-      splitLine: {
-        show: false,
-        distance: 0,
-        length: 10
-      },
-      axisTick: {
-        show: false
-      },
-      axisLabel: {
-        show: false,
-        distance: 50
-      },
-      data: gaugeData,
-      title: {
-        fontSize: 14
-      },
-      detail: {
-        width: 50,
-        height: 14,
-        fontSize: 14,
-        color: 'inherit',
-        borderColor: 'inherit',
-        borderRadius: 20,
-        borderWidth: 1,
-        formatter: '{value}%'
-      }
-    }
-  ]
-})
+      series: [70],
+    };
+  },
+};
 </script>
 
-<style scoped>
-.chart {
-  height: 250px;
-  border: 1px solid red;
+<style lang="scss" scoped>
+.progress-info {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  // border: 1px solid red;
+  margin-bottom: 1.5rem;
+  .info-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    h3 {
+      font-size: 22px;
+    }
+  }
 }
 </style>

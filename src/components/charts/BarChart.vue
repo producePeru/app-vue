@@ -1,73 +1,57 @@
 <template>
-  <div ref="chart" class="chart"></div>
-
-  <!-- <pre>{{ props.message }}</pre> -->
+  <div>
+    <apexchart
+      height="400"
+      type="bar"
+      :options="chartOptions"
+      :series="series"
+    ></apexchart>
+  </div>
 </template>
 
-<script setup>
-import { ref, onMounted } from 'vue';
-import * as echarts from 'echarts';
-
-const chart = ref(null);
-
-const initChart = () => {
-const echartsInstance = echarts.init(chart.value);
-
-const barrierData = [
-  { name: 'Barrera 1', value: 200 },
-  { name: 'Barrera 2', value: 35 },
-  { name: 'Barrera 3', value: 15 },
-];
-
-const props = defineProps(['hola'])
-
-console.log(props.hola)
-
-
-// const props = defineProps({
-//   barrierData: {
-//     type: Array,
-//     required: true // Esta propiedad es requerida
-//   }
-// });
-
-// const props = defineProps({
-
-//   barrierData: {
-//     type: Array
-//   },
-
-// })
-
-  const option = {
-    // title: {
-    //   text: 'Modelo de Barreras'
-    // },
-    xAxis: {
-      type: 'category',
-      data: barrierData.map(item => item.name)
-    },
-    yAxis: {
-      type: 'value'
-    },
-    series: [{
-      data: barrierData.map(item => item.value),
-      type: 'bar'
-    }]
-  };
-
-  echartsInstance.setOption(option);
-  return echartsInstance;
+<script>
+export default {
+  data() {
+    return {
+      chartOptions: {
+        chart: {
+          id: "vuechart-example",
+          toolbar: {
+            show: true, 
+            tools: {
+              download: true, 
+              selection: true,
+              zoom: true,
+              zoomin: true,
+              zoomout: true,
+              pan: true,
+              reset: true
+            },
+          }
+        },
+        xaxis: {
+          categories: [1991, 1992, 1993, 1994, 1995, 1996],
+        },
+        title: {
+          text: 'Historical Data', 
+          align: 'center',
+          margin: 10,
+          offsetX: 0,
+          offsetY: 0,
+          floating: false,
+          style: {
+            fontSize: '20px',
+            color: '#333'
+          },
+        },
+      },
+      series: [
+        {
+          name: "series-1",
+          data: [30, 40, 35, 50, 49, 60],
+        },
+      ],
+    };
+  },
 };
-
-onMounted(() => {
-  initChart();
-});
 </script>
-
-<style scoped>
-.chart {
-  height: 300px;
-  /* border: 1px solid red; */
-}
-</style>

@@ -10,5 +10,8 @@ module.exports = {
   },
   "rules": {
     "vue/no-setup-props-destructure": "off"
+  },
+  env : {
+    'vue/setup-compiler-macros': true
   }
 }

@@ -11,6 +11,7 @@ import 'ant-design-vue/dist/reset.css';
 
 import './utils/api.js'
 import './utils/auth'
+import VueApexCharts from "vue3-apexcharts";
 
 const app = createApp(App)
 
@@ -19,4 +20,13 @@ const app = createApp(App)
 app.use(createPinia())
 app.use(router)
 
+app.use(VueApexCharts);
+
 app.use(Antd).mount('#app')
+
+
+
+// import VueApexCharts from "vue3-apexcharts";
+
+// const app = createApp(App);
+// app.use(VueApexCharts);
