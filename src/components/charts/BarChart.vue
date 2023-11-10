@@ -1,13 +1,10 @@
 <template>
   <div>
     <apexchart
-      height="400"
-      type="bar"
-      :options="chartOptions"
-      :series="series"
-    ></apexchart>
-
-    <pre>::: {{ values }}</pre>
+    :height="height"
+    type="bar"
+    :options="chartOptions"
+    :series="series" />
   </div>
 
 </template>
@@ -15,13 +12,21 @@
 <script>
 export default {
   props: {
+    title: {
+      type: String,
+      default: ""
+    },
     categories: {
       type: Array,
-      // default: null
+      default: []
     },
     values: {
       type: Array,
-      // default: []
+      default: []
+    },
+    height: {
+      type: Number,
+      default: 300
     }
   },
 
@@ -33,13 +38,7 @@ export default {
           toolbar: {
             show: true, 
             tools: {
-              download: true,
-              selection: true,
-              zoom: true,
-              zoomin: true,
-              zoomout: true,
-              pan: true,
-              reset: true
+              download: true
             },
           }
         },
@@ -47,14 +46,14 @@ export default {
           categories: this.categories,
         },
         title: {
-          text: 'Historical Data', 
+          text: this.title, 
           align: 'center',
           margin: 10,
           offsetX: 0,
           offsetY: 0,
           floating: false,
           style: {
-            fontSize: '20px',
+            fontSize: '18px',
             color: '#333'
           },
         },

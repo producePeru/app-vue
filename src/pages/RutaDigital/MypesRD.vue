@@ -44,6 +44,14 @@
             <a-tag color="error">Jurídica</a-tag>
           </template>
         </template>
+        <template v-if="column.dataIndex == 'sexo'">
+          <template v-if="record.sexo == 'MASCULINO'">
+            <a-tag color="blue">Masculino</a-tag>
+          </template>
+          <template v-if="record.sexo == 'FEMENINO'">
+            <a-tag color="pink">Femenino</a-tag>
+          </template>
+        </template>
       </template>
       
     </a-table>
