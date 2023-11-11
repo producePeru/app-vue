@@ -28,7 +28,8 @@
         <!-- <a-menu-item key="indicadores"> <router-link to="/admin/ruta-digital/indicadores">Indicadores</router-link> </a-menu-item>
         <a-menu-item key="mailing"> <router-link to="/admin/ruta-digital/mailing">Mailing</router-link> </a-menu-item> -->
         <a-menu-item key="reportes"> <router-link to="/admin/ruta-digital/reportes">Reportes</router-link> </a-menu-item> 
-        <a-menu-item key="mypes"> <router-link to="/admin/ruta-digital/mypes">Mypes</router-link> </a-menu-item>
+        <a-menu-item key="mype"> <router-link to="/admin/ruta-digital/mype">Las Mype</router-link> </a-menu-item>
+        <a-menu-item key="cuestionarios"> <router-link to="/admin/ruta-digital/cuestionarios">Cuestionarios</router-link> </a-menu-item>
 
       </a-sub-menu>
 
