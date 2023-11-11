@@ -9,23 +9,17 @@ const router = createRouter({
       component: () => import('../pages/LoginPage.vue')
     },
     {
+      path: '/cuestionario/:id',
+      name: 'questionary',
+      component: () => import('../pages/QuestionaryId.vue')
+    },
+    {
       path: '/admin',
       name: 'admin',
       component: () => import('../pages/DashboardPage.vue'),
       
 
       children: [
-        // {
-        //   path: 'users',
-        //   name: 'users',
-        //   component: () => import('../pages/UsersPage.vue')
-        // },
-        // {
-        //   path: 'rr',
-        //   name: 'rr',
-        //   component: () => import('../pages/TelePage.vue')
-        // },
-
         {
           path: 'ruta-digital',
           name: 'ruta-digital',
