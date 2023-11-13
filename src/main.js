@@ -5,6 +5,7 @@ import { createPinia } from 'pinia'
 
 import App from './App.vue'
 import router from './router'
+import moment from  'moment'
 
 import Antd from 'ant-design-vue'
 import 'ant-design-vue/dist/reset.css';
@@ -13,6 +14,9 @@ import './utils/api.js'
 import './utils/auth'
 import VueApexCharts from "vue3-apexcharts";
 
+
+moment.locale('es')
+
 const app = createApp(App)
 
 // app.config.globalProperties.$antd = { locale: esES };
@@ -20,6 +24,7 @@ const app = createApp(App)
 app.use(createPinia())
 app.use(router)
 
+app.use(moment)
 app.use(VueApexCharts);
 
 app.use(Antd).mount('#app')

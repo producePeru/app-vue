@@ -1,182 +1,135 @@
 <template>
-  <section class="container-form">
+  <div>
+    <h3>Mis cuestionarios</h3>
+    
+    <a-row class="table-header">
+      <a-col :span="8">
+        <router-link to="crear-cuestionario"><a-button type="primary">Crear cuestionario</a-button></router-link>
+      </a-col>
+      <a-col :span="8" :offset="8"></a-col>
+    </a-row>
 
-
-    <div>
-      <div>
-        <h2>Título del cuestionario</h2>
-        <a-input v-model:value="formState.title" />
-      </div>
-      <div class="slug">
-        <div class="slug-title">Slug del cuestionario</div>
-        <a-input v-model:value="formState.slug" />
-      </div>
-    </div>
-
-    <template v-if="formState.title && formState.slug">
-      <div class="question" v-for="(item, idx) in formState.questions" :key="idx">
-        <div>
-          <h3>Pregunta {{ idx + 1 }}</h3>
-          <a-input v-model:value="item.title" />
-        </div>
-        <div>
-          <span>Opción 1</span>
-          <a-input v-model:value="item.opt1" />
-        </div>
-        <div>
-          <span>Opción 2</span>
-          <a-input v-model:value="item.opt2" />
-        </div>
-        <div>
-          <span>Opción 3</span>
-          <a-input v-model:value="item.opt3" />
-        </div>
-        <div>
-          <span>Respuesta</span>
-          <a-input-number v-model:value="item.resp" :min="1" :max="3" style="width: 100px;" />
-          <a-button type="text" danger class="delete-item" @click="handleDeleteQuestion(idx)">
-            <DeleteOutlined />
-          </a-button>
-        </div>
-      </div>
-      
-      <a-button class="btn-question" @click="handleAddQuestion">Agregar pregunta</a-button>
-      <a-divider />
-      <div class="question" v-for="(item, idx) in formState.ratings" :key="idx">
-        <div>
-          <h4>Pregunta Rating {{ idx + 1 }}</h4>
-          <a-input class="w-100" v-model:value="item.title" />
-          <a-button type="text" danger class="delete-item" @click="handleDeleteRating(idx)">
-            <DeleteOutlined />
-          </a-button>
-        </div>
-      </div>
-      <template v-if="formState.questions.length >= 1">
-        <a-button class="btn-question" @click="handleAddRating">
-          <StarOutlined /> Agregar rating
-        </a-button>
-        <a-divider />
-        <div class="question-check">
-          <a-checkbox v-model:checked="formState.comments">Comentarios</a-checkbox>
-          <a-checkbox v-model:checked="formState.social">Redes sociales</a-checkbox>
-        </div>
-
-        <a-divider />
-
-        <a-button size="large" type="primary" :loading="loading" @click="onSubmit">Crear cuestionario</a-button>
+    <a-table 
+    bordered
+    class="ant-table-striped"
+    :scroll="{ x: valueX }" 
+    :columns="columns" 
+    :data-source="dataSource" 
+    :pagination="false"
+    :loading="loading"
+    size="small">
+      <template v-slot:bodyCell="{column, record}">
+        <template v-if="column.dataIndex == 'date'">
+          <div class="text-center">
+            <span>{{ handleCreationDate(record.created_at) }}</span>
+          </div>
+        </template> 
+        <template v-if="column.dataIndex == 'questions'">
+          <div class="text-center">
+            <b>{{ record.questions.length }}</b>
+          </div>
+        </template>
+        <template v-if="column.dataIndex == 'rating'">
+          <div class="text-center">
+            <a-tag :color="record.ratings.length >= 1 ? 'green' : 'orange'">{{ record.ratings.length >= 1 ? 'Si' : 'No' }}</a-tag>
+          </div>
+        </template>
+        <template v-if="column.dataIndex == 'comments'">
+          <div class="text-center">
+            <a-tag :color="record.comments == 1 ? 'green' : 'orange'">{{ record.comments == 1 ? 'Si' : 'No' }}</a-tag>
+          </div>
+        </template>
+        <template v-if="column.dataIndex == 'redes'">
+          <div class="text-center">
+            <a-tag :color="record.social == 1 ? 'green' : 'orange'">{{ record.social == 1 ? 'Si' : 'No' }}</a-tag>
+          </div>
+        </template>
+        <template v-if="column.dataIndex == 'link'">
+          <div class="text-center">
+            <router-link :to="`/cuestionario/${record.slug}`">
+              <LinkOutlined />
+            </router-link>
+          </div>
+        </template>
       </template>
+      
+    </a-table>
+  </div>
 
+  <div class="paginator">
+    <a-pagination size="small"  :total="total" :pageSize="20"  @change="handlePaginator" :showSizeChanger="false" />
+  </div>
 
-    </template>
-
-  </section>
-
-
-  <pre>{{ formState }}</pre>
 </template>
 
 <script setup>
-import { ref, reactive } from 'vue';
-import { DeleteOutlined, StarOutlined } from '@ant-design/icons-vue';
 
-const loading = ref(false);
-const question = ref({
-  title: '',
-  opt1: '',
-  opt2: '',
-  opt3: '',
-  resp: null
-})
-const rating = ref({
-  title: ''
-})
+import { makeRequest } from '@/utils/api.js'
+import { ref, onMounted } from 'vue';
+import moment from 'moment';
+import 'moment/locale/es';
+import { LinkOutlined } from '@ant-design/icons-vue';
+moment.locale('es');
 
-const formState = reactive({
-  title: '',
-  slug: '',
-  questions: [],
-  ratings: [],	
-  comments: false,
-  social: false
-})
-
-
-const handleAddQuestion = () => {
-  formState.questions.push({ ...question.value });
+const handleCreationDate = (date) => {
+  return moment(date).format('l')
 }
-const handleAddRating = () => {
-  formState.ratings.push({ ...rating.value });
+
+const loading = ref(false)
+const valueX = ref(1200)
+const total = ref(0)
+const dataSource = ref([])
+
+const params = ref({
+  page: 1
+})
+const handlePaginator = (current) =>{
+  params.value.page = current;
+  fetchData()
 }
-const handleDeleteQuestion = (index) => {
-  if (index >= 0 && index < formState.questions.length) {
-    formState.questions.splice(index, 1);
+
+const columns = [
+  { title: 'Slug',            dataIndex: 'slug', fixed: 'left', width: 150},
+  { title: 'Título',          dataIndex: 'title', width: 250},
+  { title: 'Fecha creación',  dataIndex: 'date', width: 80, align: 'center'},
+  { title: 'Preguntas',      dataIndex: 'questions', width: 70, align: 'center'},
+  { title: 'Ratings',         dataIndex: 'rating', width: 40, align: 'center'},
+  { title: 'Comentarios',     dataIndex: 'comments', width: 70, align: 'center'},
+  { title: 'Redes',           dataIndex: 'redes', width: 40, align: 'center'},
+  { title: 'Link',            dataIndex: 'link', width: 40, align: 'center'},
+];
+
+const fetchData = async() => {
+  try {
+    loading.value = true;
+    const data = await makeRequest({ url: '/questionnaries/ruta_digital', method: 'GET', params:params.value });
+    dataSource.value = data.data
+    total.value = data.total;
+  } catch (error) {
+    console.error('Error de red:', error);
+  } finally {
+    loading.value = false;
   }
-};
-const handleDeleteRating = (index) => {
-  if (index >= 0 && index < formState.ratings.length) {
-    formState.ratings.splice(index, 1);
-  }
-};
-
-const onSubmit = () => {
-  loading.value = true;
 }
 
-
+onMounted(
+  fetchData
+);
 </script>
 
-<style lang="scss" scoped>
-h3, h4 {
-  margin: 0;
+<style lang="scss">
+.table-footer {
+  background-color: #fafafa;
 }
-.w-100 {
-  width: 100%;
-}
-.container-form {
-  width: 100%;
-  margin: auto;
-  .slug {
-    margin: .6rem 0 1.2rem;
-    max-width: 250px;
-    &-title {
-      margin-bottom: .3rem;
-    }
-  }
-}
-.question {
-  border: 1px solid #c7cdd1;
-  background: #f7f7f7;
-  padding: .5rem 1rem;
-  border-radius: 8px;
-  margin: 1rem 0;
-  div {
-    display: grid;
-    grid-template-columns: 100px 9fr;
-    margin: .5rem 0;
-    position: relative;
-    align-items: center;
-    .delete-item {
-      position: absolute;
-      right: 0;
-    }
-  }
-}
-.btn-question {
-  display: block;
-  margin: 1rem 0;
-  color: #389e0d;
-  border-color: #b7eb8f;
-}
-.question-check {
+.paginator {
   display: flex;
-  flex-direction: column;
+  justify-content: flex-end;
+  margin-top: 1.5rem;
 }
-
-@media screen and (min-width: 992px) {
-  .container-form {
-    width: 70%;
-  }
+.table-header {
+  margin: 1rem 0;
 }
-
+.text-center {
+  text-align: center;
+}
 </style>
-

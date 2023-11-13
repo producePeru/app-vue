@@ -11,7 +11,7 @@ const router = createRouter({
     {
       path: '/cuestionario/:id',
       name: 'questionary',
-      component: () => import('../pages/QuestionaryId.vue')
+      component: () => import('../pages/public/QuestionaryId.vue')
     },
     {
       path: '/admin',
@@ -34,6 +34,12 @@ const router = createRouter({
               path: 'mype',
               name: 'mype',
               component: () => import('../pages/RutaDigital/MypesRD.vue'),
+              meta: { requiresAuth: true, roles: ['admin', 'user'] },
+            },
+            {
+              path: 'crear-cuestionario',
+              name: 'crear-cuestionario',
+              component: () => import('../pages/RutaDigital/CrearCuestionario.vue'),
               meta: { requiresAuth: true, roles: ['admin', 'user'] },
             },
             {
