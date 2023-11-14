@@ -94,6 +94,7 @@ const rating = ref({
 })
 
 const formState = reactive({
+  id_user: 2,
   type_questionary: 'ruta_digital',
   title: '',
   slug: '',

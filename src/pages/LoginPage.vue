@@ -10,18 +10,18 @@
         <span>Ingrese su usuario y contraseña para ingresar a la plataforma.</span>
       </div>
 
-      <a-form class="form-wrapper" :model="formState" name="basic" autocomplete="off" @finish="onFinish" @finishFailed="onFinishFailed">
+      <a-form class="form-wrapper" :model="formState" name="basic" autocomplete="off" @finish="onSubmit" @finishFailed="onFinishFailed">
 
-        <a-form-item name="username" :rules="[{ required: true, message: 'Ingresa tu cuenta de usuario' }]">
-          <a-input v-model:value="formState.username" size="large">
+        <a-form-item name="usuario" :rules="[{ required: true, message: 'Ingresa tu cuenta de usuario' }]">
+          <a-input v-model:value="formState.usuario" size="large">
             <template #prefix>
               <UserOutlined class="input-ico" />
             </template>
           </a-input>
         </a-form-item>
 
-        <a-form-item name="password" :rules="[{ required: true, message: 'La contraseña es incorrecta' }]">
-          <a-input-password v-model:value="formState.password" size="large">
+        <a-form-item name="clave" :rules="[{ required: true, message: 'La contraseña es incorrecta' }]">
+          <a-input-password v-model:value="formState.clave" size="large">
             <template #prefix>
               <LockOutlined class="input-ico" />
             </template>
@@ -37,34 +37,78 @@
 
         <a-form-item>
           <a-button size="large" block type="primary" html-type="submit" class="btn-login">Ingresar</a-button>
+
+          
         </a-form-item>
       </a-form>
     </div>
+    <button @click="cerrarSesion">Cerrar</button>
+
+    <pre>::: {{ token }}</pre>
+    <hr>
+
 
   </div>
 </template>
 <script setup>
-import { reactive } from 'vue';
+import { makeRequest } from '@/utils/api.js'
+import { reactive, ref } from 'vue';
 import { UserOutlined, LockOutlined } from '@ant-design/icons-vue';
 import { message } from 'ant-design-vue';
 import { useRouter } from 'vue-router';
+  import Cookies from 'js-cookie';
+
+
+const token = ref(Cookies.get('token'));
 
 const router = useRouter();
 
 const formState = reactive({
-  username: '',
-  password: '',
-  remember: true,
+  usuario: '',
+  clave: '',
 });
 
-const onFinish = (values) => {
-  console.log('Success:', values);
-  router.push('/admin/usuarios/lista');
+const onSubmit =async() => {
+  const payload = formState
+  try {
+    const data = await makeRequest({ url: '/login', method: 'POST', data:  payload });
+    console.log("jajajja", data)
+  } catch (error) {
+    console.error('Error de red:', error);
+  }
+  
+
+
+
+  // const fakeToken = 'este-es-un-toke-fake';
+  
+
+  
+  // Cookies.set('token', fakeToken);
+
+  // token.value = fakeToken;
+
+  
+
+  // console.log('Success:', values);
+  // router.push('/admin/usuarios/lista');
+//   como codificar mi rol en laravel
+// y en vue decodificar el rol
 };
 
 const onFinishFailed = () => {
   message.error('Sin acceso');
 };
+
+
+
+const cerrarSesion = () => {
+  Cookies.remove('token');
+  token.value = null;
+
+}
+
+
 </script>
 
 
