@@ -1,4 +1,6 @@
 import axios from 'axios';
+import Cookies from 'js-cookie';
+
 const apiUrl = import.meta.env.VITE_APP_API_URL;
 
 const api = axios.create({
@@ -6,19 +8,21 @@ const api = axios.create({
 });
 
 // Agregar un interceptor para solicitudes
-api.interceptors.response.use(
+api.interceptors.request.use(
   (config) => {
-    const token = 'tu_token_aqui'; // Reemplaza con tu token de autorización
+    // Verificar si config.headers existe y, si no, inicializarlo como un objeto vacío
+    config.headers = config.headers || {};
+
+    const token = Cookies.get('token');
     if (token) {
-      config.headers.Authorization = `Bearer ${token}`;
+      config.headers['Authorization'] = `Bearer ${token}`;
+    } else {
+      delete config.headers['Authorization'];  // Eliminar el encabezado si no hay token
     }
 
     // Establecer el tipo de contenido como application/json
     config.headers['Content-Type'] = 'application/json';
 
-    // Activar el estado de carga
-    // Puedes realizar otras modificaciones en la configuración de la solicitud aquí
-    // Por ejemplo, agregar encabezados personalizados o realizar acciones previas a la solicitud
     return config;
   },
   (error) => {
@@ -42,7 +46,6 @@ api.interceptors.response.use(
     return Promise.reject(error);
   }
 );
-
 
 export async function makeRequest({ method, url, data, params }) {
   // eslint-disable-next-line no-useless-catch

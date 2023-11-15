@@ -36,18 +36,10 @@
         <br />
 
         <a-form-item>
-          <a-button size="large" block type="primary" html-type="submit" class="btn-login">Ingresar</a-button>
-
-          
+          <a-button size="large" block type="primary" html-type="submit" class="btn-login" :loading="loading">Ingresar</a-button>
         </a-form-item>
       </a-form>
     </div>
-    <!-- <button @click="cerrarSesion">Cerrar</button>
-
-    <pre>::: {{ token }}</pre> -->
-    
-
-
   </div>
 </template>
 <script setup>
@@ -56,11 +48,11 @@ import { reactive, ref } from 'vue';
 import { UserOutlined, LockOutlined } from '@ant-design/icons-vue';
 import { message } from 'ant-design-vue';
 import { useRouter } from 'vue-router';
-  import Cookies from 'js-cookie';
+import Cookies from 'js-cookie';
 
 
 const token = ref(Cookies.get('token'));
-
+const loading = ref(false)
 const router = useRouter();
 
 const formState = reactive({
@@ -69,21 +61,22 @@ const formState = reactive({
 });
 
 const onSubmit =async() => {
-  const payload = formState
+  loading.value = true
   try {
+    const payload = formState
     const data = await makeRequest({ url: '/login', method: 'POST', data:  payload });
 
-
-
-    console.log("role", data)
-  
+    localStorage.setItem('user', JSON.stringify(data.user));
     Cookies.set('token', data.access_token);
-  
-  
+    Cookies.set('user', data.role);
+
+    router.push('/admin/dashboard');
   
   } catch (error) {
     message.error("Las credenciales son incorrectas")
     console.error('Error de red:', error);
+  } finally {
+    loading.value = false
   }
   
 
@@ -100,7 +93,7 @@ const onSubmit =async() => {
   
 
   // console.log('Success:', values);
-  // router.push('/admin/usuarios/lista');
+  // 
 
 };
 
@@ -122,7 +115,6 @@ const cerrarSesion = () => {
 
 
 <style lang="scss" scoped>
-
 .container {
   display: grid;
   grid-template-columns: 1fr;
@@ -188,5 +180,4 @@ const cerrarSesion = () => {
   color: var(--primary-color);
   font-size: var(--font-size-base);
 }
-
 </style>

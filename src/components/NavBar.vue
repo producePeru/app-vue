@@ -25,11 +25,27 @@
 </template>
 
 <script setup>
+import { makeRequest } from '@/utils/api.js'
 import { UserOutlined, PoweroffOutlined, MenuOutlined } from '@ant-design/icons-vue';
+// import Cookies from 'js-cookie';
 
 const handleMenuClick = (e) => {
-  console.log('click', e);
+  if(e.key == 2){
+    // console.log("kskks", Cookies.get('token'))
+    logout()
+  }
 };
+
+const logout = async() => {
+  try {
+      // const token = Cookies.get('token')
+      const data = await makeRequest({ url: '/logout', method: 'POST'});
+      console.log(data)
+    
+    } catch (error) {
+      console.error('Error de red:', error);
+    }
+}
 </script>
 
 <style lang="scss" scoped>

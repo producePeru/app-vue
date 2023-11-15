@@ -4,18 +4,12 @@
       <h1 v-show="!collapsed">Admin Pro</h1>
     </div>
 
-
     <a-menu theme="dark" v-model:selectedKeys="selectedKeys" v-model:openKeys="openKeys" mode="inline">
       
-      <!-- <a-menu-item key="rr">
+      <a-menu-item key="dashboard">
         <pie-chart-outlined />
-        <span> <router-link to="/admin/rr">Inicio</router-link></span>
+        <span> <router-link to="/admin/dashboard">Dashboard</router-link></span>
       </a-menu-item>
-      
-      <a-menu-item key="users">
-        <desktop-outlined />
-        <span> <router-link to="/admin/users">Inicio</router-link> </span>
-      </a-menu-item> -->
 
 
       <a-sub-menu key="ruta-digital">

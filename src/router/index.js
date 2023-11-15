@@ -17,9 +17,12 @@ const router = createRouter({
       path: '/admin',
       name: 'admin',
       component: () => import('../pages/DashboardPage.vue'),
-      
-
       children: [
+        {
+          path: 'dashboard',
+          name: 'dashboard',
+          component: () => import('../pages/Inicio/InicioDashboard.vue'),
+        },
         {
           path: 'ruta-digital',
           name: 'ruta-digital',
