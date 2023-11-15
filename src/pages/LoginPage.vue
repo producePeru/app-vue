@@ -42,10 +42,10 @@
         </a-form-item>
       </a-form>
     </div>
-    <button @click="cerrarSesion">Cerrar</button>
+    <!-- <button @click="cerrarSesion">Cerrar</button>
 
-    <pre>::: {{ token }}</pre>
-    <hr>
+    <pre>::: {{ token }}</pre> -->
+    
 
 
   </div>
@@ -72,8 +72,17 @@ const onSubmit =async() => {
   const payload = formState
   try {
     const data = await makeRequest({ url: '/login', method: 'POST', data:  payload });
-    console.log("jajajja", data)
+
+
+
+    console.log("role", data)
+  
+    Cookies.set('token', data.access_token);
+  
+  
+  
   } catch (error) {
+    message.error("Las credenciales son incorrectas")
     console.error('Error de red:', error);
   }
   
@@ -92,8 +101,7 @@ const onSubmit =async() => {
 
   // console.log('Success:', values);
   // router.push('/admin/usuarios/lista');
-//   como codificar mi rol en laravel
-// y en vue decodificar el rol
+
 };
 
 const onFinishFailed = () => {
