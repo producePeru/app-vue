@@ -50,8 +50,6 @@ import { message } from 'ant-design-vue';
 import { useRouter } from 'vue-router';
 import Cookies from 'js-cookie';
 
-
-const token = ref(Cookies.get('token'));
 const loading = ref(false)
 const router = useRouter();
 
@@ -78,41 +76,12 @@ const onSubmit =async() => {
   } finally {
     loading.value = false
   }
-  
-
-
-
-  // const fakeToken = 'este-es-un-toke-fake';
-  
-
-  
-  // Cookies.set('token', fakeToken);
-
-  // token.value = fakeToken;
-
-  
-
-  // console.log('Success:', values);
-  // 
-
 };
 
 const onFinishFailed = () => {
   message.error('Sin acceso');
 };
-
-
-
-const cerrarSesion = () => {
-  Cookies.remove('token');
-  token.value = null;
-
-}
-
-
 </script>
-
-
 
 <style lang="scss" scoped>
 .container {

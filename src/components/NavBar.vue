@@ -5,8 +5,10 @@
 
     <a-dropdown>
       <a class="ant-dropdown-link" @click.prevent>
-        <span class="name-user">Kinder</span>
-        <a-avatar size="default" style="background-color: #f56a00">K</a-avatar>
+        <span class="name-user">{{ user.nombres }}</span>
+        <a-avatar size="default" style="background-color: #cf1322">
+          {{ user.nombres.charAt(0) }}
+        </a-avatar>
       </a>
       <template #overlay>
         <a-menu @click="handleMenuClick">
@@ -27,20 +29,29 @@
 <script setup>
 import { makeRequest } from '@/utils/api.js'
 import { UserOutlined, PoweroffOutlined, MenuOutlined } from '@ant-design/icons-vue';
-// import Cookies from 'js-cookie';
+import Cookies from 'js-cookie';
+import { useRouter } from 'vue-router';
+
+const router = useRouter();
+
+const user = JSON.parse(localStorage.getItem('user'));
 
 const handleMenuClick = (e) => {
   if(e.key == 2){
-    // console.log("kskks", Cookies.get('token'))
     logout()
   }
 };
 
 const logout = async() => {
   try {
-      // const token = Cookies.get('token')
       const data = await makeRequest({ url: '/logout', method: 'POST'});
-      console.log(data)
+      if(data) {
+        localStorage.removeItem('user');
+        Cookies.remove('token');
+        Cookies.remove('user', data.role);
+        localStorage.clear();
+        router.push('/');
+      }
     
     } catch (error) {
       console.error('Error de red:', error);

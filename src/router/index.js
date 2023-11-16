@@ -22,6 +22,7 @@ const router = createRouter({
           path: 'dashboard',
           name: 'dashboard',
           component: () => import('../pages/Inicio/InicioDashboard.vue'),
+          meta: { requiresAuth: true, roles: ['admin', 'user'] },
         },
         {
           path: 'ruta-digital',

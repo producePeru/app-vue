@@ -3,7 +3,7 @@
   
     <h3>Lista de usuarios</h3>
 
-    <div class="wrapper-search">
+    <!-- <div class="wrapper-search">
       <a-button>
         <template #icon>
           <DownloadOutlined />
@@ -16,7 +16,7 @@
       placeholder="Buscar"
       enter-button
       @search="handleSearch"/>
-    </div>
+    </div> -->
 
     <a-table 
     bordered
@@ -113,15 +113,15 @@ const params = ref({
 })
 
 const columns = [
-  { title: 'Nombres',         dataIndex: 'nombres', fixed: 'left', width: 180 },
-  { title: 'Apellidos',       dataIndex: 'apellidos', fixed: 'left', width: 180},
-  { title: 'N° documento',    dataIndex: 'nro_documento', align: 'center'},
-  { title: 'Usuario',         dataIndex: 'usuario', align: 'center' },
-  { title: 'Correo',          dataIndex: 'correo', width: 180 },
-  { title: 'Celular',         dataIndex: 'celular', align: 'center'},
-  { title: 'Tipo de usuario', dataIndex: 'tipo_usuario', align: 'center' },
-  { title: 'Estado',          dataIndex: 'estado', align: 'center' },
-  { title: '',                dataIndex: 'actions', width: '55px'}
+  { title: 'Nombres',         dataIndex: 'nombres', fixed: 'left', width: 160 },
+  { title: 'Apellidos',       dataIndex: 'apellidos', fixed: 'left', width: 160},
+  { title: 'N° documento',    dataIndex: 'nro_documento', align: 'center', width: 150},
+  { title: 'Usuario',         dataIndex: 'usuario', align: 'center', width: 120},
+  { title: 'Correo',          dataIndex: 'correo', width: 180},
+  { title: 'Celular',         dataIndex: 'celular', align: 'center', width: 120},
+  { title: 'Tipo de usuario', dataIndex: 'tipo_usuario', align: 'center', width: 150},
+  { title: 'Estado',          dataIndex: 'estado', align: 'center', width: 130},
+  { title: '',                dataIndex: 'actions', width: 55}
 ];
 
 

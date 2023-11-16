@@ -163,7 +163,7 @@ const onSubmit = async values => {
   
   loading.value = true
   try {
-    const data = await makeRequest({ url: '/register-user', method: 'POST', data: payload });
+    const data = await makeRequest({ url: '/register', method: 'POST', data: payload });
     clearFields()
     message.success(data.message);
   } catch (error) {
