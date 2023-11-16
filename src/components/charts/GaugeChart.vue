@@ -1,7 +1,7 @@
 <template>
   <div>
     <apexchart
-      height="320"
+      height="250"
       type="radialBar"
       :options="chartOptions"
       :series="series"

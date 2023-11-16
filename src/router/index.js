@@ -14,13 +14,23 @@ const router = createRouter({
       component: () => import('../pages/public/QuestionaryId.vue')
     },
     {
+      path: '/enviado',
+      name: 'enviado',
+      component: () => import('../pages/public/SuccessMessage.vue')
+    },
+    {
+      path: '/404',
+      name: 'pagina404',
+      component: () => import('../pages/public/NoFound.vue')
+    },
+    {
       path: '/admin',
       name: 'admin',
       component: () => import('../pages/DashboardPage.vue'),
       children: [
         {
-          path: 'dashboard',
-          name: 'dashboard',
+          path: 'inicio',
+          name: 'inicio',
           component: () => import('../pages/Inicio/InicioDashboard.vue'),
           meta: { requiresAuth: true, roles: ['admin', 'user'] },
         },

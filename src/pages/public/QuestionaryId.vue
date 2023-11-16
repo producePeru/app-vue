@@ -4,9 +4,7 @@
       <div class="questionary">
 
         <div class="box text-center">
-          <img
-          src="../../assets/img/tuempresa.png"
-            alt="">
+          <img src="../../assets/img/tuempresa.png" alt="">
           <a-divider />
           <h1 class="title">{{ dataSource.cuestionario?.title }}</h1>
         </div>
@@ -76,7 +74,7 @@
 
           <br />
 
-          <div class="box box-btn">
+          <div class="box-btn">
             <a-button type="primary" html-type="submit" size="large" :loading="submitLoading">Enviar respuestas</a-button>
           </div>
 
@@ -91,6 +89,7 @@ import { ref, reactive, onMounted } from 'vue';
 import { makeRequest } from '@/utils/api.js'
 import { useRoute } from 'vue-router'
 import { message } from 'ant-design-vue';
+import router from "@/router";
 
 const showForm = ref(false)
 const loading = ref(false)
@@ -175,18 +174,17 @@ const fetchData = async () => {
 }
 
 const onSubmit = async() => {
-
   const payload = formState
   submitLoading.value = true;
   try {
-    submitLoading.value = true;
     const data = await makeRequest({ url: `/answersmype`, method: 'POST', data:payload });
-    if(data) {
-      message.success(data.message);
-      clearFields()
-    }
+    message.success(data.message);
+    router.push({name: 'enviado'});
   } catch (error) {
-    console.error('Error de red:', error);
+    console.error('Error de redxxxx:', error);
+    // if(error.code == '"ERR_BAD_RESPONSE"') {
+    //   router.push({name: 'pagina404'});
+    // }
   } finally {
     submitLoading.value = false;
   }
@@ -262,7 +260,7 @@ img {
 
 .box-btn {
   text-align: center;
-
+  margin-bottom: 3rem;
   .btn {
     margin: 0 !important;
   }

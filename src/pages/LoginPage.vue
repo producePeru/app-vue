@@ -72,7 +72,7 @@ const onSubmit =async() => {
     Cookies.set('token', data.access_token);
     Cookies.set('user', data.role);
 
-    router.push('/admin/dashboard');
+    router.push('/admin/inicio');
   
   } catch (error) {
     message.error("Las credenciales son incorrectas")

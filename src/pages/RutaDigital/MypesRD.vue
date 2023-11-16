@@ -1,6 +1,6 @@
 <template>
   <div>
-    <h3>Lista de MYPES</h3>
+    <h3>Lista de MYPE</h3>
     <div class="w-search">
       <div>
         <a-button @click="handleFileUploadExcel" v-if="!selectedExcel">

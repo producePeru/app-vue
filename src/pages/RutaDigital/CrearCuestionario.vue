@@ -137,8 +137,6 @@ const onSubmit = async() => {
     loading.value = false;
   }
 }
-
-
 </script>
 
 <style lang="scss" scoped>
@@ -198,4 +196,3 @@ h3, h4 {
 }
 
 </style>
-

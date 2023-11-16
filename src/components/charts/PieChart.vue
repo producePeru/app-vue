@@ -1,6 +1,6 @@
 <template>
   <div id="chart" class="pie-pie">
-    <apexchart type="pie" width="450" :options="chartOptions" :series="series"></apexchart>
+    <apexchart type="pie" height="290px" width="100%" :options="chartOptions" :series="series"></apexchart>
   </div>
 </template>
 
@@ -40,7 +40,7 @@ export default {
 
 <style >
 .pie-pie .apexcharts-canvas {
-  width: 100% !important;
-  margin-top: 2rem !important;
+  /* width: 100% !important; */
+  /* margin-top: 2rem !important; */
 }
 </style>

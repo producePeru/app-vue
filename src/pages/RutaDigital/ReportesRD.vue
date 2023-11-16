@@ -1,18 +1,26 @@
 <template>
   <div class="reports">
 
-    <h2>Indicadores de Ruta Digital</h2>
+    <h3>Indicadores de Ruta Digital</h3>
+
+    <br/>
 
     <a-row :gutter="16">
-      <a-col :xs="24" :sm="24" :md="24" :lg="12" :xl="8">
+      <a-col class="years-report" :xs="24" :sm="24" :md="24" :lg="12" :xl="8">
         <div class="wrapper-chart">
-          <Radial :meta="meta" :avance="avance" :porcentage="categoriesAvance" title="Avance de MYPE registrados" />
+          <div class="head-chars">
+            <text class="title">Avance de MYPE registrados</text>
+          </div>
+          <Radial :meta="meta" :avance="avance" :porcentage="categoriesAvance" />
         </div>
       </a-col>
       
-      <a-col :xs="24" :sm="24" :md="24" :lg="12" :xl="8">
+      <a-col class="years-report" :xs="24" :sm="24" :md="24" :lg="12" :xl="8">
         <div class="wrapper-chart">
-          <Bar title="Avance Anual" :categories="categoriesYear" :values="yearsData" :height="400" />
+          <div class="head-chars">
+            <text class="title">Avance Anual</text>
+          </div>
+          <Bar :categories="categoriesYear" :values="yearsData" :height="294" />
         </div>
       </a-col>
        
@@ -26,12 +34,10 @@
               <a-select-option value="2021">2021</a-select-option>
             </a-select>
           </div>
-          <Bar :categories="categoriesMounth" :values="dataMonth" :height="370" />
+          <Bar :categories="categoriesMounth" :values="dataMonth" :height="280" />
         </div>
       </a-col>
-      
-
-
+    
       <a-col class="years-report" :xs="24" :sm="24" :md="24" :lg="24" :xl="8">
         <div class="wrapper-chart">
           <div class="head-chars">
@@ -46,8 +52,6 @@
         </div>
       </a-col>
 
-
-
       <a-col class="years-report" :xs="24" :sm="24" :md="24" :lg="24" :xl="8">
         <div class="wrapper-chart">
           <div class="head-chars">
@@ -61,35 +65,7 @@
           <Pie />
         </div>
       </a-col>
-
-
-
-
-
-
- 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-      
     </a-row>
-
- 
-
-    
-
   </div>
 </template>
 
@@ -181,29 +157,32 @@ onMounted(
 </script>
 
 <style lang="scss">
+.years-report {
+  padding: .5rem 1rem;
+}
   .wrapper-chart {
-    // margin: 1rem;
-    height: 97%;
-    // position: relative;
-    padding: 1.5rem;
+    border: 1px solid #efefef;
+    // height: 97%;
+    padding: 1rem;
     border-radius: 8px;
-    // border: 1px solid #f0f0f0;
-    // margin: .5rem;
-    box-shadow: 0 6px 16px 0 rgba(0, 0, 0, 0.08), 0 3px 6px -4px rgba(0, 0, 0, 0.12), 0 9px 28px 8px rgba(0, 0, 0, 0.05);
+    box-shadow: 6px 5px 12px #f0f0f0;
   }
   .head-chars {
     margin-bottom: .5rem;
     display: flex;
     align-items: center;
     justify-content: space-between;
+    // position: absolute;
     .title {
-      padding-left: 1rem;
-      font-family: Helvetica, Arial, sans-serif;
-      text-anchor: middle;
-      dominant-baseline: auto;
-      font-size: 18px;
-      font-weight: 900;
-      fill: rgb(51, 51, 51);
+      font-size: 15px;
+      font-weight: 500;
+      // padding-left: 1rem;
+      // font-family: Helvetica, Arial, sans-serif;
+      // text-anchor: middle;
+      // dominant-baseline: auto;
+      // font-size: 16px;
+      // font-weight: 900;
+      // fill: rgb(51, 51, 51);
     }
   }
 
