@@ -65,6 +65,10 @@ const onSubmit =async() => {
     const data = await makeRequest({ url: '/login', method: 'POST', data:  payload });
 
     localStorage.setItem('user', JSON.stringify(data.user));
+    
+    console.log(data);
+    
+
     Cookies.set('token', data.access_token);
     Cookies.set('user', data.role);
 

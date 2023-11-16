@@ -80,6 +80,7 @@ import { DeleteOutlined, StarOutlined } from '@ant-design/icons-vue';
 import { message } from 'ant-design-vue';
 import { makeRequest } from '@/utils/api.js'
 import router from "@/router";
+import idUserStorage from '@/utils/storage'
 
 const loading = ref(false);
 const question = ref({
@@ -94,7 +95,6 @@ const rating = ref({
 })
 
 const formState = reactive({
-  id_user: 2,
   type_questionary: 'ruta_digital',
   title: '',
   slug: '',
@@ -124,7 +124,8 @@ const handleDeleteRating = (index) => {
 
 const onSubmit = async() => {
   loading.value = true;
-  const payload = formState
+  const id_registrador = idUserStorage;
+  const payload = {...formState, id_registrador}
   try {
     const data = await makeRequest({ url: '/questionnary/create', method: 'POST', data: payload });
     message.success(data.message);

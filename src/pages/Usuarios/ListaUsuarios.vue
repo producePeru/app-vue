@@ -29,11 +29,11 @@
     size="small">
       <template v-slot:bodyCell="{column, record}">
         <template v-if="column.dataIndex == 'tipo_usuario'">
-          <template v-if="record.tipo_usuario === 1">
+          <template v-if="record.tipo_usuario == 'Admin'">
             <a-tag :bordered="false" color="processing">Administrador</a-tag>
           </template>
-          <template v-if="record.tipo_usuario === 2">
-            <a-tag :bordered="false" color="magenta">Común</a-tag>
+          <template v-if="record.tipo_usuario == 'Invitado'">
+            <a-tag :bordered="false" color="magenta">Invitado</a-tag>
           </template>
           <template v-if="record.tipo_usuario === 3">
             <a-tag :bordered="false" color="purple">3</a-tag>
@@ -47,7 +47,7 @@
         </template>
         
         <template v-if="column.dataIndex == 'estado'">
-          <template v-if="record.estado === 1">
+          <template v-if="record.activo == 1">
             <a-tag color="success">Activo</a-tag>
           </template>
           <template v-else>
@@ -62,7 +62,7 @@
               <a-menu>
                 <a-menu-item key="1">Editar</a-menu-item>
                 <a-menu-item key="2">Dar de baja / Activar</a-menu-item>
-                <a-menu-item key="3" @click="handleOpenModal(record.idUsuario)"> Actualizar clave</a-menu-item>
+                <a-menu-item key="3" @click="handleOpenModal(record.id)"> Actualizar clave</a-menu-item>
               </a-menu>
             </template>
           </a-dropdown>
@@ -99,7 +99,7 @@ const dataSource = ref([])
 const loading = ref(false)
 const valueX = ref(1000)
 const valueY = ref('60vh')
-const dataToSearch = ref('')
+// const dataToSearch = ref('')
 const open = ref(false);
 const total = ref(0)
 const idUserSelected = ref(null)
@@ -125,9 +125,9 @@ const columns = [
 ];
 
 
-const handleSearch = (searchValue) => {
-  console.log(searchValue);
-}
+// const handleSearch = (searchValue) => {
+//   console.log(searchValue);
+// }
 const handlePaginator = (current) =>{
   params.value.page = current;
   fetchData()
@@ -137,7 +137,7 @@ const fetchData = async() => {
   try {
     loading.value = true;
     const data = await makeRequest({ url: '/users', method: 'GET', params:params.value });
-    dataSource.value = data.data
+    dataSource.value = data
     total.value = data.total;
   } catch (error) {
     console.error('Error de red:', error);
@@ -157,11 +157,12 @@ const handleChangePassword = async() => {
   }
 
   const id = idUserSelected.value
+
   const data = {
     new_password: formState.password
   }
   
-  const response = await makeRequest({ url: `/user/change-password/${id}`, method: 'POST', data: data });
+  const response = await makeRequest({ url: `/user/change-password/${id}`, method: 'PUT', data: data });
 
   if(response.message) {
     formState.password = ''

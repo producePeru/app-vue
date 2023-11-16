@@ -70,7 +70,6 @@
     </a-form>
 
 
-    <!-- <pre>{{ formState }}</pre> -->
 
     <div>
       <h1></h1>
@@ -84,6 +83,7 @@ import { makeRequest } from '@/utils/api.js'
 import { reactive, ref, onMounted } from 'vue';
 import { message } from 'ant-design-vue';
 import fields from '@/forms/nuevoUsuario.js'
+import idUserStorage from '@/utils/storage'
 
 const loading = ref(!true);
 const countries = ref([]);
@@ -158,8 +158,8 @@ const clearFields = () => {
 }
 
 const onSubmit = async values => {
-  const idUsuarioRegistrador = 1;
-  const payload = {...values, idUsuarioRegistrador}
+  const id_registrador = idUserStorage;
+  const payload = {...values, id_registrador}
   
   loading.value = true
   try {
