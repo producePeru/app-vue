@@ -90,6 +90,12 @@ const router = createRouter({
 
         },
 
+        {
+          path: 'mis-datos',
+          name: 'mis-datos',
+          component: () => import('../pages/Usuarios/MiPerfil.vue')
+        },
+
       ]
     }
   ]

@@ -37,7 +37,10 @@ const router = useRouter();
 const user = JSON.parse(localStorage.getItem('user'));
 
 const handleMenuClick = (e) => {
-  if(e.key == 2){
+  if(e.key == 1) {
+    router.push('/admin/mis-datos');
+  }
+  if(e.key == 2) {
     logout()
   }
 };
