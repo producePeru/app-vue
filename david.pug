@@ -2,3 +2,14 @@ https://soporte-pnte.com/tuempresa/prueba-entrada/eccbc87e4b5ce2fe28308fd9f2a7ba
 nivel_digitalizacion
 
 
+const props = defineProps(['open'])
+const emit = defineEmits(['closeModal'])
+const handleCloseModal = () => {
+  console.log("auuauauaua");
+  emit('closeModal', true)
+}
+
+ok-text="Cambiar contraseña" 
+
+  this.$router.push({ name: '', query: { paramName: 'someValue' } });
+

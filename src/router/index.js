@@ -13,6 +13,17 @@ const router = createRouter({
       name: 'questionary',
       component: () => import('../pages/public/QuestionaryId.vue')
     },
+
+    {
+      path: '/F',
+      name: 'questionary',
+      component: () => import('../pages/public/QuestionaryId.vue')
+    },
+
+
+
+
+
     {
       path: '/enviado',
       name: 'enviado',
@@ -62,6 +73,46 @@ const router = createRouter({
               component: () => import('../pages/RutaDigital/CuestionariosRD.vue'),
               meta: { requiresAuth: true, roles: ['admin', 'user'] },
             },
+
+            {
+              path: 'talleres',
+              name: 'talleres',
+              component: () => import('../pages/RutaDigital/TalleresRD.vue'),
+              meta: { requiresAuth: true, roles: ['admin', 'user'] }
+            },
+            {
+              path: 'talleres/test-entrada/:id',
+              name: 'test-entrada',
+              component: () => import('../pages/RutaDigital/components/TestEntrada.vue'),
+              meta: { requiresAuth: true, roles: ['admin', 'user'] }
+            },
+            {
+              path: 'talleres/test-salida/:id',
+              name: 'test-salida',
+              component: () => import('../pages/RutaDigital/components/TestSalida.vue'),
+              meta: { requiresAuth: true, roles: ['admin', 'user'] }
+            },
+            {
+              path: 'taller-detalle/:id',
+              name: 'taller-id',
+              component: () => import('../pages/RutaDigital/TallerDetalle.vue'),
+              meta: { requiresAuth: true, roles: ['admin', 'user'] },
+            },
+            {
+              path: 'calendario',
+              name: 'calendario',
+              component: () => import('../pages/RutaDigital/CalendarioTalleres.vue'),
+              meta: { requiresAuth: true, roles: ['admin', 'user'] },
+            },
+            
+
+
+            
+
+
+
+
+            
           ]
 
         },
@@ -84,6 +135,12 @@ const router = createRouter({
               path: 'reportes',
               name: 'usuario-reportes',
               component: () => import('../pages/Usuarios/ReportesUsuario.vue'),
+              meta: { requiresAuth: true, roles: ['admin', 'user'] },
+            },
+            {
+              path: 'expositores',
+              name: 'expositores',
+              component: () => import('../pages/Usuarios/ExpositoresLista.vue'),
               meta: { requiresAuth: true, roles: ['admin', 'user'] },
             }
           ]

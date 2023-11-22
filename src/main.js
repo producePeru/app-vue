@@ -13,13 +13,15 @@ import 'ant-design-vue/dist/reset.css';
 import './utils/api.js'
 import './utils/auth'
 import VueApexCharts from "vue3-apexcharts";
+import { esES } from 'ant-design-vue/lib/locale-provider';
+
 
 
 moment.locale('es')
 
 const app = createApp(App)
 
-// app.config.globalProperties.$antd = { locale: esES };
+app.config.globalProperties.$antd = { locale: esES };
 
 app.use(createPinia())
 app.use(router)

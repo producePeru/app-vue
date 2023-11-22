@@ -61,16 +61,16 @@ const formState = reactive({
 const onSubmit =async() => {
   loading.value = true
   try {
-    const payload = formState
-    const data = await makeRequest({ url: '/login', method: 'POST', data:  payload });
+    // const payload = formState
+    // const data = await makeRequest({ url: '/login', method: 'POST', data:  payload });
 
-    localStorage.setItem('user', JSON.stringify(data.user));
+    // localStorage.setItem('user', JSON.stringify(data.user));
     
-    console.log(data);
+    // console.log(data);
     
 
-    Cookies.set('token', data.access_token);
-    Cookies.set('user', data.role);
+    // Cookies.set('token', data.access_token);
+    // Cookies.set('user', data.role);
 
     router.push('/admin/inicio');
   

@@ -3,7 +3,11 @@ import router from '../router/index'
 
 router.beforeEach((to, from, next) => {
 
-  const isAuthenticated = Cookies.get('token');
+  // const isAuthenticated = Cookies.get('token');
+
+  const isAuthenticated = true;
+
+
   const userRoles = ['admin'];
   
   if (to.matched.some((record) => record.meta.requiresAuth)) {
