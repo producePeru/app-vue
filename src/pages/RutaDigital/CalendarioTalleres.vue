@@ -2,7 +2,7 @@
   <h3>Calendario de talleres</h3>
   <br>
   <div :style="{ width: '100%', border: '1px solid #d9d9d9', borderRadius: '4px', padding: '1rem'}">
-    <a-calendar v-model:value="value">
+    <a-calendar v-model:value="value" @panelChange="onPanelChange" :locale="locale">
       <template #dateCellRender="{ current }">
         <ul class="events">
           <li v-for="item in getListData(current)" :key="item.content">
@@ -25,12 +25,21 @@
 <script setup>
 import { ref } from 'vue';
 
+import locale from 'ant-design-vue/es/locale/es_ES';
+import 'moment/locale/es'; 
+import moment from 'moment';
+// const value = ref(moment('11-5-2023', 'MM-DD-YYYY'));
+// const locale = ref(moment.locale('es'));
+
+
+
 const value = ref();
 
 const getListData = (current) => {
-  const dateKey = `${current.month() + 1}-${current.date()}`;
+
+  const dateKey = `${current.year()}-${current.month() + 1}-${current.date()}`;
   const simulatedData = {
-    '11-5': [
+    '2023-11-5': [
       {type: 'warning', content:'Taller es similar al Módulo de tarea y amplia su funcionalidad de diversas maneras. '},
       {type: 'success', content:'Taller de redes'},
       {type: 'warning', content:'Taller de redes'},
@@ -48,6 +57,10 @@ const getMonthData = (current) => {
   };
 
   return monthData[current.month()];
+};
+
+const onPanelChange = (value, mode) => {
+  console.log(value, mode);
 };
 </script>
 
