@@ -42,7 +42,7 @@
             <a-tag color="success">Activo</a-tag>
           </template>
           <template v-else>
-            <a-tag color="error">Inactivo</a-tag>
+            <a-tag color="error">Hombre</a-tag>
           </template>
         </template>
 

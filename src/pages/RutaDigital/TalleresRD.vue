@@ -23,7 +23,9 @@
             <a-button size="small" @click="handleCreateInTest(record)">Crear</a-button>
           </template>
           <template v-if="record.id_in_test">
-            <a-button type="link">Link</a-button>
+            <a-button type="link">
+              <router-link to="/test-entrada">Link</router-link>
+            </a-button>
             <EditOutlined />
           </template>
         </template>

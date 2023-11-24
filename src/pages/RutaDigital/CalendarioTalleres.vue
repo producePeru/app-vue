@@ -2,11 +2,11 @@
   <h3>Calendario de talleres</h3>
   <br>
   <div :style="{ width: '100%', border: '1px solid #d9d9d9', borderRadius: '4px', padding: '1rem'}">
-    <a-calendar v-model:value="value" @panelChange="onPanelChange" :locale="locale">
+    <a-calendar v-model:value="value" @panelChange="onPanelChange">
       <template #dateCellRender="{ current }">
         <ul class="events">
           <li v-for="item in getListData(current)" :key="item.content">
-            <a-badge :status="item.type" :text="item.content" />
+            <a-badge :status="item.type" :text="item.content" @click="handleSelectDay" />
           </li>
         </ul>
       </template>
@@ -20,19 +20,34 @@
   </div>
 
   <pre>::: {{ value }}</pre>
+
+
+  <a-modal v-model:open="open" title="Detalles del día" >
+    <p>Some contents...</p>
+    <p>Some contents...</p>
+    <p>Some contents...</p>
+
+    <template #footer>
+      <a-button key="back">Cerrar</a-button>
+    </template>
+  </a-modal>
+
 </template>
 
 <script setup>
 import { ref } from 'vue';
 
-import locale from 'ant-design-vue/es/locale/es_ES';
-import 'moment/locale/es'; 
-import moment from 'moment';
+// import moment from 'moment';
+// import 'moment/locale/es';
+// import es_ES from '@/utils/es_ES';
+
+
+// const locale = es_ES;
 // const value = ref(moment('11-5-2023', 'MM-DD-YYYY'));
 // const locale = ref(moment.locale('es'));
 
 
-
+const open = ref(false);
 const value = ref();
 
 const getListData = (current) => {
@@ -62,10 +77,15 @@ const getMonthData = (current) => {
 const onPanelChange = (value, mode) => {
   console.log(value, mode);
 };
+const handleSelectDay = (val, string) => {
+  console.log("jasjakjska", val);
+  open.value = true
+}
+
 </script>
 
 
-<style scoped>
+<style lang="scss" scoped>
 .events {
   list-style: none;
   margin: 0;
@@ -84,5 +104,21 @@ const onPanelChange = (value, mode) => {
 }
 .notes-month section {
   font-size: 28px;
+}
+
+
+</style>
+
+<style lang="scss">
+:where(.css-dev-only-do-not-override-1qb1s0s).ant-picker-calendar.ant-picker-calendar-full .ant-picker-panel .ant-picker-body td {
+  padding: 0;
+  border: 1px solid #4096ff !important;
+}
+:where(.css-dev-only-do-not-override-1qb1s0s).ant-picker-calendar.ant-picker-calendar-full .ant-picker-panel .ant-picker-body th {
+  border: 1px solid #4096ff !important;
+}
+:where(.css-dev-only-do-not-override-1qb1s0s).ant-picker-calendar.ant-picker-calendar-full .ant-picker-calendar-date {
+  border-top: none !important;
+  margin: 0;
 }
 </style>

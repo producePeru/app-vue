@@ -14,6 +14,23 @@ const router = createRouter({
       component: () => import('../pages/public/QuestionaryId.vue')
     },
 
+
+
+    // ruta_tests
+    {
+      path: '/test-entrada',
+      name: 'public-test-entrada',
+      component: () => import('../pages/public/TestEntrada.vue')
+    },
+
+
+
+
+
+
+
+
+
     {
       path: '/F',
       name: 'questionary',

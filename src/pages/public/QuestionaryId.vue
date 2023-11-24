@@ -223,6 +223,7 @@ img {
   background: #fff;
   border-radius: 8px;
   margin-bottom: .6rem;
+  
 }
 
 .questionary {
@@ -270,4 +271,6 @@ img {
   @media screen and (min-width: 768px) {
     width: 350px;
   }
-}</style>
+}
+
+</style>
