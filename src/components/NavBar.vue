@@ -5,9 +5,9 @@
 
     <a-dropdown>
       <a class="ant-dropdown-link" @click.prevent>
-        <span class="name-user">{{ user.nombres }}</span>
+        <!-- <span class="name-user">{{ user.nombres }}</span> -->
         <a-avatar size="default" style="background-color: #cf1322">
-          {{ user.nombres.charAt(0) }}
+          <!-- {{ user.nombres.charAt(0) }} -->
         </a-avatar>
       </a>
       <template #overlay>
