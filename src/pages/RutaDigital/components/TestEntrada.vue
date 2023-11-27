@@ -3,7 +3,7 @@
 
     <a-breadcrumb>
       <a-breadcrumb-item><router-link to="/admin/ruta-digital/talleres">Volver a Talleres de Ruta Digital</router-link></a-breadcrumb-item>
-      <a-breadcrumb-item>Crear test de entrada</a-breadcrumb-item>
+      <a-breadcrumb-item> {{ $route.name == 'test-entrada' ? 'Crear' : 'Editar' }} test de entrada</a-breadcrumb-item>
     </a-breadcrumb>
 
     <br>
@@ -51,8 +51,10 @@
 </template>
 
 <script setup>
-import { reactive } from 'vue';
+import { reactive, onMounted } from 'vue';
+import { useRouter } from 'vue-router';
 
+const router = useRouter();
 
 const formState = reactive({
   date_end: null,
@@ -93,6 +95,30 @@ const handleFinish = values => {
 const handleFinishFailed = errors => {
   console.log(errors);
 };
+
+const fetchData = async() => {
+
+  
+  if(router.currentRoute.value.name != 'editar-test-entrada') return
+  
+  console.log("PAOOSOOSOSOS...")
+
+
+  // try {
+  //   loading.value = true;
+  //   const data = await makeRequest({ url: '/users', method: 'GET', params:params.value });
+  //   dataSource.value = data
+  //   total.value = data.total;
+  // } catch (error) {
+  //   console.error('Error de red:', error);
+  // } finally {
+  //   loading.value = false;
+  // }
+}
+
+onMounted(
+  fetchData
+);
 </script>
 
 <style lang="scss" scoped>
