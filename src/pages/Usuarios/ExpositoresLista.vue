@@ -9,10 +9,11 @@
     
 
 
+
     <a-table 
     bordered
     class="ant-table-striped"
-    :scroll="{ x: valueX, y: valueY }"
+    :scroll="{ y: handleScrollY }"
     :columns="columns" 
     :data-source="dataSource" 
     :pagination="false"
@@ -73,7 +74,7 @@
 
 <script setup>
 import { makeRequest } from '@/utils/api.js'
-import { ref, onMounted, reactive, h } from 'vue';
+import { ref, onMounted, reactive, h, computed  } from 'vue';
 import { MoreOutlined,DownloadOutlined } from '@ant-design/icons-vue';
 import AgregarExpositor from './components/AgregarExpositor.vue'
 import dataFake from '@/utils/fake.js'
@@ -81,7 +82,7 @@ import dataFake from '@/utils/fake.js'
 const dataSource = ref([])
 const loading = ref(false)
 const valueX = ref(1000)
-const valueY = ref('60vh')
+const valueY = ref(null)
 // const dataToSearch = ref('')
 const open = ref(false);
 const total = ref(0)
@@ -139,7 +140,9 @@ const handleCloseModal = () => {
   // open.value = false;
 };
 
-
+const handleScrollY = computed(() => {
+  return console.log("IISISISII")
+})
 
 onMounted(
   fetchData

@@ -22,6 +22,16 @@ const router = createRouter({
       name: 'public-test-entrada',
       component: () => import('../pages/public/TestEntrada.vue')
     },
+    {
+      path: '/test-salida',
+      name: 'public-test-salida',
+      component: () => import('../pages/public/TestSalida.vue')
+    },
+    {
+      path: '/invitacion',
+      name: 'public-invitacion',
+      component: () => import('../pages/public/InvitacionPage.vue')
+    },
 
 
 
@@ -98,14 +108,26 @@ const router = createRouter({
               meta: { requiresAuth: true, roles: ['admin', 'user'] }
             },
             {
-              path: 'talleres/test-entrada/:id',
+              path: 'talleres/test-entrada/:idTaller',
               name: 'test-entrada',
+              component: () => import('../pages/RutaDigital/components/TestEntrada.vue'),
+              meta: { requiresAuth: true, roles: ['admin', 'user'] }
+            },
+            {
+              path: 'talleres/editar-test-entrada/:idTest',
+              name: 'editar-test-entrada',
               component: () => import('../pages/RutaDigital/components/TestEntrada.vue'),
               meta: { requiresAuth: true, roles: ['admin', 'user'] }
             },
             {
               path: 'talleres/test-salida/:id',
               name: 'test-salida',
+              component: () => import('../pages/RutaDigital/components/TestSalida.vue'),
+              meta: { requiresAuth: true, roles: ['admin', 'user'] }
+            },
+            {
+              path: 'talleres/editar-test-salida/:idTest',
+              name: 'editar-test-salida',
               component: () => import('../pages/RutaDigital/components/TestSalida.vue'),
               meta: { requiresAuth: true, roles: ['admin', 'user'] }
             },

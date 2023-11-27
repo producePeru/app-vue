@@ -25,8 +25,8 @@
           <template v-if="record.id_in_test">
             <a-button type="link">
               <router-link to="/test-entrada">Link</router-link>
-            </a-button>
-            <EditOutlined />
+            </a-button >
+            <EditOutlined @click="handleEditInTest" />
           </template>
         </template>
         <template v-if="column.dataIndex == 'test_out'">
@@ -34,17 +34,28 @@
             <a-button size="small" @click="handleCreateOutTest(record)">Crear</a-button>
           </template>
           <template v-if="record.id_output_test">
-            <a-button type="link">Link</a-button>
+            <a-button type="link">
+              <router-link to="/test-salida">Link</router-link>
+            </a-button>
+            <EditOutlined @click="handleEditEndTest" />
           </template>
         </template>
+
+
         <template v-if="column.dataIndex == 'invitation'">
           <template v-if="!record.id_invitation">
-            <a-button size="small">Crear</a-button>
+            <a-button size="small" @click="handleInvitationForm('create',)">Crear</a-button>
           </template>
           <template v-if="record.id_invitation">
-            <a-button type="link">Editar</a-button>
+            <a-button type="link">
+              <router-link to="/invitacion">Link</router-link>
+            </a-button>
+            <EditOutlined  @click="handleInvitationForm('edit', 3)" />
           </template>
         </template>
+
+
+        
         <template v-if="column.dataIndex == 'status'">
           <template v-if="record.status == 'En proceso'">
             <a-tag :bordered="false" color="success">En proceso</a-tag>
@@ -96,6 +107,20 @@
 
   <NuevoTaller :open="open" @handleCloseModal="open = false"/>
 
+
+  <a-modal v-model:open="modalInvitation" :title="`${titleInvitation} invitación`" @ok="handleOkCancelWorkshop" width="400px">
+    <a-form :model="formStateInvitation" layout="vertical">
+      <a-form-item label="Texto 1">
+        <a-textarea v-model:value="formState.text1" />
+      </a-form-item>
+      <a-form-item label="Texto 2">
+        <a-textarea v-model:value="formState.text2" />
+      </a-form-item>
+    </a-form>
+  </a-modal>
+
+
+
   <a-modal v-model:open="modalCancel" title="Cancelar taller" @ok="handleOkCancelWorkshop" width="400px">
     <a-form :model="formState" layout="vertical">
       <a-form-item label="Especificar motivo de la cancelación del taller">
@@ -125,6 +150,9 @@ const open = ref(false);
 const total = ref(0)
 const idUserSelected = ref(null)
 const modalCancel = ref(false);
+const modalInvitation = ref(false);
+const titleInvitation = ref('Crear');
+
 
 
 const params = ref({
@@ -153,6 +181,11 @@ const formState = reactive({
   reason: ''
 });
 
+const formStateInvitation = reactive({
+  text1: '',
+  text2: ''
+});
+
 const handlePaginator = (current) =>{
   params.value.page = current;
   fetchData()
@@ -174,12 +207,32 @@ const handlePaginator = (current) =>{
 const fetchData = () => {
   dataSource.value = dataFake
 }
+const handleInvitationForm = (val, id) => {
+  if(val === 'create') {
+    titleInvitation.value = 'Crear'
+    console.log("crear");
+  }
+
+  if(val === 'edit') {
+    titleInvitation.value = 'Editar'
+    console.log('edit', id);
+  }
+  modalInvitation.value = true
+}
 const handleOpenModal = () => {
   open.value = true;
 };
 const handleCreateInTest = (val) => {
   const id = 1
   router.push(`talleres/test-entrada/${id}`);
+}
+const handleEditInTest = (val) => {
+  const id = 1
+  router.push(`talleres/editar-test-entrada/${id}`);
+}
+const handleEditEndTest = (val) => {
+  const id = 1
+  router.push(`talleres/editar-test-salida/${id}`); 
 }
 const handleCreateOutTest = (val) => {
   const id = 1
