@@ -107,30 +107,38 @@ const router = createRouter({
               component: () => import('../pages/RutaDigital/TalleresRD.vue'),
               meta: { requiresAuth: true, roles: ['admin', 'user'] }
             },
-            {
-              path: 'talleres/test-entrada/:idTaller',
+            
+            
+            { //entrada
+              path: 'talleres/test-entrada',
               name: 'test-entrada',
               component: () => import('../pages/RutaDigital/components/TestEntrada.vue'),
               meta: { requiresAuth: true, roles: ['admin', 'user'] }
             },
             {
-              path: 'talleres/editar-test-entrada/:idTest',
+              path: 'talleres/editar-test-entrada',
               name: 'editar-test-entrada',
               component: () => import('../pages/RutaDigital/components/TestEntrada.vue'),
               meta: { requiresAuth: true, roles: ['admin', 'user'] }
             },
-            {
-              path: 'talleres/test-salida/:id',
+            { //salida
+              path: 'talleres/test-salida',
               name: 'test-salida',
               component: () => import('../pages/RutaDigital/components/TestSalida.vue'),
               meta: { requiresAuth: true, roles: ['admin', 'user'] }
             },
             {
-              path: 'talleres/editar-test-salida/:idTest',
+              path: 'talleres/editar-test-salida',
               name: 'editar-test-salida',
               component: () => import('../pages/RutaDigital/components/TestSalida.vue'),
               meta: { requiresAuth: true, roles: ['admin', 'user'] }
             },
+
+
+
+
+
+
             {
               path: 'taller-detalle/:id',
               name: 'taller-id',
@@ -143,6 +151,12 @@ const router = createRouter({
               component: () => import('../pages/RutaDigital/CalendarioTalleres.vue'),
               meta: { requiresAuth: true, roles: ['admin', 'user'] },
             },
+            {
+              path: 'expositores',
+              name: 'expositores',
+              component: () => import('../pages/Usuarios/ExpositoresLista.vue'),
+              meta: { requiresAuth: true, roles: ['admin', 'user'] },
+            }
             
 
 
@@ -176,12 +190,7 @@ const router = createRouter({
               component: () => import('../pages/Usuarios/ReportesUsuario.vue'),
               meta: { requiresAuth: true, roles: ['admin', 'user'] },
             },
-            {
-              path: 'expositores',
-              name: 'expositores',
-              component: () => import('../pages/Usuarios/ExpositoresLista.vue'),
-              meta: { requiresAuth: true, roles: ['admin', 'user'] },
-            }
+            
           ]
 
         },

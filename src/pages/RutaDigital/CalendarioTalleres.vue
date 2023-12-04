@@ -59,6 +59,31 @@ const getListData = (current) => {
       {type: 'success', content:'Taller de redes'},
       {type: 'warning', content:'Taller de redes'},
       {type: 'warning', content:'Taller de redes'}
+    ],
+
+    "2023-11-22": [
+        {
+            "content": "Tema de jjjdjdh djdjdjshusu wiwii 2323",
+            "status": 1
+        }
+    ],
+    "2023-11-23": [
+        {
+            "content": "Tema de jjjdjdh djdjdjshusu wiwii 2323",
+            "status": 2
+        }
+    ],
+    "2023-11-24": [
+        {
+            "content": "Tema de jjjdjdh djdjdjshusu wiwii 2323",
+            "status": 3
+        }
+    ],
+    "2023-11-25": [
+        {
+            "content": "Tema de jjjdjdh djdjdjshusu wiwii 2323",
+            "status": 1
+        }
     ]
   };
 
@@ -110,15 +135,16 @@ const handleSelectDay = (val, string) => {
 </style>
 
 <style lang="scss">
-:where(.css-dev-only-do-not-override-1qb1s0s).ant-picker-calendar.ant-picker-calendar-full .ant-picker-panel .ant-picker-body td {
+.ant-picker-cell {
   padding: 0;
   border: 1px solid #4096ff !important;
 }
-:where(.css-dev-only-do-not-override-1qb1s0s).ant-picker-calendar.ant-picker-calendar-full .ant-picker-panel .ant-picker-body th {
-  border: 1px solid #4096ff !important;
-}
-:where(.css-dev-only-do-not-override-1qb1s0s).ant-picker-calendar.ant-picker-calendar-full .ant-picker-calendar-date {
+.ant-picker-calendar-date {
   border-top: none !important;
+  margin: 0 !important;
+}
+.ant-picker-calendar-date-today {
   margin: 0;
+  padding: 0;
 }
 </style>

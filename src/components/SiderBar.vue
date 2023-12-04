@@ -21,12 +21,13 @@
         </template>
         <!-- <a-menu-item key="indicadores"> <router-link to="/admin/ruta-digital/indicadores">Indicadores</router-link> </a-menu-item>
         <a-menu-item key="mailing"> <router-link to="/admin/ruta-digital/mailing">Mailing</router-link> </a-menu-item> -->
-        <a-menu-item key="reportes"> <router-link to="/admin/ruta-digital/reportes">Reportes</router-link> </a-menu-item> 
-        <a-menu-item key="mype"> <router-link to="/admin/ruta-digital/mype">Las MYPE</router-link> </a-menu-item>
+        <!-- <a-menu-item key="reportes"> <router-link to="/admin/ruta-digital/reportes">Reportes</router-link> </a-menu-item>  -->
         <!-- <a-menu-item key="cuestionarios"> <router-link to="/admin/ruta-digital/cuestionarios">Cuestionarios</router-link> </a-menu-item> -->
-        <a-menu-item key="talleres"> <router-link to="/admin/ruta-digital/talleres">Talleres</router-link> </a-menu-item>
         <a-menu-item key="calendario"> <router-link to="/admin/ruta-digital/calendario">Calendario</router-link> </a-menu-item>
-
+        <a-menu-item key="talleres"> <router-link to="/admin/ruta-digital/talleres">Talleres</router-link> </a-menu-item>
+        <a-menu-item key="mype"> <router-link to="/admin/ruta-digital/mype">Las MYPE</router-link> </a-menu-item>
+        <a-menu-item key="expositores"> <router-link to="/admin/ruta-digital/expositores">Expositores</router-link> </a-menu-item>
+        
 
 
       </a-sub-menu>
@@ -41,7 +42,6 @@
         </template>
         <a-menu-item key="nuevo-usuario"> <router-link to="/admin/usuarios/nuevo-usuario">Nuevo usuario</router-link> </a-menu-item>
         <a-menu-item key="lista"> <router-link to="/admin/usuarios/lista">Lista usuarios</router-link> </a-menu-item>
-        <a-menu-item key="expositores"> <router-link to="/admin/usuarios/expositores">Expositores</router-link> </a-menu-item>
 
         <!-- <a-menu-item key="usuario-reportes"> <router-link to="/admin/usuarios/reportes">Reportes</router-link> </a-menu-item> -->
       </a-sub-menu>

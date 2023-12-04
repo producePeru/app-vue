@@ -12,8 +12,7 @@
     :model="formState"
     name="basic"
     autocomplete="off"
-    @finish="onSubmit"
-    @finishFailed="onSubmitFail">
+    @finish="onSubmit">
       <div class="grid-item">
         <template v-for="(el, idx) in fields" :key="idx">
           <a-form-item 
@@ -22,8 +21,8 @@
           :name="el.name" 
           :label="el.label" 
           :rules="[{ required: el.required, message: el.message }]">
-            <a-select v-if="el.name == 'type_document'" v-model:value="formState[el.name]" :options="typeDocuments" />
-            <a-select v-if="el.name == 'sex'" v-model:value="formState[el.name]" :options="geners" />
+            <a-select v-if="el.name == 'documentType'" v-model:value="formState[el.name]" :options="typeDocuments" />
+            <a-select v-if="el.name == 'gender'" v-model:value="formState[el.name]" :options="geners" />
           </a-form-item>
 
           <a-form-item
@@ -37,11 +36,11 @@
       </div>
 
       <div class="wrapper-form_btn">
-        <a-button type="primary" html-type="submit" :loading="loading">Registrar expositor</a-button>
+        <a-button type="primary" html-type="submit" :loading="loading">{{!isIdUpdate ? 'Registrar' : 'Actualizar'}} expositor</a-button>
       </div>
     </a-form>
 
-    <!-- <pre>{{ formState }}</pre> -->
+    <pre class="white">{{ handleSetData() }}</pre>
 
   </a-modal>
 </template>
@@ -50,25 +49,29 @@
 import { reactive, ref } from 'vue'; 
 import { message } from 'ant-design-vue';
 import fields from '@/forms/nuevoExpositor.js'
+import { makeRequest } from '@/utils/api.js'
 
-const emit = defineEmits(['handleCloseModal'])
+const props = defineProps(['isIdUpdate'])
+
+const emit = defineEmits(['handleCloseModal', 'refreshTable'])
 
 const open = ref(true);
 const loading = ref(false);
 
 const formState = reactive({
-  type_document: null,
-  number_document: null,
-  name: null,
-  last_name_p: null,
-  last_name_m: null,
-  sex: null,
+  documentType: null,
+  documentNumber: null,
+  firstName: null,
+  lastName: null,
+  middleName: null,
+  gender: null,
   email: null,
-  ruc: null,
-  phone: null,
+  rucNumber: null,
+  phoneNumber: null,
   specialty: null,
   profession: null,
-  url_cv: null
+  cvLink: null,
+  user_id: 1,
 });
 
 const geners = [
@@ -77,10 +80,10 @@ const geners = [
   { label: '...', value: 3 }
 ];
 const typeDocuments = [
-  { label: 'DNI', value: 1 },
-  { label: 'CE', value: 2 },
-  { label: 'PAS', value: 3 },
-  { label: 'PTP', value: 4 } 
+  { label: 'DNI', value: 'dni' },
+  { label: 'CE', value: 'ce' },
+  { label: 'PAS', value: 'pas' },
+  { label: 'PTP', value: 'ptp' } 
 ];
 
 const handleCloseModal = () => {
@@ -88,26 +91,66 @@ const handleCloseModal = () => {
   open.value = false;
 }
 
-const onSubmitFail = () => {
-  // message.error('Debes de completar todos los espacios requeridos')
-};
-const onSubmit = values => {
-  console.log("Valores", values)
-  // const id_registrador = idUserStorage;
-  // const payload = {...values, id_registrador}
-  
-  // loading.value = true
-  // try {
-  //   const data = await makeRequest({ url: '/register', method: 'POST', data: payload });
-  //   clearFields()
-  //   message.success(data.message);
-  // } catch (error) {
-  //   message.error('No se pudo registrar este usuario');
-  // } finally {
-  //   loading.value = false;
-  // }
-};
+const handleSetData = async() => {
+  if(!props.isIdUpdate) return clearFields();
 
+  try {
+    const data = await makeRequest({ url: `/exponents/${props.isIdUpdate}`, method: 'GET' });
+    formState.documentType = data.document_type
+    formState.documentNumber = data.document_number
+    formState.firstName = data.first_name
+    formState.lastName = data.last_name
+    formState.middleName = data.middle_name
+    formState.gender = data.gender == 'h' ? 1 : 2
+    formState.email = data.email
+    formState.rucNumber = data.ruc_number
+    formState.phoneNumber = data.phone_number
+    formState.specialty = data.specialty
+    formState.profession = data.profession
+    formState.cvLink = data.cv_link
+  } catch (error) {
+    console.error('Error de red:', error);
+  }
+}
+
+const clearFields = () => {
+  formState.documentType = null
+  formState.documentNumber = null
+  formState.firstName = null
+  formState.lastName = null
+  formState.middleName = null
+  formState.gender = null
+  formState.email = null
+  formState.rucNumber = null
+  formState.phoneNumber = null
+  formState.specialty = null
+  formState.profession = null
+  formState.cvLink = null
+}
+const onSubmit = async(values) => {
+
+  // const user_id = 1;
+  // const payload = {...values, user_id}
+  const payload = formState
+
+  loading.value = true
+  try {
+    if(!props.isIdUpdate) {
+      const data = await makeRequest({ url: '/exponents', method: 'POST', data: payload });
+      message.success(data.message);
+    } else {
+      const data = await makeRequest({ url: `/exponents/${props.isIdUpdate}`, method: 'PUT', data: payload });
+      message.success(data.message);
+    }
+    clearFields()
+    emit('refreshTable', true)
+    handleCloseModal()
+  } catch (error) {
+    message.error('No se pudo registrar este usuario');
+  } finally {
+    loading.value = false;
+  }
+};
 </script>
 
 <style lang="scss" scoped>
@@ -119,5 +162,8 @@ const onSubmit = values => {
   display: grid;
   grid-template-columns: repeat(2, 1fr);
   gap: 0 1.5rem;
+}
+.white {
+  display: none;
 }
 </style>

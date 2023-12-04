@@ -12,10 +12,9 @@
 
         <a-button @click="handleUploadExcel" type="primary" v-else>Cargar datos</a-button>
 
-        <a-popconfirm v-if="dataSource.length >= 1" title="¿Deseas borrar todos los registros?" @confirm="handleDropData">
+        <!-- <a-popconfirm v-if="dataSource.length >= 1" title="¿Deseas borrar todos los registros?" @confirm="handleDropData">
           <a-button type="primary" danger class="btn-drop">Drop base de datos</a-button>
-        </a-popconfirm>
-    
+        </a-popconfirm> -->
       </div>
   
       <!-- <a-input-search
@@ -36,19 +35,20 @@
     :loading="loading"
     size="small">
       <template v-slot:bodyCell="{column, record}">
-        <template v-if="column.dataIndex == 'tipo'">
-          <template v-if="record.tipo == 'NATURAL'">
+        <template v-if="column.dataIndex == 'type'">
+          <template v-if="record.type == 'NATURAL'">
             <a-tag color="success">Natural</a-tag>
           </template>
-          <template v-if="record.tipo == 'JURIDICA'">
+          <template v-if="record.type == 'JURIDICA'">
             <a-tag color="error">Jurídica</a-tag>
           </template>
         </template>
-        <template v-if="column.dataIndex == 'sexo'">
-          <template v-if="record.sexo == 'MASCULINO'">
+        
+        <template v-if="column.dataIndex == 'sex'">
+          <template v-if="record.sex == 'MASCULINO'">
             <a-tag color="blue">Masculino</a-tag>
           </template>
-          <template v-if="record.sexo == 'FEMENINO'">
+          <template v-if="record.sex == 'FEMENINO'">
             <a-tag color="pink">Femenino</a-tag>
           </template>
         </template>
@@ -58,8 +58,10 @@
   </div>
 
   <div class="paginator">
-    <a-pagination size="small"  :total="total" :pageSize="50"  @change="handlePaginator" :showSizeChanger="false" />
+    <a-pagination size="small" :pageSize="50" :total="total"  @change="handlePaginator" :showSizeChanger="false" />
   </div>
+
+  <pre>{{ total }}</pre>
 
   <div class="full-spin" v-if="spinning">
     <a-spin :indicator="indicator" :spinning="spinning" />
@@ -97,9 +99,6 @@ const hanleSizeHeigth = () => {
 //    console.log(new);
 // });
 
-
-
-
 const indicator = h(LoadingOutlined, {
   style: {  fontSize: '40px' },
   spin: true,
@@ -109,18 +108,17 @@ const params = ref({
 })
 
 const columns = [
-  { title: 'RUC',                 dataIndex: 'ruc', fixed: 'left', width: 100},
-  { title: 'Razón social',        dataIndex: 'razon_social', width: 250},
-  { title: 'Rubro',               dataIndex: 'rubro', width: 200},
-  { title: 'Tipo',                dataIndex: 'tipo', align: 'center', width: 140 },
-  { title: 'Departamento',        dataIndex: 'departamento', width: 140 },
-  { title: 'Distrito',            dataIndex: 'distrito', width: 130},
-  { title: 'Nombres y Apellidos', dataIndex: 'nombres_apellidos', width: 300},
-  { title: 'DNI',                 dataIndex: 'dni', align: 'center', width: 120},
-  { title: 'Sexo',                dataIndex: 'sexo', align: 'center', width: 130},
-  { title: 'Teléfono',            dataIndex: 'telefono', align: 'center', width: 130},
+  { title: 'RUC',                 dataIndex: 'ruc', fixed: 'left', width: 120},
+  { title: 'Razón social',        dataIndex: 'socialReason', width: 250},
+  { title: 'Rubro',               dataIndex: 'category', width: 200},
+  { title: 'Tipo',                dataIndex: 'type', align: 'center', width: 140 },
+  { title: 'Departamento',        dataIndex: 'department', width: 140 },
+  { title: 'Distrito',            dataIndex: 'district', width: 130},
+  { title: 'Nombres y Apellidos', dataIndex: 'nameComplete', width: 300},
+  { title: 'DNI',                 dataIndex: 'dniNumber', align: 'center', width: 120},
+  { title: 'Sexo',                dataIndex: 'sex', align: 'center', width: 130},
+  { title: 'Teléfono',            dataIndex: 'phone', align: 'center', width: 130},
   { title: 'Email',               dataIndex: 'email', width: 200 },
-
   // { title: '',                dataIndex: 'actions', width: '55px'}
 ];
 
@@ -134,22 +132,22 @@ const handlePaginator = (current) =>{
 }
 
 const handleFileUploadExcel = () => {
-  let input = document.createElement('input');
-  input.type = 'file';
-  input.accept = '.xls, .xlsx';
-  input.onchange = event => {
-    selectedExcel.value = event.target.files[0];
-    notification.open({
-      message: '¡Alerta!',
-      description:
-        'Debes ahora de cargar los datos del excel.',
-      onClick: () => {
-        console.log('Notification Clicked!');
-      },
-    });
+  // let input = document.createElement('input');
+  // input.type = 'file';
+  // input.accept = '.xls, .xlsx';
+  // input.onchange = event => {
+  //   selectedExcel.value = event.target.files[0];
+  //   notification.open({
+  //     message: '¡Alerta!',
+  //     description:
+  //       'Debes ahora de cargar los datos del excel.',
+  //     onClick: () => {
+  //       console.log('Notification Clicked!');
+  //     },
+  //   });
 
-  };
-  input.click();
+  // };
+  // input.click();
 };
 
 const handleUploadExcel = () => {
@@ -177,27 +175,27 @@ const handleUploadExcel = () => {
     selectedExcel.value = null;
   })
 }
-const handleDropData = async() => {
-  try {
-    const data = await makeRequest({ url: '/digital-route/delete-excel-records', method: 'DELETE' });
-    new Promise(resolve => {
-      setTimeout(() => resolve(true), 3000);
-    });
-    if(data) {
-      message.success(data.message);
-      fetchData()
-    }
-  } catch (error) {
-    console.error('Error de red:', error);
-  }
-}
+// const handleDropData = async() => {
+//   try {
+//     const data = await makeRequest({ url: '/digital-route/delete-excel-records', method: 'DELETE' });
+//     new Promise(resolve => {
+//       setTimeout(() => resolve(true), 3000);
+//     });
+//     if(data) {
+//       message.success(data.message);
+//       fetchData()
+//     }
+//   } catch (error) {
+//     console.error('Error de red:', error);
+//   }
+// }
 
 const fetchData = async() => {
   try {
     loading.value = true;
-    const data = await makeRequest({ url: '/digital-route/data-excel', method: 'GET', params:params.value });
+    const data = await makeRequest({ url: '/mype', method: 'GET', params:params.value });
     dataSource.value = data.data
-    total.value = data.total;
+    total.value = data.meta.total;
   } catch (error) {
     console.error('Error de red:', error);
   } finally {

@@ -7,27 +7,41 @@ const fields = {
     required: true,
     message: 'Escribe el título para el taller'
   },
-  id_exponent: {
+  exponentId: {
     type: 'iSelect',
     label: 'Seleccinar expositor',
-    name: 'id_exponent',
+    name: 'exponentId',
     required: true,
     message: 'Seleccionar un expositor',
   },
-  date_workshop: {
+  workshopDate: {
     type: 'iDate',
     label: 'Fecha del taller',
-    name: 'date_workshop',
+    name: 'workshopDate',
     required: false,
     message: 'Seleccionar la fecha del taller'
   },
-  intervention: {
+  typeIntervention: {
     type: 'iSelect',
     label: 'Seleccinar tipo de intervención',
-    name: 'intervention',
+    name: 'typeIntervention',
     required: true,
     message: 'Seleccionar un tipo',
-  }
+  },
+  slug: {
+    type: 'iText',
+    label: 'Slug',
+    name: 'slug',
+    required: true,
+    message: 'Escribe el título para el taller'
+  },
+  link: {
+    type: 'iText',
+    label: 'Link del taller',
+    name: 'link',
+    required: false,
+    message: 'Escribe el título para el taller'
+  },
 }
 
 export default fields;

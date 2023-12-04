@@ -12,8 +12,7 @@
     :model="formState"
     name="basic"
     autocomplete="off"
-    @finish="onSubmit"
-    @finishFailed="onSubmitFail">
+    @finish="onSubmit">
       <div class="grid-item">
         <template v-for="(el, idx) in fields" :key="idx">
           <a-form-item 
@@ -22,8 +21,8 @@
           :name="el.name" 
           :label="el.label" 
           :rules="[{ required: el.required, message: el.message }]">
-            <a-select v-if="el.name == 'id_exponent'" v-model:value="formState[el.name]" :options="typeDocuments" />
-            <a-select v-if="el.name == 'intervention'" v-model:value="formState[el.name]" :options="geners" />
+            <a-select v-if="el.name == 'typeIntervention'" v-model:value="formState[el.name]" :options="typeIntervention" />
+            <a-select v-if="el.name == 'exponentId'" v-model:value="formState[el.name]" :options="exponents" />
           </a-form-item>
 
           <a-form-item
@@ -39,7 +38,7 @@
           :name="el.name" 
           :label="el.label" 
           :rules="[{ required: el.required, message: el.message, type: el.email }]">
-            <a-date-picker class="w-100" show-time placeholder="" @change="onChange" @ok="onOk" :locale="esES" format="DD-MM-YYYY HH:mm A" />
+            <a-date-picker class="w-100" show-time placeholder="" @change="onChange" :locale="esES" format="DD-MM-YYYY HH:mm A" />
           </a-form-item>
 
         </template>
@@ -49,83 +48,110 @@
         <a-button type="primary" html-type="submit" :loading="loading">Registrar taller</a-button>
       </div>
     </a-form>
-
-    <!-- <pre>{{ formState }}</pre> -->
-
   </a-modal>
 </template>
 
 <script setup>
-import { reactive, ref } from 'vue'; 
+import { reactive, ref, onMounted } from 'vue'; 
 import { message } from 'ant-design-vue';
 import fields from '@/forms/nuevoTaller.js'
 import { esES } from 'ant-design-vue/lib/locale-provider';
+import { makeRequest } from '@/utils/api.js'
 
-const emit = defineEmits(['handleCloseModal'])
+const emit = defineEmits(['handleCloseModal', 'refreshTable'])
 
 const open = ref(true);
 const loading = ref(false);
 
 const formState = reactive({
-  id_user: null,
   title: null,
-  id_exponent: null,
-  date_workshop: null,
-  intervention: null,
-  id_in_test: null,
-  id_output_test: null,
-  number_registered: 0
+  exponentId: null,
+  workshopDate: null,
+  typeIntervention: null,
+
+  slug: null,
+  link: null,
+
+  userId: 1,
+  testinId: null,
+  testoutId: null,
+  invitationId: null,
+  status: null,
+  registered: null,
+  rrss: null,
+  sms: null,
+  correo: null,
 });
 
-const geners = [
-  { label: 'Masculino', value: 1 },
-  { label: 'Femenino', value: 2 },
-  { label: '...', value: 3 }
-];
-const typeDocuments = [
-  { label: 'DNI', value: 1 },
-  { label: 'CE', value: 2 },
-  { label: 'PAS', value: 3 },
-  { label: 'PTP', value: 4 } 
+const exponents = ref([])
+const typeIntervention = [
+  { label: 'Marketing Digital', value: 1 },
+  { label: 'Comercio Electrónico', value: 2 },
+  { label: 'Gestión Empresarial', value: 3 },
+  { label: 'Analisis de datos', value: 4 },
+  { label: 'Medios de pago', value: 5 },
+  { label: 'Finanzas', value: 6 },
 ];
 
 const handleCloseModal = () => {
   emit('handleCloseModal', true)
   open.value = false;
 }
-
-
-
+const clearFields = () => {
+  formState.title = null
+  formState.exponentId = null
+  formState.workshopDate = null
+  formState.typeIntervention = null
+  formState.slug = null
+  formState.link = null
+  formState.userId = 1
+  formState.testinId = null
+  formState.testoutId = null
+  formState.invitationId = null
+  formState.status = null
+  formState.registered = null
+  formState.rrss = null
+  formState.sms = null
+  formState.correo = null
+}
 
 const onChange = (value, dateString) => {
-  formState.date_workshop = dateString
-};
-const onOk = value => {
-  // console.log('onOk: ', value);
+  formState.workshopDate = dateString
 };
 
-
-
-
-const onSubmitFail = () => {
-  // message.error('Debes de completar todos los espacios requeridos')
+const onSubmit = async() => {
+  const payload = formState
+  loading.value = true
+  try {
+    const data = await makeRequest({ url: '/workshops', method: 'POST', data: payload });
+    clearFields()
+    emit('refreshTable', true)
+    message.success(data.message);
+    handleCloseModal()
+  } catch (error) {
+    message.error('No se pudo registrar este taller');
+  } finally {
+    loading.value = false;
+  }
 };
-const onSubmit = values => {
-  console.log("Valores", values)
-  // const id_registrador = idUserStorage;
-  // const payload = {...values, id_registrador}
-  
-  // loading.value = true
-  // try {
-  //   const data = await makeRequest({ url: '/register', method: 'POST', data: payload });
-  //   clearFields()
-  //   message.success(data.message);
-  // } catch (error) {
-  //   message.error('No se pudo registrar este usuario');
-  // } finally {
-  //   loading.value = false;
-  // }
-};
+
+const fetchData = async() => {
+  try {
+    const data = await makeRequest({ url: '/exponents', method: 'GET' });
+    data.data.forEach(element => {
+      const obj = {
+        label: element.firstName + ' ' + element.lastName,
+        value: element.id
+      }
+      exponents.value.push(obj)
+    });
+  } catch (error) {
+    console.error('Error de red:', error);
+  } 
+}
+onMounted(
+  fetchData
+);
 
 </script>
 

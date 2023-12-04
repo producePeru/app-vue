@@ -1,148 +1,127 @@
 <template>
   <div>
-  
     <h3>Expositores</h3>
 
     <div class="filters">
       <a-button type="primary" @click="handleOpenModal">Agregar expositor</a-button>
     </div>
     
-
-
-
     <a-table 
     bordered
+    :scroll="{ x: 2000 }"
     class="ant-table-striped"
-    :scroll="{ y: handleScrollY }"
     :columns="columns" 
     :data-source="dataSource" 
     :pagination="false"
     :loading="loading"
     size="small">
       <template v-slot:bodyCell="{column, record}">
-        <template v-if="column.dataIndex == 'tipo_usuario'">
-          <template v-if="record.tipo_usuario == 'Admin'">
-            <a-tag :bordered="false" color="processing">Administrador</a-tag>
-          </template>
-          <template v-if="record.tipo_usuario == 'Invitado'">
-            <a-tag :bordered="false" color="magenta">Invitado</a-tag>
-          </template>
-          <template v-if="record.tipo_usuario === 3">
-            <a-tag :bordered="false" color="purple">3</a-tag>
-          </template>
-          <template v-if="record.tipo_usuario === 4">
-            <a-tag :bordered="false" color="warning">4</a-tag>
-          </template>
-          <template v-if="record.tipo_usuario === 5">
-            <a-tag :bordered="false" color="cyan">5</a-tag>
-          </template>
+        <template v-if="column.dataIndex == 'lastNames'">
+          {{ record.lastName }} {{ record.middleName }}
         </template>
-        
-        <template v-if="column.dataIndex == 'estado'">
-          <template v-if="record.activo == 1">
-            <a-tag color="success">Activo</a-tag>
+
+        <template v-if="column.dataIndex == 'sex'">
+          <template v-if="record.gender == 'h'">
+            <a-tag color="blue">Hombre</a-tag>
           </template>
           <template v-else>
-            <a-tag color="error">Hombre</a-tag>
+            <a-tag color="pink">Mujer</a-tag>
           </template>
         </template>
 
-        <!-- <template v-if="column.dataIndex == 'actions'">
+        <template v-if="column.dataIndex == 'actions'">
           <a-dropdown :trigger="['click']">
-            <a-button @click.prevent shape="circle" size="small" :icon="h(MoreOutlined)" />
+            <a class="ant-dropdown-link" @click.prevent>
+              <a-button shape="circle" :icon="h(MoreOutlined)" size="small" />
+            </a>
             <template #overlay>
               <a-menu>
-                <a-menu-item key="1">Editar</a-menu-item>
-                <a-menu-item key="2">Dar de baja / Activar</a-menu-item>
-                <a-menu-item key="3" @click="handleOpenModal(record.id)"> Actualizar clave</a-menu-item>
+                <a-menu-item>
+                  <a @click="handleEditExponent(record)">Editar</a>
+                </a-menu-item>
+                <a-menu-item>
+                  <a>Eliminar</a>
+                </a-menu-item>
               </a-menu>
             </template>
           </a-dropdown>
-        </template> -->
+        </template>
       </template>
       
     </a-table>
   </div>
 
   <div class="paginator">
-    <a-pagination size="small"  :total="total" :pageSize="20"  @change="handlePaginator" :showSizeChanger="false" />
+    <a-pagination size="small" :total="total" :pageSize="20"  @change="handlePaginator" :showSizeChanger="false" />
   </div>
 
-  <AgregarExpositor :open="open" @handleCloseModal="open = false"/>
-  
+  <AgregarExpositor :open="open" @refreshTable="refreshTable" @handleCloseModal="open = false" :isIdUpdate="isIdUpdate" />
+
 </template>
 
 <script setup>
 import { makeRequest } from '@/utils/api.js'
-import { ref, onMounted, reactive, h, computed  } from 'vue';
-import { MoreOutlined,DownloadOutlined } from '@ant-design/icons-vue';
+import { ref, onMounted, computed, h } from 'vue';
 import AgregarExpositor from './components/AgregarExpositor.vue'
-import dataFake from '@/utils/fake.js'
+import { MoreOutlined,DownloadOutlined } from '@ant-design/icons-vue';
 
 const dataSource = ref([])
 const loading = ref(false)
 const valueX = ref(1000)
-const valueY = ref(null)
-// const dataToSearch = ref('')
+const valueY = ref(80000)
 const open = ref(false);
 const total = ref(0)
-const idUserSelected = ref(null)
-
+const isIdUpdate = ref(null);
 
 const params = ref({
   page: 1
 })
 
 const columns = [
-  { title: 'Nombres',             dataIndex: 'nombres', fixed: 'left', width: 160 },
-  { title: 'Apellidos',           dataIndex: 'apellidos', fixed: 'left', width: 160},
-  { title: 'RUC',                 dataIndex: 'usuario', align: 'center', width: 120},
-  { title: 'Tipo documento',      dataIndex: 'apellidos', width: 160},
-  { title: 'N° documento',        dataIndex: 'nro_documento', align: 'center', width: 150},
-  { title: 'Correo electrónico',  dataIndex: 'correo', width: 180},
-  { title: 'Celular',             dataIndex: 'celular', align: 'center', width: 120},
-  { title: 'Especialidad',        dataIndex: 'tipo_usuario', align: 'center', width: 150},
-  { title: 'Sexo',                dataIndex: 'estado', align: 'center', width: 130},
-  // { title: '',                dataIndex: 'actions', width: 55}
+  { title: 'Nombres',             dataIndex: 'firstName', fixed: 'left', width: 80 },
+  { title: 'Apellidos',           dataIndex: 'lastNames', fixed: 'left', width: 80},
+  { title: 'RUC',                 dataIndex: 'rucNumber', align: 'center', width: 50},
+  { title: 'Tipo documento',      dataIndex: 'documentType', align: 'center', width: 50},
+  { title: 'N° documento',        dataIndex: 'documentNumber', align: 'center', width: 50},
+  { title: 'Correo electrónico',  dataIndex: 'email', width: 80},
+  { title: 'Celular',             dataIndex: 'phoneNumber', align: 'center', width: 40},
+  { title: 'Especialidad',        dataIndex: 'specialty', align: 'center', width: 40},
+  { title: 'Profesión',           dataIndex: 'profession', align: 'center', width: 40},
+  { title: 'Género',              dataIndex: 'sex', align: 'center', width: 40},
+  { title: '',                    dataIndex: 'actions', align: 'center', width: 20}
 ];
+
+const refreshTable = (val) => {
+  if(val) fetchData()
+}
 
 const handlePaginator = (current) =>{
   params.value.page = current;
   fetchData()
 }
 
-// const fetchData = async() => {
-//   try {
-//     loading.value = true;
-//     const data = await makeRequest({ url: '/users', method: 'GET', params:params.value });
-//     dataSource.value = data
-//     total.value = data.total;
-//   } catch (error) {
-//     console.error('Error de red:', error);
-//   } finally {
-//     loading.value = false;
-//   }
-// }
-
-const fetchData = () => {
-  dataSource.value = dataFake
+const fetchData = async() => {
+  try {
+    loading.value = true;
+    const data = await makeRequest({ url: '/exponents', method: 'GET', params:params.value });
+    dataSource.value = data.data
+    total.value = data.meta.total;
+  } catch (error) {
+    console.error('Error de red:', error);
+  } finally {
+    loading.value = false;
+  }
 }
 
-
-
+const handleEditExponent = (data) => {
+  isIdUpdate.value = data.id
+  open.value = true
+}
 
 const handleOpenModal = () => {
+  isIdUpdate.value = null
   open.value = true;
 };
-const handleCloseModal = () => {
-
-  console.log("8a8a8a8a8a");
-  // open.value = false;
-};
-
-const handleScrollY = computed(() => {
-  return console.log("IISISISII")
-})
 
 onMounted(
   fetchData
@@ -158,6 +137,5 @@ onMounted(
   justify-content: flex-end;
   margin-top: 1.5rem;
 }
-
 </style>
 

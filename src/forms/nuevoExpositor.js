@@ -1,44 +1,44 @@
 
 const fields = {
-  type_document: {
+  documentType: {
     type: 'iSelect',
     label: 'Tipo de documento',
-    name: 'type_document',
+    name: 'documentType',
     required: true,
     message: 'Seleccionar tipo de documento',
   },
-  number_document: {
+  documentNumber: {
     type: 'iText',
     label: 'Número de documento',
-    name: 'number_document',
+    name: 'documentNumber',
     required: true,
     message: 'Error en el tipo de documento'
   },
-  name: {
+  firstName: {
     type: 'iText',
     label: 'Nombres',
-    name: 'name',
+    name: 'firstName',
     required: true,
     message: 'Escribe el nombre'
   },
-  last_name_p: {
+  lastName: {
     type: 'iText',
     label: 'Apellido paterno',
-    name: 'last_name_p',
+    name: 'lastName',
     required: true,
     message: 'Escribe el apellido paterno'
   },
-  last_name_m: {
+  middleName: {
     type: 'iText',
     label: 'Apellido materno',
-    name: 'last_name_m',
+    name: 'middleName',
     required: true,
     message: 'Escribe el apellido materno'
   },
-  sex: {
+  gender: {
     type: 'iSelect',
     label: 'Género',
-    name: 'sex',
+    name: 'gender',
     required: true,
     message: 'Seleccionar tipo de género',
   },
@@ -50,17 +50,17 @@ const fields = {
     email: 'email',
     message: 'Escribe el correo del usuario'
   },
-  ruc: {
+  rucNumber: {
     type: 'iText',
     label: 'Número de RUC',
-    name: 'ruc',
+    name: 'rucNumber',
     required: false,
     message: 'Registra el Número de RUC'
   },
-  phone: {
+  phoneNumber: {
     type: 'iText',
     label: 'Celular',
-    name: 'phone',
+    name: 'phoneNumber',
     required: false,
     message: 'Escribe el celular del usuario'
   },
@@ -78,10 +78,10 @@ const fields = {
     required: false,
     message: 'Registra la especialidad del expositor'
   },
-  url_cv: {
+  cvLink: {
     type: 'iText',
     label: 'Link de CV',
-    name: 'url_cv',
+    name: 'cvLink',
     required: false,
     message: 'Registra la especialidad del expositor'
   }

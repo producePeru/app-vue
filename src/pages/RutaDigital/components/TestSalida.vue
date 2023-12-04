@@ -9,16 +9,16 @@
 
     <div class="test-head">
       <h1>TEST DE SALIDA</h1>
-      <h2>Taller de redes sociales</h2>
-      <span><b>Expositor:</b> Juan Manuel Sanz</span>
-      <span><b>Fecha taller:</b> 20/12/2023</span>
+      <h2>{{ $route.query.taller }}</h2>
+      <span><b>Expositor:</b> {{ $route.query.exponent }}</span>
+      <span><b>Fecha taller:</b> {{ $route.query.date }}</span>
     </div>
 
     <a-divider />
     
-    <a-form layout="vertical" :model="formState" @finish="handleFinish" @finishFailed="handleFinishFailed">
+    <a-form layout="vertical" :model="formState" @finish="onSubmit">
       <a-form-item label="Fecha de expiración de la prueba" name="date_end" :rules="[{ required: true, message: 'Seleccionar una fecha' }]">
-        <a-date-picker v-model:value="formState.date_end" format="DD-MM-YYYY" />
+        <a-date-picker v-model:value="formState.date_end" :format="dateFormat" />
       </a-form-item>
       
       <div v-for="(item, idx) in 5" :key="idx">
@@ -57,33 +57,40 @@
           <a-input v-model:value="formState.comments_title" />
         </a-form-item>
       </div>
-
-
-
-
-
+<pre>{{ formState }}</pre>
       <br>
       <a-form-item class="text-center">
-        <a-button type="primary" html-type="submit" :disabled="formState.user === '' || formState.option === ''">
-          CREAR CUESTIONARIO
+        <a-button type="primary" html-type="submit" :loading="loading">
+          {{  $route.name == 'test-salida' ? 'CREAR' : 'EDITAR' }} CUESTIONARIO
         </a-button>
       </a-form-item>
     </a-form>
   </div>
 
-  <pre>{{ formState }}</pre>
-
 </template>
 
 <script setup>
-import { reactive, onMounted } from 'vue';
-import { useRouter } from 'vue-router';
+import { reactive, onMounted, ref } from 'vue';
+import { useRouter,useRoute } from 'vue-router';
+import { makeRequest } from '@/utils/api.js'
+import { message } from 'ant-design-vue';
+import moment from 'moment';
+import dayjs from 'dayjs';
+const dateFormat = 'DD/MM/YYYY';
 
 const router = useRouter();
+const route = useRoute();
+const loading = ref(false);
+
+// const date_end = ref(null);
+
+// const value1 = ref(dayjs('01/12/2022', dateFormat));
 
 const formState = reactive({
-  date_end: null,
+  workshop_id: +route.query.id,
+  user_id: 1,
 
+  date_end: ref(dayjs('04/12/2023', dateFormat)),
   question1: null,
   question1_opt1: null,
   question1_opt2: null,
@@ -122,31 +129,63 @@ const formState = reactive({
   comments_title: null
   
 });
-const handleFinish = values => {
-  console.log("OOOOk", values, formState);
-};
-const handleFinishFailed = errors => {
-  console.log("Error",errors);
+
+// const handleSetDate = () => {
+//   formState.date_end = moment(date_end.value).format('YYYY-MM-DD');
+// }
+
+const onSubmit = async() => {
+  loading.value = true;
+
+  let url = null
+  let method = null
+
+  if(router.currentRoute.value.name == 'editar-test-salida') {
+    url = `/testout/${route.query.test}`;
+    method = 'PUT';
+  } else {
+    url = `/create-test-out/${route.query.id}`;
+    method = 'POST';
+  }
+
+  let payload = formState
+  try {
+    const data = await makeRequest({ url, method, data: payload });
+    message.success(data.message);
+    router.push('/admin/ruta-digital/talleres');
+  } catch (error) {
+    console.error('Error de red:', error);
+    message.error('No se pudo crear este cuestionario');
+  } finally {
+    loading.value = false;
+  }
 };
 
 const fetchData = async() => {
+  if(router.currentRoute.value.name != 'editar-test-salida') return
+  try {
+    const {data} = await makeRequest({ url: `/testout/${route.query.test}`, method: 'GET' });
+    
+    let fec = moment(data.date_end).format('DD/MM/YYYY')
+    formState.date_end = ref(dayjs(fec, dateFormat));
 
-  
-if(router.currentRoute.value.name != 'editar-test-entrada') return
+    for (let index = 1; index <= 5; index++) {
+      formState['question'+index] = data['question'+index]
+      formState['question'+index+'_opt1'] = data['question'+index+'_opt1']
+      formState['question'+index+'_opt2'] = data['question'+index+'_opt2']
+      formState['question'+index+'_opt3'] = data['question'+index+'_opt3']
+      formState['question'+index+'_resp'] = data['question'+index+'_resp']
+    }
 
-console.log("PAOOSOOSOSOS...")
+    formState.satistaction1 = data.satistaction1
+    formState.satistaction2 = data.satistaction2
+    formState.satistaction3 = data.satistaction3
+    formState.comments = data.is_comments == 1 ? true : false
+    formState.comments_title = data.comments
 
-
-// try {
-//   loading.value = true;
-//   const data = await makeRequest({ url: '/users', method: 'GET', params:params.value });
-//   dataSource.value = data
-//   total.value = data.total;
-// } catch (error) {
-//   console.error('Error de red:', error);
-// } finally {
-//   loading.value = false;
-// }
+  } catch (error) {
+    console.error('Error de red:', error);
+  }
 }
 onMounted(
   fetchData
@@ -178,7 +217,7 @@ onMounted(
     }
   }
   @media screen and (min-width: 1200px) {
-    width: 1000px;
+    width: 900px;
     margin: auto;
   }
 }
