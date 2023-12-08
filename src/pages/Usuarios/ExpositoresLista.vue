@@ -137,5 +137,6 @@ onMounted(
   justify-content: flex-end;
   margin-top: 1.5rem;
 }
+
 </style>
 

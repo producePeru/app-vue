@@ -1,28 +1,21 @@
 <template>
   <a-modal v-model:open="open" title="Participar con mi empresa" style="top: 20px" footer="" @cancel="handleCloseModal" width="700px">
     <span class="modal-notice">Completa el formulario para participar</span>
-    <a-form layout="vertical" :model="formState" name="basic" autocomplete="off" @finish="onSubmit"
-      @finishFailed="onSubmitFail">
+    <a-form layout="vertical" :model="formState" name="basic" autocomplete="off" @finish="onSubmit">
       <div class="grid-item">
         <template v-for="(el, idx) in fields" :key="idx">
           <a-form-item class="item-max" v-if="el.type === 'iSelect'" :name="el.name" :label="el.label"
             :rules="[{ required: el.required, message: el.message }]">
-            <a-select v-if="el.name == 'type_person'" v-model:value="formState[el.name]" :options="typePerson" />
-            <a-select v-if="el.name == 'department'" v-model:value="formState[el.name]" :options="departments" />
-            <a-select v-if="el.name == 'province'" v-model:value="formState[el.name]" :options="provinces" />
+            <a-select v-if="el.name == 'type'" v-model:value="formState[el.name]" :options="typePerson" />
+            <a-select v-if="el.name == 'department'" v-model:value="formState[el.name]" :options="departments" @change="handleDepartaments" />
+            <a-select v-if="el.name == 'province'" v-model:value="formState[el.name]" :options="provinces" @change="handleProvinces" />
             <a-select v-if="el.name == 'district'" v-model:value="formState[el.name]" :options="districts" />
             <a-select v-if="el.name == 'sex'" v-model:value="formState[el.name]" :options="geners" />
           </a-form-item>
 
           <a-form-item v-if="el.type === 'iText'" :name="el.name" :label="el.label"
-            :rules="[{ required: el.required, message: el.message, type: el.email }]">
-            <a-input v-model:value="formState[el.name]" />
-          </a-form-item>
-
-          <a-form-item v-if="el.type === 'iDate'" :name="el.name" :label="el.label"
-            :rules="[{ required: el.required, message: el.message }]">
-            <a-date-picker class="w-100" show-time placeholder="" @change="onChange" @ok="onOk" :locale="esES"
-              format="DD-MM-YYYY HH:mm A" />
+            :rules="[{ required: el.required, message: el.message, type: el.email, max: el.max }]">
+            <a-input v-model:value="formState[el.name]" :disabled="el.disabled" />
           </a-form-item>
 
           <a-form-item v-if="el.type === 'iSearch'" :name="el.name" :label="el.label"
@@ -42,9 +35,6 @@
             </a-checkbox>
           </a-form-item>
 
-          
-
-
         </template>
       </div>
 
@@ -52,72 +42,97 @@
         <a-button type="primary" html-type="submit" :loading="loading">Participar</a-button>
       </div>
     </a-form>
-
-    <!-- <pre>{{ formState }}</pre> -->
-
+<pre>{{ formState }}</pre>
   </a-modal>
 </template>
 
 <script setup>
-import { reactive, ref } from 'vue';
+import { reactive, ref, onUpdated, onMounted } from 'vue';
 import { message } from 'ant-design-vue';
 import fields from '@/forms/nuevaMYPE.js'
 import { esES } from 'ant-design-vue/lib/locale-provider';
+import { makeRequest } from '@/utils/api.js'
+import options from '@/utils/categories.js'
 
-const emit = defineEmits(['handleCloseModal'])
+const props = defineProps(['rucProp'])
+const emit = defineEmits(['handleCloseModal','handleSetData'])
+
+onUpdated(() => {
+  formState.ruc = props.rucProp?.numeroDocumento ?? props.rucProp.numeroDocumento;
+  formState.socialReason = props.rucProp?.razonSocial ?? props.rucProp.razonSocial;
+});
+
 
 const open = ref(true);
 const loading = ref(false);
 
 const formState = reactive({
   ruc: null,
-  business_name: null,
+  socialReason: null,
   category: null,
-  type_person: null,
+  type: null,
   department: null,
   province: null,
   district: null,
-  document_number: null,
+  dniNumber: null,
   name_full: null,
   sex: null,
   phone: null,
   email: null,
-  agree: null,
-  id_user: null,
+  // agree: null,
+  // id_user: null,
 });
 
 const typePerson = [
-  { label: 'Jurídica', value: 1 },
-  { label: 'Natural', value: 2 },
+  { label: 'JURÍDICA', value: 'JURIDICA' },
+  { label: 'NATURAL', value: 'NATURAL' },
 ];
 const geners = [
-  { label: 'Masculino', value: 1 },
-  { label: 'Femenino', value: 2 },
+  { label: 'MASCULINO', value: 'MASCULINO' },
+  { label: 'FEMENINO', value: 'FEMENINO' },
   { label: '...', value: 3 }
 ];
+
+// start_place
 const departments = ref([]);
 const provinces = ref([]);
 const districts = ref([]);
 
-
-
-const options = ref([
-  {
-    value: 'jack',
-    label: 'Jack',
-  },
-  {
-    value: 'lucy',
-    label: 'Lucy',
-  },
-  {
-    value: 'tom',
-    label: 'Tom',
-  },
-]);
-
-
-
+const getDepartaments = async() => {
+  try {
+    const {data} = await makeRequest({ url: '/departaments', method: 'GET' });
+    departments.value = data
+  } catch (error) {
+    console.log(error);
+  }
+};
+const handleDepartaments = (id, evt) => {
+  console.log(evt);
+  formState.province = null
+  formState.district = null
+  getProvinces(evt.id)
+}
+const getProvinces = async(id) => {
+  try {
+    const {data} = await makeRequest({ url: `/province/${id}`, method: 'GET' });
+    provinces.value = data
+  } catch (error) {
+    console.log(error);
+  }
+};
+const handleProvinces = (id, evt) => {
+  formState.district = null
+  getDistricts(evt.id)
+}
+const getDistricts = async(id) => {
+  try {
+    const {data} = await makeRequest({ url: `/district/${id}`, method: 'GET' });
+    districts.value = data
+  } catch (error) {
+    console.log(error);
+  }
+};
+// end_place
 
 const filterOption = (input, option) => {
   return option.value.toLowerCase().indexOf(input.toLowerCase()) >= 0;
@@ -132,37 +147,37 @@ const handleCheckStatus = (e) => {
   }
 }
 
+const onSubmit = async() => {
+  const payload = {
+    ruc: formState.ruc,
+    socialReason: formState.socialReason,
+    category: formState.category,
+    type: formState.type,
+    department: formState.department,
+    district: formState.district,
+    nameComplete: formState.name_full,
+    dniNumber: formState.dniNumber,
+    sex: formState.sex,
+    phone: formState.phone,
+    email: formState.email
+  }
 
-
-const onChange = (value, dateString) => {
-  formState.date_workshop = dateString
+  loading.value = true
+  try {
+    const data = await makeRequest({ url: '/mype', method: 'POST', data: payload });
+    message.success(data.message);
+    emit('handleSetData', data.data)
+    handleCloseModal()
+  } catch (error) {
+    message.error('Error al crear la Mype.');
+  } finally {
+    loading.value = false;
+  }
 };
-const onOk = value => {
-  // console.log('onOk: ', value);
-};
 
-
-
-
-const onSubmitFail = () => {
-  // message.error('Debes de completar todos los espacios requeridos')
-};
-const onSubmit = values => {
-  console.log("Valores", values)
-  // const id_registrador = idUserStorage;
-  // const payload = {...values, id_registrador}
-
-  // loading.value = true
-  // try {
-  //   const data = await makeRequest({ url: '/register', method: 'POST', data: payload });
-  //   clearFields()
-  //   message.success(data.message);
-  // } catch (error) {
-  //   message.error('No se pudo registrar este usuario');
-  // } finally {
-  //   loading.value = false;
-  // }
-};
+onMounted(
+  getDepartaments
+);
 
 </script>
 

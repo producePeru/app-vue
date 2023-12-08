@@ -37,7 +37,7 @@
           </template>
           <template v-if="record.testin_id">
             <a-button type="link">
-              <router-link to="/test-entrada">Link</router-link>
+              <router-link :to="`/test-entrada/${record.slug}`">Link</router-link>
             </a-button >
             <EditOutlined @click="handleEditInTest(record)" />
           </template>
@@ -79,10 +79,18 @@
           </template>
         </template>
         <template v-if="column.dataIndex == 'link_sala'">
-          <VideoCameraOutlined v-if="record.link" class="pointer" :style="{fontSize: '16px', color: '#08c'}" />
+          <a :href="record.link" target="_blank">
+            <VideoCameraOutlined v-if="record.link" class="pointer" :style="{fontSize: '16px', color: '#08c'}" />
+          </a>
         </template>
+
+        <template v-if="column.dataIndex == 'status'">
+          <a-tag v-if="record.status == 'en curso'" :bordered="false" color="success">{{ record.status }}</a-tag>
+          <a-tag v-if="record.status == 'finalizado'" :bordered="false" color="volcano">{{ record.status }}</a-tag>
+        </template>
+
         <template v-if="column.dataIndex == 'details'">
-          <a-button size="small" @click="handleShowDetails">Ver detalles</a-button>
+          <a-button size="small" @click="handleShowDetails(record)">Ver detalles</a-button>
         </template>
 
         <template v-if="column.dataIndex == 'options'">
@@ -91,9 +99,9 @@
               <a-button shape="circle" :icon="h(MoreOutlined)" size="small" />
             </a>
             <template #overlay>
-              <a-menu @click="handleOptionsSelect">
+              <a-menu>
                 <a-menu-item key="0">
-                  <a>Editar</a>
+                  <a @click="handleOpenModalEdit(record)">Editar</a>
                 </a-menu-item>
                 <a-menu-item key="1">
                   <a>Cancelar</a>
@@ -111,7 +119,7 @@
   <div class="paginator">
     <a-pagination size="small" :total="total" :pageSize="20" @change="handlePaginator" :showSizeChanger="false" />
   </div>
-<!-- <pre>:::{{ recordData }}</pre> -->
+
   <NuevoTaller :open="open" @handleCloseModal="open = false" :isIdUpdate="isIdUpdate" @refreshTable="refreshTable"/>
 
   <a-modal footer="" v-model:open="modalInvitation" :title="`${titleInvitation} invitación`" width="460px">
@@ -176,11 +184,11 @@ const columns = [
   { title: 'T. Salida',           dataIndex: 'test_out', align: 'center', width: 80},
   { title: 'Invitación',          dataIndex: 'invitation', align: 'center', width: 80},
   { title: 'Estado',              dataIndex: 'status', align: 'center', width: 100},
-  { title: 'Inscriptos',          dataIndex: 'number_registered', align: 'center', width: 100},
+  { title: 'Inscriptos',          dataIndex: 'registered_count', align: 'center', width: 100},
   { title: 'Link',                dataIndex: 'link_sala', align: 'center', width: 80},
   { title: 'RRSS',                dataIndex: 'rrss', align: 'center', width: 70},
   { title: 'SMS',                 dataIndex: 'sms', align: 'center', width: 70},
-  { title: 'Correo',              dataIndex: 'mail', align: 'center', width: 70},
+  { title: 'Correo',              dataIndex: 'correo', align: 'center', width: 70},
   { title: 'Detalles',            dataIndex: 'details', align: 'center', width: 120},
   { title: '',                    dataIndex: 'options', align: 'center', width: 50}
 ];
@@ -243,6 +251,16 @@ const handleEditEndTest = (workshop) => {
   router.push({ name: 'editar-test-salida', query });
 }
 //end_test
+// ver_detalles
+const handleShowDetails = (workshop) => {
+  const query = {
+    id: workshop.id,
+    date: workshop.workshop_date,
+    taller: workshop.title,
+    exponent: `${workshop.exponent.first_name} ${workshop.exponent.last_name} ${workshop.exponent.middle_name}`
+  }
+  router.push({ name: 'taller-id', query });
+}
 
 //start_invitation
 const handleInvitationModal = async (val, record) => {
@@ -266,6 +284,16 @@ const handleInvitationModal = async (val, record) => {
 const handleOpenModal = () => {
   isIdUpdate.value = null
   open.value = true;
+};
+const handleOpenModalEdit = async(val) => {
+  try {
+    const data = await makeRequest({ url: `/get-workshop-slug/${val.slug}`, method: 'GET' });
+    isIdUpdate.value = data.workshop
+    open.value = true;
+  } catch (error) {
+    console.error('Error de red:', error);
+    message.warning("Error de red");
+  } 
 };
 const handleInvitation = async() => {
 
@@ -298,16 +326,11 @@ const handleInvitation = async() => {
   }
 }
 
-
-
-
-
-
-const handleShowDetails = (val) => {
-  const id = 1
-  router.push(`taller-detalle/${id}`);
-}
 const handleOptionsSelect = (e) => {
+  if(e.key == 0) {
+    console.log("ediittttt", e);
+  }
+
   if(e.key == 1) {
     handleOkCancelWorkshop()
   }

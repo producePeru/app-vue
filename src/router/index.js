@@ -18,7 +18,7 @@ const router = createRouter({
 
     // ruta_tests
     {
-      path: '/test-entrada',
+      path: '/test-entrada/:slug',
       name: 'public-test-entrada',
       component: () => import('../pages/public/TestEntrada.vue')
     },
@@ -41,11 +41,11 @@ const router = createRouter({
 
 
 
-    {
-      path: '/F',
-      name: 'questionary',
-      component: () => import('../pages/public/QuestionaryId.vue')
-    },
+    // {
+    //   path: '/F',
+    //   name: 'questionary',
+    //   component: () => import('../pages/public/QuestionaryId.vue')
+    // },
 
 
 
@@ -140,7 +140,7 @@ const router = createRouter({
 
 
             {
-              path: 'taller-detalle/:id',
+              path: 'taller-detalle',
               name: 'taller-id',
               component: () => import('../pages/RutaDigital/TallerDetalle.vue'),
               meta: { requiresAuth: true, roles: ['admin', 'user'] },

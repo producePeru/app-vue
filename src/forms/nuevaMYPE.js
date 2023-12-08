@@ -5,12 +5,13 @@ const fields = {
     label: 'RUC',
     name: 'ruc',
     required: true,
-    message: 'Escribe el RUC'
+    message: 'Escribe el RUC',
+    disabled: true
   },
-  business_name: {
+  socialReason: {
     type: 'iText',
     label: 'Razón social',
-    name: 'business_name',
+    name: 'socialReason',
     required: true,
     message: 'Escribe la razón social'
   },
@@ -21,10 +22,10 @@ const fields = {
     required: true,
     message: 'Escribe la razón social'
   },
-  type_person: {
+  type: {
     type: 'iSelect',
     label: 'Tipo de persona',
-    name: 'type_person',
+    name: 'type',
     required: true,
     message: 'Seleccionar un tipo',
   },
@@ -49,12 +50,13 @@ const fields = {
     required: true,
     message: 'Seleccionar un tipo',
   },
-  document_number: {
+  dniNumber: {
     type: 'iText',
     label: 'Número de documento DNI',
-    name: 'document_number',
+    name: 'dniNumber',
     required: true,
-    message: 'Escribe el número del documento'
+    message: 'El número de DNI no es válido',
+    max: 8
   },
   name_full: {
     type: 'iText',
@@ -69,20 +71,23 @@ const fields = {
     name: 'sex',
     required: true,
     message: 'Seleccionar un tipo',
+    max: 12
   },
   phone: {
     type: 'iText',
     label: 'Teléfono',
     name: 'phone',
     required: true,
-    message: 'Escribe el teléfono'
+    message: 'Escribe el teléfono',
+    max: 12
   },
   email: {
     type: 'iText',
     label: 'Correo electrónico',
     name: 'email',
     required: true,
-    message: 'Escribe el teléfono'
+    message: 'Escribe el teléfono',
+    max: 100
   },
   agree: {
     type: 'iCheck',

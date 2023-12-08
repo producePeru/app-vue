@@ -1,7 +1,7 @@
 <template>
   <a-result
     status="success"
-    title="¡Gracias por participar en este formulario!"
+    title="¡Gracias por participar de este formulario!"
     sub-title="El amiwito Pol te saluda."
   >
     <template #extra>

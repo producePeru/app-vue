@@ -51,6 +51,10 @@ h1 {
 .ant-form-item-explain-error {
   font-size: 12px;
 }
+.flex-baseline {
+  display: flex;
+  align-items: baseline;
+}
 .flex-between {
   display: flex;
   justify-content: space-between;
@@ -70,6 +74,9 @@ h1 {
 }
 .pointer {
   cursor: pointer;
+}
+.relative {
+  position: relative;
 }
 .wrapper-search {
   display: grid;
@@ -99,3 +106,7 @@ h1 {
 // :where(.css-dev-only-do-not-override-185kyl0).ant-input-search .ant-input:hover, :where(.css-dev-only-do-not-override-185kyl0).ant-input-search .ant-input:focus {
 //   border-color: var(--color-3)!important;
 // }
+
+.c-primary {
+  color: #d9363e;
+}

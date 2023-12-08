@@ -38,27 +38,47 @@
           :name="el.name" 
           :label="el.label" 
           :rules="[{ required: el.required, message: el.message, type: el.email }]">
-            <a-date-picker class="w-100" show-time placeholder="" @change="onChange" :locale="esES" format="DD-MM-YYYY HH:mm A" />
+            <a-date-picker class="w-100" show-time :placeholder="formState.workshopDate" @change="onChange" :locale="esES" format="DD-MM-YYYY HH:mm A" />
           </a-form-item>
 
         </template>
       </div>
 
       <div class="wrapper-form_btn">
-        <a-button type="primary" html-type="submit" :loading="loading">Registrar taller</a-button>
+        <a-button type="primary" html-type="submit" :loading="loading">{{ props.isIdUpdate ? 'Actualizar' : 'Registrar' }} taller</a-button>
       </div>
     </a-form>
   </a-modal>
 </template>
 
 <script setup>
-import { reactive, ref, onMounted } from 'vue'; 
+import { reactive, ref, onMounted, onUpdated } from 'vue'; 
 import { message } from 'ant-design-vue';
 import fields from '@/forms/nuevoTaller.js'
 import { esES } from 'ant-design-vue/lib/locale-provider';
 import { makeRequest } from '@/utils/api.js'
 
+const props = defineProps(['isIdUpdate'])
 const emit = defineEmits(['handleCloseModal', 'refreshTable'])
+
+onUpdated(() => {
+  if (props.isIdUpdate) {
+    formState.title = props.isIdUpdate.title
+    formState.exponentId = props.isIdUpdate.exponent_k
+    formState.workshopDate = props.isIdUpdate.workshop_date
+    formState.typeIntervention = props.isIdUpdate.type_intervention
+    formState.slug = props.isIdUpdate.slug
+    formState.link = props.isIdUpdate.link
+  } else {
+    formState.title = null
+    formState.exponentId = null
+    formState.workshopDate = null
+    formState.typeIntervention = null
+    formState.slug = null
+    formState.link = null
+  }
+  
+});
 
 const open = ref(true);
 const loading = ref(false);
@@ -122,8 +142,18 @@ const onChange = (value, dateString) => {
 const onSubmit = async() => {
   const payload = formState
   loading.value = true
+  
+  let url, method
+  
+  if(props.isIdUpdate) {
+    url = `/workshops/${props.isIdUpdate.id}`
+    method = "PUT"
+  } else {
+    url = "/workshops"
+    method = "POST"
+  }
   try {
-    const data = await makeRequest({ url: '/workshops', method: 'POST', data: payload });
+    const data = await makeRequest({ url, method, data: payload });
     clearFields()
     emit('refreshTable', true)
     message.success(data.message);

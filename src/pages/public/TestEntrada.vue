@@ -1,7 +1,7 @@
 <template>
   <div class="background">
-    <section class="container">
-      <div class="questionary">
+    <section class="container" >
+      <div class="questionary" >
         <div class="box">
           <div class="text-center">
             <img src="../../assets/img/tuempresa.png" alt="">
@@ -11,25 +11,23 @@
           <a-divider />
           
           <div class="box-info-workshop">
-            <span><b>Taller: </b>Redes sociales</span>
-            <span><b>Expositor: </b>Juan Manuel Sanz</span>
-            <span><b>Fecha del taller:</b> 20/12/2023</span>
-            <span><b>Fecha de expiración del cuestionario:</b> 22/12/2023 - 22:00</span>
+            <span><b>Taller: </b>{{ testInfo.title }}</span>
+            <span><b>Expositor: </b>{{ testInfo.exponent }}</span>
+            <span><b>Fecha del taller:</b> {{ testInfo.workShopDate }}</span>
+            <span><b>Fecha de expiración del cuestionario:</b> {{ formattedDate}}</span>
           </div>
         </div>
 
         <a-form layout="vertical" :model="formState" autocomplete="off" @finish="onSubmit" @finishFailed="onFinishFailed">
-          
-
 
           <div class="box">
-            <a-form-item class="search-ruc" name="ruc" label="Número de RUC"
+            <a-form-item class="search-ruc f-15" name="ruc" label="Número de RUC"
               :rules="[{ required: true, message: 'Es importante el número de RUC' }]">
               <a-input-search :maxlength="15" :loading="searchLoading" size="large" v-model:value="formState.ruc"
                 enter-button @search="handleSearchMype" @input="validateNumber" />
             </a-form-item>
 
-            <div>
+            <!-- <div>
               <a-form-item label="Nombres y Apellidos:" name="name"
                 :rules="[{ required: true, message: 'Ingresar nombres y apellidos' }]">
                 <a-input v-model:value="formState.name" />
@@ -42,39 +40,52 @@
                 :rules="[{ required: true, message: 'Ingresar número de celular' }]">
                 <a-input v-model:value="formState.phone" />
               </a-form-item>
+            </div> -->
+
+            <div class="personal-info" v-if="formDataSearch.name">
+              <h4 class="c-primary">Mis Datos</h4>
+              <div>
+                <span class="name">Nombres y Apellidos: </span>
+                <span>{{ formDataSearch.name }}</span>
+              </div>
+              <div>
+                <span class="name">Correo electrónico: </span>
+                <span>{{ formDataSearch.email }}</span>
+              </div>
+              <div>
+                <span class="name">Número de contácto: </span>
+                <span>{{ formDataSearch.phone }}</span>
+              </div>
+              <br>
+              <a-button>Editar datos</a-button>
             </div>
-
           </div>
 
 
+          <div v-if="dataTestArr">
+            <div class="box" v-for="(item, idx) in 5" :key="idx">
+              <span class="box-mensagge">Pregunta {{ idx+1 }}</span>
+              <h3 class="box-title">{{ dataTestArr['question'+(idx+1)] }}</h3>
 
-          <div class="box" v-for="(item, idx) in 5" :key="idx">
-            <span class="box-mensagge">Pregunta {{ idx+1 }}</span>
-            <h3 class="box-title">¿A través de que medio recibió información sobre este taller?</h3>
+              <a-form-item :name="`te${idx+1}`" :rules="[{ required: true, message: 'Escoge una respuesta' }]">
+                <a-radio-group class="group-radios" v-model:value="formState[`te${idx+1}`]">
 
-            <a-form-item label="Celular:" :name="`te_${idx+1}`" :rules="[{ required: true, message: 'Escoge una respuesta' }]">
-              <a-radio-group class="group-radios" v-model:value="formState[`te_${idx+1}`]">
-                <a-radio class="item-radio" :value="1">Redes sociales</a-radio>
-                <a-radio class="item-radio" :value="2">SMS</a-radio>
-                <a-radio class="item-radio" :value="3">Correo</a-radio>
-              </a-radio-group>
-            </a-form-item>
-            
-            
-            
+                  <template v-for="(radio, jdx) in 3" :key="jdx">
+                    <a-radio class="item-radio" :value="jdx+1">{{ dataTestArr[`question${idx+1}_opt${jdx+1}`] }}</a-radio>
+                  </template>
+                </a-radio-group>
+              </a-form-item>
+            </div>
           </div>
-
-
-
 
           <div class="box">
             <span class="box-mensagge">Opcional</span>
             <h3 class="box-title">¿Cómo te enteraste del taller?</h3>
             <a-radio-group class="group-radios" v-model:value="formState.social">
-              <a-radio class="item-radio" :value="1">Redes sociales</a-radio>
-              <a-radio class="item-radio" :value="2">SMS</a-radio>
-              <a-radio class="item-radio" :value="3">Correo</a-radio>
-              <a-radio class="item-radio" :value="4">Otros</a-radio>
+              <a-radio class="item-radio" value="rrss">Redes sociales</a-radio>
+              <a-radio class="item-radio" value="sms">SMS</a-radio>
+              <a-radio class="item-radio" value="correo">Correo</a-radio>
+              <!-- <a-radio class="item-radio" value="otro">Otros</a-radio> -->
             </a-radio-group>
           </div>
 
@@ -84,93 +95,189 @@
 
         </a-form>
 
-
-        <pre>{{ formState }}</pre>
-
-
-
-
       </div>
     </section>
-
-
-    <RegistroMYPE :open="open" @handleCloseModal="open = false"/>
-
+    
+    <RegistroMYPE :open="open" @handleCloseModal="open = false" :rucProp="rucProp" @handleSetData="handleSetData"/>
 
   </div>
 </template>
 
 <script setup>
-import { ref, reactive, onMounted } from 'vue';
+import { ref, reactive, onMounted, computed } from 'vue';
 import { message } from 'ant-design-vue';
 import RegistroMYPE from './components/ModalRegistroMYPE.vue'
+import { makeRequest } from '@/utils/api.js'
+import { useRouter,useRoute } from 'vue-router';
+import moment from 'moment';
 
+const route = useRoute();
+const rucProp = ref(null)
 const open = ref(false);
 const searchLoading = ref(false)
 const submitLoading = ref(false)
+const dataTestArr = ref(null)
+const router = useRouter();
 
-const formState = reactive({
-  id_questionnaire: null,
+const testInfo = reactive({
+  id: null,
+  exponent: null,
+  idIn: null,
+  idOut: null,
+  dateTestIn: null,
+  dateTestOut: null,
+  title: null,
+  workShopDate: null,
+});
+const formDataSearch = reactive({
+  name: null,
+  email: null,
+  phone: null,
   ruc: null,
   dni: null,
-  te_1: null,
-  te_2: null,
-  te_3: null,
-  te_4: null,
-  te_5: null,
-  social: null
+})
+const formState = reactive({
+  te1: null,
+  te2: null,
+  te3: null,
+  te4: null,
+  te5: null,
+  social: null,
 });
 
+const formattedDate = computed(() => {
+  return moment(testInfo.dateTestIn).format('DD-MM-YYYY'); 
+});
 const validateNumber = () => {
   formState.ruc = formState.ruc.replace(/\D/g, '');
 };
-const handleSearchMype = async (ruc) => {
+const handleSetData = (data) => {
+  formDataSearch.name = data.name_complete
+  formDataSearch.email = data.email
+  formDataSearch.phone = data.phone
+  formDataSearch.ruc = data.ruc
+  formDataSearch.dni = data.dni_number
+}
+const handleSearchMype = async () => {
+  let ruc = formState.ruc
   if (!ruc) {
     return message.warning('Ingresa el número de RUC');
-  } else {
-    open.value = true
+  } 
+  searchLoading.value = true
+
+  try {
+    const {data} = await makeRequest({ url: `/data-mype/${ruc}`, method: 'GET' });
+    
+    if (data.ruc) {
+      formDataSearch.ruc = data.ruc;
+      formDataSearch.name = data.name_complete;
+      formDataSearch.email = data.email;
+      formDataSearch.phone = data.phone
+      formDataSearch.dni = data.dni_number
+    }
+  } catch (error) {
+    console.error('Error de red:', error.response.status);
+
+    formDataSearch.name = null;
+    formDataSearch.email = null;
+    formDataSearch.phone = null;
+    formDataSearch.dni = null;
+
+    if(error.response.status == 404) {
+      try {
+        const {data} = await makeRequest({ url: `/api-data-mype/${formState.ruc}`, method: 'GET' });
+        const result = {
+          razonSocial: data.razonSocial,
+          numeroDocumento: data.numeroDocumento
+        }
+        rucProp.value = result
+        open.value = true;
+      } catch (error) {
+        message.warning("El número de RUC no es válido")
+        console.error('Error de red:', error);
+      }
+    }
+  } finally {
+    searchLoading.value = false;
   }
-  // searchLoading.value = true;
-  // showForm.value = true;
-  // try {
-  //   const data = await makeRequest({ url: `/mype-ruc/${ruc}`, method: 'GET' });
-  //   if (data.ruc) {
-  //     formState.ruc = data.ruc;
-  //     formState.name = data.nombres_apellidos;
-  //     formState.email = data.email;
-  //     formState.phone = data.telefono
-  //   } else {
-  //     formState.name = '';
-  //     formState.email = '';
-  //     formState.phone = ''
-  //   }
-  // } catch (error) {
-  //   console.error('Error de red:', error);
-  // } finally {
-  //   searchLoading.value = false;
-  // }
 }
 
 const onSubmit = async() => {
-  console.log("uauuaauu")
-  // const payload = formState
-  // submitLoading.value = true;
-  // try {
-  //   const data = await makeRequest({ url: `/answersmype`, method: 'POST', data:payload });
-  //   message.success(data.message);
-  //   router.push({name: 'enviado'});
-  // } catch (error) {
-  //   console.error('Error de redxxxx:', error);
-    // if(error.code == '"ERR_BAD_RESPONSE"') {
-    //   router.push({name: 'pagina404'});
-    // }
-  // } finally {
-  //   submitLoading.value = false;
-  // }
+  if(formDataSearch.name == null && formDataSearch.dni == null && formDataSearch.ruc == null) {
+    handleSearchMype()
+    message.warning('Revisando sus respuestas')
+    scrollTop()
+    return 
+  }
+
+  const payload = {
+    te1: formState.te1,
+    te2: formState.te2,
+    te3: formState.te3,
+    te4: formState.te4,
+    te5: formState.te5,
+    social: formState.social,
+    ruc_mype: formDataSearch.ruc,
+    dni_mype: formDataSearch.dni,
+    workshop_id: testInfo.id
+  }
+
+  submitLoading.value = true;
+  try {
+    const data = await makeRequest({ url: `/sending-test-answers/${testInfo.id}`, method: 'POST', data:payload });
+    message.success(data.message);
+    router.push({name: 'enviado'});
+
+    await makeRequest({ url: `/addPoint/${testInfo.id}/${formState.social}`, method: 'PUT' });
+
+  } catch (error) {
+    console.error('Error:', error);
+  } finally {
+    submitLoading.value = false;
+  }
 };
+const scrollTop = () => {
+  window.scrollTo({
+    top: 200,
+    behavior: 'smooth'
+  });
+}
 const onFinishFailed = () => {
   message.error('Debes de completar todos los datos');
+  scrollTop()
 };
+
+const fetchin = async(idx) => {
+  try {
+    const {data} = await makeRequest({ url: `/testin/${idx}`, method: 'GET' });
+    dataTestArr.value = data
+  } catch (error) {
+    console.error('Error de red:', error);
+  }
+}
+
+const fetchData = async() => {
+  try {
+    const data = await makeRequest({ url: `/get-workshop-slug/${route.params.slug}`, method: 'GET' });
+    testInfo.id = data.workshop.id;
+    testInfo.exponent = data.workshop.exponent_name;
+    testInfo.idIn = data.workshop.id_in;
+    testInfo.idOut = data.workshop.id_out;
+    testInfo.dateTestIn = data.workshop.test_in_date;
+    testInfo.dateTestOut = data.workshop.test_out_date;
+    testInfo.title = data.workshop.title;
+    testInfo.workShopDate = data.workshop.workshop_date;
+
+    await fetchin(data.workshop.id)
+
+  } catch (error) {
+    console.error('Error de red:', error);
+  }
+}
+
+onMounted(
+  fetchData
+);
 </script>
 
 <style lang="scss" scoped>
@@ -207,6 +314,11 @@ const onFinishFailed = () => {
       display: flex;
       flex-direction: column;
       line-height: 1.6;
+      font-family: 'Roboto', sans-serif;
+      b {
+        color: #d9363e;
+        font-size: 15px;
+      }
     }
     .box-mensagge {
       font-size: 15px;
@@ -235,10 +347,27 @@ const onFinishFailed = () => {
     }
   }
 }
-
+.personal-info {
+  .c-primary {
+    color: #d9363e;
+    font-size: 16px;
+  }
+  .name {
+    font-weight: 500;
+  }
+}
 .search-ruc {
   @media screen and (min-width: 768px) {
     width: 350px;
+  }
+}
+</style>
+
+
+<style lang="scss">
+.my-wrapper {
+  label {
+    font-size: 15px !important;
   }
 }
 </style>
