@@ -3,6 +3,9 @@
     <h3>Lista de MYPE</h3>
     <div class="w-search">
       <div>
+        
+        <!-- <img src="" /> -->
+        
         <a-button @click="handleFileUploadExcel" v-if="!selectedExcel">
           <template #icon>
             <UploadOutlined />
@@ -61,7 +64,7 @@
     <a-pagination size="small" :pageSize="50" :total="total"  @change="handlePaginator" :showSizeChanger="false" />
   </div>
 
-  <pre>{{ total }}</pre>
+  <!-- <pre>{{ total }}</pre> -->
 
   <div class="full-spin" v-if="spinning">
     <a-spin :indicator="indicator" :spinning="spinning" />
@@ -118,7 +121,7 @@ const columns = [
   { title: 'DNI',                 dataIndex: 'dniNumber', align: 'center', width: 120},
   { title: 'Sexo',                dataIndex: 'sex', align: 'center', width: 130},
   { title: 'Teléfono',            dataIndex: 'phone', align: 'center', width: 130},
-  { title: 'Email',               dataIndex: 'email', width: 200 },
+  { title: 'Email',               dataIndex: 'email', width: 300 },
   // { title: '',                dataIndex: 'actions', width: '55px'}
 ];
 

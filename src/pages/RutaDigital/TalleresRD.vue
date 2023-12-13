@@ -49,32 +49,32 @@
           </template>
           <template v-if="record.testout_id">
             <a-button type="link">
-              <router-link to="/test-salida">Link</router-link>
+              <router-link :to="`/test-salida/${record.slug}`">Link</router-link>
             </a-button>
             <EditOutlined @click="handleEditEndTest(record)" />
           </template>
         </template>
 
-        <template v-if="column.dataIndex == 'invitation'">
+        <template v-if="column.dataIndex == 'invitation_id'">
           <template v-if="!record.invitation_id">
             <a-button size="small" @click="handleInvitationModal('create', record)">Crear</a-button>
           </template>
           <template v-if="record.invitation_id">
             <a-button type="link">
-              <router-link to="/invitacion">Link</router-link>
+              <router-link :to="`/invitacion/${record.slug}`">Link</router-link>
             </a-button>
-            <EditOutlined  @click="handleInvitationModal('edit', record)" />
+            <EditOutlined @click="handleInvitationModal('edit', record)" />
           </template>
         </template>
 
         <template v-if="column.dataIndex == 'status'">
-          <template v-if="record.status == 'En proceso'">
+          <template v-if="record.status == 1">
             <a-tag :bordered="false" color="success">En proceso</a-tag>
           </template>
-          <template v-if="record.status == 'Finalizado'">
+          <template v-if="record.status == 0">
             <a-tag :bordered="false" color="error">Finalizado</a-tag>
           </template>
-          <template v-if="record.status == 'Cancelado'">
+          <template v-if="record.status == 2">
             <a-tag :bordered="false" color="warning">Cancelado</a-tag>
           </template>
         </template>
@@ -104,7 +104,7 @@
                   <a @click="handleOpenModalEdit(record)">Editar</a>
                 </a-menu-item>
                 <a-menu-item key="1">
-                  <a>Cancelar</a>
+                  <!-- <a>Cancelar</a> -->
                 </a-menu-item>
               </a-menu>
             </template>
@@ -180,9 +180,9 @@ const columns = [
   { title: 'Expositor',           dataIndex: 'expositor', width: 170},
   { title: 'Fecha taller',        dataIndex: 'workshop_date', align: 'center', width: 160},
   { title: 'Intervención',        dataIndex: 'type_intervention', align: 'center', width: 160},
+  { title: 'Invitación',          dataIndex: 'invitation_id', align: 'center', width: 80},
   { title: 'T. Entrada',          dataIndex: 'test_in', align: 'center', width: 80},
   { title: 'T. Salida',           dataIndex: 'test_out', align: 'center', width: 80},
-  { title: 'Invitación',          dataIndex: 'invitation', align: 'center', width: 80},
   { title: 'Estado',              dataIndex: 'status', align: 'center', width: 100},
   { title: 'Inscriptos',          dataIndex: 'registered_count', align: 'center', width: 100},
   { title: 'Link',                dataIndex: 'link_sala', align: 'center', width: 80},
@@ -316,6 +316,7 @@ const handleInvitation = async() => {
     }
     const data = await makeRequest({ url, method, data: payload });
     message.success(data.message);
+    fetchData()
   } catch (error) {
     console.error('Error de red:', error);
     message.error('La invitación fue creada');

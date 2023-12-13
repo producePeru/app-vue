@@ -64,6 +64,7 @@ import { makeRequest } from '@/utils/api.js'
 import { ref, onMounted, computed, h } from 'vue';
 import AgregarExpositor from './components/AgregarExpositor.vue'
 import { MoreOutlined,DownloadOutlined } from '@ant-design/icons-vue';
+import { message } from 'ant-design-vue';
 
 const dataSource = ref([])
 const loading = ref(false)
@@ -78,17 +79,17 @@ const params = ref({
 })
 
 const columns = [
-  { title: 'Nombres',             dataIndex: 'firstName', fixed: 'left', width: 80 },
-  { title: 'Apellidos',           dataIndex: 'lastNames', fixed: 'left', width: 80},
-  { title: 'RUC',                 dataIndex: 'rucNumber', align: 'center', width: 50},
-  { title: 'Tipo documento',      dataIndex: 'documentType', align: 'center', width: 50},
-  { title: 'N° documento',        dataIndex: 'documentNumber', align: 'center', width: 50},
-  { title: 'Correo electrónico',  dataIndex: 'email', width: 80},
-  { title: 'Celular',             dataIndex: 'phoneNumber', align: 'center', width: 40},
+  { title: 'Nombres',             dataIndex: 'firstName', fixed: 'left', width: 40 },
+  { title: 'Apellidos',           dataIndex: 'lastNames', fixed: 'left', width: 50},
+  { title: 'RUC',                 dataIndex: 'rucNumber', align: 'center', width: 40},
+  { title: 'Tipo documento',      dataIndex: 'documentType', align: 'center', width: 30},
+  { title: 'N° documento',        dataIndex: 'documentNumber', align: 'center', width: 40},
+  { title: 'Correo electrónico',  dataIndex: 'email', width: 60},
+  { title: 'Celular',             dataIndex: 'phoneNumber', align: 'center', width: 20},
   { title: 'Especialidad',        dataIndex: 'specialty', align: 'center', width: 40},
-  { title: 'Profesión',           dataIndex: 'profession', align: 'center', width: 40},
-  { title: 'Género',              dataIndex: 'sex', align: 'center', width: 40},
-  { title: '',                    dataIndex: 'actions', align: 'center', width: 20}
+  { title: 'Profesión',           dataIndex: 'profession', align: 'center', width: 50},
+  { title: 'Género',              dataIndex: 'sex', align: 'center', width: 30},
+  { title: '',                    dataIndex: 'actions', align: 'center', width: 15}
 ];
 
 const refreshTable = (val) => {
@@ -99,6 +100,23 @@ const handlePaginator = (current) =>{
   params.value.page = current;
   fetchData()
 }
+
+const handleEditExponent = async(val) => {
+  try {
+    const data = await makeRequest({ url: `/exponents/${val.id}`, method: 'GET' });
+    isIdUpdate.value = data.data
+    open.value = true;
+  } catch (error) {
+    console.error('Error de red:', error);
+    message.warning("Error de red");
+  } 
+}
+
+const handleOpenModal = () => {
+  isIdUpdate.value = null
+  open.value = true;
+};
+
 
 const fetchData = async() => {
   try {
@@ -112,16 +130,6 @@ const fetchData = async() => {
     loading.value = false;
   }
 }
-
-const handleEditExponent = (data) => {
-  isIdUpdate.value = data.id
-  open.value = true
-}
-
-const handleOpenModal = () => {
-  isIdUpdate.value = null
-  open.value = true;
-};
 
 onMounted(
   fetchData

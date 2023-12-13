@@ -133,7 +133,7 @@ const handleFinishFailed = errors => {
 const fetchData = async() => {
   if(router.currentRoute.value.name != 'editar-test-entrada') return
   try {
-    const {data} = await makeRequest({ url: `/testin/${route.query.test}`, method: 'GET' });
+    const {data} = await makeRequest({ url: `/testin/${route.query.id}`, method: 'GET' });
     
     let fec = moment(data.date_end).format('DD/MM/YYYY')
     formState.date_end = ref(dayjs(fec, dateFormat));

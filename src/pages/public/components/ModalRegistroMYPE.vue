@@ -42,7 +42,7 @@
         <a-button type="primary" html-type="submit" :loading="loading">Participar</a-button>
       </div>
     </a-form>
-<pre>{{ formState }}</pre>
+<!-- <pre>{{ formState }}</pre> -->
   </a-modal>
 </template>
 

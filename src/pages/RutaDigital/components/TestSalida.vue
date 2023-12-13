@@ -52,12 +52,13 @@
       </div>
 
       <div>
-        <a-checkbox v-model:checked="formState.comments">Comentarios</a-checkbox>
-        <a-form-item v-if="formState.comments" label="Título comentario" name="comments_title" :rules="[{ required: formState.comments, message: 'Escribir pregunta' }]">
-          <a-input v-model:value="formState.comments_title" />
+        <a-checkbox v-model:checked="formState.is_comments">Comentarios</a-checkbox>
+        
+        <a-form-item v-if="formState.is_comments" label="Título comentario" name="comments" :rules="[{ required: formState.comments, message: 'Escribir pregunta' }]">
+          <a-input v-model:value="formState.comments" />
         </a-form-item>
       </div>
-<pre>{{ formState }}</pre>
+
       <br>
       <a-form-item class="text-center">
         <a-button type="primary" html-type="submit" :loading="loading">
@@ -81,10 +82,6 @@ const dateFormat = 'DD/MM/YYYY';
 const router = useRouter();
 const route = useRoute();
 const loading = ref(false);
-
-// const date_end = ref(null);
-
-// const value1 = ref(dayjs('01/12/2022', dateFormat));
 
 const formState = reactive({
   workshop_id: +route.query.id,
@@ -125,8 +122,8 @@ const formState = reactive({
   satistaction2: null,
   satistaction3: null,
 
-  comments: false,
-  comments_title: null
+  comments: null,
+  is_comments: false
   
 });
 
@@ -177,11 +174,13 @@ const fetchData = async() => {
       formState['question'+index+'_resp'] = data['question'+index+'_resp']
     }
 
+    console.log("suusus", data.is_comments);
+
     formState.satistaction1 = data.satistaction1
     formState.satistaction2 = data.satistaction2
     formState.satistaction3 = data.satistaction3
-    formState.comments = data.is_comments == 1 ? true : false
-    formState.comments_title = data.comments
+    formState.comments = data.comments 
+    formState.is_comments = data.is_comments == 1 ? true : false
 
   } catch (error) {
     console.error('Error de red:', error);

@@ -6,7 +6,6 @@
           <div class="text-center">
             <img src="../../assets/img/tuempresa.png" alt="">
             <div class="head-title">
-              <h1>Confirmación de asistencia a talleres de Ruta Digital</h1>
               <h2 class="title">Confirmación de asistencia a talleres de Ruta Digital</h2>
             </div>
           </div>
@@ -14,44 +13,47 @@
           <a-divider />
           
           <div class="box-info-workshop">
-            <span><b>Expositor: </b>Juan Manuel Sanz</span>
-            <span><b>Fecha del taller:</b> 20/12/2023</span>
-            <span><b>Fecha de expiración del cuestionario:</b> 22/12/2023 - 22:00</span>
+            <span><b>Taller: </b>{{ testInfo.title }}</span>
+            <span><b>Expositor: </b>{{ testInfo.exponent }}</span>
+            <span><b>Fecha del taller:</b> {{ testInfo.workShopDate }}</span>
           </div>
         </div>
 
         <a-form layout="vertical" :model="formState" autocomplete="off" @finish="onSubmit" @finishFailed="onFinishFailed">
           
           <div class="box">
-            <a-form-item class="search-ruc" name="ruc" label="Número de RUC"
+            <a-form-item class="search-ruc f-15" name="ruc" label="Número de RUC"
               :rules="[{ required: true, message: 'Es importante el número de RUC' }]">
               <a-input-search :maxlength="15" :loading="searchLoading" size="large" v-model:value="formState.ruc"
                 enter-button @search="handleSearchMype" @input="validateNumber" />
             </a-form-item>
 
-            <div>
-              <a-form-item label="Nombres y Apellidos:" name="name"
-                :rules="[{ required: true, message: 'Ingresar nombres y apellidos' }]">
-                <a-input v-model:value="formState.name" />
-              </a-form-item>
-              <a-form-item label="Correo:" name="email"
-                :rules="[{ required: true, message: 'Ingresar correo electrónico' }]">
-                <a-input v-model:value="formState.email" />
-              </a-form-item>
-              <a-form-item label="Celular:" name="phone"
-                :rules="[{ required: true, message: 'Ingresar número de celular' }]">
-                <a-input v-model:value="formState.phone" />
-              </a-form-item>
+            <div class="personal-info" v-if="formDataSearch.name">
+              <h4 class="c-primary">Mis Datos</h4>
+              <div>
+                <span class="name">Nombres y Apellidos: </span>
+                <span>{{ formDataSearch.name }}</span>
+              </div>
+              <div>
+                <span class="name">Correo electrónico: </span>
+                <span>{{ formDataSearch.email }}</span>
+              </div>
+              <div>
+                <span class="name">Número de contácto: </span>
+                <span>{{ formDataSearch.phone }}</span>
+              </div>
+              <br>
+              <a-button>Editar datos</a-button>
             </div>
-
           </div>
 
-
           <div class="box">
-            <h3 class="box-title">¿A través de que medio recibió información sobre este taller?</h3>
+            <p class="p-text" v-html="dataPresentation.text1"></p>
+            <p class="p-text" v-html="dataPresentation.text2"></p>
+            <h3 class="box-title">¿Estas interesado en participar en este taller de Ruta Digital?</h3>
             <a-radio-group v-model:value="formState.attendance">
-              <a-radio :style="radioStyle" :value="1">SI</a-radio>
-              <a-radio :style="radioStyle" :value="0">NO</a-radio>
+              <a-radio value="si">SI</a-radio>
+              <a-radio value="no">NO</a-radio>
             </a-radio-group>
           </div>
 
@@ -59,10 +61,10 @@
             <span class="box-mensagge">Opcional</span>
             <h3 class="box-title">¿Cómo te enteraste del taller?</h3>
             <a-radio-group class="group-radios" v-model:value="formState.social">
-              <a-radio class="item-radio" :value="1">Redes sociales</a-radio>
-              <a-radio class="item-radio" :value="2">SMS</a-radio>
-              <a-radio class="item-radio" :value="3">Correo</a-radio>
-              <a-radio class="item-radio" :value="4">Otros</a-radio>
+              <a-radio class="item-radio" value="rrss">Redes sociales</a-radio>
+              <a-radio class="item-radio" value="sms">SMS</a-radio>
+              <a-radio class="item-radio" value="correo">Correo</a-radio>
+              <!-- <a-radio class="item-radio" value="otro">Otros</a-radio> -->
             </a-radio-group>
           </div>          
 
@@ -70,34 +72,51 @@
             <a-button type="primary" html-type="submit" size="large" :loading="submitLoading">Enviar respuestas</a-button>
           </div>
 
-          
-
         </a-form>
-
-
-        <pre>{{ formState }}</pre>
-
-
-
-
       </div>
     </section>
 
 
-    <RegistroMYPE :open="open" @handleCloseModal="open = false"/>
-
+    <RegistroMYPE :open="open" @handleCloseModal="open = false" :rucProp="rucProp" @handleSetData="handleSetData"/>
 
   </div>
 </template>
 
 <script setup>
-import { ref, reactive, onMounted } from 'vue';
+import { ref, reactive, onMounted, computed } from 'vue';
 import { message } from 'ant-design-vue';
 import RegistroMYPE from './components/ModalRegistroMYPE.vue'
+import { useRouter,useRoute } from 'vue-router';
+import { makeRequest } from '@/utils/api.js'
+import moment from 'moment';
 
+
+const route = useRoute();
+const router = useRouter();
+
+const rucProp = ref(null)
 const open = ref(false);
 const searchLoading = ref(false)
 const submitLoading = ref(false)
+const dataPresentation = ref([])
+
+const testInfo = reactive({
+  id: null,
+  exponent: null,
+  idIn: null,
+  idOut: null,
+  dateTestIn: null,
+  dateTestOut: null,
+  title: null,
+  workShopDate: null,
+});
+const formDataSearch = reactive({
+  name: null,
+  email: null,
+  phone: null,
+  ruc: null,
+  dni: null,
+})
 
 const formState = reactive({
   id_questionnaire: null,
@@ -107,56 +126,133 @@ const formState = reactive({
   social: null
 });
 
+
 const validateNumber = () => {
   formState.ruc = formState.ruc.replace(/\D/g, '');
 };
-const handleSearchMype = async (ruc) => {
+const handleSetData = (data) => {
+  formDataSearch.name = data.name_complete
+  formDataSearch.email = data.email
+  formDataSearch.phone = data.phone
+  formDataSearch.ruc = data.ruc
+  formDataSearch.dni = data.dni_number
+}
+const handleSearchMype = async () => {
+  formDataSearch.ruc = null
+  formDataSearch.dni = null
+
+  let ruc = formState.ruc
   if (!ruc) {
     return message.warning('Ingresa el número de RUC');
-  } else {
-    open.value = true
-  }
-  // searchLoading.value = true;
-  // showForm.value = true;
-  // try {
-  //   const data = await makeRequest({ url: `/mype-ruc/${ruc}`, method: 'GET' });
-  //   if (data.ruc) {
-  //     formState.ruc = data.ruc;
-  //     formState.name = data.nombres_apellidos;
-  //     formState.email = data.email;
-  //     formState.phone = data.telefono
-  //   } else {
-  //     formState.name = '';
-  //     formState.email = '';
-  //     formState.phone = ''
-  //   }
-  // } catch (error) {
-  //   console.error('Error de red:', error);
-  // } finally {
-  //   searchLoading.value = false;
-  // }
-}
+  } 
+  searchLoading.value = true
 
+  try {
+    const {data} = await makeRequest({ url: `/data-mype/${ruc}`, method: 'GET' });
+    
+    if (data.ruc) {
+      formDataSearch.ruc = data.ruc;
+      formDataSearch.name = data.name_complete;
+      formDataSearch.email = data.email;
+      formDataSearch.phone = data.phone
+      formDataSearch.dni = data.dni_number
+    }
+  } catch (error) {
+    console.error('Error de red:', error.response.status);
+
+    formDataSearch.name = null;
+    formDataSearch.email = null;
+    formDataSearch.phone = null;
+    formDataSearch.dni = null;
+
+    if(error.response.status == 404) {
+      try {
+        const {data} = await makeRequest({ url: `/api-data-mype/${formState.ruc}`, method: 'GET' });
+        const result = {
+          razonSocial: data.razonSocial,
+          numeroDocumento: data.numeroDocumento
+        }
+        rucProp.value = result
+        open.value = true;
+      } catch (error) {
+        message.warning("El número de RUC no es válido")
+        console.error('Error de red:', error);
+      }
+    }
+  } finally {
+    searchLoading.value = false;
+  }
+}
+const scrollTop = () => {
+  window.scrollTo({
+    top: 200,
+    behavior: 'smooth'
+  });
+}
 const onSubmit = async() => {
-  console.log("uauuaauu")
-  // const payload = formState
-  // submitLoading.value = true;
-  // try {
-  //   const data = await makeRequest({ url: `/answersmype`, method: 'POST', data:payload });
-  //   message.success(data.message);
-  //   router.push({name: 'enviado'});
-  // } catch (error) {
-  //   console.error('Error de redxxxx:', error);
-    // if(error.code == '"ERR_BAD_RESPONSE"') {
-    //   router.push({name: 'pagina404'});
-    // }
-  // } finally {
-  //   submitLoading.value = false;
-  // }
+  if(formDataSearch.name == null && formDataSearch.dni == null && formDataSearch.ruc == null) {
+    handleSearchMype()
+    message.warning('Revisando sus datos')
+    scrollTop()
+    return 
+  }
+
+  const payload = {
+    ruc_mype: formDataSearch.ruc,
+    dni_mype: formDataSearch.dni,
+    workshop_id: testInfo.id,
+    email: formDataSearch.email,
+    is_participant: formState.attendance
+  }
+
+  submitLoading.value = true;
+  try {
+    const data = await makeRequest({ url: `/accept-invitation/${testInfo.id}`, method: 'POST', data:payload });
+    message.success(data.message);
+    router.push({name: 'enviado'});
+
+    await makeRequest({ url: `/addPoint/${testInfo.id}/${formState.social}`, method: 'PUT' });
+
+  } catch (error) {
+    console.error('Error:', error.response.data.errors[0]);
+  } finally {
+    submitLoading.value = false;
+  }
 };
 const onFinishFailed = () => {
   message.error('Debes de completar todos los datos');
+  scrollTop()
 };
+const fetchDataPresentation = async(idx) => {
+  // console.log("isisiisiss", idx);
+  try {
+    const {data} = await makeRequest({ url: `/invitations/${idx}`, method: 'GET' });
+    dataPresentation.value = data
+    console.log(data);
+  } catch (error) {
+    console.error('Error de red:', error);
+  }
+}
+
+const fetchData = async() => {
+  try {
+    const data = await makeRequest({ url: `/get-workshop-slug/${route.params.slug}`, method: 'GET' });
+    testInfo.id = data.workshop.id;
+    testInfo.exponent = data.workshop.exponent_name;
+   
+    testInfo.title = data.workshop.title;
+    testInfo.workShopDate = data.workshop.workshop_date;
+
+    await fetchDataPresentation(data.workshop.id_invitation)
+
+  } catch (error) {
+    console.error('Error de red:', error);
+  }
+}
+
+onMounted(
+  fetchData
+);
 </script>
 
 <style lang="scss" scoped>
@@ -191,9 +287,23 @@ const onFinishFailed = () => {
         font-family: 'Roboto', sans-serif;
       }
     }
+    .p-text {
+      font-size: 15px;
+      font-family: 'Roboto', sans-serif;
+    }
  
     .box-title {
       font-size: 18px;
+    }
+    .box-info-workshop {
+      display: flex;
+      flex-direction: column;
+      line-height: 1.6;
+      font-family: 'Roboto', sans-serif;
+      b {
+        color: #d9363e;
+        font-size: 15px;
+      }
     }
     .box-info-workshop {
       display: flex;

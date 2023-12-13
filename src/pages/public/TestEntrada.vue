@@ -159,6 +159,10 @@ const handleSetData = (data) => {
   formDataSearch.dni = data.dni_number
 }
 const handleSearchMype = async () => {
+
+  formDataSearch.ruc = null
+  formDataSearch.dni = null
+
   let ruc = formState.ruc
   if (!ruc) {
     return message.warning('Ingresa el número de RUC');
@@ -231,7 +235,7 @@ const onSubmit = async() => {
     await makeRequest({ url: `/addPoint/${testInfo.id}/${formState.social}`, method: 'PUT' });
 
   } catch (error) {
-    console.error('Error:', error);
+    console.error('Error:', error.response.data.errors[0]);
   } finally {
     submitLoading.value = false;
   }

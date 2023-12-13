@@ -39,25 +39,39 @@
         <a-button type="primary" html-type="submit" :loading="loading">{{!isIdUpdate ? 'Registrar' : 'Actualizar'}} expositor</a-button>
       </div>
     </a-form>
-
-    <pre class="white">{{ handleSetData() }}</pre>
-
   </a-modal>
 </template>
 
 <script setup>
-import { reactive, ref } from 'vue'; 
+import { reactive, ref, onUpdated } from 'vue'; 
 import { message } from 'ant-design-vue';
 import fields from '@/forms/nuevoExpositor.js'
 import { makeRequest } from '@/utils/api.js'
 
 const props = defineProps(['isIdUpdate'])
-
 const emit = defineEmits(['handleCloseModal', 'refreshTable'])
+
+onUpdated(() => {
+  if (props.isIdUpdate) {
+    formState.documentType = props.isIdUpdate.document_type
+    formState.documentNumber = props.isIdUpdate.document_number
+    formState.firstName = props.isIdUpdate.first_name
+    formState.lastName = props.isIdUpdate.last_name
+    formState.middleName = props.isIdUpdate.middle_name
+    formState.gender = props.isIdUpdate.gender == 'h' ? 1 : 2
+    formState.email = props.isIdUpdate.email
+    formState.rucNumber = props.isIdUpdate.ruc_number
+    formState.phoneNumber = props.isIdUpdate.phone_number
+    formState.specialty = props.isIdUpdate.specialty
+    formState.profession = props.isIdUpdate.profession
+    formState.cvLink = props.isIdUpdate.cv_link
+  } else {
+    clearFields()
+  }
+});
 
 const open = ref(true);
 const loading = ref(false);
-
 const formState = reactive({
   documentType: null,
   documentNumber: null,
@@ -91,28 +105,6 @@ const handleCloseModal = () => {
   open.value = false;
 }
 
-const handleSetData = async() => {
-  if(!props.isIdUpdate) return clearFields();
-
-  try {
-    const data = await makeRequest({ url: `/exponents/${props.isIdUpdate}`, method: 'GET' });
-    formState.documentType = data.document_type
-    formState.documentNumber = data.document_number
-    formState.firstName = data.first_name
-    formState.lastName = data.last_name
-    formState.middleName = data.middle_name
-    formState.gender = data.gender == 'h' ? 1 : 2
-    formState.email = data.email
-    formState.rucNumber = data.ruc_number
-    formState.phoneNumber = data.phone_number
-    formState.specialty = data.specialty
-    formState.profession = data.profession
-    formState.cvLink = data.cv_link
-  } catch (error) {
-    console.error('Error de red:', error);
-  }
-}
-
 const clearFields = () => {
   formState.documentType = null
   formState.documentNumber = null
@@ -127,26 +119,28 @@ const clearFields = () => {
   formState.profession = null
   formState.cvLink = null
 }
-const onSubmit = async(values) => {
 
-  // const user_id = 1;
-  // const payload = {...values, user_id}
+const onSubmit = async() => {
+
   const payload = formState
-
   loading.value = true
+  let url, method
+
+  if(props.isIdUpdate) {
+    url = `/exponents/${props.isIdUpdate.id}`
+    method = "PUT"
+  } else {
+    url = "/exponents"
+    method = "POST"
+  }
   try {
-    if(!props.isIdUpdate) {
-      const data = await makeRequest({ url: '/exponents', method: 'POST', data: payload });
-      message.success(data.message);
-    } else {
-      const data = await makeRequest({ url: `/exponents/${props.isIdUpdate}`, method: 'PUT', data: payload });
-      message.success(data.message);
-    }
+    const data = await makeRequest({ url, method, data: payload });
     clearFields()
     emit('refreshTable', true)
+    message.success(data.message);
     handleCloseModal()
   } catch (error) {
-    message.error('No se pudo registrar este usuario');
+    message.error('No se pudo registrar al exponente');
   } finally {
     loading.value = false;
   }

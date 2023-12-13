@@ -19,13 +19,13 @@
     </a-calendar>  
   </div>
 
-  <pre>::: {{ value }}</pre>
+
 
 
   <a-modal v-model:open="open" title="Detalles del día" >
+    <!-- <p>Some contents...</p>
     <p>Some contents...</p>
-    <p>Some contents...</p>
-    <p>Some contents...</p>
+    <p>Some contents...</p> -->
 
     <template #footer>
       <a-button key="back">Cerrar</a-button>
@@ -35,59 +35,16 @@
 </template>
 
 <script setup>
-import { ref } from 'vue';
-
-// import moment from 'moment';
-// import 'moment/locale/es';
-// import es_ES from '@/utils/es_ES';
-
-
-// const locale = es_ES;
-// const value = ref(moment('11-5-2023', 'MM-DD-YYYY'));
-// const locale = ref(moment.locale('es'));
-
+import { ref, onMounted } from 'vue';
+import { makeRequest } from '@/utils/api.js'
 
 const open = ref(false);
 const value = ref();
+const simulatedData = ref({});
 
 const getListData = (current) => {
-
   const dateKey = `${current.year()}-${current.month() + 1}-${current.date()}`;
-  const simulatedData = {
-    '2023-11-5': [
-      {type: 'warning', content:'Taller es similar al Módulo de tarea y amplia su funcionalidad de diversas maneras. '},
-      {type: 'success', content:'Taller de redes'},
-      {type: 'warning', content:'Taller de redes'},
-      {type: 'warning', content:'Taller de redes'}
-    ],
-
-    "2023-11-22": [
-        {
-            "content": "Tema de jjjdjdh djdjdjshusu wiwii 2323",
-            "status": 1
-        }
-    ],
-    "2023-11-23": [
-        {
-            "content": "Tema de jjjdjdh djdjdjshusu wiwii 2323",
-            "status": 2
-        }
-    ],
-    "2023-11-24": [
-        {
-            "content": "Tema de jjjdjdh djdjdjshusu wiwii 2323",
-            "status": 3
-        }
-    ],
-    "2023-11-25": [
-        {
-            "content": "Tema de jjjdjdh djdjdjshusu wiwii 2323",
-            "status": 1
-        }
-    ]
-  };
-
-  return simulatedData[dateKey] || [];
+  return simulatedData.value[dateKey] || [];
 };
 
 const getMonthData = (current) => {
@@ -107,6 +64,19 @@ const handleSelectDay = (val, string) => {
   open.value = true
 }
 
+
+const fetchData = async() => {
+  try {
+    const data = await makeRequest({ url: '/workshop/bydate', method: 'GET' });
+    simulatedData.value = data;
+  } catch (error) {
+    console.error('Error de red:', error);
+  } 
+};
+
+onMounted(
+  fetchData
+);
 </script>
 
 

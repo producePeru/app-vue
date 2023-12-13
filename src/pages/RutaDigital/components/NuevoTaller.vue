@@ -38,7 +38,7 @@
           :name="el.name" 
           :label="el.label" 
           :rules="[{ required: el.required, message: el.message, type: el.email }]">
-            <a-date-picker class="w-100" show-time :placeholder="formState.workshopDate" @change="onChange" :locale="esES" format="DD-MM-YYYY HH:mm A" />
+            <a-date-picker class="w-100" show-time :placeholder="formState.workshopDate" @change="onChange" :disabled-date="disabledDate" :locale="esES" format="DD-MM-YYYY HH:mm A" />
           </a-form-item>
 
         </template>
@@ -77,7 +77,6 @@ onUpdated(() => {
     formState.slug = null
     formState.link = null
   }
-  
 });
 
 const open = ref(true);
@@ -96,7 +95,7 @@ const formState = reactive({
   testinId: null,
   testoutId: null,
   invitationId: null,
-  status: null,
+  status: 1,
   registered: null,
   rrss: null,
   sms: null,
@@ -134,7 +133,15 @@ const clearFields = () => {
   formState.sms = null
   formState.correo = null
 }
+const disabledDate = (current) => {
+  // Obtén la fecha actual
+  const today = new Date();
+  // Configura la hora actual a medianoche para comparaciones precisas
+  today.setHours(0, 0, 0, 0);
 
+  // Deshabilita las fechas anteriores a la fecha actual
+  return current && current < today;
+};
 const onChange = (value, dateString) => {
   formState.workshopDate = dateString
 };
