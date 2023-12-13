@@ -45,9 +45,15 @@
 h1 {
   margin: 0;
 }
-
+.text-center {
+  text-align: center;
+}
 .ant-form-item-explain-error {
   font-size: 12px;
+}
+.flex-baseline {
+  display: flex;
+  align-items: baseline;
 }
 .flex-between {
   display: flex;
@@ -62,6 +68,15 @@ h1 {
 
 .mb-1 {
   margin-bottom: 1rem;
+}
+.w-100 {
+  width: 100% !important;
+}
+.pointer {
+  cursor: pointer;
+}
+.relative {
+  position: relative;
 }
 .wrapper-search {
   display: grid;
@@ -91,3 +106,7 @@ h1 {
 // :where(.css-dev-only-do-not-override-185kyl0).ant-input-search .ant-input:hover, :where(.css-dev-only-do-not-override-185kyl0).ant-input-search .ant-input:focus {
 //   border-color: var(--color-3)!important;
 // }
+
+.c-primary {
+  color: #d9363e;
+}

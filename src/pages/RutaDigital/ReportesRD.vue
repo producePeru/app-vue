@@ -1,113 +1,198 @@
 <template>
-  <div id="components-table-demo-size">
-  
-    <h4>Reporte de MYPE inscritas en Ruta Digital</h4>
+  <div class="reports">
 
-    <a-row class="mb-1">
-      <a-col :xs="12" :lg="6" :xl="18">
-        <span>nt</span>
+    <h3>Indicadores de Ruta Digital</h3>
+
+    <br/>
+
+    <a-row :gutter="16">
+      <a-col class="years-report" :xs="24" :sm="24" :md="24" :lg="12" :xl="8">
+        <div class="wrapper-chart">
+          <div class="head-chars">
+            <text class="title">Avance de MYPE registrados</text>
+          </div>
+          <Radial :meta="meta" :avance="avance" :porcentage="categoriesAvance" />
+        </div>
       </a-col>
-      <a-col :xs="12" :lg="6" :xl="6">
-        <a-input-search
-        v-model:value="dataToSearch"
-        placeholder="Buscar"
-        enter-button
-        @search="handleSearch"/>
+      
+      <a-col class="years-report" :xs="24" :sm="24" :md="24" :lg="12" :xl="8">
+        <div class="wrapper-chart">
+          <div class="head-chars">
+            <text class="title">Avance Anual</text>
+          </div>
+          <Bar :categories="categoriesYear" :values="yearsData" :height="294" />
+        </div>
+      </a-col>
+       
+      <a-col class="years-report" :xs="24" :sm="24" :md="24" :lg="24" :xl="8">
+        <div class="wrapper-chart">
+          <div class="head-chars">
+            <text class="title">Avance mensual del año {{ yearMonth }}</text>
+            <a-select ref="select" v-model:value="yearMonth" style="width: 80px" @change="handleChangeYear">
+              <a-select-option value="2023">2023</a-select-option>
+              <a-select-option value="2022">2022</a-select-option>
+              <a-select-option value="2021">2021</a-select-option>
+            </a-select>
+          </div>
+          <Bar :categories="categoriesMounth" :values="dataMonth" :height="280" />
+        </div>
+      </a-col>
+    
+      <a-col class="years-report" :xs="24" :sm="24" :md="24" :lg="24" :xl="8">
+        <div class="wrapper-chart">
+          <div class="head-chars">
+            <text class="title">Nivel digitalización del año {{ yearMonth }}</text>
+            <a-select ref="select" v-model:value="yearMonth" style="width: 80px" @change="handleChangeYear">
+              <a-select-option value="2023">2023</a-select-option>
+              <a-select-option value="2022">2022</a-select-option>
+              <a-select-option value="2021">2021</a-select-option>
+            </a-select>
+          </div>
+          <BarColors :colors="colors" />
+        </div>
+      </a-col>
+
+      <a-col class="years-report" :xs="24" :sm="24" :md="24" :lg="24" :xl="8">
+        <div class="wrapper-chart">
+          <div class="head-chars">
+            <text class="title">Nivel digitalización del año {{ yearMonth }}</text>
+            <a-select ref="select" v-model:value="yearMonth" style="width: 80px" @change="handleChangeYear">
+              <a-select-option value="2023">2023</a-select-option>
+              <a-select-option value="2022">2022</a-select-option>
+              <a-select-option value="2021">2021</a-select-option>
+            </a-select>
+          </div>
+          <Pie />
+        </div>
       </a-col>
     </a-row>
-
-    <a-table 
-    bordered
-    class="ant-table-striped"
-    :scroll="{ x: valueX, y: valueY }"
-    :columns="columns" 
-    :data-source="dataSource" 
-    :pagination="false"
-    :loading="loading"
-    size="small">
-      <template v-slot:bodyCell="{column, record, index}">
-        <template v-if="column.dataIndex == 'idx'">
-          <span>{{  `                   ${params.page}${index + 1}`   }}</span>
-        </template>
-
-        <template v-if="column.dataIndex == 'name'">
-          <span>
-            {{ record.name.first }}
-          </span>
-        </template>
-      </template>
-    </a-table>
-  </div>
-
-  <div class="paginator">
-    <a-pagination size="small" :total="50" @change="handlePaginator" />
   </div>
 </template>
 
 <script setup>
-import { makeRequest } from '@/utils/api.js'
 import { ref, onMounted } from 'vue';
+import { makeRequest } from '@/utils/api.js'
+import Bar from '@/components/charts/BarChart.vue'
+import Radial from '@/components/charts/GaugeChart.vue'
+import Pie from '@/components/charts/PieChart.vue'
+import BarColors from '@/components/charts/BarColorsChart.vue'
 
-const dataSource = ref([])
-const loading = ref(false)
-const valueX = ref(1000)
-const valueY = ref('50vh')
-const dataToSearch = ref('')
+//radial_chart
+const meta = 50000
+const avance = ref(null)
+const categoriesAvance = ref([])
 
-const columns = [
-  { title: '#',         dataIndex: 'idx', fixed: 'left', width: 100 },
-  { title: 'Name',      dataIndex: 'nat', fixed: 'left', width: 100 },
-  { title: 'Age',       dataIndex: 'phone' },
-  { title: 'Address',   dataIndex: 'name'},
-  { title: 'Name',      dataIndex: 'nat' },
-  { title: 'Age',       dataIndex: 'phone' },
-  { title: 'Address',   dataIndex: 'name'},
-  { title: 'Name',      dataIndex: 'nat' },
-  { title: 'Age',       dataIndex: 'phone' },
-  { title: 'Address',   dataIndex: 'name'},
-  { title: 'Address',   dataIndex: 'name'},
-  { title: 'Name',      dataIndex: 'nat' },
-  { title: 'Age',       dataIndex: 'phone' },
-  { title: 'Address',   dataIndex: 'name'},
-];
-const params = ref({
-  noinfo: null,
-  results: 15,
-  page: 1,
-  sortField: 'name',
-  sortOrder: 'ascend'
-})
+const categoriesYear = ref([])	
+const yearsData = ref([{
+  name: "Avance anual",
+  data: []
+}]);
 
-const handleSearch = (searchValue) => {
-  console.log(searchValue);
-}
-const handlePaginator = (current) =>{
-  params.value.page = current;
-  fetchData()
-}
+const yearMonth = ref('2023')
+const categoriesMounth = ['Ene', 'Feb', 'Mar', 'Abr', 'May', 'Jun', 'Jul', 'Ago', 'Sep', 'Oct', 'Nov', 'Dic'] 
+const dataMonth = ref([{
+  name: "Avance mensual",
+  data: []
+}]);
 
-const fetchData = async() => {
+const colors = ['#ffe58f', '#1677ff', '#E46651']
+
+const fetchDataMonth = async() => {
   try {
-    loading.value = true;
-    const data = await makeRequest({ method: 'GET', params: params.value });
-    dataSource.value = data.results
+    const data = await makeRequest({ url: '/digital-route/report-months', method: 'GET' });
+    
+    const year = data.reports_years[yearMonth.value]
+    const monthsOrder = [ "Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec" ];
+    const series= monthsOrder.map(month => {
+      const value = year[month];
+      return value !== null ? value : 0;
+    });
+    dataMonth.value[0].data = series
   } catch (error) {
     console.error('Error de red:', error);
-  } finally {
-    loading.value = false;
+  }
+}
+const handleChangeYear = () => {
+  fetchDataMonth()
+}
+
+const fetchDataReports = async() => {
+  try {
+    const data = await makeRequest({ url: '/digital-route/reports', method: 'GET' });
+    
+    avance.value = data.total_mypes
+    const mypes = data.total_mypes
+    const meta = 50000
+    const calculate = (mypes / meta) * 100
+    categoriesAvance.value.push(Math.round(calculate * 100) / 100)
+
+    // =================================================================
+
+    const yearsTotal = data.count_years
+    yearsTotal.map(item => {
+      categoriesYear.value.push(item.anio)
+    });
+    yearsData.value[0].data = yearsTotal.map(item => item.total || 0);
+
+    // =================================================================
+
+  
+
+
+
+
+
+
+  
+  
+  } catch (error) {
+    console.error('Error de red:', error);
   }
 }
 
 onMounted(
-  fetchData
+  fetchDataMonth(),
+  fetchDataReports()
 );
 </script>
 
-<style>
-.paginator {
-  display: flex;
-  justify-content: flex-end;
-  margin-top: 1.5rem;
+<style lang="scss">
+.years-report {
+  padding: .5rem 1rem;
 }
+  .wrapper-chart {
+    border: 1px solid #efefef;
+    // height: 97%;
+    padding: 1rem;
+    border-radius: 8px;
+    box-shadow: 6px 5px 12px #f0f0f0;
+  }
+  .head-chars {
+    margin-bottom: .5rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    // position: absolute;
+    .title {
+      font-size: 15px;
+      font-weight: 500;
+      // padding-left: 1rem;
+      // font-family: Helvetica, Arial, sans-serif;
+      // text-anchor: middle;
+      // dominant-baseline: auto;
+      // font-size: 16px;
+      // font-weight: 900;
+      // fill: rgb(51, 51, 51);
+    }
+  }
+
+  @media screen and (max-width: 1200px) {
+    .years-report {
+      // margin: 0 0;
+    }
+  }
 
 </style>
+
+
+

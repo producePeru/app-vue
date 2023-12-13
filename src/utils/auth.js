@@ -1,8 +1,13 @@
+import Cookies from 'js-cookie';
 import router from '../router/index'
 
 router.beforeEach((to, from, next) => {
 
+  // const isAuthenticated = Cookies.get('token');
+
   const isAuthenticated = true;
+
+
   const userRoles = ['admin'];
   
   if (to.matched.some((record) => record.meta.requiresAuth)) {
@@ -13,7 +18,7 @@ router.beforeEach((to, from, next) => {
         next('/unauthorized'); // Usuario no tiene roles permitidos
       }
     } else {
-      next('/'); // Usuario no autenticado
+      next('/'); 
     }
   } else {
     next();

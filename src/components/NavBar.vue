@@ -1,9 +1,14 @@
 <template>
   <a-layout-header class="navbar">
+
+    <MenuOutlined class="ico-menu" />
+
     <a-dropdown>
       <a class="ant-dropdown-link" @click.prevent>
-        <span class="name-user">Kinder</span>
-        <a-avatar size="default" style="background-color: #f56a00">K</a-avatar>
+        <!-- <span class="name-user">{{ user.nombres }}</span> -->
+        <a-avatar size="default" style="background-color: #cf1322">
+          <!-- {{ user.nombres.charAt(0) }} -->
+        </a-avatar>
       </a>
       <template #overlay>
         <a-menu @click="handleMenuClick">
@@ -22,11 +27,39 @@
 </template>
 
 <script setup>
-import { UserOutlined, PoweroffOutlined } from '@ant-design/icons-vue';
+import { makeRequest } from '@/utils/api.js'
+import { UserOutlined, PoweroffOutlined, MenuOutlined } from '@ant-design/icons-vue';
+import Cookies from 'js-cookie';
+import { useRouter } from 'vue-router';
+
+const router = useRouter();
+
+const user = JSON.parse(localStorage.getItem('user'));
 
 const handleMenuClick = (e) => {
-  console.log('click', e);
+  if(e.key == 1) {
+    router.push('/admin/mis-datos');
+  }
+  if(e.key == 2) {
+    logout()
+  }
 };
+
+const logout = async() => {
+  try {
+      const data = await makeRequest({ url: '/logout', method: 'POST'});
+      if(data) {
+        localStorage.removeItem('user');
+        Cookies.remove('token');
+        Cookies.remove('user', data.role);
+        localStorage.clear();
+        router.push('/');
+      }
+    
+    } catch (error) {
+      console.error('Error de red:', error);
+    }
+}
 </script>
 
 <style lang="scss" scoped>
@@ -36,10 +69,14 @@ const handleMenuClick = (e) => {
   height: 48px;
   display: flex;
   align-items: center;
-  justify-content: end;
+  justify-content: space-between;
   .name-user {
     color: var(--text-color);
     margin-right: .5rem;
+  }
+  .ico-menu {
+    cursor: pointer;
+    font-size: 16px;
   }
 }
 </style>

@@ -1,166 +1,117 @@
 <template>
-  <v-chart class="chart" :option="option" autoresize />
+  <div>
+    <apexchart
+      height="250"
+      type="radialBar"
+      :options="chartOptions"
+      :series="series"
+    ></apexchart>
+
+    <div class="progress-info">
+      <div class="info-item">
+        <span>Meta al 2024</span>
+        <a-tag class="porcentage-tag" color="success"><h3>{{ meta }}</h3></a-tag>
+        <span>100 %</span>
+      </div>
+
+      <div class="info-item">
+        <span>Avance</span>
+        <a-tag class="porcentage-tag" color="processing"><h3>{{ avance }}</h3></a-tag>
+        <span>{{ porcentage[0] }} % </span>
+      </div>
+
+      <div class="info-item">
+        <span>Brecha</span>
+        <a-tag class="porcentage-tag" color="warning"><h3>{{ meta - avance }}</h3></a-tag>
+        <span>{{ 100 - porcentage[0] }} %</span>
+      </div>
+    </div>
+  </div>
 </template>
 
-<script setup>
-import { use } from 'echarts/core';
-import { CanvasRenderer } from 'echarts/renderers';
-import { GaugeChart } from 'echarts/charts';
-import {
-  TitleComponent,
-  TooltipComponent,
-  LegendComponent,
-} from 'echarts/components';
-import VChart, { THEME_KEY } from 'vue-echarts';
-import { ref, provide } from 'vue';
-
-use([
-  CanvasRenderer,
-  GaugeChart,
-  TitleComponent,
-  TooltipComponent,
-  LegendComponent,
-]);
-
-// provide(THEME_KEY, 'dark');
-
-const gaugeData = [
-  {
-    value: 20,
-    name: 'Perfect',
-    title: {
-      offsetCenter: ['0%', '-20rem']
+<script>
+export default {
+  props: {
+    meta: {
+      type: Number,
+      default: 0
     },
-    detail: {
-      valueAnimation: true,
-      offsetCenter: ['0%', '4rem']
+    avance: {
+      type: Number,
+      default: 0
+    },
+    porcentage: {
+      type: Array,
+      default: []
+    },
+    title: {
+      type: String,
+      default: ''
     }
   },
-
- 
-];
-
-const option = ref({
-  series: [
-    {
-      type: 'gauge',
-      startAngle: 90,
-      endAngle: -270,
-      pointer: {
-        show: false
+  data() {
+    return {
+      chartOptions: {
+        chart: {
+          id: "vuechart-example",
+          toolbar: {
+            show: true, 
+            tools: {
+              download: true, 
+              selection: true,
+              zoom: true,
+              zoomin: true,
+              zoomout: true,
+              pan: true,
+              reset: true
+            },
+          }
+        },
+        plotOptions: {
+          radialBar: {
+            hollow: {
+              size: '70%',
+            }
+          },
+        },
+        labels: ['Total'],
+        title: {
+          text: this.title,
+          align: 'center',
+          margin: 10,
+          offsetX: 0,
+          offsetY: 0,
+          floating: false,
+          style: {
+            fontSize: '18px',
+            color: '#333'
+          },
+        },
       },
-      progress: {
-        show: true,
-        overlap: false,
-        roundCap: true,
-        clip: false,
-        itemStyle: {
-          borderWidth: 1,
-          borderColor: 'red'
-        }
-      },
-      axisLine: {
-        lineStyle: {
-          width: 20
-        }
-      },
-      splitLine: {
-        show: false,
-        distance: 0,
-        length: 10
-      },
-      axisTick: {
-        show: false
-      },
-      axisLabel: {
-        show: false,
-        distance: 50
-      },
-      data: gaugeData,
-      title: {
-        fontSize: 14
-      },
-      detail: {
-        width: 50,
-        height: 14,
-        fontSize: 14,
-        color: 'inherit',
-        borderColor: 'inherit',
-        borderRadius: 20,
-        borderWidth: 1,
-        formatter: '{value}%'
-      }
-    }
-  ]
-})
-
-// setInterval(function () {
-//   gaugeData[0].value = +(Math.random() * 100).toFixed(2);
-//   gaugeData[1].value = +(Math.random() * 100).toFixed(2);
-//   gaugeData[2].value = +(Math.random() * 100).toFixed(2);
-//   myChart.setOption<echarts.EChartsOption>({
-//     series: [
-//       {
-//         data: gaugeData,
-//         pointer: {
-//           show: false
-//         }
-//       }
-//     ]
-//   });
-// }, 2000);
-
-
-
-
-
-
-
-
-// const option = ref({
-//   title: {
-//     text: 'Traffic Sources',
-//     left: 'center',
-//   },
-//   tooltip: {
-//     trigger: 'item',
-//     formatter: '{a} <br/>{b} : {c} ({d}%)',
-//   },
-//   legend: {
-//     orient: 'vertical',
-//     left: 'left',
-//     data: ['Direct', 'Email', 'Ad Networks', 'Video Ads', 'Search Engines'],
-//   },
-//   series: [
-//     {
-//       name: 'Traffic Sources',
-//       type: 'pie',
-//       radius: '55%',
-//       center: ['50%', '60%'],
-//       data: [
-//         { value: 335, name: 'Direct' },
-//         { value: 310, name: 'Email' },
-//         { value: 234, name: 'Ad Networks' },
-//         { value: 135, name: 'Video Ads' },
-//         { value: 1548, name: 'Search Engines' },
-//       ],
-//       emphasis: {
-//         itemStyle: {
-//           shadowBlur: 10,
-//           shadowOffsetX: 0,
-//           shadowColor: 'rgba(0, 0, 0, 0.5)',
-//         },
-//       },
-//     },
-//   ],
-// });
-
-
+      series: this.porcentage,
+    };
+  }
+};
 </script>
 
-<style scoped>
-.chart {
-  height: 300px;
-  border: 1px solid red                      ;
+<style lang="scss" scoped>
+.progress-info {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  // border: 1px solid red;
+  // margin-bottom: 1.5rem;
+  .info-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    .porcentage-tag {
+      margin: .2rem 0;
+    }
+    h3 {
+      font-size: 22px;
+      margin: 0;
+      padding: 4px;
+    }
+  }
 }
 </style>

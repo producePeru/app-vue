@@ -1,8 +1,5 @@
 <template>
-  <h3>Registro de Usuarios</h3>
-  <span>Formulario para el registro de usuarios:</span>
-
-  <a-divider />
+  <h3>Mis datos</h3>
 
   <div class="user">
     
@@ -65,11 +62,9 @@
       </div>
 
       <a-form-item>
-        <a-button type="primary" html-type="submit" :loading="loading">Registrar usuario</a-button>
+        <a-button type="primary" html-type="submit" :loading="loading">Actualizar mis datos</a-button>
       </a-form-item>
     </a-form>
-
-
 
     <div>
       <h1></h1>
@@ -231,9 +226,32 @@ const fetchDataSedes = async() => {
   }
 }
 
+const setInformation = () => {
+  const user = JSON.parse(localStorage.getItem('user'));
+  
+  console.log("uauauauua", fields.usuario)
+
+  formState.usuario = user.usuario
+  formState.tipo_documento = user.tipo_documento
+  formState.nro_documento = user.nro_documento
+  formState.apellido_paterno = user.apellido_paterno
+  formState.apellido_materno = user.apellido_materno
+  formState.nombres = user.nombres
+  formState.pais = user.pais
+
+  formState.genero = user.genero
+  formState.discapacidad = user.discapacidad
+  formState.correo = user.correo
+  formState.celular = user.celular
+  formState.idOficina = user.idOficina
+  formState.idSede = user.idSede
+  
+}
+
 onMounted(
   fetchDataCountries(),
-  fetchDataSedes()
+  fetchDataSedes(),
+  setInformation()
 );
 
 </script>
