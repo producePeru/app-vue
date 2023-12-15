@@ -18,7 +18,7 @@
     
     <a-form layout="vertical" :model="formState" @finish="onSubmit" @finishFailed="handleFinishFailed">
       <a-form-item label="Fecha de expiración de la prueba" name="date_end" :rules="[{ required: true, message: 'Seleccionar una fecha' }]">
-        <a-date-picker v-model:value="formState.date_end" :format="dateFormat" />
+        <a-date-picker v-model:value="formState.date_end" :format="dateFormat" :disabled-date="disabledDate" />
       </a-form-item>
       
       <div v-for="(item, idx) in 5" :key="idx">
@@ -44,7 +44,7 @@
       </a-form-item>
     </a-form>
   </div>
-<!-- <pre>{{ formState }}</pre> -->
+
 </template>
 
 <script setup>
@@ -62,12 +62,18 @@ const loading = ref(false);
 
 const date_end = ref(null);
 
+const disabledDate = (current) => {
+  const today = new Date();
+  today.setHours(0, 0, 0, 0);
+  return current && current < today;
+};
+
 const formState = reactive({
   
   workshop_id: +route.query.id,
   user_id: 1,
 
-  date_end: ref(dayjs('04/12/2023', dateFormat)),
+  date_end: ref(dayjs(moment().format('DD/MM/YYYY'), dateFormat)),
   question1: null,
   question1_opt1: null,
   question1_opt2: null,

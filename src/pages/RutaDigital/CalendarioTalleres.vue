@@ -6,7 +6,7 @@
       <template #dateCellRender="{ current }">
         <ul class="events">
           <li v-for="item in getListData(current)" :key="item.content">
-            <a-badge :status="item.type" :text="item.content" @click="handleSelectDay" />
+            <a-badge class="hover-workshop" :status="item.type" :text="item.content" @click="handleSelectDay(item)" />
           </li>
         </ul>
       </template>
@@ -22,14 +22,14 @@
 
 
 
-  <a-modal v-model:open="open" title="Detalles del día" >
-    <!-- <p>Some contents...</p>
-    <p>Some contents...</p>
-    <p>Some contents...</p> -->
-
-    <template #footer>
-      <a-button key="back">Cerrar</a-button>
-    </template>
+  <a-modal v-model:open="open" title="Detalles del taller" width="400px" :footer="null">
+    <div class="details-modal" v-if="workshopData">
+      <b>Tema</b> <span> {{ workshopData.title }}</span>
+      <b>Fecha y hora del taller: </b> <span>{{ workshopData.workshop_date }}</span>
+      <b>Exponente: </b> <span>{{ workshopData.exponent_name }}</span>
+      <b>LInk:</b> <a :href="workshopData.link" target="_blank">{{ workshopData.link }}</a>
+    </div>
+    <a-skeleton v-else />
   </a-modal>
 
 </template>
@@ -41,6 +41,7 @@ import { makeRequest } from '@/utils/api.js'
 const open = ref(false);
 const value = ref();
 const simulatedData = ref({});
+const workshopData = ref();
 
 const getListData = (current) => {
   const dateKey = `${current.year()}-${current.month() + 1}-${current.date()}`;
@@ -59,11 +60,20 @@ const getMonthData = (current) => {
 const onPanelChange = (value, mode) => {
   console.log(value, mode);
 };
-const handleSelectDay = (val, string) => {
-  console.log("jasjakjska", val);
+const handleSelectDay = (item) => {
+  handleDataWorkshopSlug(item.slug)
   open.value = true
 }
 
+const handleDataWorkshopSlug = async(slug) => {
+  workshopData.value = null
+  try {
+    const data = await makeRequest({ url: `/get-workshop-slug/${slug}`, method: 'GET' });
+    workshopData.value = data.workshop;
+  } catch (error) {
+    console.error('Error de red:', error);
+  } 
+};
 
 const fetchData = async() => {
   try {
@@ -100,8 +110,21 @@ onMounted(
 .notes-month section {
   font-size: 28px;
 }
-
-
+.hover-workshop {
+  &:hover {
+    text-decoration: underline;
+    color: #4096ff;
+  }
+}
+.details-modal {
+  display: grid;
+  grid-template-columns: .6fr 1fr;
+  grid-gap: .2rem .5rem;
+  b {
+    font-weight: 500;
+    font-size: 13px;
+  }
+}
 </style>
 
 <style lang="scss">

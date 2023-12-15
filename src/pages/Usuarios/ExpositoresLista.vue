@@ -1,9 +1,9 @@
 <template>
   <div>
-    <h3>Expositores</h3>
+    <h3>EXPOSITORES</h3>
 
     <div class="filters">
-      <a-button type="primary" @click="handleOpenModal">Agregar expositor</a-button>
+      <a-button type="primary" @click="handleOpenModal">AGREGAR EXPOSITOR</a-button>
     </div>
     
     <a-table 

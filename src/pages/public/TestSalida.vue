@@ -91,6 +91,8 @@
       </div>
     </section>
 
+    <pre>{{ formState }}</pre>
+
     <RegistroMYPE :open="open" @handleCloseModal="open = false" :rucProp="rucProp" @handleSetData="handleSetData"/>
 
   </div>
@@ -225,8 +227,8 @@ const onSubmit = async() => {
     ts4: formState.ts4,
     ts5: formState.ts5,
     c1: formState.rate_1,
-    c2: formDataSearch.rate_2,
-    c3: formDataSearch.rate_3,
+    c2: formState.rate_2,
+    c3: formState.rate_3,
     suggestions: formState.comments,
 
     ruc_mype: formDataSearch.ruc,

@@ -6,7 +6,7 @@
         
         
         
-        <a-button @click="handleFileUploadExcel">
+        <a-button @click="handleFileUploadExcel" :loading="spinning">
           <!-- <template #icon>
             <UploadOutlined />
           </template> -->
@@ -64,8 +64,6 @@
     <a-pagination size="small" :pageSize="50" :total="total"  @change="handlePaginator" :showSizeChanger="false" />
   </div>
 
-  <!-- <pre>{{ apiUrl }}</pre> -->
-
   <div class="full-spin" v-if="spinning">
     <a-spin :indicator="indicator" :spinning="spinning" />
   </div>
@@ -75,7 +73,7 @@
 <script setup>
 import axios from 'axios';
 import { makeRequest } from '@/utils/api.js'
-import { ref, onMounted, reactive, h, watch } from 'vue';
+import { ref, onMounted, h } from 'vue';
 import { MoreOutlined,UploadOutlined,LoadingOutlined } from '@ant-design/icons-vue';
 import { message,notification } from 'ant-design-vue';
 
@@ -148,8 +146,6 @@ const handleFileUploadExcel = () => {
 };
 
 const handleUploadExcel = () => {
-
-  
   if (!selectedExcel.value) {
     alert("Por favor selecciona un archivo Excel.");
     return;
@@ -164,30 +160,29 @@ const handleUploadExcel = () => {
       'Content-Type': 'multipart/form-data',
     }
   })
-  .then(response => {
-    message.success(response.data.message);
-    fetchData()
+  .then(() => {
+
+    handleCallBack()
+
   }).catch(error => {
     console.error('Error al subir el archivo', error);
   }).finally(() => {
-    spinning.value = false;
     selectedExcel.value = null;
+    // spinning.value = false;
   })
 }
-// const handleDropData = async() => {
-//   try {
-//     const data = await makeRequest({ url: '/digital-route/delete-excel-records', method: 'DELETE' });
-//     new Promise(resolve => {
-//       setTimeout(() => resolve(true), 3000);
-//     });
-//     if(data) {
-//       message.success(data.message);
-//       fetchData()
-//     }
-//   } catch (error) {
-//     console.error('Error de red:', error);
-//   }
-// }
+
+const handleCallBack = () => {
+  const fetchDataAndSpin = () => {
+    if (dataSource.value.length < 1) {
+      return fetchData();
+    }
+    return spinning.value = false;
+  };
+
+  return setInterval(fetchDataAndSpin, 3000);
+};
+
 
 const fetchData = async() => {
   try {

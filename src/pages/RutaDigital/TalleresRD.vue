@@ -1,10 +1,10 @@
 <template>
   <div>
   
-    <h3>Talleres de Ruta Digital</h3>
+    <h3>TALLERES DE RUTA DIGITAL</h3>
 
     <div class="filters">
-      <a-button type="primary" @click="handleOpenModal">Nuevo taller</a-button>
+      <a-button type="primary" @click="handleOpenModal">NUEVO TALLER</a-button>
     </div>
     
     <a-table 

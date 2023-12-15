@@ -136,9 +136,11 @@
   </div>
 
   <!-- modal -->
-  <a-modal v-model:open="open" title="Sugerencias" :footer="null">
-    <h4>RUC: {{ dataModal.ruc_mype }}</h4>
-    <p>{{ dataModal.suggestions }}</p>
+  <a-modal v-model:open="open" title="Sugerencias" :footer="null" width="350px">
+    <div class="details-modal" v-if="dataModal">
+      <b>RUC</b> <span>{{ dataModal.ruc_mype }}</span>
+      <b>Sugerencia</b> <span>{{ dataModal.suggestions }}</span>
+    </div>
   </a-modal>
 
 </template>
