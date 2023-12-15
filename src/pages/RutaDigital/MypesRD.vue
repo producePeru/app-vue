@@ -188,7 +188,7 @@ const handleCallBack = () => {
     return spinning.value = false;
   };
 
-  return setInterval(fetchDataAndSpin, 3000);
+  return setInterval(fetchDataAndSpin, 6000);
 };
 
 
