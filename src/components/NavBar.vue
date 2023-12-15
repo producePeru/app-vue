@@ -1,21 +1,22 @@
 <template>
   <a-layout-header class="navbar">
 
-    <MenuOutlined class="ico-menu" />
+    <!-- <MenuOutlined class="ico-menu" /> -->
+    <span></span>
 
     <a-dropdown>
       <a class="ant-dropdown-link" @click.prevent>
-        <!-- <span class="name-user">{{ user.nombres }}</span> -->
+        <span class="name-user">{{ user.name }}</span>
         <a-avatar size="default" style="background-color: #cf1322">
-          <!-- {{ user.nombres.charAt(0) }} -->
+          {{ user.name.charAt(0) }}
         </a-avatar>
       </a>
       <template #overlay>
         <a-menu @click="handleMenuClick">
-          <a-menu-item key="1">
+          <!-- <a-menu-item key="1">
             <UserOutlined />
             Ver Perfil
-          </a-menu-item>
+          </a-menu-item> -->
           <a-menu-item key="2">
             <PoweroffOutlined />
             Cerrar Sesión
