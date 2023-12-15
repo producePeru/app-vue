@@ -1,116 +1,116 @@
 
 const fields = {
-  usuario: {
+  nickName: {
     type: 'iText',
     label: 'Usuario',
-    name: 'usuario',
+    name: 'nickName',
     required: true,
     message: 'Escribe cuenta de usuario'
   },
-  clave: {
+  password: {
     type: 'iText',
     label: 'Contraseña',
-    name: 'clave',
+    name: 'password',
     required: true,
     message: 'Registra la contraseña'
   },
-  tipo_documento: {
+  documentType: {
     type: 'iSelect',
     label: 'Tipo de documento',
-    name: 'tipo_documento',
+    name: 'documentType',
     required: true,
     message: 'Seleccionar tipo de documento',
   },
-  nro_documento: {
+  documentNumber: {
     type: 'iSearch',
     label: 'Número de documento',
-    name: 'nro_documento',
+    name: 'documentNumber',
     required: true,
     message: 'Error en el tipo de documento'
   },
-  apellido_paterno: {
+  lastName: {
     type: 'iText',
     label: 'Apellido paterno',
-    name: 'apellido_paterno',
+    name: 'lastName',
     required: true,
     message: 'Escribe el apellido paterno'
   },
-  apellido_materno: {
+  middleName: {
     type: 'iText',
     label: 'Apellido materno',
-    name: 'apellido_materno',
+    name: 'middleName',
     required: true,
     message: 'Escribe el apellido materno'
   },
-  nombres: {
+  name: {
     type: 'iText',
     label: 'Nombres',
-    name: 'nombres',
+    name: 'name',
     required: true,
     message: 'Escribe el nombre'
   },
-  pais: {
+  countryCode: {
     type: 'iSelectWrite',
     label: 'País',
-    name: 'pais',
+    name: 'countryCode',
     required: true,
     message: 'Seleccionar país'
   },
 
-  fecha_nacimiento: {
+  birthdate: {
     type: 'iDate',
     label: 'Fecha de nacimiento',
-    name: 'fecha_nacimiento',
+    name: 'birthdate',
     required: false,
     message: 'Seleccionar país'
   },
-  genero: {
+  gender: {
     type: 'iSelect',
     label: 'Género',
-    name: 'genero',
+    name: 'gender',
     required: false,
     message: 'Seleccionar tipo de documento',
   },
-  discapacidad: {
+  isDisabled: {
     type: 'iSelect',
     label: '¿Tiene discapacidad?',
-    name: 'discapacidad',
+    name: 'isDisabled',
     required: true,
     message: 'Seleccionar un tipo',
   },
-  correo: {
+  email: {
     type: 'iText',
     label: 'Correo',
-    name: 'correo',
-    required: false,
+    name: 'email',
+    required: true,
     email: 'email',
     message: 'Escribe el correo del usuario'
   },
-  celular: {
+  phoneNumber: {
     type: 'iText',
     label: 'Celular',
-    name: 'celular',
+    name: 'phoneNumber',
     required: false,
     message: 'Escribe el celular del usuario'
   },
-  oficina: {
+  officeCode: {
     type: 'iSelect',
     label: 'Oficina',
-    name: 'idOficina',
+    name: 'officeCode',
     required: true,
     message: 'Seleccionar un tipo',
   },
-  sede_labora: {
-    type: 'iSelect',
-    label: 'Sede donde labora',
-    name: 'idSede',
-    required: true,
-    message: 'Seleccionar un tipo',
-  },
-  tipo_usuario: {
+  // sedeCode: {
+  //   type: 'iSelect',
+  //   label: 'Sede donde labora',
+  //   name: 'sedeCode',
+  //   required: true,
+  //   message: 'Seleccionar un tipo',
+  // },
+  role: {
     type: 'iSelect',
     label: 'Tipo de usuario',
-    name: 'tipo_usuario',
+    name: 'role',
     required: true,
     message: 'Seleccionar un tipo',
   }

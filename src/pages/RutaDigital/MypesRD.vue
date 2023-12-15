@@ -1,19 +1,19 @@
 <template>
   <div>
-    <h3>Lista de MYPE</h3>
+    <h3>LISTA DE MYPE</h3>
     <div class="w-search">
       <div>
         
-        <!-- <img src="" /> -->
         
-        <a-button @click="handleFileUploadExcel" v-if="!selectedExcel">
-          <template #icon>
+        
+        <a-button @click="handleFileUploadExcel">
+          <!-- <template #icon>
             <UploadOutlined />
-          </template>
-          Seleccionar archivo excel
+          </template> -->
+          <img width="20" style="margin-right: 6px;" src="../../assets/img/icoexcel.png" /> SUBIR EXCEL
         </a-button>
 
-        <a-button @click="handleUploadExcel" type="primary" v-else>Cargar datos</a-button>
+        <!-- <a-button @click="handleUploadExcel" type="primary" v-else>Cargar datos</a-button> -->
 
         <!-- <a-popconfirm v-if="dataSource.length >= 1" title="¿Deseas borrar todos los registros?" @confirm="handleDropData">
           <a-button type="primary" danger class="btn-drop">Drop base de datos</a-button>
@@ -64,7 +64,7 @@
     <a-pagination size="small" :pageSize="50" :total="total"  @change="handlePaginator" :showSizeChanger="false" />
   </div>
 
-  <!-- <pre>{{ total }}</pre> -->
+  <!-- <pre>{{ apiUrl }}</pre> -->
 
   <div class="full-spin" v-if="spinning">
     <a-spin :indicator="indicator" :spinning="spinning" />
@@ -135,25 +135,21 @@ const handlePaginator = (current) =>{
 }
 
 const handleFileUploadExcel = () => {
-  // let input = document.createElement('input');
-  // input.type = 'file';
-  // input.accept = '.xls, .xlsx';
-  // input.onchange = event => {
-  //   selectedExcel.value = event.target.files[0];
-  //   notification.open({
-  //     message: '¡Alerta!',
-  //     description:
-  //       'Debes ahora de cargar los datos del excel.',
-  //     onClick: () => {
-  //       console.log('Notification Clicked!');
-  //     },
-  //   });
+  let input = document.createElement('input');
+  input.type = 'file';
+  input.accept = '.xls, .xlsx';
+  input.onchange = event => {
+    selectedExcel.value = event.target.files[0];
 
-  // };
-  // input.click();
+    handleUploadExcel()
+
+  };
+  input.click();
 };
 
 const handleUploadExcel = () => {
+
+  
   if (!selectedExcel.value) {
     alert("Por favor selecciona un archivo Excel.");
     return;
@@ -162,7 +158,7 @@ const handleUploadExcel = () => {
   const formData = new FormData();
   formData.append('file', selectedExcel.value);
 
-  axios.post(`${apiUrl}/digital-route/load-excel`, formData, {
+  axios.post(`${apiUrl}/import-excel`, formData, {
     headers: { 
       'Accept': 'application/json',
       'Content-Type': 'multipart/form-data',

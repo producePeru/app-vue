@@ -57,7 +57,7 @@
                 <span>{{ formDataSearch.phone }}</span>
               </div>
               <br>
-              <a-button>Editar datos</a-button>
+              <!-- <a-button>Editar datos</a-button> -->
             </div>
           </div>
 

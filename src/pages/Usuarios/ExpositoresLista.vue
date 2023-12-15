@@ -8,7 +8,7 @@
     
     <a-table 
     bordered
-    :scroll="{ x: 2000 }"
+    :scroll="{ x: 1800 }"
     class="ant-table-striped"
     :columns="columns" 
     :data-source="dataSource" 
@@ -39,9 +39,9 @@
                 <a-menu-item>
                   <a @click="handleEditExponent(record)">Editar</a>
                 </a-menu-item>
-                <a-menu-item>
+                <!-- <a-menu-item>
                   <a>Eliminar</a>
-                </a-menu-item>
+                </a-menu-item> -->
               </a-menu>
             </template>
           </a-dropdown>
@@ -85,7 +85,7 @@ const columns = [
   { title: 'Tipo documento',      dataIndex: 'documentType', align: 'center', width: 30},
   { title: 'N° documento',        dataIndex: 'documentNumber', align: 'center', width: 40},
   { title: 'Correo electrónico',  dataIndex: 'email', width: 60},
-  { title: 'Celular',             dataIndex: 'phoneNumber', align: 'center', width: 20},
+  { title: 'Celular',             dataIndex: 'phoneNumber', align: 'center', width: 80},
   { title: 'Especialidad',        dataIndex: 'specialty', align: 'center', width: 40},
   { title: 'Profesión',           dataIndex: 'profession', align: 'center', width: 50},
   { title: 'Género',              dataIndex: 'sex', align: 'center', width: 30},

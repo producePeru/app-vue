@@ -2,7 +2,7 @@
   <a-result
     status="success"
     title="¡Gracias por participar de este formulario!"
-    sub-title="El amiwito Pol te saluda."
+    sub-title=""
   >
     <template #extra>
       <!-- <a-button key="console" type="primary">Go Console</a-button>

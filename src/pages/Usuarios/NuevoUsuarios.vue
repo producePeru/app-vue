@@ -1,5 +1,5 @@
 <template>
-  <h3>Registro de Usuarios</h3>
+  <h3>REGISTRO DE USUARIOS</h3>
   <span>Formulario para el registro de usuarios:</span>
 
   <a-divider />
@@ -22,12 +22,12 @@
           :name="el.name" 
           :label="el.label" 
           :rules="[{ required: el.required, message: el.message }]">
-            <a-select v-if="el.name == 'tipo_documento'" v-model:value="formState[el.name]" :options="typeDocuments" />
-            <a-select v-if="el.name == 'genero'" v-model:value="formState[el.name]" :options="geners" />
-            <a-select v-if="el.name == 'discapacidad'" v-model:value="formState[el.name]" :options="disabilities" />
-            <a-select v-if="el.name == 'idOficina'" v-model:value="formState[el.name]" :options="offices"/>
-            <a-select v-if="el.name == 'idSede'" v-model:value="formState[el.name]" :options="sedes" />
-            <a-select v-if="el.name == 'tipo_usuario'" v-model:value="formState[el.name]" :options="typeUsers" />
+            <a-select v-if="el.name == 'documentType'" v-model:value="formState[el.name]" :options="typeDocuments" />
+            <a-select v-if="el.name == 'gender'" v-model:value="formState[el.name]" :options="geners" />
+            <a-select v-if="el.name == 'isDisabled'" v-model:value="formState[el.name]" :options="disabilities" />
+            <a-select v-if="el.name == 'officeCode'" v-model:value="formState[el.name]" :options="offices"/>
+            <a-select v-if="el.name == 'sedeCode'" v-model:value="formState[el.name]" :options="sedes" />
+            <a-select v-if="el.name == 'role'" v-model:value="formState[el.name]" :options="typeUsers" />
           </a-form-item>
 
           <a-form-item 
@@ -59,7 +59,7 @@
           :name="el.name" 
           :label="el.label" 
           :rules="[{ required: el.required, message: el.message }]">
-            <a-date-picker v-model:value="formState.fecha_nacimiento" style="width: 100%;" format="YYYY-MM-DD" />
+            <a-date-picker v-model:value="formState.birthdate" style="width: 100%;" />
           </a-form-item>
         </template>
       </div>
@@ -69,7 +69,7 @@
       </a-form-item>
     </a-form>
 
-
+<!-- <pre>{{ formState  }}</pre> -->
 
     <div>
       <h1></h1>
@@ -84,29 +84,29 @@ import { reactive, ref, onMounted } from 'vue';
 import { message } from 'ant-design-vue';
 import fields from '@/forms/nuevoUsuario.js'
 import idUserStorage from '@/utils/storage'
+import { useRouter } from 'vue-router';
 
 const loading = ref(!true);
 const countries = ref([]);
 const sedes = ref([]);
-
+const router = useRouter();
 
 const formState = reactive({
-  usuario: '',
-  clave: '',
-  tipo_documento: '',
-  nro_documento: '',
-  apellido_paterno: '',
-  apellido_materno: '',
-  nombres: '',
-  pais: '',
-  fecha_nacimiento: null,
-  genero: '',
-  discapacidad: null,
-  correo: '',
-  celular: '',
-  tipo_usuario: null,
-  idOficina: null,
-  idSede: null,
+  nickName: '',
+  password: '',
+  documentType: 1,
+  documentNumber: '',
+  middleName: '',
+  name: '',
+  countryCode: 173,
+  birthdate: null,
+  gender: '',
+  isDisabled: null,
+  email: '',
+  phoneNumber: '',
+  role: null,
+  officeCode: null,
+  sedeCode: 1,
 });
 
 const typeDocuments = [
@@ -139,33 +139,32 @@ const offices = [
 ]
 
 const clearFields = () => {
-  formState.usuario = ''
-  formState.clave = ''
-  formState.tipo_documento = ''
-  formState.nro_documento = ''
-  formState.apellido_paterno = ''
-  formState.apellido_materno = ''
-  formState.nombres = ''
-  formState.pais = ''
-  formState.fecha_nacimiento = null
-  formState.genero = ''
-  formState.discapacidad = null
-  formState.correo = ''
-  formState.celular = ''
-  formState.tipo_usuario = null
-  formState.idOficina = null
-  formState.idSede = null
+  formState.nickName = ''
+  formState.password = ''
+  formState.documentType = 1
+  formState.documentNumber = ''
+  formState.lastName = ''
+  formState.middleName = ''
+  formState.name = ''
+  formState.countryCode = 173
+  formState.birthdate = null
+  formState.gender = ''
+  formState.isDisabled = null
+  formState.email = ''
+  formState.phoneNumber = ''
+  formState.role = null
+  formState.officeCode = null
+  formState.sedeCode = null
 }
 
-const onSubmit = async values => {
-  const id_registrador = idUserStorage;
-  const payload = {...values, id_registrador}
-  
+const onSubmit = async () => {
+  const payload = formState
   loading.value = true
   try {
     const data = await makeRequest({ url: '/register', method: 'POST', data: payload });
     clearFields()
     message.success(data.message);
+    router.push('/admin/ruta-digital/talleres');
   } catch (error) {
     message.error('No se pudo registrar este usuario');
   } finally {
@@ -182,13 +181,13 @@ const onSubmitFail = () => {
 
 
 const handleSearchUser = async searchValue => {
-  if(!formState.tipo_documento) return message.error('Selecciona el tipo de documento');
+  if(!formState.documentType) return message.error('Selecciona el tipo de documento');
   if(!searchValue) return message.error('El campo número de documento esta vacío');
  
   console.log(typeof(searchValue))
 
   // try {
-  //   const data = { dni: formState.nro_documento, tipo_doc: formState.tipo_documento };
+  //   const data = { dni: formState.documentNumber, tipo_doc: formState.documentType };
 
   //   const response = await axios.post('https://soporte-pnte.com/tuempresa/tu-empresa/consultar-dni', data);
 
@@ -201,7 +200,7 @@ const handleSearchUser = async searchValue => {
 
 
 const validateNumber = () => {
-  formState.nro_documento = formState.nro_documento.replace(/\D/g, ''); 
+  formState.documentNumber = formState.documentNumber.replace(/\D/g, ''); 
 };
 
 const filterOption = (input, option) => {
@@ -210,25 +209,22 @@ const filterOption = (input, option) => {
 
 const fetchDataCountries = async() => {
   try {
-    const data = await makeRequest({ url: '/countries', method: 'GET' });
-    data.map((item) => {
-      const obj = { value: item.idPais, label: item.nombre }
-      countries.value = [...countries.value, obj]
-    })
+    const {data} = await makeRequest({ url: '/countries', method: 'GET' });
+    countries.value = data;
   } catch (error) {
     console.error('Error de red:', error);
   }
 }
 const fetchDataSedes = async() => {
-  try {
-    const data = await makeRequest({ url: '/sedes', method: 'GET' });
-    data.map((item) => {
-      const obj = { label: item.nombre, value: item.idSede }
-      sedes.value = [...sedes.value, obj]
-    })
-  } catch (error) {
-    console.error('Error de red:', error);
-  }
+  // try {
+  //   const data = await makeRequest({ url: '/sedes', method: 'GET' });
+  //   data.map((item) => {
+  //     const obj = { label: item.nombre, value: item.sedeCode }
+  //     sedes.value = [...sedes.value, obj]
+  //   })
+  // } catch (error) {
+  //   console.error('Error de red:', error);
+  // }
 }
 
 onMounted(
