@@ -36,7 +36,7 @@
         <br />
 
         <a-form-item>
-          <a-button size="large" block type="primary" html-type="submit" class="btn-login" :loading="loading">Ingresar xxdxd</a-button>
+          <a-button size="large" block type="primary" html-type="submit" class="btn-login" :loading="loading">Ingresar</a-button>
         </a-form-item>
       </a-form>
     </div>
