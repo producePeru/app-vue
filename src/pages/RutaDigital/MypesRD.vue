@@ -74,6 +74,7 @@
 import axios from 'axios';
 import { makeRequest } from '@/utils/api.js'
 import { ref, onMounted, h } from 'vue';
+import Cookies from 'js-cookie';
 import { MoreOutlined,UploadOutlined,LoadingOutlined } from '@ant-design/icons-vue';
 import { message,notification } from 'ant-design-vue';
 
@@ -86,6 +87,7 @@ const apiUrl = window.location.hostname == '127.0.0.1' ? dev : prod;
 
 const spinning = ref(!true);
 const selectedExcel = ref(null);
+const token = Cookies.get('token');
 
 const dataSource = ref([])
 const loading = ref(false)
@@ -163,6 +165,7 @@ const handleUploadExcel = () => {
     headers: { 
       'Accept': 'application/json',
       'Content-Type': 'multipart/form-data',
+      'Authorization': `Bearer ${token}`
     }
   })
   .then(() => {
