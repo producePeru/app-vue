@@ -36,14 +36,14 @@
         <br />
 
         <a-form-item>
-          <a-button size="large" block type="primary" html-type="submit" class="btn-login" :loading="loading">Ingresar</a-button>
+          <a-button size="large" block type="primary" html-type="submit" class="btn-login" :loading="loading">Ingresar xxdxd</a-button>
         </a-form-item>
       </a-form>
     </div>
   </div>
 </template>
 <script setup>
-import { makeRequest } from '@/utils/noToken.js'
+import { requestNoToken } from '@/utils/noToken.js'
 import { reactive, ref } from 'vue';
 import { UserOutlined, LockOutlined } from '@ant-design/icons-vue';
 import { message } from 'ant-design-vue';
@@ -62,7 +62,7 @@ const onSubmit =async() => {
   loading.value = true
   try {
     const payload = formState
-    const data = await makeRequest({ url: '/login', method: 'POST', data:  payload });
+    const data = await requestNoToken({ url: '/login', method: 'POST', data:  payload });
 
     localStorage.setItem('user', JSON.stringify(data.user));
     

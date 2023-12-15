@@ -33,7 +33,7 @@ api.interceptors.response.use(
   }
 );
 
-export async function makeRequest({ method, url, data, params }) {
+export async function requestNoToken({ method, url, data, params }) {
   // eslint-disable-next-line no-useless-catch
   try {
     let response;
