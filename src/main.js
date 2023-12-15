@@ -11,6 +11,7 @@ import Antd from 'ant-design-vue'
 import 'ant-design-vue/dist/reset.css';
 
 import './utils/api.js'
+import './utils/noToken.js'
 import './utils/auth'
 import VueApexCharts from "vue3-apexcharts";
 import { esES } from 'ant-design-vue/lib/locale-provider';

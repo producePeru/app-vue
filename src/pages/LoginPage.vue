@@ -12,16 +12,16 @@
 
       <a-form class="form-wrapper" :model="formState" name="basic" autocomplete="off" @finish="onSubmit" @finishFailed="onFinishFailed">
 
-        <a-form-item name="usuario" :rules="[{ required: true, message: 'Ingresa tu cuenta de usuario' }]">
-          <a-input v-model:value="formState.usuario" size="large">
+        <a-form-item name="email" :rules="[{ required: true, message: 'Ingresa tu cuenta de email' }]">
+          <a-input v-model:value="formState.email" size="large">
             <template #prefix>
               <UserOutlined class="input-ico" />
             </template>
           </a-input>
         </a-form-item>
 
-        <a-form-item name="clave" :rules="[{ required: true, message: 'La contraseña es incorrecta' }]">
-          <a-input-password v-model:value="formState.clave" size="large">
+        <a-form-item name="password" :rules="[{ required: true, message: 'La contraseña es incorrecta' }]">
+          <a-input-password v-model:value="formState.password" size="large">
             <template #prefix>
               <LockOutlined class="input-ico" />
             </template>
@@ -43,7 +43,7 @@
   </div>
 </template>
 <script setup>
-import { makeRequest } from '@/utils/api.js'
+import { makeRequest } from '@/utils/noToken.js'
 import { reactive, ref } from 'vue';
 import { UserOutlined, LockOutlined } from '@ant-design/icons-vue';
 import { message } from 'ant-design-vue';
@@ -54,25 +54,25 @@ const loading = ref(false)
 const router = useRouter();
 
 const formState = reactive({
-  usuario: '',
-  clave: '',
+  email: '',
+  password: '',
 });
 
 const onSubmit =async() => {
   loading.value = true
   try {
-    // const payload = formState
-    // const data = await makeRequest({ url: '/login', method: 'POST', data:  payload });
+    const payload = formState
+    const data = await makeRequest({ url: '/login', method: 'POST', data:  payload });
 
-    // localStorage.setItem('user', JSON.stringify(data.user));
+    localStorage.setItem('user', JSON.stringify(data.user));
     
-    // console.log(data);
+    console.log(data);
     
 
-    // Cookies.set('token', data.access_token);
-    // Cookies.set('user', data.role);
+    Cookies.set('token', data.access_token);
+    Cookies.set('user', data.role);
 
-    router.push('/admin/inicio');
+    router.push('/admin/ruta-digital/calendario');
   
   } catch (error) {
     message.error("Las credenciales son incorrectas")

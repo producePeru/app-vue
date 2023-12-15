@@ -1,5 +1,5 @@
 <template>
-  <h3>Calendario de talleres</h3>
+  <h3>CALENDARIO DE TALLERES</h3>
   <br>
   <div :style="{ width: '100%', border: '1px solid #d9d9d9', borderRadius: '4px', padding: '1rem'}">
     <a-calendar v-model:value="value" @panelChange="onPanelChange">
@@ -18,9 +18,6 @@
       </template>
     </a-calendar>  
   </div>
-
-
-
 
   <a-modal v-model:open="open" title="Detalles del taller" width="400px" :footer="null">
     <div class="details-modal" v-if="workshopData">

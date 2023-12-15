@@ -1,36 +1,24 @@
 import axios from 'axios';
-import Cookies from 'js-cookie';
 
 const prod = import.meta.env.VITE_APP_API_URL_PRODUCTION
-const dev = import.meta.env.VITE_APP_API_URL_LOCAL
+const dev = import.meta.env.VITE_APP_API_URL_LOCAL_NO_TOKEN
 const apiUrl = window.location.hostname == '127.0.0.1' ? dev : prod;
 
 const api = axios.create({
   baseURL: apiUrl
 });
 
-// Agregar un interceptor para solicitudes
+
 api.interceptors.request.use(
   (config) => {
-    // Verificar si config.headers existe y, si no, inicializarlo como un objeto vacío
+    
     config.headers = config.headers || {};
-
-    const token = Cookies.get('token');
-    if (token) {
-      config.headers['Authorization'] = `Bearer ${token}`;
-    } else {
-      delete config.headers['Authorization'];  // Eliminar el encabezado si no hay token
-    }
-
-    // Establecer el tipo de contenido como application/json
     config.headers['Content-Type'] = 'application/json';
 
     return config;
   },
   (error) => {
-    // Desactivar el estado de carga en caso de error
-
-    // Manejo de errores de solicitud
+    
     return Promise.reject(error);
   }
 );
@@ -38,13 +26,9 @@ api.interceptors.request.use(
 // Agregar un interceptor para respuestas
 api.interceptors.response.use(
   (response) => {
-    // Desactivar el estado de carga al recibir una respuesta
-    // Puedes realizar modificaciones en la respuesta aquí
-    // Por ejemplo, procesar los datos antes de que lleguen al componente
     return response;
   },
   (error) => {
-    // Desactivar el estado de carga en caso de error
     return Promise.reject(error);
   }
 );

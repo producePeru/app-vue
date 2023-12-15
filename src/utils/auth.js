@@ -3,10 +3,9 @@ import router from '../router/index'
 
 router.beforeEach((to, from, next) => {
 
-  // const isAuthenticated = Cookies.get('token');
+  const isAuthenticated = Cookies.get('token');
 
-  const isAuthenticated = true;
-
+  // const isAuthenticated = true;
 
   const userRoles = ['admin'];
   
