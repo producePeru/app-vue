@@ -77,7 +77,12 @@ import { ref, onMounted, h } from 'vue';
 import { MoreOutlined,UploadOutlined,LoadingOutlined } from '@ant-design/icons-vue';
 import { message,notification } from 'ant-design-vue';
 
-const apiUrl = import.meta.env.VITE_APP_API_URL;
+// const apiUrl = import.meta.env.VITE_APP_API_URL;
+
+const prod = import.meta.env.VITE_APP_API_URL_PRODUCTION
+const dev = import.meta.env.VITE_APP_API_URL_LOCAL
+const apiUrl = window.location.hostname == '127.0.0.1' ? dev : prod;
+
 
 const spinning = ref(!true);
 const selectedExcel = ref(null);
