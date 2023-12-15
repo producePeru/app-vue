@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-const prod = import.meta.env.VITE_APP_API_URL_PRODUCTION
+const prod = import.meta.env.VITE_APP_API_URL_PRODUCTION_NO_TOKEN
 const dev = import.meta.env.VITE_APP_API_URL_LOCAL_NO_TOKEN
 const apiUrl = window.location.hostname == '127.0.0.1' ? dev : prod;
 
