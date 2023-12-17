@@ -34,6 +34,7 @@
 <script setup>
 import { ref, onMounted } from 'vue';
 import { makeRequest } from '@/utils/api.js'
+import { requestNoToken } from '@/utils/noToken.js'
 
 const open = ref(false);
 const value = ref();
@@ -65,7 +66,7 @@ const handleSelectDay = (item) => {
 const handleDataWorkshopSlug = async(slug) => {
   workshopData.value = null
   try {
-    const data = await makeRequest({ url: `/get-workshop-slug/${slug}`, method: 'GET' });
+    const data = await requestNoToken({ url: `/get-workshop-slug/${slug}`, method: 'GET' });
     workshopData.value = data.workshop;
   } catch (error) {
     console.error('Error de red:', error);

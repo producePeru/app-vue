@@ -52,6 +52,7 @@ import { message } from 'ant-design-vue';
 import fields from '@/forms/nuevaMYPE.js'
 import { esES } from 'ant-design-vue/lib/locale-provider';
 import { makeRequest } from '@/utils/api.js'
+import { requestNoToken } from '@/utils/noToken.js'
 import options from '@/utils/categories.js'
 
 const props = defineProps(['rucProp'])
@@ -100,7 +101,7 @@ const districts = ref([]);
 
 const getDepartaments = async() => {
   try {
-    const {data} = await makeRequest({ url: '/departaments', method: 'GET' });
+    const {data} = await requestNoToken({ url: '/departaments', method: 'GET' });
     departments.value = data
   } catch (error) {
     console.log(error);
@@ -114,7 +115,7 @@ const handleDepartaments = (id, evt) => {
 }
 const getProvinces = async(id) => {
   try {
-    const {data} = await makeRequest({ url: `/province/${id}`, method: 'GET' });
+    const {data} = await requestNoToken({ url: `/province/${id}`, method: 'GET' });
     provinces.value = data
   } catch (error) {
     console.log(error);
@@ -126,7 +127,7 @@ const handleProvinces = (id, evt) => {
 }
 const getDistricts = async(id) => {
   try {
-    const {data} = await makeRequest({ url: `/district/${id}`, method: 'GET' });
+    const {data} = await requestNoToken({ url: `/district/${id}`, method: 'GET' });
     districts.value = data
   } catch (error) {
     console.log(error);
@@ -164,7 +165,7 @@ const onSubmit = async() => {
 
   loading.value = true
   try {
-    const data = await makeRequest({ url: '/mype', method: 'POST', data: payload });
+    const data = await requestNoToken({ url: '/register-mype', method: 'POST', data: payload });
     message.success(data.message);
     emit('handleSetData', data.data)
     handleCloseModal()

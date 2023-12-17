@@ -152,6 +152,7 @@ import { EditOutlined,VideoCameraOutlined,MoreOutlined,DownloadOutlined } from '
 import NuevoTaller from './components/NuevoTaller.vue'
 import { useRouter } from 'vue-router';
 import { message } from 'ant-design-vue';
+import { requestNoToken } from '@/utils/noToken.js'
 
 const isIdUpdate = ref(null);
 const router = useRouter();
@@ -287,7 +288,7 @@ const handleOpenModal = () => {
 };
 const handleOpenModalEdit = async(val) => {
   try {
-    const data = await makeRequest({ url: `/get-workshop-slug/${val.slug}`, method: 'GET' });
+    const data = await requestNoToken({ url: `/get-workshop-slug/${val.slug}`, method: 'GET' });
     isIdUpdate.value = data.workshop
     open.value = true;
   } catch (error) {

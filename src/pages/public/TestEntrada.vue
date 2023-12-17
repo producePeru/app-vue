@@ -110,6 +110,7 @@ import RegistroMYPE from './components/ModalRegistroMYPE.vue'
 import { makeRequest } from '@/utils/api.js'
 import { useRouter,useRoute } from 'vue-router';
 import moment from 'moment';
+import { requestNoToken } from '@/utils/noToken.js'
 
 const route = useRoute();
 const rucProp = ref(null)
@@ -170,7 +171,7 @@ const handleSearchMype = async () => {
   searchLoading.value = true
 
   try {
-    const {data} = await makeRequest({ url: `/data-mype/${ruc}`, method: 'GET' });
+    const {data} = await requestNoToken({ url: `/data-mype/${ruc}`, method: 'GET' });
     
     if (data.ruc) {
       formDataSearch.ruc = data.ruc;
@@ -189,7 +190,7 @@ const handleSearchMype = async () => {
 
     if(error.response.status == 404) {
       try {
-        const {data} = await makeRequest({ url: `/api-data-mype/${formState.ruc}`, method: 'GET' });
+        const {data} = await requestNoToken({ url: `/api-data-mype/${formState.ruc}`, method: 'GET' });
         const result = {
           razonSocial: data.razonSocial,
           numeroDocumento: data.numeroDocumento
@@ -228,11 +229,11 @@ const onSubmit = async() => {
 
   submitLoading.value = true;
   try {
-    const data = await makeRequest({ url: `/sending-test-answers/${testInfo.id}`, method: 'POST', data:payload });
+    const data = await requestNoToken({ url: `/sending-test-answers/${testInfo.id}`, method: 'POST', data:payload });
     message.success(data.message);
     router.push({name: 'enviado'});
 
-    await makeRequest({ url: `/addPoint/${testInfo.id}/${formState.social}`, method: 'PUT' });
+    await requestNoToken({ url: `/addPoint/${testInfo.id}/${formState.social}`, method: 'PUT' });
 
   } catch (error) {
     console.error('Error:', error.response.data.errors[0]);
@@ -253,7 +254,7 @@ const onFinishFailed = () => {
 
 const fetchin = async(idx) => {
   try {
-    const {data} = await makeRequest({ url: `/testin/${idx}`, method: 'GET' });
+    const {data} = await requestNoToken({ url: `/testin-questions/${idx}`, method: 'GET' });
     dataTestArr.value = data
   } catch (error) {
     console.error('Error de red:', error);
@@ -262,7 +263,7 @@ const fetchin = async(idx) => {
 
 const fetchData = async() => {
   try {
-    const data = await makeRequest({ url: `/get-workshop-slug/${route.params.slug}`, method: 'GET' });
+    const data = await requestNoToken({ url: `/get-workshop-slug/${route.params.slug}`, method: 'GET' });
     testInfo.id = data.workshop.id;
     testInfo.exponent = data.workshop.exponent_name;
     testInfo.idIn = data.workshop.id_in;
