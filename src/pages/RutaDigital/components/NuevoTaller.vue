@@ -174,14 +174,8 @@ const onSubmit = async() => {
 
 const fetchData = async() => {
   try {
-    const data = await makeRequest({ url: '/exponents', method: 'GET' });
-    data.data.forEach(element => {
-      const obj = {
-        label: element.firstName + ' ' + element.lastName,
-        value: element.id
-      }
-      exponents.value.push(obj)
-    });
+    const {data} = await makeRequest({ url: '/enableds-exponents', method: 'GET' });
+    exponents.value = data
   } catch (error) {
     console.error('Error de red:', error);
   } 

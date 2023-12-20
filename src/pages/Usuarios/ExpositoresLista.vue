@@ -29,6 +29,13 @@
           </template>
         </template>
 
+        <template v-if="column.dataIndex == 'enabled'">
+          <a-switch v-model:checked="record.enabled" @change="handleExpositorEnabled(record.id)" :checkedValue="1" :unCheckedValue="0">
+            <template #checkedChildren><check-outlined /></template>
+            <template #unCheckedChildren><close-outlined /></template>
+          </a-switch>
+        </template>
+
         <template v-if="column.dataIndex == 'actions'">
           <a-dropdown :trigger="['click']">
             <a class="ant-dropdown-link" @click.prevent>
@@ -63,7 +70,7 @@
 import { makeRequest } from '@/utils/api.js'
 import { ref, onMounted, computed, h } from 'vue';
 import AgregarExpositor from './components/AgregarExpositor.vue'
-import { MoreOutlined,DownloadOutlined } from '@ant-design/icons-vue';
+import { MoreOutlined,DownloadOutlined,CloseOutlined, CheckOutlined } from '@ant-design/icons-vue';
 import { message } from 'ant-design-vue';
 
 const dataSource = ref([])
@@ -73,6 +80,7 @@ const valueY = ref(80000)
 const open = ref(false);
 const total = ref(0)
 const isIdUpdate = ref(null);
+const isEnabled = ref(false);
 
 const params = ref({
   page: 1
@@ -89,6 +97,7 @@ const columns = [
   { title: 'Especialidad',        dataIndex: 'specialty', align: 'center', width: 40},
   { title: 'Profesión',           dataIndex: 'profession', align: 'center', width: 50},
   { title: 'Género',              dataIndex: 'sex', align: 'center', width: 30},
+  { title: 'Habilitado',          dataIndex: 'enabled', align: 'center', width: 30},
   { title: '',                    dataIndex: 'actions', align: 'center', width: 15}
 ];
 
@@ -116,7 +125,17 @@ const handleOpenModal = () => {
   isIdUpdate.value = null
   open.value = true;
 };
-
+const handleExpositorEnabled= async(id) => {
+  try {
+    loading.value = true;
+    const data = await makeRequest({ url: `/enabled-disabled/${id}`, method: 'PUT' });
+    message.success(data.message);
+  } catch (error) {
+    console.error('Error de red:', error);
+  } finally {
+    loading.value = false;
+  }
+}
 
 const fetchData = async() => {
   try {

@@ -12,11 +12,14 @@
           
           <a-divider />
           
-          <div class="box-info-workshop">
+          <div v-if="testInfo.title" class="box-info-workshop">
             <span><b>Taller: </b>{{ testInfo.title }}</span>
             <span><b>Expositor: </b>{{ testInfo.exponent }}</span>
             <span><b>Fecha del taller:</b> {{ testInfo.workShopDate }}</span>
           </div>
+
+          <a-skeleton v-else active />
+
         </div>
 
         <a-form layout="vertical" :model="formState" autocomplete="off" @finish="onSubmit" @finishFailed="onFinishFailed">
@@ -229,7 +232,6 @@ const fetchDataPresentation = async(idx) => {
   try {
     const {data} = await requestNoToken({ url: `/invitations/${idx}`, method: 'GET' });
     dataPresentation.value = data
-    console.log(data);
   } catch (error) {
     console.error('Error de red:', error);
   }

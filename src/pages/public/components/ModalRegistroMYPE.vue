@@ -160,7 +160,8 @@ const onSubmit = async() => {
     dniNumber: formState.dniNumber,
     sex: formState.sex,
     phone: formState.phone,
-    email: formState.email
+    email: formState.email,
+    added: 1
   }
 
   loading.value = true
