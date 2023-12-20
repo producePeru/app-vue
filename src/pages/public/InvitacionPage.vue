@@ -48,8 +48,9 @@
           </div>
 
           <div class="box">
-            <p class="p-text" v-html="dataPresentation.text1"></p>
-            <p class="p-text" v-html="dataPresentation.text2"></p>
+        
+            <div class="html-invitation" v-html="dataPresentation.content"></div>
+            <br>
             <h3 class="box-title">¿Estas interesado en participar en este taller de Ruta Digital?</h3>
             <a-radio-group v-model:value="formState.attendance">
               <a-radio value="si">SI</a-radio>
@@ -226,7 +227,7 @@ const onFinishFailed = () => {
 const fetchDataPresentation = async(idx) => {
   // console.log("isisiisiss", idx);
   try {
-    const {data} = await makeRequest({ url: `/invitations/${idx}`, method: 'GET' });
+    const {data} = await requestNoToken({ url: `/invitations/${idx}`, method: 'GET' });
     dataPresentation.value = data
     console.log(data);
   } catch (error) {
@@ -338,11 +339,15 @@ onMounted(
   }
 }
 
-
-
 .search-ruc {
   @media screen and (min-width: 768px) {
     width: 350px;
   }
+}
+</style>
+
+<style>
+.html-invitation p {
+  margin: 0;
 }
 </style>

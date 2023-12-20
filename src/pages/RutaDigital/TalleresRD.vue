@@ -124,12 +124,15 @@
 
   <a-modal footer="" v-model:open="modalInvitation" :title="`${titleInvitation} invitación`" width="460px">
     <a-form :model="formStateInvitation" layout="vertical" @finish="handleInvitation">
-      <a-form-item label="Texto 1">
+      <!-- <a-form-item label="Texto 1">
         <a-textarea v-model:value="formStateInvitation.text1" />
       </a-form-item>
       <a-form-item label="Texto 2">
         <a-textarea v-model:value="formStateInvitation.text2" />
-      </a-form-item>
+      </a-form-item> -->
+
+      <QuillEditor class="quill-editor" v-model:content="contenido" :options="editorOptions" contentType="html" />
+
       <div class="wrapper-form_btn">
         <a-button type="primary" html-type="submit" :loading="loadingInvitation">{{ `${titleInvitation} invitación` }}</a-button>
       </div>
@@ -153,13 +156,15 @@ import NuevoTaller from './components/NuevoTaller.vue'
 import { useRouter } from 'vue-router';
 import { message } from 'ant-design-vue';
 import { requestNoToken } from '@/utils/noToken.js'
+import { QuillEditor } from '@vueup/vue-quill';
+import 'quill/dist/quill.snow.css';
 
+const contenido = ref('');
 const isIdUpdate = ref(null);
 const router = useRouter();
 const dataSource = ref([])
 const loading = ref(false)
 const loadingInvitation = ref(false)
-
 const valueX = ref(1000)
 const valueY = ref('60vh')
 // const dataToSearch = ref('')
@@ -171,6 +176,25 @@ const modalInvitation = ref(false);
 const titleInvitation = ref('Crear');
 const recordData = ref(null);
 
+const editorOptions = {
+  theme: 'snow',
+  modules: {
+    
+    toolbar: [
+      [{ header: [1, 2, false] }],
+      ['bold', 'italic', 'underline', 'strike'],
+      [{ align: [] }],
+      // ['link', 'image', 'video'],
+      [{ list: 'ordered' }, { list: 'bullet' }],
+      // ['blockquote', 'code-block'],
+      [{ script: 'sub' }, { script: 'super' }],
+      // [{ indent: '-1' }, { indent: '+1' }],
+      [{ color: [] }, { background: [] }],
+      ['clean'],
+    ],
+  },
+  contentType: 'html', 
+};
 
 const params = ref({
   page: 1
@@ -272,8 +296,7 @@ const handleInvitationModal = async (val, record) => {
     titleInvitation.value = 'Editar'
     try {
       const {data} = await makeRequest({ url: `/invitations/${recordData.value.invitation_id}`, method: 'GET' });
-      formStateInvitation.text1 = data.text1
-      formStateInvitation.text2 = data.text2
+      contenido.value = data.content
       formStateInvitation.workshop_id = data.workshop_id
     } catch (error) {
       console.error('Error de red:', error);
@@ -311,8 +334,7 @@ const handleInvitation = async() => {
   loadingInvitation.value = true;
   try {
     const payload = {
-      text1: formStateInvitation.text1,
-      text2: formStateInvitation.text2,
+      content: contenido.value,
       workshop_id: recordData.value.id != null ? recordData.value.id : formStateInvitation.workshop_id
     }
     const data = await makeRequest({ url, method, data: payload });
@@ -359,7 +381,7 @@ onMounted(
 );
 </script>
 
-<style>
+<style lang="scss">
 .filters {
   margin: 1rem 0;
 }
@@ -371,5 +393,10 @@ onMounted(
 .wrapper-form_btn {
   margin-top: 1rem;
   text-align: right;
+}
+.quill-editor {
+  .ql-editor {
+    height: 200px;
+  }
 }
 </style>

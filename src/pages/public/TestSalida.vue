@@ -91,8 +91,6 @@
       </div>
     </section>
 
-    <pre>{{ formState }}</pre>
-
     <RegistroMYPE :open="open" @handleCloseModal="open = false" :rucProp="rucProp" @handleSetData="handleSetData"/>
 
   </div>
@@ -253,8 +251,9 @@ const onFinishFailed = () => {
 };
 
 const fetchOut = async(idx) => {
+  console.log("uuuu", idx);
   try {
-    const {data} = await makeRequest({ url: `/testout/${idx}`, method: 'GET' });
+    const {data} = await requestNoToken({ url: `/testout-questions/${idx}`, method: 'GET' });
     dataTestArr.value = data
   } catch (error) {
     console.error('Error de red:', error);
@@ -272,7 +271,7 @@ const fetchData = async() => {
     testInfo.title = data.workshop.title;
     testInfo.workShopDate = data.workshop.workshop_date;
 
-    await fetchOut(data.workshop.id_out)
+    await fetchOut(data.workshop.id)
 
   } catch (error) {
     console.error('Error de red:', error);
