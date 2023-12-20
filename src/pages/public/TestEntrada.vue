@@ -233,7 +233,7 @@ const onSubmit = async() => {
     message.success(data.message);
     router.push({name: 'enviado'});
 
-    await requestNoToken({ url: `/addPoint/${testInfo.id}/${formState.social}`, method: 'PUT' });
+    await requestNoToken({ url: `/add-point/${testInfo.id}/${formState.social}`, method: 'PUT' });
 
   } catch (error) {
     console.error('Error:', error.response.data.errors[0]);
