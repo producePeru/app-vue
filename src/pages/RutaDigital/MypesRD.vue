@@ -73,7 +73,7 @@
 <script setup>
 import axios from 'axios';
 import { makeRequest } from '@/utils/api.js'
-import { ref, onMounted, h } from 'vue';
+import { ref, onMounted, h, onBeforeUnmount } from 'vue';
 import Cookies from 'js-cookie';
 import { MoreOutlined,UploadOutlined,LoadingOutlined } from '@ant-design/icons-vue';
 import { message,notification } from 'ant-design-vue';
@@ -88,24 +88,21 @@ const apiUrl = window.location.hostname == '127.0.0.1' ? dev : prod;
 const spinning = ref(!true);
 const selectedExcel = ref(null);
 const token = Cookies.get('token');
-
 const dataSource = ref([])
 const loading = ref(false)
 const valueX = ref(1200)
-// const valueY = s
 const dataToSearch = ref('')
 const total = ref(0)
 
 
-const valueY = ref(null)
+const valueY = ref(window.innerHeight - 100);
+const actualizarAltura = () => {
+  valueY.value = window.innerHeight - 300;
+};
+onBeforeUnmount(() => {
+  window.removeEventListener('resize', actualizarAltura);
+});
 
-const hanleSizeHeigth = () => {
-  return valueY.value = 150
-}
-
-// watch(hanleSizeHeigth, (new) => {
-//    console.log(new);
-// });
 
 const indicator = h(LoadingOutlined, {
   style: {  fontSize: '40px' },
@@ -117,7 +114,7 @@ const params = ref({
 
 const columns = [
   { title: 'RUC',                 dataIndex: 'ruc', fixed: 'left', width: 120},
-  { title: 'Razón social',        dataIndex: 'socialReason', width: 250},
+  { title: 'Razón social',        dataIndex: 'socialReason', fixed: 'left', width: 250},
   { title: 'Rubro',               dataIndex: 'category', width: 200},
   { title: 'Tipo',                dataIndex: 'type', align: 'center', width: 140 },
   { title: 'Departamento',        dataIndex: 'department', width: 140 },
@@ -131,9 +128,9 @@ const columns = [
 ];
 
 
-const handleSearch = (searchValue) => {
-  console.log(searchValue);
-}
+// const handleSearch = (searchValue) => {
+//   console.log(searchValue);
+// }
 const handlePaginator = (current) =>{
   params.value.page = current;
   fetchData()
@@ -205,9 +202,11 @@ const fetchData = async() => {
   }
 }
 
-onMounted(
-  fetchData
-);
+onMounted(() => {
+  fetchData();
+  window.addEventListener('resize', actualizarAltura);
+  actualizarAltura();
+});
 </script>
 
 <style lang="scss">
