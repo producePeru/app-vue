@@ -95,8 +95,8 @@ onMounted(
 }
 .reports {
   display: grid;
-  grid-template-columns: repeat(3, 33%);
-  grid-gap: 2% 1%;
+  grid-template-columns: repeat(1, 100%);
+  grid-gap: 1rem;
   width: 99%;
   .wrapper {
     border: 1px solid #ccc;
@@ -106,6 +106,14 @@ onMounted(
     &-div {
       // padding-top: 1rem;
     }
+  }
+
+  @media screen and (min-width: 720px) {
+    grid-template-columns: repeat(2, 50%);
+    grid-gap: 2% 1%;
+  }
+  @media screen and (min-width: 992px) {
+    grid-template-columns: repeat(3, 33%);
   }
 }
 </style>

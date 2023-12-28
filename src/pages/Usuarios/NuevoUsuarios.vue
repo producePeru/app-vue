@@ -264,6 +264,7 @@ const fetchDataCountries = async() => {
     countries.value = data;
   } catch (error) {
     console.error('Error de red:', error);
+    
   }
 }
 const fetchDataSedes = async() => {
