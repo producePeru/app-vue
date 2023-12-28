@@ -1,7 +1,7 @@
 <template>
   <a-layout-sider v-model:collapsed="collapsed"  class="my-sider">
     <div class="logo center-center">
-      <h1 v-show="!collapsed">Admin Pro</h1>
+      <h1 v-show="!collapsed">Admin</h1>
     </div>
 
     <a-menu theme="dark" v-model:selectedKeys="selectedKeys" v-model:openKeys="openKeys" mode="inline">
