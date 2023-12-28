@@ -69,7 +69,32 @@
       </a-form-item>
     </a-form>
 
-<!-- <pre>{{ formState  }}</pre> -->
+
+    <section>
+      <div>
+        <a-checkbox v-model:checked="userRoles.user">Usuarios</a-checkbox>
+        <a-select
+        v-model:value="userRoles.userActions"
+        mode="multiple"
+        style="width: 100%"
+        placeholder="Agrega vistas para este usuario"
+        @change="handleChange('user')"
+        :options="usuarios" />
+      </div>
+      <br>
+      <div>
+        <a-checkbox v-model:checked="userRoles.digital">Ruta Digital</a-checkbox>
+        <a-select
+        v-model:value="userRoles.digitalActions"
+        mode="multiple"
+        style="width: 100%"
+        placeholder="Agrega vistas para este usuario"
+        @change="handleChange('digital')"
+        :options="rutaDigital" />
+      </div>
+
+    </section>
+
 
     <div>
       <h1></h1>
@@ -85,6 +110,7 @@ import { message } from 'ant-design-vue';
 import fields from '@/forms/nuevoUsuario.js'
 import idUserStorage from '@/utils/storage'
 import { useRouter } from 'vue-router';
+import { requestNoToken } from '@/utils/noToken.js'
 
 const loading = ref(!true);
 const countries = ref([]);
@@ -157,6 +183,31 @@ const clearFields = () => {
   formState.sedeCode = null
 }
 
+
+
+
+const usuarios = ref([
+  {value: 'Nuevo Usuario'}, {value: 'Lista de usuarios'}
+]);
+const rutaDigital = ref([
+  {value: 'Reportes'}, {value: 'Calendario'}, {value: 'Talleres'}, {value: 'MYPE'}, {value: 'Expositores'}
+]);
+
+
+const userRoles = reactive({
+  user: false,
+  userActions: [],
+  digital: false,
+  digitalActions: []
+});
+
+const handleChange = value => {
+  if(!userRoles[value]) {
+    userRoles[value] = true
+  }
+};
+
+
 const onSubmit = async () => {
   const payload = formState
   loading.value = true
@@ -209,7 +260,7 @@ const filterOption = (input, option) => {
 
 const fetchDataCountries = async() => {
   try {
-    const {data} = await makeRequest({ url: '/countries', method: 'GET' });
+    const {data} = await requestNoToken({ url: '/countries', method: 'GET' });
     countries.value = data;
   } catch (error) {
     console.error('Error de red:', error);
