@@ -41,3 +41,25 @@ const descargar = async() => {
         });
     
 }
+
+
+
+
+
+
+PINIA 
+import { useMyStore } from '../stores/index';
+const myStore = useMyStore();
+
+
+// const someValue = ref(null);
+const { getSomeValue } = useMyStore();      //PINTA
+
+funcion 
+myStore.addFile();
+
+
+// onMounted(() => {
+//   // Obtener el valor del getter al montar el componente
+//   someValue.value = myStore.getSomeValue;
+// });

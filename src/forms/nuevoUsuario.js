@@ -22,8 +22,8 @@ const fields = {
     message: 'Seleccionar tipo de documento',
   },
   documentNumber: {
-    type: 'iSearch',
-    label: 'Número de documento',
+    type: 'iText',
+    label: 'Núm. de documento',
     name: 'documentNumber',
     required: true,
     message: 'Error en el tipo de documento'
@@ -56,6 +56,35 @@ const fields = {
     required: true,
     message: 'Seleccionar país'
   },
+  email: {
+    type: 'iText',
+    label: 'Correo',
+    name: 'email',
+    required: true,
+    email: 'email',
+    message: 'Escribe el correo del usuario'
+  },
+  officeCode: {
+    type: 'iSelect',
+    label: 'Oficina',
+    name: 'officeCode',
+    required: true,
+    message: 'Seleccionar un tipo',
+  },
+  sedeCode: {
+    type: 'iSelect',
+    label: 'Sede donde labora',
+    name: 'sedeCode',
+    required: true,
+    message: 'Seleccionar un tipo',
+  },
+  role: {
+    type: 'iSelect',
+    label: 'Tipo de usuario',
+    name: 'role',
+    required: true,
+    message: 'Seleccionar un tipo',
+  },
 
   birthdate: {
     type: 'iDate',
@@ -71,21 +100,15 @@ const fields = {
     required: false,
     message: 'Seleccionar tipo de documento',
   },
+  
   isDisabled: {
     type: 'iSelect',
     label: '¿Tiene discapacidad?',
     name: 'isDisabled',
-    required: true,
+    required: false,
     message: 'Seleccionar un tipo',
   },
-  email: {
-    type: 'iText',
-    label: 'Correo',
-    name: 'email',
-    required: true,
-    email: 'email',
-    message: 'Escribe el correo del usuario'
-  },
+ 
   phoneNumber: {
     type: 'iText',
     label: 'Celular',
@@ -93,27 +116,8 @@ const fields = {
     required: false,
     message: 'Escribe el celular del usuario'
   },
-  officeCode: {
-    type: 'iSelect',
-    label: 'Oficina',
-    name: 'officeCode',
-    required: true,
-    message: 'Seleccionar un tipo',
-  },
-  // sedeCode: {
-  //   type: 'iSelect',
-  //   label: 'Sede donde labora',
-  //   name: 'sedeCode',
-  //   required: true,
-  //   message: 'Seleccionar un tipo',
-  // },
-  role: {
-    type: 'iSelect',
-    label: 'Tipo de usuario',
-    name: 'role',
-    required: true,
-    message: 'Seleccionar un tipo',
-  }
+  
+  
 }
 
 export default fields;

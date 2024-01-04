@@ -49,6 +49,10 @@ import { UserOutlined, LockOutlined } from '@ant-design/icons-vue';
 import { message } from 'ant-design-vue';
 import { useRouter } from 'vue-router';
 import Cookies from 'js-cookie';
+import { makeRequest } from '@/utils/api.js'
+import CryptoJS from 'crypto-js';
+// import { useSideBar } from '../stores/index';
+// const myStore = useSideBar();
 
 const loading = ref(false)
 const router = useRouter();
@@ -62,17 +66,22 @@ const onSubmit =async() => {
   loading.value = true
   try {
     const payload = formState
-    const data = await requestNoToken({ url: '/login', method: 'POST', data:  payload });
-
-    localStorage.setItem('user', JSON.stringify(data.user));
+    const {data} = await requestNoToken({ url: '/login', method: 'POST', data:  payload });
     
-    console.log(data);
+    const personalData = {
+      'email': data.email,
+      'name': data.name,
+      'nick': data.nick
+    }
     
+    localStorage.setItem('user', JSON.stringify(personalData));
+    Cookies.set('token', data.access_token);                          //token
+    Cookies.set('user', data.id);                                     //data-user-id
+    Cookies.set('role', data.role);                                   //role-user
 
-    Cookies.set('token', data.access_token);
-    Cookies.set('user', data.role);
+    if(data.access_token) await fetchData(data.id);
 
-    router.push('/admin/ruta-digital/calendario');
+    router.push('/admin/inicio');
   
   } catch (error) {
     message.error("Las credenciales son incorrectas")
@@ -81,6 +90,30 @@ const onSubmit =async() => {
     loading.value = false
   }
 };
+
+const visibles = [
+  "inicio",
+  'usuarios','nuevo-usuario', 'lista', 
+  'ruta-digital', 'reportes', 'calendario', 'talleres', 'mype', 'expositores'
+]
+
+const fetchData = async(id) => {
+  try {
+    const {data} =  await makeRequest({ url: `/permission/${id}`, method: 'GET'});
+    
+    const secretKey = 'vistas_secret_key';
+
+    if(data.views == '***') {
+      localStorage.setItem('views', CryptoJS.AES.encrypt(JSON.stringify(visibles), secretKey).toString());
+    } else {
+      data.views = [...data.views, "inicio"]
+      localStorage.setItem('views', CryptoJS.AES.encrypt(JSON.stringify(data.views), secretKey).toString());
+    }
+
+  } catch (error) {
+    console.error('Error de red:', error);
+  }
+}
 
 const onFinishFailed = () => {
   message.error('Sin acceso');

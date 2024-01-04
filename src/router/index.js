@@ -39,7 +39,11 @@ const router = createRouter({
 
 
 
-
+    {
+      path: '/unauthorized',
+      name: 'unauthorized',
+      component: () => import('../pages/Unauthorized.vue')
+    },
 
     {
       path: '/enviado',
@@ -167,29 +171,23 @@ const router = createRouter({
             {
               path: 'nuevo-usuario',
               name: 'nuevo-usuario',
-              component: () => import('../pages/Usuarios/NuevoUsuarios.vue')
+              component: () => import('../pages/Usuarios/NuevoUsuarios.vue'),
+              meta: { requiresAuth: true },
             },
             {
               path: 'lista',
               name: 'lista',
-              component: () => import('../pages/Usuarios/ListaUsuarios.vue')
-            },
-            {
-              path: 'reportes',
-              name: 'usuario-reportes',
-              component: () => import('../pages/Usuarios/ReportesUsuario.vue'),
-              meta: { requiresAuth: true, roles: ['admin', 'user'] },
-            },
-            
+              component: () => import('../pages/Usuarios/ListaUsuarios.vue'),
+              meta: { requiresAuth: true },
+            }          
           ]
-
         },
 
-        {
-          path: 'mis-datos',
-          name: 'mis-datos',
-          component: () => import('../pages/Usuarios/MiPerfil.vue')
-        },
+        // {
+        //   path: 'mis-datos',
+        //   name: 'mis-datos',
+        //   component: () => import('../pages/Usuarios/MiPerfil.vue')
+        // },
 
       ]
     }
