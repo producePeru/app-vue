@@ -12,6 +12,18 @@
         <span><router-link to="/admin/inicio">inicio</router-link></span>
       </a-menu-item>
 
+      <!-- Convenios  --> 
+      <!-- <a-sub-menu key="convenios">
+        <template #title>
+          <span>
+            <BookOutlined />
+            <span>Convenios</span>
+          </span>
+        </template>
+        <a-menu-item key="lista-convenios"> <router-link to="/admin/convenios/lista-convenios">Lista de convenio</router-link> </a-menu-item>
+        <a-menu-item key="nuevo-convenio"> <router-link to="/admin/convenios/nuevo-convenio">Nuevo convenio</router-link> </a-menu-item> 
+      </a-sub-menu> -->
+
       <!-- Ruta Digital  -->
       <a-sub-menu key="ruta-digital" v-if="views.includes('ruta-digital')">
         <template #title>
@@ -62,7 +74,7 @@ import CryptoJS from 'crypto-js';
 
 import {
   PieChartOutlined,
-  // DesktopOutlined,
+  BookOutlined,
   SolutionOutlined,
   TeamOutlined,
   // FileOutlined,

@@ -62,6 +62,7 @@
           placeholder="Agrega vistas para este usuario" @change="handleChange('usuarios')" :options="usuarios" />
       </div>
       <br>
+      <!-- <button @click="handleAsignedViews">Hooola</button> -->
     </section>
   </div>
 </template>
@@ -175,6 +176,7 @@ const objectToArray = (obj) => {
 const handleAsignedViews = async(idPermission) => {
   let principal = objectToArray(userViews);
   let data = convertirAMinusculasConGuiones(userRoles)
+  // return console.log("dataaa", data)
   const arrays = [data.usuarios, data.rutaDigital];       //añadir***
 
   const allPermisions = [].concat(...principal, ...arrays);

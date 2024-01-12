@@ -284,7 +284,7 @@ const handleShowDetails = (workshop) => {
     taller: workshop.title,
     exponent: `${workshop.exponent.first_name} ${workshop.exponent.last_name} ${workshop.exponent.middle_name}`
   }
-  router.push({ name: 'taller-id', query });
+  router.push({ name: 'taller-descripcion', query });
 }
 
 //start_invitation

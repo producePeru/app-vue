@@ -67,6 +67,30 @@ const router = createRouter({
           meta: { requiresAuth: true, roles: ['admin', 'user'] },
         },
         {
+          path: 'convenios',
+          name: 'convenios',
+          children: [
+            {
+              path: 'nuevo-convenio',
+              name: 'nuevo-convenio',
+              component: () => import('../pages/Convenios/NuevoConvenio.vue'),
+              meta: { requiresAuth: true },
+            },
+            {
+              path: 'compromisos/:id',
+              name: 'compromisos',
+              component: () => import('../pages/Convenios/CompromisosConvenios.vue'),
+              // meta: { requiresAuth: true },
+            },
+            {
+              path: 'lista-convenios',
+              name: 'lista-convenios',
+              component: () => import('../pages/Convenios/ListaConvenios.vue'),
+              meta: { requiresAuth: true },
+            }          
+          ]
+        },
+        {
           path: 'ruta-digital',
           name: 'ruta-digital',
           children: [
@@ -101,8 +125,6 @@ const router = createRouter({
               component: () => import('../pages/RutaDigital/TalleresRD.vue'),
               meta: { requiresAuth: true, roles: ['admin', 'user'] }
             },
-            
-            
             { //entrada
               path: 'talleres/test-entrada',
               name: 'test-entrada',
@@ -127,15 +149,9 @@ const router = createRouter({
               component: () => import('../pages/RutaDigital/components/TestSalida.vue'),
               meta: { requiresAuth: true, roles: ['admin', 'user'] }
             },
-
-
-
-
-
-
             {
               path: 'taller-detalle',
-              name: 'taller-id',
+              name: 'taller-descripcion',
               component: () => import('../pages/RutaDigital/TallerDetalle.vue'),
               meta: { requiresAuth: true, roles: ['admin', 'user'] },
             },
@@ -150,18 +166,8 @@ const router = createRouter({
               name: 'expositores',
               component: () => import('../pages/Usuarios/ExpositoresLista.vue'),
               meta: { requiresAuth: true, roles: ['admin', 'user'] },
-            }
-            
-
-
-            
-
-
-
-
-            
+            } 
           ]
-
         },
 
         {

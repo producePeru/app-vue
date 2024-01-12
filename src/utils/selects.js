@@ -30,4 +30,31 @@ const offices = [
   { label: 'Comunicación', value: 5 },
 ]
 
-export { typeDocuments, geners, disabilities, typeUsers, offices };
+const convenioOffices = [
+  { label: 'U. de Gestión de Servicios Empresariales', value: 1 },
+  { label: 'U. de Gestión de Operaciones', value: 2 },
+]
+
+const convenioComponent = [
+  { label: 'Digitalización', value: 1 },
+  { label: 'Desarrollo Productivo', value: 2 },
+  { label: 'Gestión Empresarial', value: 3 },
+  { label: 'Formalización', value: 4 },
+]
+
+const entities = [
+  { label: 'Tu empresa', value: 1 },
+  { label: 'Aliado', value: 2 }
+]
+
+
+export { 
+  typeDocuments, 
+  geners, 
+  disabilities, 
+  typeUsers, 
+  offices, 
+  convenioOffices,
+  convenioComponent,
+  entities
+};

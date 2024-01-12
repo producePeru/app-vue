@@ -91,7 +91,7 @@ const fields = {
     label: 'Fecha de nacimiento',
     name: 'birthdate',
     required: false,
-    message: 'Seleccionar país'
+    message: 'Seleccionar fecha'
   },
   gender: {
     type: 'iSelect',

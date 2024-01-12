@@ -145,9 +145,32 @@ const disabledDate = (current) => {
 const onChange = (value, dateString) => {
   formState.workshopDate = dateString
 };
+const convertirAMinusculasConGuiones = (objeto) => {
+  if (typeof objeto === 'string') {
+    return objeto.toLowerCase().replace(/\s+/g, '-');
+  } else if (Array.isArray(objeto)) {
+    return objeto.map(convertirAMinusculasConGuiones);
+  } else if (typeof objeto === 'object') {
+    const resultado = {};
+    for (const clave in objeto) {
+      // eslint-disable-next-line no-prototype-builtins
+      if (objeto.hasOwnProperty(clave)) {
+        resultado[clave] = convertirAMinusculasConGuiones(objeto[clave]);
+      }
+    }
+    return resultado;
+  } else {
+    return objeto;
+  }
+}
 
 const onSubmit = async() => {
+
+  const slug = convertirAMinusculasConGuiones(formState.slug)
+
   const payload = formState
+  payload['slug'] = slug
+
   loading.value = true
   
   let url, method

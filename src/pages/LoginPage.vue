@@ -94,7 +94,8 @@ const onSubmit =async() => {
 const visibles = [
   "inicio",
   'usuarios','nuevo-usuario', 'lista', 
-  'ruta-digital', 'reportes', 'calendario', 'talleres', 'mype', 'expositores'
+  'ruta-digital', 'reportes', 'calendario', 'talleres', 'mype', 'expositores', 'test-entrada', 'editar-test-entrada', 'test-salida', 'editar-test-salida', 'taller-descripcion',
+  'convenios', 'nuevo-convenio', 'compromisos', 'lista-convenios'
 ]
 
 const fetchData = async(id) => {
