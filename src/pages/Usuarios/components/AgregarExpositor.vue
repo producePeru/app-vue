@@ -86,7 +86,7 @@ const formState = reactive({
   profession: null,
   cvLink: null,
   user_id: 1,
-  enabled: 0
+  enabled: 1
 });
 
 const geners = [

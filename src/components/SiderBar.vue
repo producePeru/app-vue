@@ -1,5 +1,5 @@
 <template>
-  <a-layout-sider v-model:collapsed="collapsed"  class="my-sider">
+  <a-layout-sider v-model:collapsed="collapsed" class="my-sider" @collapse="handleCollapse">
     <div class="logo center-center">
       <h1 v-show="!collapsed">Admin</h1>
       
@@ -13,7 +13,7 @@
       </a-menu-item>
 
       <!-- Convenios  --> 
-      <!-- <a-sub-menu key="convenios">
+      <a-sub-menu key="convenios">
         <template #title>
           <span>
             <BookOutlined />
@@ -22,7 +22,7 @@
         </template>
         <a-menu-item key="lista-convenios"> <router-link to="/admin/convenios/lista-convenios">Lista de convenio</router-link> </a-menu-item>
         <a-menu-item key="nuevo-convenio"> <router-link to="/admin/convenios/nuevo-convenio">Nuevo convenio</router-link> </a-menu-item> 
-      </a-sub-menu> -->
+      </a-sub-menu>
 
       <!-- Ruta Digital  -->
       <a-sub-menu key="ruta-digital" v-if="views.includes('ruta-digital')">
@@ -89,10 +89,13 @@ const collapsed = ref(false);
 // views = Array.isArray(views) ? views : [];
 
 
-  const ecryptedText = localStorage.getItem('views')
-  const secretKey = 'vistas_secret_key';
-  const views = CryptoJS.AES.decrypt(ecryptedText, secretKey).toString(CryptoJS.enc.Utf8);
+const ecryptedText = localStorage.getItem('views')
+const secretKey = 'vistas_secret_key';
+const views = CryptoJS.AES.decrypt(ecryptedText, secretKey).toString(CryptoJS.enc.Utf8);
 
+const handleCollapse = () => {
+  console.log("isiisisi");
+}
 
 // const fetchData = async() => {
 //   try {
