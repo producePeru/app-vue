@@ -16,6 +16,7 @@
           <video class="scan-video" ref="video" autoplay></video>
           <canvas ref="scan-canvas" style="display: none;"></canvas>
           <p v-if="barcodeResult">Código de barras detectado: {{ barcodeResult }}</p>
+          pppp----- {{ barcodeResult }}
         </div>
 
     </a-modal>
