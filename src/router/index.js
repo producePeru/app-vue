@@ -67,6 +67,12 @@ const router = createRouter({
           meta: { requiresAuth: true, roles: ['admin', 'user'] },
         },
         {
+          path: 'patrimonios',
+          name: 'patrimonios',
+          component: () => import('../pages/Patrimonio/PatrimonioIndex.vue'),
+          
+        },
+        {
           path: 'convenios',
           name: 'convenios',
           children: [

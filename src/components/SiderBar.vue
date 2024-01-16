@@ -12,6 +12,11 @@
         <span><router-link to="/admin/inicio">inicio</router-link></span>
       </a-menu-item>
 
+      <a-menu-item key="patrimonios">
+        <pie-chart-outlined />
+        <span><router-link to="/admin/patrimonios">Patrimonios</router-link></span>
+      </a-menu-item>
+
       <!-- Convenios  --> 
       <!-- <a-sub-menu key="convenios">
         <template #title>
