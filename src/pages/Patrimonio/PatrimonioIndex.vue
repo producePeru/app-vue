@@ -1,34 +1,26 @@
 <template>
   <div>
-    
-
     <a-input v-model:value="value5">
       <template #addonAfter>
         <CameraOutlined @click="handleOpenScan" />
       </template>
     </a-input>
 
-
-
     <a-modal v-model:open="open" title="Scan Code" @cancel="handleCloseModal">
-     
-        <div>
-          <video class="scan-video" ref="video" autoplay></video>
-          <canvas ref="scan-canvas" style="display: none;"></canvas>
-          <p v-if="barcodeResult">Código de barras detectado: {{ barcodeResult }}</p>
-          pppp----- {{ barcodeResult }}
-        </div>
-
+      <div>
+        <video class="scan-video" ref="video" autoplay></video>
+        <canvas ref="scan-canvas" style="display: none;"></canvas>
+        <p v-if="barcodeResult">Código de barras detectado: {{ barcodeResult }}</p>
+        pppp----- {{ barcodeResult }}
+      </div>
     </a-modal>
-
   </div>
 </template>
 
 <script setup>
 import { ref, onMounted, onBeforeUnmount } from 'vue';
 import Quagga from 'quagga';
-import { CameraOutlined } from '@ant-design/icons-vue'
-import VideoScan from '@/components/CamScan.vue'
+import { CameraOutlined } from '@ant-design/icons-vue';
 
 const value5 = ref('code');
 const open = ref(false);
@@ -40,7 +32,7 @@ let stream = null;
 
 const openCamera = async () => {
   try {
-    const constraints = { video: true };
+    const constraints = { video: { facingMode: 'environment' } }; // 'environment' for rear camera
     const streamObj = await navigator.mediaDevices.getUserMedia(constraints);
 
     video.value.srcObject = streamObj;
@@ -78,6 +70,7 @@ const openCamera = async () => {
     canvas.value.height = video.value.videoHeight;
   });
 };
+
 const closeCamera = () => {
   console.log("cerrando....");
   if (stream) {
@@ -89,14 +82,15 @@ const closeCamera = () => {
     barcodeResult.value = null;
   }
 };
+
 const handleOpenScan = () => {
   open.value = true;
-  openCamera()
+  openCamera();
 };
 
 const handleCloseModal = () => {
-  closeCamera()
-}
+  closeCamera();
+};
 </script>
 
 <style lang="scss" scoped>
