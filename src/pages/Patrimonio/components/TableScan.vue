@@ -1,13 +1,10 @@
 <template>
-  <section>
-    <h3>CONVENIOS SUSCRIPTOS</h3>
-
-    <br>
+  <div>
     <a-button @click="handleFileUploadExcel" :loading="spinning">
-      <img width="20" style="margin-right: 6px;" src="../../assets/img/icoexcel.png" /> EXPORTAR
+      <img width="20" style="margin-right: 6px;" src="../../../assets/img/icoexcel.png" /> CARGAR EXCEL
     </a-button>
 
-    <br><br>
+    <br>
 
     <a-table 
     @change="handleTableChange"
@@ -20,26 +17,23 @@
     :loading="loading"
     size="small">
       <template v-slot:bodyCell="{column, record}">
-
-        <template v-if="column.dataIndex == 'options'">
-          <div class="text-center">
-            <MoreOutlined />
-          </div>
-        </template>
-        <template v-if="column.dataIndex == 'pdf'">
-          <div class="text-center">
-            <img width="32" src="../../assets/img/pdf.png" />
-          </div>
-        </template>
-        <template v-if="column.dataIndex == 'details'">
-          <div class="text-center">
-            <a-button size="small" @click="handleFileUploadExcel" :loading="spinning">
-              <router-link :to="`/admin/convenios/convenio/${valueX}`">Ver detalles</router-link>
-            </a-button>
-            
-          </div>
+        <template v-if="column.dataIndex == 'type'">
+          <template v-if="record.type == 'NATURAL'">
+            <a-tag color="success">Natural</a-tag>
+          </template>
+          <template v-if="record.type == 'JURIDICA'">
+            <a-tag color="error">Jurídica</a-tag>
+          </template>
         </template>
         
+        <template v-if="column.dataIndex == 'sex'">
+          <template v-if="record.sex == 'MASCULINO'">
+            <a-tag color="blue">Masculino</a-tag>
+          </template>
+          <template v-if="record.sex == 'FEMENINO'">
+            <a-tag color="pink">Femenino</a-tag>
+          </template>
+        </template>
       </template>
       
     </a-table>
@@ -47,13 +41,12 @@
     <div class="paginator">
       <a-pagination size="small" :pageSize="50" :total="total"  @change="handlePaginator" :showSizeChanger="false" />
     </div>
-  </section>
+  </div>
 </template>
 
 <script setup>
 import { ref, onBeforeUnmount, onMounted } from 'vue'
 import { makeRequest } from '@/utils/api.js'
-import { MoreOutlined } from '@ant-design/icons-vue'
 
 const spinning = ref(false);
 const loading = ref(false);
@@ -64,17 +57,17 @@ const dataSource = ref([])
 const params = ref({ page: 1 })
 
 const columns = [
-  { title: '',                          dataIndex: 'options', fixed: 'left', width: 40},
-  { title: 'PDF',                       dataIndex: 'pdf', fixed: 'left', width: 80, align: 'center'},
-  { title: 'Nombre de la Institución',  dataIndex: 'socialReason', fixed: 'left', width: 250},
-  { title: 'Unidad',                    dataIndex: 'category', width: 200},
-  { title: 'Componente Responsable',    dataIndex: 'type', align: 'center', width: 140, filters: [{text: 'NATURAL', value: 'NATURAL'},{text: 'JURIDICA', value: 'JURIDICA'}] },
-  { title: 'Adenda',                    dataIndex: 'department', width: 140 },
-  { title: 'Estado convenio',           dataIndex: 'district', width: 130},
-  { title: 'Fecha de emisión',          dataIndex: 'nameComplete', width: 300},
-  { title: 'Inicio de vigencia',        dataIndex: 'dniNumber', align: 'center', width: 120},
-  { title: 'Punto Focal',               dataIndex: 'sex', align: 'center', width: 130},
-  { title: 'Detalles',                  dataIndex: 'details', align: 'center', width: 130}
+  { title: 'RUC',                 dataIndex: 'ruc', fixed: 'left', width: 120},
+  { title: 'Razón social',        dataIndex: 'socialReason', fixed: 'left', width: 250},
+  { title: 'Rubro',               dataIndex: 'category', width: 200},
+  { title: 'Tipo',                dataIndex: 'type', align: 'center', width: 140, filters: [{text: 'NATURAL', value: 'NATURAL'},{text: 'JURIDICA', value: 'JURIDICA'}] },
+  { title: 'Departamento',        dataIndex: 'department', width: 140 },
+  { title: 'Distrito',            dataIndex: 'district', width: 130},
+  { title: 'Nombres y Apellidos', dataIndex: 'nameComplete', width: 300},
+  { title: 'DNI',                 dataIndex: 'dniNumber', align: 'center', width: 120},
+  { title: 'Sexo',                dataIndex: 'sex', align: 'center', width: 130},
+  { title: 'Teléfono',            dataIndex: 'phone', align: 'center', width: 130},
+  { title: 'Email',               dataIndex: 'email', width: 300 },
 ];
 
 
@@ -130,8 +123,5 @@ onMounted(() => {
   display: flex;
   justify-content: flex-end;
   margin-top: 1.5rem;
-}
-.text-center {
-  text-align: center;
 }
 </style>

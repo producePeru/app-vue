@@ -18,7 +18,7 @@
       </a-menu-item> -->
 
       <!-- Convenios  --> 
-      <!-- <a-sub-menu key="convenios">
+      <a-sub-menu key="convenios">
         <template #title>
           <span>
             <BookOutlined />
@@ -27,7 +27,7 @@
         </template>
         <a-menu-item key="lista-convenios"> <router-link to="/admin/convenios/lista-convenios">Lista de convenio</router-link> </a-menu-item>
         <a-menu-item key="nuevo-convenio"> <router-link to="/admin/convenios/nuevo-convenio">Nuevo convenio</router-link> </a-menu-item> 
-      </a-sub-menu> -->
+      </a-sub-menu>
 
       <!-- Ruta Digital  -->
       <a-sub-menu key="ruta-digital" v-if="views.includes('ruta-digital')">

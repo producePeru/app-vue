@@ -1,28 +1,35 @@
 <template>
   <div>
-    <a-input v-model:value="value5">
-      <template #addonAfter>
-        <CameraOutlined @click="handleOpenScan" />
-      </template>
-    </a-input>
+    <div class="heritage">
+      <a-input v-model:value="barcodeResult">
+        <template #addonAfter>
+          <CameraOutlined @click="handleOpenScan" />
+        </template>
+      </a-input>
+      <a-button type="primary">Buscar</a-button>
+    </div>
 
-    <a-modal v-model:open="open" title="Scan Code" @cancel="handleCloseModal">
+    <a-modal v-model:open="open" title="Scan Code" :footer="null" @cancel="handleCloseModal">
       <div>
         <video class="scan-video" ref="video" autoplay></video>
         <canvas ref="scan-canvas" style="display: none;"></canvas>
-        <p v-if="barcodeResult">Código de barras detectado: {{ barcodeResult }}</p>
-        pppp----- {{ barcodeResult }}
       </div>
     </a-modal>
   </div>
+
+  <br>
+  
+  <TableScaner />
+
+
 </template>
 
 <script setup>
-import { ref, onMounted, onBeforeUnmount } from 'vue';
+import { ref } from 'vue';
 import Quagga from 'quagga';
 import { CameraOutlined } from '@ant-design/icons-vue';
+import TableScaner from './components/TableScan.vue'
 
-const value5 = ref('code');
 const open = ref(false);
 const video = ref(null);
 const canvas = ref(null);
@@ -46,7 +53,7 @@ const openCamera = async () => {
         target: video.value,
       },
       decoder: {
-        readers: ['code_128_reader'],
+        readers: ['code_128_reader', 'ean_reader', 'upc_reader'],
       },
     }, (err) => {
       if (err) {
@@ -59,6 +66,8 @@ const openCamera = async () => {
     Quagga.onDetected((result) => {
       Quagga.stop();
       barcodeResult.value = result.codeResult.code;
+      open.value = false
+      closeCamera()
     });
 
   } catch (error) {
@@ -72,14 +81,14 @@ const openCamera = async () => {
 };
 
 const closeCamera = () => {
-  console.log("cerrando....");
+  console.log("cerrado");
   if (stream) {
     const tracks = stream.getTracks();
     tracks.forEach(track => track.stop());
     video.value.srcObject = null;
     isCameraOn.value = false;
     Quagga.stop();
-    barcodeResult.value = null;
+    // barcodeResult.value = null;
   }
 };
 
@@ -96,5 +105,9 @@ const handleCloseModal = () => {
 <style lang="scss" scoped>
 .scan-video {
   width: 100%;
+}
+.heritage {
+  display: flex;
+  gap: 1rem;
 }
 </style>

@@ -93,7 +93,13 @@ const router = createRouter({
               name: 'lista-convenios',
               component: () => import('../pages/Convenios/ListaConvenios.vue'),
               meta: { requiresAuth: true },
-            }          
+            },
+            {
+              path: 'convenio/:id',
+              name: 'convenio-detalles',
+              component: () => import('../pages/Convenios/ListaConvenioDetalle.vue'),
+              // meta: { requiresAuth: true },
+            }         
           ]
         },
         {
