@@ -28,11 +28,6 @@
           </a-input-password>
         </a-form-item>
 
-        <!-- <a-form-item>
-          <a-form-item name="remember" no-style>
-            <a-checkbox v-model:checked="formState.remember">Recuerdame</a-checkbox>
-          </a-form-item>
-        </a-form-item> -->
         <br />
 
         <a-form-item>
@@ -141,9 +136,9 @@ const onFinishFailed = () => {
     height: 100%;
     padding: 2rem;
     .form-wrapper {
-      width: 368px;
-      min-width: 260px;
-      margin: 0 auto;
+      width: 100%;
+      // min-width: 260px;
+      // margin: 0 auto;
       .btn-login {
         background-color: var(--primary) !important;
       }
@@ -154,15 +149,20 @@ const onFinishFailed = () => {
     .hero {
       display: block;
     }
+    .form-wrapper {
+      width: 368px !important;
+    }
   }
 }
 
 .title {
   text-align: center;
   .logo {
-    width: 150px;
-    width: 220px;
+    // width: 150px;
+    // width: 220px;
     margin-bottom: 2rem;
+    max-width: 220px;
+    width: 100%;
   }
   h1 {
     position: relative;

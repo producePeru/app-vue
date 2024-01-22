@@ -73,6 +73,37 @@ const router = createRouter({
           
         },
         {
+          path: 'asesorias',
+          name: 'asesorias',
+          children: [
+            {
+              path: 'solicitantes',
+              name: 'solicitantes',
+              component: () => import('../pages/Asesorias/SolicitantesLista.vue'),
+              // meta: { requiresAuth: true },
+            },
+            {
+              path: 'notarias',
+              name: 'notarias',
+              component: () => import('../pages/Asesorias/NotariasLista.vue'),
+              // meta: { requiresAuth: true },
+            },
+            {
+              path: 'supervisores',
+              name: 'supervisores',
+              component: () => import('../pages/Asesorias/SupervisoresLista.vue'),
+              // meta: { requiresAuth: true },
+            },
+            {
+              path: 'asesores',
+              name: 'asesores',
+              component: () => import('../pages/Asesorias/AsesoresLista.vue'),
+              // meta: { requiresAuth: true },
+            },
+                  
+          ]
+        },
+        {
           path: 'convenios',
           name: 'convenios',
           children: [

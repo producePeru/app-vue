@@ -80,8 +80,12 @@
       </div>
     </section>
 
-
-    <RegistroMYPE :open="open" @handleCloseModal="open = false" :rucProp="rucProp" @handleSetData="handleSetData"/>
+    <RegistroMYPE 
+    title="Participar con mi empresa"
+    :open="open" 
+    :rucProp="rucProp" 
+    @handleCloseModal="open = false" 
+    @handleSetData="handleSetData"/>
 
   </div>
 </template>
@@ -287,7 +291,7 @@ onMounted(
         font-weight: 400;
       }
       h2 {
-        color: #e31d1a;
+        // color: #e31d1a;
         font-family: 'Roboto', sans-serif;
       }
     }

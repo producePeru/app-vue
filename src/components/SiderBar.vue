@@ -1,8 +1,7 @@
 <template>
-  <a-layout-sider v-model:collapsed="collapsed" class="my-sider" @collapse="handleCollapse">
+  <a-layout-sider v-model:collapsed="collapsed" class="my-sider">
     <div class="logo center-center">
       <h1 v-show="!collapsed">Admin</h1>
-      
     </div>
 
     <a-menu theme="dark" v-model:selectedKeys="selectedKeys" v-model:openKeys="openKeys" mode="inline">
@@ -17,8 +16,22 @@
         <span><router-link to="/admin/patrimonios">Patrimonios</router-link></span>
       </a-menu-item> -->
 
+      <!-- Asesorias  --> 
+      <a-sub-menu key="asesorias" @click="handleCollapse('asesorias')">
+        <template #title>
+          <span>
+            <BulbOutlined />
+            <span>Asesorias</span>
+          </span>
+        </template>
+        <a-menu-item key="solicitantes"> <router-link to="/admin/asesorias/solicitantes">Solicitantes</router-link> </a-menu-item> 
+        <a-menu-item key="notarias"> <router-link to="/admin/asesorias/notarias">Notarias</router-link> </a-menu-item> 
+        <a-menu-item key="asesores"> <router-link to="/admin/asesorias/asesores">Asesores</router-link> </a-menu-item> 
+        <a-menu-item key="supervisores"> <router-link to="/admin/asesorias/supervisores">Supervisores</router-link> </a-menu-item>
+      </a-sub-menu>
+
       <!-- Convenios  --> 
-      <a-sub-menu key="convenios">
+      <a-sub-menu key="convenios" @click="handleCollapse('convenios')">
         <template #title>
           <span>
             <BookOutlined />
@@ -30,7 +43,7 @@
       </a-sub-menu>
 
       <!-- Ruta Digital  -->
-      <a-sub-menu key="ruta-digital" v-if="views.includes('ruta-digital')">
+      <a-sub-menu key="ruta-digital" v-if="views.includes('ruta-digital')" @click="handleCollapse('ruta-digital')">
         <template #title>
           <span>
             <SolutionOutlined />
@@ -45,7 +58,7 @@
       </a-sub-menu>
 
       <!-- Usuarios  -->
-      <a-sub-menu key="usuarios" v-if="views.includes('usuarios')">
+      <a-sub-menu key="usuarios" v-if="views.includes('usuarios')" @click="handleCollapse('usuarios')">
         <template #title>
           <span>
             <team-outlined />
@@ -82,6 +95,7 @@ import {
   BookOutlined,
   SolutionOutlined,
   TeamOutlined,
+  BulbOutlined,
   // FileOutlined,
 } from '@ant-design/icons-vue';
 
@@ -98,8 +112,9 @@ const ecryptedText = localStorage.getItem('views')
 const secretKey = 'vistas_secret_key';
 const views = CryptoJS.AES.decrypt(ecryptedText, secretKey).toString(CryptoJS.enc.Utf8);
 
-const handleCollapse = () => {
-  console.log("isiisisi");
+const handleCollapse = (name) => {
+  // openKeys.value = []
+  openKeys.value = [0, name]
 }
 
 // const fetchData = async() => {
