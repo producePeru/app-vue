@@ -17,7 +17,7 @@ router.beforeEach((to, from, next) => {
     viewsStorage = CryptoJS.AES.decrypt(ecryptedText, secretKey).toString(CryptoJS.enc.Utf8);
   }
 
-  console.log("ssssf",viewsStorage);
+  // console.log("ssssf",viewsStorage);
   
   if (to.matched.some((record) => record.meta.requiresAuth)) {
     if (isAuthenticated) {

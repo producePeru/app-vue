@@ -2,7 +2,7 @@
   <h3>CALENDARIO DE TALLERES</h3>
   <br>
   <div :style="{ width: '100%', border: '1px solid #d9d9d9', borderRadius: '4px', padding: '1rem'}">
-    <a-calendar v-model:value="value" @panelChange="onPanelChange">
+    <a-calendar :locale="locale" v-model:value="value" @panelChange="onPanelChange">
       <template #dateCellRender="{ current }">
         <ul class="events">
           <li v-for="item in getListData(current)" :key="item.content">
@@ -32,6 +32,11 @@
 </template>
 
 <script setup>
+import locale from 'ant-design-vue/es/date-picker/locale/es_ES';
+import dayjs from 'dayjs';
+import 'dayjs/locale/es';
+dayjs.locale('es');
+
 import { ref, onMounted } from 'vue';
 import { makeRequest } from '@/utils/api.js'
 import { requestNoToken } from '@/utils/noToken.js'
