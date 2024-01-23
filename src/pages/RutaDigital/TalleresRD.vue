@@ -134,7 +134,7 @@
       <QuillEditor class="quill-editor" v-model:content="contenido" :options="editorOptions" contentType="html" />
 
       <div class="wrapper-form_btn">
-        <a-button type="primary" html-type="submit" :loading="loadingInvitation">{{ `${titleInvitation} invitación` }}</a-button>
+        <a-button type="primary" html-type="submit" :loading="loadingInvitation">Guardar</a-button>
       </div>
     </a-form>
   </a-modal>

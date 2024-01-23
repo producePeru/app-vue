@@ -38,7 +38,7 @@
           :name="el.name" 
           :label="el.label" 
           :rules="[{ required: el.required, message: el.message, type: el.email }]">
-            <a-date-picker class="w-100" show-time :placeholder="formState.workshopDate" @change="onChange" :disabled-date="disabledDate" :locale="esES" format="DD-MM-YYYY HH:mm A" />
+            <a-date-picker :locale="locale" class="w-100" show-time :placeholder="formState.workshopDate" @change="onChange" :disabled-date="disabledDate" format="DD-MM-YYYY HH:mm A" />
           </a-form-item>
 
         </template>
@@ -52,6 +52,11 @@
 </template>
 
 <script setup>
+import locale from 'ant-design-vue/es/date-picker/locale/es_ES';
+import dayjs from 'dayjs';
+import 'dayjs/locale/es';
+dayjs.locale('es');
+
 import { reactive, ref, onMounted, onUpdated } from 'vue'; 
 import { message } from 'ant-design-vue';
 import fields from '@/forms/nuevoTaller.js'

@@ -1,7 +1,7 @@
 <template>
   <a-modal 
   v-model:open="open" 
-  title="Agregar Supervisor" 
+  title="Asesores" 
   style="top: 40px"
   footer="" 
   @cancel="handleCloseModal"
@@ -25,6 +25,13 @@
             <a-select v-if="el.name == 'department'" v-model:value="formState[el.name]" :options="departments" @change="handleDepartaments" />
             <a-select v-if="el.name == 'province'" v-model:value="formState[el.name]" :options="provinces" @change="handleProvinces" />
             <a-select v-if="el.name == 'district'" v-model:value="formState[el.name]" :options="districts" />
+            <a-select v-if="el.name == 'supervisor'" v-model:value="formState[el.name]" :options="districts" />
+            <a-select v-if="el.name == 'id_sede'" v-model:value="formState[el.name]" :options="sedes" />
+          </a-form-item>
+
+          <a-form-item v-if="el.type === 'iSelectWrite'" :name="el.name" :label="el.label"
+            :rules="[{ required: el.required, message: el.message }]">
+            <a-select v-model:value="formState[el.name]" show-search :options="supervisors" :filter-option="filterOption" />
           </a-form-item>
 
           <a-form-item
@@ -38,7 +45,7 @@
       </div>
 
       <div class="wrapper-form_btn">
-        <a-button type="primary" html-type="submit" :loading="loading">{{!isIdUpdate ? 'Registrar' : 'Actualizar'}} supervisor</a-button>
+        <a-button type="primary" html-type="submit" :loading="loading">{{!isIdUpdate ? 'Registrar' : 'Actualizar'}}</a-button>
       </div>
     </a-form>
     <!-- <pre>:::-- {{ formState }}</pre> -->
@@ -48,7 +55,7 @@
 <script setup>
 import { reactive, ref, onUpdated, onMounted } from 'vue'; 
 import { message } from 'ant-design-vue';
-import fields from '@/forms/nuevoSupervisor.js'
+import fields from '@/forms/nuevoAsesor.js'
 import { makeRequest } from '@/utils/api.js';
 import { requestNoToken } from '@/utils/noToken.js'
 import { userId } from '@/utils/cookies.js'
@@ -60,6 +67,8 @@ onUpdated(() => {
   if (props.isIdUpdate) {
     formState.document_type = props.isIdUpdate.document_type
     formState.number_document = props.isIdUpdate.number_document
+    formState.id_sede = props.isIdUpdate.id_sede
+    formState.id_supervisor = props.isIdUpdate.id_supervisor
     formState.name = props.isIdUpdate.name
     formState.last_name = props.isIdUpdate.last_name
     formState.middle_name = props.isIdUpdate.middle_name
@@ -79,6 +88,8 @@ onUpdated(() => {
 const departments = ref([]);
 const provinces = ref([]);
 const districts = ref([]);
+const sedes = ref([]);
+const supervisors = ref([]);
 
 const getDepartaments = async() => {
   try {
@@ -136,12 +147,20 @@ const getDistricts = async(id) => {
 };
 // end_place
 
+const filterOption = (input, option) => {
+  const normalizedInput = input.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "");
+  const normalizedLabel = option.label.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "");
+  return normalizedLabel.includes(normalizedInput);
+};
+
 const open = ref(true);
 const loading = ref(false);
 
 const formState = reactive({
   document_type: null,
   number_document: null,
+  id_supervisor: null,
+  id_sede: null,
   last_name: null,
   middle_name: null,
   name: null,
@@ -185,10 +204,10 @@ const onSubmit = async() => {
   let url, method
 
   if(props.isIdUpdate) {
-    url = `/supervisors/${props.isIdUpdate.id}`
+    url = `/advisor/${props.isIdUpdate.id}`
     method = "PUT"
   } else {
-    url = "/supervisors"
+    url = "/advisor"
     method = "POST"
   }
   try {
@@ -204,9 +223,28 @@ const onSubmit = async() => {
   }
 };
 
-onMounted(
-  getDepartaments
-);
+const fetchDataSedes = async () => {
+  try {
+    const { data } = await makeRequest({ url: '/sedes', method: 'GET' });
+    sedes.value = data;
+  } catch (error) {
+    console.error('Error de red:', error);
+  }
+}
+const fetchSupervisors = async () => {
+  try {
+    const { data } = await makeRequest({ url: '/supervisors-list', method: 'GET' });
+    supervisors.value = data;
+  } catch (error) {
+    console.error('Error de red:', error);
+  }
+}
+
+onMounted(() => {
+  getDepartaments(),
+  fetchDataSedes(),
+  fetchSupervisors()
+});
 </script>
 
 <style lang="scss" scoped>

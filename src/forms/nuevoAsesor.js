@@ -14,6 +14,20 @@ const fields = {
     required: true,
     message: 'Error en el tipo de documento'
   },
+  id_supervisor: {
+    type: 'iSelectWrite',
+    label: 'Supervisor',
+    name: 'id_supervisor',
+    required: true,
+    message: 'Seleccionar supervisor',
+  },
+  id_sede: {
+    type: 'iSelect',
+    label: 'CDE',
+    name: 'id_sede',
+    required: true,
+    message: 'Seleccionar tipo de documento',
+  },
   name: {
     type: 'iText',
     label: 'Nombres',

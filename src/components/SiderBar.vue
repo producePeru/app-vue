@@ -17,7 +17,7 @@
       </a-menu-item> -->
 
       <!-- Asesorias  --> 
-      <a-sub-menu key="asesorias" @click="handleCollapse('asesorias')">
+      <!-- <a-sub-menu key="asesorias" @click="handleCollapse('asesorias')">
         <template #title>
           <span>
             <BulbOutlined />
@@ -28,10 +28,10 @@
         <a-menu-item key="notarias"> <router-link to="/admin/asesorias/notarias">Notarias</router-link> </a-menu-item> 
         <a-menu-item key="asesores"> <router-link to="/admin/asesorias/asesores">Asesores</router-link> </a-menu-item> 
         <a-menu-item key="supervisores"> <router-link to="/admin/asesorias/supervisores">Supervisores</router-link> </a-menu-item>
-      </a-sub-menu>
+      </a-sub-menu> -->
 
       <!-- Convenios  --> 
-      <a-sub-menu key="convenios" @click="handleCollapse('convenios')">
+      <!-- <a-sub-menu key="convenios" @click="handleCollapse('convenios')">
         <template #title>
           <span>
             <BookOutlined />
@@ -40,7 +40,7 @@
         </template>
         <a-menu-item key="lista-convenios"> <router-link to="/admin/convenios/lista-convenios">Lista de convenio</router-link> </a-menu-item>
         <a-menu-item key="nuevo-convenio"> <router-link to="/admin/convenios/nuevo-convenio">Nuevo convenio</router-link> </a-menu-item> 
-      </a-sub-menu>
+      </a-sub-menu> -->
 
       <!-- Ruta Digital  -->
       <a-sub-menu key="ruta-digital" v-if="views.includes('ruta-digital')" @click="handleCollapse('ruta-digital')">
