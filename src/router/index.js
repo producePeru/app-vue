@@ -60,12 +60,25 @@ const router = createRouter({
       name: 'admin',
       component: () => import('../pages/DashboardPage.vue'),
       children: [
+        
         {
           path: 'inicio',
           name: 'inicio',
           component: () => import('../pages/Inicio/InicioDashboard.vue'),
           meta: { requiresAuth: true, roles: ['admin', 'user'] },
         },
+        {
+          path: 'registrar-usuario',
+          name: 'registrar-persona',
+          component: () => import('../pages/Personas/NuevaPersona.vue')
+        },
+        {
+          path: 'actualizar-usuario',
+          name: 'actualizar-persona',
+          component: () => import('../pages/Personas/ActualizarPersona.vue')
+        },
+
+
         {
           path: 'patrimonios',
           name: 'patrimonios',

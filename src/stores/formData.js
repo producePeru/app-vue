@@ -36,4 +36,5 @@ export const useFileUploadStore = defineStore('fileUpload', {
       }
     }
   },
+  
 });

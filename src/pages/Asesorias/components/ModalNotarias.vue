@@ -34,12 +34,23 @@
           :rules="[{ required: el.required, message: el.message, type: el.email }]">
             <a-input v-model:value="formState[el.name]" />
           </a-form-item>
+
+          <a-form-item
+          v-if="el.type === 'iNumber'"
+          :name="el.name" 
+          :label="el.label" 
+          :rules="[{ required: el.required, message: el.message }]">
+            <a-input-number v-model:value="formState[el.name]" />
+          </a-form-item>
+
         </template>
       </div>
 
       <div class="wrapper-form_btn">
-        <a-button type="primary" html-type="submit" :loading="loading">{{!isIdUpdate ? 'Registrar' : 'Actualizar'}} notaría</a-button>
+        <a-button type="primary" html-type="submit" :loading="loading">{{!isIdUpdate ? 'Crear' : 'Actualizar'}}</a-button>
       </div>
+
+      <!-- <pre>{{ formState }}</pre> -->
     </a-form>
   </a-modal>
 </template>
@@ -50,24 +61,22 @@ import { message } from 'ant-design-vue';
 import fields from '@/forms/nuevaNotaria.js'
 import { makeRequest } from '@/utils/api.js';
 import { requestNoToken } from '@/utils/noToken.js'
+import { userId } from '@/utils/cookies.js'
 
 const props = defineProps(['isIdUpdate'])
 const emit = defineEmits(['handleCloseModal', 'refreshTable'])
 
 onUpdated(() => {
   if (props.isIdUpdate) {
-    formState.documentType = props.isIdUpdate.document_type
-    formState.documentNumber = props.isIdUpdate.document_number
-    formState.firstName = props.isIdUpdate.first_name
-    formState.lastName = props.isIdUpdate.last_name
-    formState.middleName = props.isIdUpdate.middle_name
-    formState.gender = props.isIdUpdate.gender == 'h' ? 1 : 2
-    formState.email = props.isIdUpdate.email
-    formState.rucNumber = props.isIdUpdate.ruc_number
-    formState.phoneNumber = props.isIdUpdate.phone_number
-    formState.specialty = props.isIdUpdate.specialty
-    formState.profession = props.isIdUpdate.profession
-    formState.cvLink = props.isIdUpdate.cv_link
+    formState.name = props.isIdUpdate.name
+    formState.department = props.isIdUpdate.department
+    formState.province = props.isIdUpdate.province
+    formState.district = props.isIdUpdate.district
+    formState.address = props.isIdUpdate.address
+    formState.normal_rate = +props.isIdUpdate.normal_rate
+    formState.social_rate = +props.isIdUpdate.social_rate
+    getProvinces(props.isIdUpdate.department)
+    getDistricts(props.isIdUpdate.province)
   } else {
     clearFields()
   }
@@ -81,33 +90,53 @@ const districts = ref([]);
 const getDepartaments = async() => {
   try {
     const {data} = await requestNoToken({ url: '/departaments', method: 'GET' });
-    departments.value = data
+
+    let arr = data.map(item => ({
+      label: item.label,
+      value: item.id
+    }));
+    departments.value = [...departments.value, ...arr];
+
   } catch (error) {
     console.log(error);
   }
 };
 const handleDepartaments = (id, evt) => {
-  console.log(evt);
   formState.province = null
   formState.district = null
-  getProvinces(evt.id)
+  provinces.value = []
+  districts.value = []
+  getProvinces(evt.value)
 }
 const getProvinces = async(id) => {
   try {
     const {data} = await requestNoToken({ url: `/province/${id}`, method: 'GET' });
-    provinces.value = data
+    
+    let provincesArray = data.map(item => ({
+      label: item.label,
+      value: item.id
+    }));
+    provinces.value = [...provinces.value, ...provincesArray];
+
   } catch (error) {
     console.log(error);
   }
 };
 const handleProvinces = (id, evt) => {
   formState.district = null
-  getDistricts(evt.id)
+  districts.value = []
+  getDistricts(evt.value)
 }
 const getDistricts = async(id) => {
   try {
     const {data} = await requestNoToken({ url: `/district/${id}`, method: 'GET' });
-    districts.value = data
+ 
+    let arr = data.map(item => ({
+      label: item.label,
+      value: item.id
+    }));
+    districts.value = [...districts.value, ...arr];
+
   } catch (error) {
     console.log(error);
   }
@@ -116,34 +145,17 @@ const getDistricts = async(id) => {
 
 const open = ref(true);
 const loading = ref(false);
-const formState = reactive({
-  documentType: null,
-  documentNumber: null,
-  firstName: null,
-  lastName: null,
-  middleName: null,
-  gender: null,
-  email: null,
-  rucNumber: null,
-  phoneNumber: null,
-  specialty: null,
-  profession: null,
-  cvLink: null,
-  user_id: 1,
-  enabled: 1
-});
 
-const geners = [
-  { label: 'Masculino', value: 1 },
-  { label: 'Femenino', value: 2 },
-  { label: '...', value: 3 }
-];
-const typeDocuments = [
-  { label: 'DNI', value: 'dni' },
-  { label: 'CE', value: 'ce' },
-  { label: 'PAS', value: 'pas' },
-  { label: 'PTP', value: 'ptp' } 
-];
+const formState = reactive({
+  name: null,
+  department: null,
+  province: null,
+  district: null,
+  address: null,
+  normal_rate: null,
+  social_rate: null,
+  created_by: userId
+});
 
 const handleCloseModal = () => {
   emit('handleCloseModal', true)
@@ -151,31 +163,27 @@ const handleCloseModal = () => {
 }
 
 const clearFields = () => {
-  formState.documentType = null
-  formState.documentNumber = null
-  formState.firstName = null
-  formState.lastName = null
-  formState.middleName = null
-  formState.gender = null
-  formState.email = null
-  formState.rucNumber = null
-  formState.phoneNumber = null
-  formState.specialty = null
-  formState.profession = null
-  formState.cvLink = null
+  formState.name = null
+  formState.department = null
+  formState.province = null
+  formState.district = null
+  formState.address = null
+  formState.normal_rate = null
+  formState.social_rate = null
 }
 
 const onSubmit = async() => {
 
+  if(formState.social_rate > formState.normal_rate) return message.warning('La tarifa social no puede ser mayor a la Tarífa original')
   const payload = formState
   loading.value = true
   let url, method
 
   if(props.isIdUpdate) {
-    url = `/exponents/${props.isIdUpdate.id}`
+    url = `/notary/${props.isIdUpdate.id}`
     method = "PUT"
   } else {
-    url = "/exponents"
+    url = "/notary"
     method = "POST"
   }
   try {
@@ -185,15 +193,16 @@ const onSubmit = async() => {
     message.success(data.message);
     handleCloseModal()
   } catch (error) {
-    message.error('No se pudo registrar al exponente');
+    message.error('No se pudo registrar');
   } finally {
     loading.value = false;
   }
 };
 
-onMounted(
-  getDepartaments
-);
+
+onMounted(() => {
+  getDepartaments()
+});
 </script>
 
 <style lang="scss" scoped>
@@ -208,5 +217,13 @@ onMounted(
 }
 .white {
   display: none;
+}
+.grid-item {
+  .ant-form-item:nth-child(5)  {
+    grid-column: 1/3;
+  }
+  .ant-input-number {
+    width: 100%;
+  }
 }
 </style>

@@ -1,6 +1,6 @@
 <template>
   <div>
-    <h3>NOTARIAS</h3>
+    <h3>SOLICITANTES</h3>
 
     <div class="filters">
       <a-button type="primary" @click="handleOpenModal">AGREGAR</a-button>
@@ -16,24 +16,18 @@
     :loading="loading"
     size="small">
       <template v-slot:bodyCell="{column, record}">
-        <template v-if="column.dataIndex == 'lastNames'">
-          {{ record.lastName }} {{ record.middleName }}
+        
+        <template v-if="column.dataIndex == 'lastName'">
+          {{ record.last_name }} {{ record.middle_name }}
         </template>
-
-        <template v-if="column.dataIndex == 'sex'">
-          <template v-if="record.gender == 'h'">
-            <a-tag color="blue">Hombre</a-tag>
-          </template>
-          <template v-else>
-            <a-tag color="pink">Mujer</a-tag>
-          </template>
+        <template v-if="column.dataIndex == 'departamento'">
+          {{ record.department?.descripcion }}
         </template>
-
-        <template v-if="column.dataIndex == 'enabled'">
-          <a-switch v-model:checked="record.enabled" @change="handleExpositorEnabled(record.id)" :checkedValue="1" :unCheckedValue="0" >
-            <template #checkedChildren><check-outlined /></template>
-            <template #unCheckedChildren><close-outlined /></template>
-          </a-switch>
+        <template v-if="column.dataIndex == 'province'">
+          {{ record.province?.descripcion }}
+        </template>
+        <template v-if="column.dataIndex == 'distrite'">
+          {{ record.district?.descripcion }}
         </template>
 
         <template v-if="column.dataIndex == 'actions'">
@@ -44,11 +38,14 @@
             <template #overlay>
               <a-menu>
                 <a-menu-item>
-                  <a @click="handleEditExponent(record)">Editar</a>
+                  <a @click="handleEditUser(record)">Editar</a>
                 </a-menu-item>
-                <!-- <a-menu-item>
-                  <a>Eliminar</a>
-                </a-menu-item> -->
+                <a-menu-item>
+                  <a-popconfirm title="¿Eliminar?" @confirm="handleDeleteUser(record)">
+                    <template #icon><question-circle-outlined style="color: red" /></template>
+                    <a>Eliminar</a>
+                  </a-popconfirm>
+                </a-menu-item>
               </a-menu>
             </template>
           </a-dropdown>
@@ -62,72 +59,68 @@
     <a-pagination size="small" :total="total" :pageSize="20"  @change="handlePaginator" :showSizeChanger="false" />
   </div>
 
-  <ModalNotaria
-    :open="open" 
-    @refreshTable="refreshTable" 
-    @handleCloseModal="open = false" 
-    :isIdUpdate="isIdUpdate" />
-
 </template>
 
 <script setup>
 import { makeRequest } from '@/utils/api.js'
 import { ref, onMounted, h } from 'vue';
-import ModalNotaria from './components/ModalNotarias.vue'
-import { MoreOutlined,CloseOutlined, CheckOutlined } from '@ant-design/icons-vue';
+import { MoreOutlined } from '@ant-design/icons-vue';
 import { message } from 'ant-design-vue';
+import { useRouter } from 'vue-router';
+import { QuestionCircleOutlined } from '@ant-design/icons-vue';
+
+const rol = ref('solicitante');
+const access = ref(3);
 
 const dataSource = ref([])
 const loading = ref(false)
 const valueX = ref(1000)
-// const valueY = ref(80000)
-const open = ref(false);
 const total = ref(0)
-const isIdUpdate = ref(null);
-
-const params = ref({
-  page: 1
-})
+const router = useRouter();
+const params = ref({ page: 1 })
 
 const columns = [
-  { title: 'Nombre',          dataIndex: 'firstName', fixed: 'left', width: 100 },
-  { title: 'Departamento',    dataIndex: 'documentType', align: 'center', width: 70},
-  { title: 'Provincia',       dataIndex: 'documentNumber', align: 'center', width: 70},
-  { title: 'Distrito',        dataIndex: 'rucNumber', align: 'center', width: 70},
-  { title: 'Dirección',       dataIndex: 'lastNames', width: 90},
-  { title: 'Tarifa normal',   dataIndex: 'email', align: 'center', width: 60},
-  { title: 'Ahorro',          dataIndex: 'phoneNumber', align: 'center', width: 60},
-  { title: '',                dataIndex: 'actions', align: 'center', width: 30}
+  { title: 'Apellidos',           dataIndex: 'lastName', fixed: 'left', width: 200 },
+  { title: 'Nombres',             dataIndex: 'name', fixed: 'left', width: 120 },
+  { title: 'Tipo documento',      dataIndex: 'document_type', align: 'center', width: 100},
+  { title: 'Num. documento',      dataIndex: 'number_document', align: 'center', width: 120},
+  { title: 'Departamento',        dataIndex: 'departamento', align: 'center', width: 140},
+  { title: 'Provincia',           dataIndex: 'province', align: 'center', width: 140},
+  { title: 'Distrito',            dataIndex: 'distrite', align: 'center', width: 140},
+  { title: 'Correo',              dataIndex: 'email', width: 180},
+  { title: 'Celular',             dataIndex: 'phone', width: 100},
+  { title: '',                    dataIndex: 'actions', align: 'center', width: 50}
 ];
-
-const refreshTable = (val) => {
-  if(val) fetchData()
-}
 
 const handlePaginator = (current) =>{
   params.value.page = current;
   fetchData()
 }
 
-const handleEditExponent = async(val) => {
-  try {
-    const data = await makeRequest({ url: `/exponents/${val.id}`, method: 'GET' });
-    isIdUpdate.value = data.data
-    open.value = true;
-  } catch (error) {
-    console.error('Error de red:', error);
-    message.warning("Error de red");
-  } 
+const handleEditUser = (data) => {
+  const query = {
+    rol: rol.value,
+    dni: data.number_document,
+    access: access.value
+  }
+
+  router.push({ name: 'actualizar-persona', query });
 }
 
 const handleOpenModal = () => {
-  isIdUpdate.value = null
-  open.value = true;
+  const query = {
+    rol: rol.value,
+    access: access.value
+  }
+
+  router.push({ name: 'registrar-persona', query });
+
 };
-const handleExpositorEnabled= async(id) => {
+const handleDeleteUser= async(val) => {
   try {
     loading.value = true;
-    const data = await makeRequest({ url: `/enabled-disabled/${id}`, method: 'PUT' });
+    const data = await makeRequest({ url: `person-dni/${val.number_document}/${access.value}`, method: 'PUT' });
+    fetchData();
     message.success(data.message);
   } catch (error) {
     console.error('Error de red:', error);
@@ -139,9 +132,9 @@ const handleExpositorEnabled= async(id) => {
 const fetchData = async() => {
   try {
     loading.value = true;
-    const data = await makeRequest({ url: '/exponents', method: 'GET', params:params.value });
+    const data = await makeRequest({ url: `/person/${access.value}`, method: 'GET', params:params.value });
     dataSource.value = data.data
-    total.value = data.meta.total;
+    total.value = data.total;
   } catch (error) {
     console.error('Error de red:', error);
   } finally {
@@ -162,6 +155,9 @@ onMounted(
   display: flex;
   justify-content: flex-end;
   margin-top: 1.5rem;
+}
+.ant-popover-inner {
+  width: 200px;
 }
 </style>
 

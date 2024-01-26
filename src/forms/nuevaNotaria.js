@@ -18,34 +18,34 @@ const fields = {
     type: 'iSelect',
     label: 'Provincia',
     name: 'province',
-    required: true,
+    required: false,
     message: 'Seleccionar un tipo',
   },
   district: {
     type: 'iSelect',
     label: 'Distrito',
     name: 'district',
-    required: true,
+    required: false,
     message: 'Seleccionar un tipo',
   },
   address: {
     type: 'iText',
     label: 'Dirección',
     name: 'address',
-    required: true,
+    required: false,
     message: 'Escribe la dirección'
   },
-  fee: {
-    type: 'iText',
+  normal_rate: {
+    type: 'iNumber',
     label: 'Tarífa',
-    name: 'fee',
+    name: 'normal_rate',
     required: true,
     message: 'Escribe la tarifa'
   },
-  saving: {
-    type: 'iText',
+  social_rate: {
+    type: 'iNumber',
     label: 'Tarifa social',
-    name: 'saving',
+    name: 'social_rate',
     required: true,
     message: 'Escribe un monto'
   }
