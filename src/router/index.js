@@ -30,13 +30,13 @@ const router = createRouter({
       name: 'public-invitacion',
       component: () => import('../pages/public/InvitacionPage.vue')
     },
+    {
+      path: '/enviado',
+      name: 'enviado',
+      component: () => import('../pages/public/SuccessMessage.vue')
+    },
 
-    // {
-    //   path: '/F',
-    //   name: 'questionary',
-    //   component: () => import('../pages/public/QuestionaryId.vue')
-    // },
-
+ 
 
 
     {
@@ -45,11 +45,7 @@ const router = createRouter({
       component: () => import('../pages/Unauthorized.vue')
     },
 
-    {
-      path: '/enviado',
-      name: 'enviado',
-      component: () => import('../pages/public/SuccessMessage.vue')
-    },
+   
     {
       path: '/404',
       name: 'pagina404',
@@ -60,12 +56,10 @@ const router = createRouter({
       name: 'admin',
       component: () => import('../pages/DashboardPage.vue'),
       children: [
-        
         {
           path: 'inicio',
           name: 'inicio',
           component: () => import('../pages/Inicio/InicioDashboard.vue'),
-          meta: { requiresAuth: true, roles: ['admin', 'user'] },
         },
         {
           path: 'registrar-usuario',
@@ -77,13 +71,10 @@ const router = createRouter({
           name: 'actualizar-persona',
           component: () => import('../pages/Personas/ActualizarPersona.vue')
         },
-
-
         {
           path: 'patrimonios',
           name: 'patrimonios',
           component: () => import('../pages/Patrimonio/PatrimonioIndex.vue'),
-          
         },
         {
           path: 'asesorias',

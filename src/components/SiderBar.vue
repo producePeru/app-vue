@@ -1,7 +1,8 @@
 <template>
   <a-layout-sider v-model:collapsed="collapsed" class="my-sider">
     <div class="logo center-center">
-      <h1 v-show="!collapsed">Admin</h1>
+      <h1 v-show="!collapsed">PNTE</h1>
+      <!-- <pre class="bvbvb">{{ views }}</pre> -->
     </div>
 
     <a-menu theme="dark" v-model:selectedKeys="selectedKeys" v-model:openKeys="openKeys" mode="inline">
@@ -17,7 +18,7 @@
       </a-menu-item> -->
 
       <!-- Asesorias  --> 
-      <a-sub-menu key="asesorias" @click="handleCollapse('asesorias')">
+      <a-sub-menu key="asesorias" v-if="views.includes('asesorias')" @click="handleCollapse('asesorias')">
         <template #title>
           <span>
             <BulbOutlined />
@@ -43,7 +44,7 @@
       </a-sub-menu> -->
 
       <!-- Ruta Digital  -->
-      <a-sub-menu key="ruta-digital" v-if="views.includes('ruta-digital')" @click="handleCollapse('ruta-digital')">
+      <a-sub-menu key="rutadigital" v-if="views.includes('rutadigital')" @click="handleCollapse('rutadigital')">
         <template #title>
           <span>
             <SolutionOutlined />
@@ -81,59 +82,43 @@
 </template>
 
 <script setup>
-import { ref, onMounted } from 'vue';
+import { ref } from 'vue';
 import { useRoute } from 'vue-router';
-// import { useSideBar } from '../stores/index';
-import { makeRequest } from '@/utils/api.js'
-import { userId } from '@/utils/cookies.js' 
-import Cookies from 'js-cookie';
 import CryptoJS from 'crypto-js';
-
-
 import {
   PieChartOutlined,
-  BookOutlined,
   SolutionOutlined,
   TeamOutlined,
-  BulbOutlined,
-  // FileOutlined,
+  BulbOutlined
 } from '@ant-design/icons-vue';
 
 const route = useRoute();
 const selectedKeys = ref([route.name]);
 const openKeys = ref([route.matched[1].name]);
 const collapsed = ref(false);
-
-// let views = JSON.parse(localStorage.getItem('views'));
-// views = Array.isArray(views) ? views : [];
-
-
-const ecryptedText = localStorage.getItem('views')
-const secretKey = 'vistas_secret_key';
-const views = CryptoJS.AES.decrypt(ecryptedText, secretKey).toString(CryptoJS.enc.Utf8);
-
+const encryptedLocalStore = localStorage.getItem('views');
+const views = CryptoJS.AES.decrypt(encryptedLocalStore, 'appvistas').toString(CryptoJS.enc.Utf8);
 const handleCollapse = (name) => {
-  // openKeys.value = []
-  openKeys.value = [0, name]
+
+  if(openKeys.value[1]) {
+    openKeys.value = ["inicio", name]
+  } else {
+    openKeys.value = ["inicio"]
+  }
+  
 }
 
-// const fetchData = async() => {
-//   try {
-//     const {data} =  await makeRequest({ url: `/permission/${userId}`, method: 'GET'});
-//     // views.value = data.views;
-//     // Cookies.set('exclusions', data.exclusions);
-//     localStorage.setItem('views', JSON.stringify(data.views));
-//     // localStorage.setItem('exclusions',JSON.stringify(data.exclusions));
-//   } catch (error) {
-//     console.error('Error de red:', error);
-//   }
-// }
-// onMounted(() => {
-//   fetchData()
-// });
 </script>
 
 <style lang="scss" scoped>
+.bvbvb {
+  background-color: cadetblue;
+  position: fixed;
+  padding: 1rem;
+  right: 2rem;
+  top: 5rem;
+  width: 400px;
+}
 .my-sider {
   overflow: auto;
   height: 100vh; 

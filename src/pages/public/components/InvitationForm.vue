@@ -1,11 +1,7 @@
 <template>
-  <h3 class="uppercase">REGISTRO DE {{ route.query.rol }}</h3>
+ 
+  <div class="agreement-wrapper">
 
-  <br>
-
-  <a-spin v-if="isloading" />
-
-  <div v-else class="agreement-wrapper">
     <a-form layout="vertical" :model="formState" name="basic" autocomplete="off" @finish="onSubmit"
       @finishFailed="onSubmitFail">
       <div class="grid-item">
@@ -17,12 +13,14 @@
             <a-select v-if="el.name == 'department'" v-model:value="formState[el.name]" :options="departments" @change="handleDepartaments" :disabled="el.disabled" />
             <a-select v-if="el.name == 'province'" v-model:value="formState[el.name]" :options="provinces" @change="handleProvinces" :disabled="el.disabled" />
             <a-select v-if="el.name == 'district'" v-model:value="formState[el.name]" :options="districts" :disabled="el.disabled" />
+            <a-select v-if="el.name == 'person_type'" v-model:value="formState[el.name]" :options="typePerson" :disabled="el.disabled" />
+            <a-select v-if="el.name == 'category'" v-model:value="formState[el.name]" :options="categories" :disabled="el.disabled" />
           </a-form-item>
 
           <a-form-item v-if="el.type === 'iSearch'" class="item-max" :name="el.name" :label="el.label"
           :rules="[{ required: el.required, message: el.message }]">
-            <a-input-search :maxlength="15" :loading="searchLoading" v-model:value="formState[el.name]"
-            @search="handleSearchApi" @input="validateNumber" />
+            <a-input-search :maxlength="15" :loading="searchLoading" v-model:value="formState[el.name]" :disabled="el.disabled"
+            @search="handleSearchApi(el.name)" @input="validateNumber(el.name)" />
           </a-form-item>
 
           <a-form-item v-if="el.type === 'iText'" :name="el.name" :label="el.label"
@@ -30,29 +28,41 @@
             <a-input v-model:value="formState[el.name]" :disabled="el.disabled" />
           </a-form-item>
         </template>
+
+        <div>
+          <h4>¿Cómo te enteraste del taller?</h4>
+          <a-radio-group class="group-radios" v-model:value="addSocial">
+            <a-radio class="item-radio" value="rrss">Redes sociales</a-radio>
+            <a-radio class="item-radio" value="sms">SMS</a-radio>
+            <a-radio class="item-radio" value="correo">Correo</a-radio>
+          </a-radio-group>
+        </div>
+
+        <a-form-item class="btn-send">
+          <a-button type="primary" html-type="submit" :loading="loading">PARTICIPAR</a-button>
+        </a-form-item>
+
       </div>
-      <!-- <pre>{{ formState }}</pre> -->
-      <a-form-item>
-        <a-button type="primary" html-type="submit" :loading="loading">GUARDAR</a-button>
-      </a-form-item>
     </a-form>
   </div>
 </template>
-
+s
 <script setup>
 import { reactive, ref, onMounted } from 'vue';
-import fieldsJs from '@/forms/nuevaPersona.js'
+import fieldsJs from '@/forms/nuevaPersonaCompany.js'
 import { requestNoToken } from '@/utils/noToken.js'
-import { makeRequest } from '@/utils/api.js'
 import { message } from 'ant-design-vue';
 import { useRoute, useRouter } from 'vue-router';
 import { userId } from '@/utils/cookies.js'
+import { typePerson, categories } from '@/utils/selects.js'
+
+const props = defineProps(['idWorkshop'])
 
 const fields = ref(fieldsJs)
 const route = useRoute();
 const router = useRouter();
 
-const isloading = ref(true);
+const addSocial = ref(null)
 const searchLoading = ref(false)
 const loading = ref(false);
 const departments = ref([]);
@@ -66,6 +76,13 @@ const typeDocuments = [
 ];
 
 const formState = reactive({
+  id_workshop: props.idWorkshop,
+
+  ruc: null,
+  social_reason: null,
+  category: null,
+  person_type: null,
+
   document_type: 'dni',
   number_document: null,
   last_name: null,
@@ -78,10 +95,15 @@ const formState = reactive({
   email: null,
   created_by: userId,
   update_by: userId,
-  post: route.query.access
+  post: 4
 });
 
 const clearFields = () => {
+  formState.ruc = null
+  formState.social_reason = null
+  formState.category = null
+  formState.person_type = null
+
   formState.document_type = null
   formState.number_document = null
   formState.last_name = null
@@ -94,6 +116,12 @@ const clearFields = () => {
   formState.email = null
 }
 const enabled = () => {
+  fields.value.category.disabled = false
+  fields.value.person_type.disabled = false
+  fields.value.document_type.disabled = false
+  fields.value.number_document.disabled = false
+}
+const dniEnabled = () => {
   fields.value.last_name.disabled = false
   fields.value.middle_name.disabled = false
   fields.value.name.disabled = false
@@ -103,7 +131,14 @@ const enabled = () => {
   fields.value.phone.disabled = false
   fields.value.email.disabled = false
 }
+
 const disabled = () => {
+  fields.value.social_reason.disabled = true
+  fields.value.category.disabled = true
+  fields.value.person_type.disabled = true
+
+  fields.value.document_type.disabled = true
+  fields.value.number_document.disabled = true
   fields.value.last_name.disabled = true
   fields.value.middle_name.disabled = true
   fields.value.name.disabled = true
@@ -114,47 +149,81 @@ const disabled = () => {
   fields.value.email.disabled = true
 }
 
-const validateNumber = () => {
-  formState.number_document = formState.number_document.replace(/\D/g, '');
+const validateNumber = (name) => {
+  formState[name] = formState[name].replace(/\D/g, '');
 };
 
-const handleSearchApi = async () => {
+const handleSearchRuc = async () => {
+  searchLoading.value = true
+  try {
+    const ruc = formState.ruc
+    const {data} = await requestNoToken({ url: `/public/company/${ruc}`, method: 'GET' });
+    
+    if(data) {
+      formState.social_reason = data.razonSocial
+      enabled()
+    }
+
+    if(data.social_reason) {
+      formState.social_reason = data.social_reason
+      formState.category = data.category
+      formState.person_type = data.person_type
+    }
+    
+  } catch (error) {
+    console.log(error);
+    message.error("El número ingresado no es válido")
+    formState.ruc = null
+  } finally {
+    searchLoading.value = false
+  }
+}
+const handleSearchNumberDocument = async () => {
   if(!formState.document_type) return message.warning('Debes escoger un tipo de documento')
 
-    searchLoading.value = true
+  searchLoading.value = true
 
-    try {
-      const response = await makeRequest({ url: `/person/${formState.document_type}/${formState.number_document}`, method: 'GET' });
+  try {
+    const response = await requestNoToken({ url: `/public/person/${formState.document_type}/${formState.number_document}`, method: 'GET' });
 
-      if(response.status === 404) return enabled()
+    if(response.status === 404) return dniEnabled()
 
-      const data = response.data;
+    const data = response.data;
 
-      formState.name = data.nombres
-      formState.last_name = data.apellidoPaterno
-      formState.middle_name = data.apellidoMaterno
+    formState.name = data.nombres
+    formState.last_name = data.apellidoPaterno
+    formState.middle_name = data.apellidoMaterno
 
-      if(data.department) {
-        formState.department = data.department; 
-        getProvinces(data.department);
-      }
-      if(data.province) {
-        formState.province = data.province; 
-        getDistricts(data.province);
-      }
-      if(data.document_type) formState.document_type = data.document_type;
-      if(data.district) formState.district = data.district
-      if(data.email) formState.email = data.email
-      if(data.phone) formState.phone = data.phone
-
-      enabled()
-
-    } catch (error) {
-
-      console.log("Hhhhh", error);
-    } finally {
-      searchLoading.value = false
+    if(data.department) {
+      formState.department = data.department; 
+      getProvinces(data.department);
     }
+    if(data.province) {
+      formState.province = data.province; 
+      getDistricts(data.province);
+    }
+    if(data.document_type) formState.document_type = data.document_type;
+    if(data.district) formState.district = data.district
+    if(data.email) formState.email = data.email
+    if(data.phone) formState.phone = data.phone
+
+    dniEnabled()
+
+  } catch (error) {
+    console.log("You have an error", error);
+  } finally {
+    searchLoading.value = false
+  }
+}
+
+const handleSearchApi = async (type) => {
+  if(type == 'ruc') {
+    return handleSearchRuc()
+  }
+
+  if(type == 'number_document') {
+    return handleSearchNumberDocument();
+  }
 }
 
 const handleChangeTypeDocument = (e) => {
@@ -174,17 +243,8 @@ const handleProvinces = (id, evt) => {
   districts.value = []
   getDistricts(evt.value)
 }
-const comeBack = () => {
-  const url = route.query.access
-  if(url == 1) router.push(`/admin/asesorias/supervisores`);
-  if(url == 2) router.push(`/admin/asesorias/asesores`);
-  if(url == 3) router.push(`/admin/asesorias/solicitantes`);
-}
 
 const getDepartaments = async() => {
-
-  fields.value.document_type.disabled = false
-
   try {
     const {data} = await requestNoToken({ url: '/departaments', method: 'GET' });
 
@@ -193,8 +253,6 @@ const getDepartaments = async() => {
       value: item.id
     }));
     departments.value = [...departments.value, ...arr];
-
-    isloading.value = false
 
     disabled()
 
@@ -236,22 +294,22 @@ const onSubmit = async () => {
   const payload = formState
   loading.value = true
   try {
-    const data = await makeRequest({ url: '/new-person', method: 'POST', data: payload });
+    const data = await requestNoToken({ url: '/public/accepted-invitation', method: 'POST', data: payload });
     if(data) {
-      clearFields()
+      const query = {
+        workshop: props.idWorkshop,
+        ruc: payload.ruc,
+        dni: payload.number_document
+      }
+
+      await requestNoToken({ url: `/public/add-point/${props.idWorkshop}/${addSocial.value}`, method: 'PUT' });
+
+      router.push({ name: 'enviado', query });
       disabled()
-      formState.document_type = 'dni'
-      comeBack()
-      message.success('Registro exitoso');
+      clearFields()
     }
   } catch (error) {
-
-    if(error.response.status == 550) {
-      return message.error('El usuario ya se encuentra registrado');
-    }
-
     message.error('Error al registrar');
-
   } finally {
     loading.value = false
   }
@@ -267,21 +325,20 @@ onMounted(
 </script>
 
 <style lang="scss" scoped>
-.uppercase {
-  text-transform: uppercase;
-}
-.agreement-wrapper {
-  max-width: 700px;
-}
-
 .grid-item {
   display: grid;
-  grid-template-columns: 1fr;
-  grid-gap: 0 2rem;
-
-  @media screen and (min-width: 768px) {
-    grid-template-columns: 47% 47%;
-    grid-gap: 0 2.5rem;
-  }
+  grid-template-columns: 1fr 1fr;
+  grid-gap: 0 1.5rem;
+  padding: 1rem;
+}
+.ruc-search {
+  padding: 1rem;
+  width: 50%;
+}
+.btn-send {
+  margin-top: 2.5rem;
+  margin-bottom: 0;
+  grid-column: 1/3;
+  text-align: center;
 }
 </style>

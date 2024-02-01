@@ -12,9 +12,8 @@ router.beforeEach((to, from, next) => {
   let viewsStorage = [];
 
   if(isAuthenticated) {
-    const ecryptedText = localStorage.getItem('views');
-    const secretKey = 'vistas_secret_key';
-    viewsStorage = CryptoJS.AES.decrypt(ecryptedText, secretKey).toString(CryptoJS.enc.Utf8);
+    const encryptedLocalStore = localStorage.getItem('views');
+    viewsStorage = CryptoJS.AES.decrypt(encryptedLocalStore, 'appvistas').toString(CryptoJS.enc.Utf8);
   }
 
   // console.log("ssssf",viewsStorage);
@@ -33,6 +32,10 @@ router.beforeEach((to, from, next) => {
         next('/admin/inicio'); 
       }
     } else {
+
+      localStorage.removeItem('user');
+      localStorage.removeItem('views');
+      Cookies.remove('user');
       next('/'); 
     }
   } else {

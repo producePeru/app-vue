@@ -4,13 +4,12 @@
 
     <div class="filters">
       <router-link to="nuevo-usuario">
-        <a-button type="primary" @click="handleOpenModal">
-          NUEVO USUARIO
+        <a-button type="primary">
+          NUEVO
         </a-button>
       </router-link>
     </div>
 
-  
     <a-table 
     bordered
     class="ant-table-striped"
@@ -20,8 +19,8 @@
     :loading="loading"
     size="small">
       <template v-slot:bodyCell="{column, record}">
-        <template v-if="column.dataIndex == 'lastNames'">
-          {{ record.lastName }} {{ record.middleName }}
+        <template v-if="column.dataIndex == 'apellidos'">
+          {{ record.last_name }} {{ record.middle_name }}
         </template>
 
         <template v-if="column.dataIndex == 'gender'">
@@ -42,7 +41,7 @@
           </template>
         </template>
 
-        <!-- <template v-if="column.dataIndex == 'actions'">
+        <template v-if="column.dataIndex == 'actions'">
           <a-dropdown :trigger="['click']">
             <a class="ant-dropdown-link" @click.prevent>
               <a-button shape="circle" :icon="h(MoreOutlined)" size="small" />
@@ -50,15 +49,19 @@
             <template #overlay>
               <a-menu>
                 <a-menu-item>
-                  <a @click="handleEditExponent(record)">Editar</a>
+                  <a @click="handleEditUser(record)">Editar</a>
                 </a-menu-item>
                 <a-menu-item>
-                  <a>Eliminar</a>
+                  <a-popconfirm title="¿Eliminar?" @confirm="handleDeleteUser(record)">
+                    <template #icon><question-circle-outlined style="color: red" /></template>
+                    <a>Eliminar</a>
+                  </a-popconfirm>
                 </a-menu-item>
               </a-menu>
             </template>
           </a-dropdown>
-        </template> -->
+        </template>
+
       </template>
       
     </a-table>
@@ -68,75 +71,77 @@
     <a-pagination size="small" :total="total" :pageSize="20"  @change="handlePaginator" :showSizeChanger="false" />
   </div>
 
-
-
 </template>
 
 <script setup>
 import { makeRequest } from '@/utils/api.js'
-import { ref, onMounted, computed, h } from 'vue';
-import AgregarExpositor from './components/AgregarExpositor.vue'
-import { MoreOutlined,DownloadOutlined } from '@ant-design/icons-vue';
+import { ref, onMounted, h } from 'vue';
+import { useRouter } from 'vue-router';
+import { MoreOutlined, QuestionCircleOutlined } from '@ant-design/icons-vue';
 import { message } from 'ant-design-vue';
+import CryptoJS from 'crypto-js';
+import { userId } from '@/utils/cookies.js';
 
+const router = useRouter();
 const dataSource = ref([])
 const loading = ref(false)
-const valueX = ref(1000)
-const valueY = ref(80000)
-const open = ref(false);
 const total = ref(0)
-const isIdUpdate = ref(null);
-
-const params = ref({
-  page: 1
-})
+const params = ref({ page: 1 })
 
 const columns = [
-  { title: 'Nombres',             dataIndex: 'name', fixed: 'left', width: 40 },
-  { title: 'Apellidos',           dataIndex: 'last_name', fixed: 'left', width: 50},
-  // { title: 'RUC',                 dataIndex: 'rucNumber', align: 'center', width: 40},
-  // { title: 'Tipo documento',      dataIndex: 'documentType', align: 'center', width: 30},
+  { title: 'Nombres',             dataIndex: 'name', fixed: 'left', width: 60 },
+  { title: 'Apellidos',           dataIndex: 'apellidos', fixed: 'left', width: 50},
   { title: 'N° documento',        dataIndex: 'document_number', align: 'center', width: 40},
   { title: 'Correo electrónico',  dataIndex: 'email', width: 60},
   { title: 'Celular',             dataIndex: 'phone_number', align: 'center', width: 20},
-  // { title: 'Especialidad',        dataIndex: 'specialty', align: 'center', width: 40},
-  { title: 'Género',              dataIndex: 'gender', align: 'center', width: 30},
-  // { title: 'Estado',           dataIndex: 'is_disabled', align: 'center', width: 50},
-  // { title: '',                    dataIndex: 'actions', align: 'center', width: 15}
+  { title: 'Género',              dataIndex: 'gender', align: 'center', width: 20},
+  { title: '',                    dataIndex: 'actions', align: 'center', width: 30}
 ];
 
-const refreshTable = (val) => {
-  if(val) fetchData()
-}
 
 const handlePaginator = (current) =>{
   params.value.page = current;
   fetchData()
 }
-
-const handleEditExponent = async(val) => {
-  try {
-    const data = await makeRequest({ url: `/exponents/${val.id}`, method: 'GET' });
-    isIdUpdate.value = data.data
-    open.value = true;
-  } catch (error) {
-    console.error('Error de red:', error);
-    message.warning("Error de red");
-  } 
+const handleEditUser = async(val) => {
+  const query = {
+    dni: val.document_number
+  }
+  router.push({ name: 'nuevo-usuario', query });
 }
+const handleDeleteUser = async(val) => {
+  const dni = val.document_number;
+  const user = JSON.parse(localStorage.getItem('user'));
 
-const handleOpenModal = () => {
-  isIdUpdate.value = null
-  open.value = true;
+  const role = CryptoJS.AES.decrypt(user.rol, 'rol').toString(CryptoJS.enc.Utf8);
+
+  if(dni === user.dni) {
+    return message.warning("Amiwito no te puedes autoeliminar");
+  }
+
+  if(role === 'super') {
+    try {
+      const data = await makeRequest({ url: `/delete-user/${userId}/${dni}`, method: 'PUT' });
+      message.success(data.message);
+      fetchData()
+    } catch (error) {
+      message.error('No se puede eliminar a este usuario');
+    }
+  } else {
+    message.warning("No estas autorizado");
+  }
+
 };
 
 
 const fetchData = async() => {
   try {
+
     loading.value = true;
     const data = await makeRequest({ url: '/users', method: 'GET', params:params.value });
-    dataSource.value = data.users.data
-    total.value = data.users.total;
+    dataSource.value = data.data
+    total.value = data.total;
+
   } catch (error) {
     console.error('Error de red:', error);
   } finally {
@@ -158,6 +163,8 @@ onMounted(
   justify-content: flex-end;
   margin-top: 1.5rem;
 }
-
+.ant-popover-inner {
+  width: 200px;
+}
 </style>
 

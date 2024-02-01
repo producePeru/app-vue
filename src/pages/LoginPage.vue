@@ -46,12 +46,10 @@ import { useRouter } from 'vue-router';
 import Cookies from 'js-cookie';
 import { makeRequest } from '@/utils/api.js'
 import CryptoJS from 'crypto-js';
-// import { useSideBar } from '../stores/index';
-// const myStore = useSideBar();
+
 
 const loading = ref(false)
 const router = useRouter();
-
 const formState = reactive({
   email: '',
   password: '',
@@ -61,54 +59,46 @@ const onSubmit =async() => {
   loading.value = true
   try {
     const payload = formState
-    const {data} = await requestNoToken({ url: '/login', method: 'POST', data:  payload });
-    
+    const response = await requestNoToken({ url: '/login', method: 'POST', data:  payload });
+
+    if(response.status === 404) return message.warning(response.message);
+
+    const data = response.data
+    Cookies.set('token', data.access_token); 
+    Cookies.set('user', data.id); 
+
     const personalData = {
+      'idUser': data.id,
+      'access_token': data.access_token,
+      'dni': data.dni,
       'email': data.email,
       'name': data.name,
-      'nick': data.nick
+      'rol': CryptoJS.AES.encrypt(data.role, 'rol').toString()
     }
-    
+
     localStorage.setItem('user', JSON.stringify(personalData));
-    Cookies.set('token', data.access_token);                          //token
-    Cookies.set('user', data.id);                                     //data-user-id
-    Cookies.set('role', data.role);                                   //role-user
 
-    if(data.access_token) await fetchData(data.id);
+    if(data.access_token) await fetchDataViews(data.dni);
 
-    router.push('/admin/inicio');
-  
   } catch (error) {
     message.error("Las credenciales son incorrectas")
-    console.error('Error de red:', error);
   } finally {
     loading.value = false
   }
 };
 
-const visibles = [
-  "inicio",
-  'usuarios','nuevo-usuario', 'lista', 
-  'ruta-digital', 'reportes', 'calendario', 'talleres', 'mype', 'expositores', 'test-entrada', 'editar-test-entrada', 'test-salida', 'editar-test-salida', 'taller-descripcion',
-  'convenios', 'nuevo-convenio', 'compromisos', 'lista-convenios'
-]
+const fetchDataViews = async(dni) => {
+  const { data } = await makeRequest({ url: `/permission/${dni}`, method: 'GET' });
+  const encryptedData = CryptoJS.AES.encrypt(JSON.stringify(data), 'appvistas').toString();
 
-const fetchData = async(id) => {
   try {
-    const {data} =  await makeRequest({ url: `/permission/${id}`, method: 'GET'});
-    
-    const secretKey = 'vistas_secret_key';
-
-    if(data.views == '***') {
-      localStorage.setItem('views', CryptoJS.AES.encrypt(JSON.stringify(visibles), secretKey).toString());
-    } else {
-      data.views = [...data.views, "inicio"]
-      localStorage.setItem('views', CryptoJS.AES.encrypt(JSON.stringify(data.views), secretKey).toString());
-    }
-
-  } catch (error) {
-    console.error('Error de red:', error);
+    localStorage.setItem('views', encryptedData);
+  } catch (localStorageError) {
+    console.error('Error al guardar en localStorage:', localStorageError);
+    return; 
   }
+
+  router.push('/admin/inicio');
 }
 
 const onFinishFailed = () => {
@@ -137,8 +127,6 @@ const onFinishFailed = () => {
     padding: 2rem;
     .form-wrapper {
       width: 100%;
-      // min-width: 260px;
-      // margin: 0 auto;
       .btn-login {
         background-color: var(--primary) !important;
       }

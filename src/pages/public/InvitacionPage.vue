@@ -1,360 +1,177 @@
 <template>
-  <div class="background">
-    <section class="container">
-      <div class="questionary">
-        <div class="box">
-          <div class="text-center">
-            <img src="../../assets/img/tuempresa.png" alt="">
-            <div class="head-title">
-              <h2 class="title">Confirmación de asistencia a talleres de Ruta Digital</h2>
-            </div>
-          </div>
-          
-          <a-divider />
-          
-          <div v-if="testInfo.title" class="box-info-workshop">
-            <span><b>Taller: </b>{{ testInfo.title }}</span>
-            <span><b>Expositor: </b>{{ testInfo.exponent }}</span>
-            <span><b>Fecha del taller:</b> {{ testInfo.workShopDate }}</span>
-          </div>
+  <section class="invitation">
 
-          <a-skeleton v-else active />
+    <a-spin v-if="isloading" />
 
-        </div>
-
-        <a-form layout="vertical" :model="formState" autocomplete="off" @finish="onSubmit" @finishFailed="onFinishFailed">
-          
-          <div class="box">
-            <a-form-item class="search-ruc f-15" name="ruc" label="Número de RUC"
-              :rules="[{ required: true, message: 'Es importante el número de RUC' }]">
-              <a-input-search :maxlength="15" :loading="searchLoading" size="large" v-model:value="formState.ruc"
-                enter-button @search="handleSearchMype" @input="validateNumber" />
-            </a-form-item>
-
-            <div class="personal-info" v-if="formDataSearch.name">
-              <h4 class="c-primary">Mis Datos</h4>
-              <div>
-                <span class="name">Nombres y Apellidos: </span>
-                <span>{{ formDataSearch.name }}</span>
-              </div>
-              <div>
-                <span class="name">Correo electrónico: </span>
-                <span>{{ formDataSearch.email }}</span>
-              </div>
-              <div>
-                <span class="name">Número de contácto: </span>
-                <span>{{ formDataSearch.phone }}</span>
-              </div>
-              <br>
-              <!-- <a-button>Editar datos</a-button> -->
-            </div>
-          </div>
-
-          <div class="box">
-        
-            <div class="html-invitation" v-html="dataPresentation.content"></div>
-            <br>
-            <h3 class="box-title">¿Estas interesado en participar en este taller de Ruta Digital?</h3>
-            <a-radio-group v-model:value="formState.attendance">
-              <a-radio value="si">SI</a-radio>
-              <a-radio value="no">NO</a-radio>
-            </a-radio-group>
-          </div>
-
-          <div class="box">
-            <span class="box-mensagge">Opcional</span>
-            <h3 class="box-title">¿Cómo te enteraste del taller?</h3>
-            <a-radio-group class="group-radios" v-model:value="formState.social">
-              <a-radio class="item-radio" value="rrss">Redes sociales</a-radio>
-              <a-radio class="item-radio" value="sms">SMS</a-radio>
-              <a-radio class="item-radio" value="correo">Correo</a-radio>
-              <!-- <a-radio class="item-radio" value="otro">Otros</a-radio> -->
-            </a-radio-group>
-          </div>          
-
-          <div class="box-btn">
-            <a-button type="primary" html-type="submit" size="large" :loading="submitLoading">Enviar respuestas</a-button>
-          </div>
-
-        </a-form>
+    <div v-else class="container">
+      <div class="header">
+        <img class="logo-ruta" src="../../assets/img/logorutadigital.png" alt="">
       </div>
-    </section>
 
-    <RegistroMYPE 
-    title="Participar con mi empresa"
-    :open="open" 
-    :rucProp="rucProp" 
-    @handleCloseModal="open = false" 
-    @handleSetData="handleSetData"/>
+      <div class="lazing">
+        <h3>REGISTRO DE INVITACIÓN</h3>
+      </div>
 
-  </div>
+      <div v-if="infoInvitation" class="invitacion-info text-html"> 
+        <div>
+          <p>
+            ¡Capacítate con <b>#RUTADIGITAL</b> del Ministerio de Producción del Perú, a través de <b>#TuEmpresa</b>!
+          </p>
+          <div v-html="infoInvitation.content"></div>
+        </div>
+        <div >
+          <img class="img-wom" src="../../assets/img/imgInvitacion.jpg" alt="">
+          <div class="plataforma">
+            <h3>Plataforma</h3>
+            <img class="logo-zoom" src="../../assets/img/zoomlogo.png" alt="">
+          </div>
+          <div>
+            <img class="logo-clock" src="../../assets/img/clock.png" alt="">
+            <span class="horario">{{ infoInvitation.date }}</span>
+          </div>
+        </div>
+      </div>
+
+      <br>
+      
+      <formInvitation :idWorkshop="infoInvitation.id" />
+
+    </div>
+  </section>
 </template>
 
+
 <script setup>
-import { ref, reactive, onMounted, computed } from 'vue';
-import { message } from 'ant-design-vue';
-import RegistroMYPE from './components/ModalRegistroMYPE.vue'
-import { useRouter,useRoute } from 'vue-router';
-import { makeRequest } from '@/utils/api.js'
-import moment from 'moment';
+import { ref, onMounted } from 'vue';
 import { requestNoToken } from '@/utils/noToken.js'
+import { useRoute } from 'vue-router';
+import formInvitation from './components/InvitationForm.vue'
 
+const isloading = ref(true);
 const route = useRoute();
-const router = useRouter();
-
-const rucProp = ref(null)
-const open = ref(false);
-const searchLoading = ref(false)
-const submitLoading = ref(false)
-const dataPresentation = ref([])
-
-const testInfo = reactive({
-  id: null,
-  exponent: null,
-  idIn: null,
-  idOut: null,
-  dateTestIn: null,
-  dateTestOut: null,
-  title: null,
-  workShopDate: null,
-});
-const formDataSearch = reactive({
-  name: null,
-  email: null,
-  phone: null,
-  ruc: null,
-  dni: null,
-})
-
-const formState = reactive({
-  id_questionnaire: null,
-  ruc: null,
-  dni: null,
-  attendance: null,
-  social: null
-});
-
-
-const validateNumber = () => {
-  formState.ruc = formState.ruc.replace(/\D/g, '');
-};
-const handleSetData = (data) => {
-  formDataSearch.name = data.name_complete
-  formDataSearch.email = data.email
-  formDataSearch.phone = data.phone
-  formDataSearch.ruc = data.ruc
-  formDataSearch.dni = data.dni_number
-}
-const handleSearchMype = async () => {
-  formDataSearch.ruc = null
-  formDataSearch.dni = null
-
-  let ruc = formState.ruc
-  if (!ruc) {
-    return message.warning('Ingresa el número de RUC');
-  } 
-  searchLoading.value = true
-
-  try {
-    const {data} = await requestNoToken({ url: `/data-mype/${ruc}`, method: 'GET' });
-    
-    if (data.ruc) {
-      formDataSearch.ruc = data.ruc;
-      formDataSearch.name = data.name_complete;
-      formDataSearch.email = data.email;
-      formDataSearch.phone = data.phone
-      formDataSearch.dni = data.dni_number
-    }
-  } catch (error) {
-    console.error('Error de red:', error.response.status);
-
-    formDataSearch.name = null;
-    formDataSearch.email = null;
-    formDataSearch.phone = null;
-    formDataSearch.dni = null;
-
-    if(error.response.status == 404) {
-      try {
-        const {data} = await requestNoToken({ url: `/api-data-mype/${formState.ruc}`, method: 'GET' });
-        const result = {
-          razonSocial: data.razonSocial,
-          numeroDocumento: data.numeroDocumento
-        }
-        rucProp.value = result
-        open.value = true;
-      } catch (error) {
-        message.warning("El número de RUC no es válido")
-        console.error('Error de red:', error);
-      }
-    }
-  } finally {
-    searchLoading.value = false;
-  }
-}
-const scrollTop = () => {
-  window.scrollTo({
-    top: 200,
-    behavior: 'smooth'
-  });
-}
-const onSubmit = async() => {
-  if(formDataSearch.name == null && formDataSearch.dni == null && formDataSearch.ruc == null) {
-    handleSearchMype()
-    message.warning('Revisando sus datos')
-    scrollTop()
-    return 
-  }
-
-  const payload = {
-    ruc_mype: formDataSearch.ruc,
-    dni_mype: formDataSearch.dni,
-    workshop_id: testInfo.id,
-    email: formDataSearch.email,
-    is_participant: formState.attendance
-  }
-
-  submitLoading.value = true;
-  try {
-    const data = await makeRequest({ url: `/accept-invitation/${testInfo.id}`, method: 'POST', data:payload });
-    message.success(data.message);
-    router.push({name: 'enviado'});
-
-    await requestNoToken({ url: `/add-point/${testInfo.id}/${formState.social}`, method: 'PUT' });
-
-
-  } catch (error) {
-    console.error('Error:', error.response.data.errors[0]);
-  } finally {
-    submitLoading.value = false;
-  }
-};
-const onFinishFailed = () => {
-  message.error('Debes de completar todos los datos');
-  scrollTop()
-};
-const fetchDataPresentation = async(idx) => {
-  // console.log("isisiisiss", idx);
-  try {
-    const {data} = await requestNoToken({ url: `/invitations/${idx}`, method: 'GET' });
-    dataPresentation.value = data
-  } catch (error) {
-    console.error('Error de red:', error);
-  }
-}
+const infoInvitation = ref(null);
 
 const fetchData = async() => {
   try {
-    const data = await requestNoToken({ url: `/get-workshop-slug/${route.params.slug}`, method: 'GET' });
-    testInfo.id = data.workshop.id;
-    testInfo.exponent = data.workshop.exponent_name;
-   
-    testInfo.title = data.workshop.title;
-    testInfo.workShopDate = data.workshop.workshop_date;
 
-    await fetchDataPresentation(data.workshop.id_invitation)
+    const {data} = await requestNoToken({ url: `/public/invitation/${route.params.slug}`, method: 'GET' });
+    infoInvitation.value = data
+    isloading.value = false
 
   } catch (error) {
     console.error('Error de red:', error);
   }
 }
 
-onMounted(
-  fetchData
-);
+onMounted(() => {
+  fetchData()
+});
+
 </script>
 
 <style lang="scss" scoped>
-@import url('https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,300;0,400;0,500;0,700;1,300&display=swap');
-.background {
-  background-color: #f6f6f6;
-  padding: 1rem 0;
+.invitation {
+  background-color: #f9f9f9;
+  padding: 0 0 1rem 0;
+  min-height: 100vh;
 }
 .container {
-  max-width: 960px;
-  width: 100%;
-  width: calc(100% - 1rem);
+  max-width: 800px;
   margin: auto;
-  img {
-    width: 200px;
-  }
-  .box {
-    padding: 50px;
-    background: #fff;
-    border-radius: 8px;
-    margin-bottom: .6rem;
-    .head-title {
-      margin: 2rem 0 2rem 0;
-      h1 {
-        font-size: 16px;
-        margin-bottom: 0.2rem;
-        font-family: 'Roboto', sans-serif;
-        font-weight: 400;
-      }
-      h2 {
-        // color: #e31d1a;
-        font-family: 'Roboto', sans-serif;
-      }
-    }
-    .p-text {
-      font-size: 15px;
-      font-family: 'Roboto', sans-serif;
-    }
- 
-    .box-title {
-      font-size: 18px;
-    }
-    .box-info-workshop {
-      display: flex;
-      flex-direction: column;
-      line-height: 1.6;
-      font-family: 'Roboto', sans-serif;
-      b {
-        color: #d9363e;
-        font-size: 15px;
-      }
-    }
-    .box-info-workshop {
-      display: flex;
-      flex-direction: column;
-      line-height: 1.6;
-    }
-    .box-mensagge {
-      font-size: 15px;
-      margin-bottom: .2rem;
-      display: block;
-      color: #e31d1a;
-    }
-    .group-radios {
-      display: flex;
-      flex-direction: column;
-      .item-radio {
-        border: 1px solid #d9d9d9;
-        padding: .6rem;
-        font-size: 15px;
-        margin: 5px 0;
-        border-radius: 4px;
-      }
-    }
-  }
-  .box-btn {
-    text-align: center;
-    margin-bottom: 3rem;
-    margin-top: 2rem;
-    .btn {
-      margin: 0 !important;
-    }
+  min-width: 300px;
+  // border: 1px solid #d1d1d1;
+  padding-bottom: 2rem;
+  background-color: #fff;
+  border-radius: 6px;
+}
+
+.header {
+  background-image: url("../../assets/img/header.png");
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: cover;
+  height: 140px;
+  position: relative;
+  margin-bottom: 1rem;
+}
+.logo-ruta {
+  width: 100%;
+  max-width: 240px;
+  position: absolute;
+  right: 50%;
+  top: 25%;
+  transform: translate(50%, 50%);
+}
+
+.lazing {
+  background-color: #1d71b8;
+  text-align: center;
+  color: #fff;
+  padding: 1rem 0;
+  h3 {
+    font-weight: 500;
+    margin: 0;
+    font-size: 17px;
   }
 }
 
-.search-ruc {
-  @media screen and (min-width: 768px) {
-    width: 350px;
+.invitacion-info {
+  display: grid;
+  grid-template-columns: 50% 50%;
+  margin-top: 1rem;
+  grid-gap: 1rem;
+  padding: .5rem 1rem;
+  .img-wom {
+    width: 95%;
+  }
+  .logo-clock {
+    width: 30px;
+    margin-right: .3rem;
+    position: relative;
+    top: -.1rem;
+  }
+  .horario {
+    // color: red;
+    font-size: 15px;
+    font-weight: 500;
+  }
+}
+.plataforma {
+  display: flex;
+  align-items: center;
+  gap: .6rem;
+  h3 {
+    color: #1d71b8;
+    padding-top: .3rem;
+    margin: 0;
+  }
+  .logo-zoom {
+    width: 100px;
   }
 }
 </style>
 
-<style>
-.html-invitation p {
-  margin: 0;
+<style lang="scss">
+.horario {
+  color: rgba(0, 0, 0, 0.88);
+  font-family: -apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,'Helvetica Neue',Arial,'Noto Sans',sans-serif,'Apple Color Emoji','Segoe UI Emoji','Segoe UI Symbol','Noto Color Emoji';
+}
+.text-html {
+  h2 {
+    font-size: 22px;
+  }
+  h3 {
+    font-size: 16px;
+  }
+  p {
+    font-size: 14px;
+    line-height: 1.3;
+    color: rgba(0, 0, 0, 0.88);
+    white-space: initial;
+    margin-bottom: .5rem;
+  }
+  h2, p {
+    font-family: -apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,'Helvetica Neue',Arial,'Noto Sans',sans-serif,'Apple Color Emoji','Segoe UI Emoji','Segoe UI Symbol','Noto Color Emoji';
+  }
 }
 </style>

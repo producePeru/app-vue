@@ -1,9 +1,11 @@
 <template>
-  <h3>REGISTRO DE USUARIOS</h3>
-  <!-- <span>Formulario para el registro de usuarios:</span> -->
+  <h3>{{ route.query.dni ? 'ACTUALIZAR' : 'REGISTRO DE' }} USUARIO</h3>
+
   <a-divider />
 
-  <div class="user">
+  <a-spin v-if="isloading" />
+
+  <div v-else class="user">
 
     <a-form layout="vertical" :model="formState" name="basic" autocomplete="off" @finish="onSubmit"
       @finishFailed="onSubmitFail">
@@ -12,22 +14,27 @@
 
           <a-form-item class="item-max" v-if="el.type === 'iSelect'" :name="el.name" :label="el.label"
             :rules="[{ required: el.required, message: el.message }]">
-            <a-select v-if="el.name == 'documentType'" v-model:value="formState[el.name]" :options="typeDocuments" />
+            <a-select v-if="el.name == 'document_type'" v-model:value="formState[el.name]" :options="typeDocuments" :disabled="el.disabled" />
             <a-select v-if="el.name == 'gender'" v-model:value="formState[el.name]" :options="geners" />
             <a-select v-if="el.name == 'isDisabled'" v-model:value="formState[el.name]" :options="disabilities" />
-            <a-select v-if="el.name == 'officeCode'" v-model:value="formState[el.name]" :options="offices" />
-            <a-select v-if="el.name == 'sedeCode'" v-model:value="formState[el.name]" :options="sedes" />
+            <a-select v-if="el.name == 'office_code'" v-model:value="formState[el.name]" :options="offices" />
+            <a-select v-if="el.name == 'sede_code'" v-model:value="formState[el.name]" :options="sedes" />
             <a-select v-if="el.name == 'role'" v-model:value="formState[el.name]" :options="typeUsers" />
           </a-form-item>
 
-          <!-- <a-form-item v-if="el.type === 'iSearch'" :name="el.name" :label="el.label"
-            :rules="[{ required: el.required, message: el.message, len: 8 }]">
-            <a-input-search v-model:value="formState[el.name]" enter-button @search="handleSearchUser"
-              @input="validateNumber" />
-          </a-form-item> -->
+          <a-form-item v-if="el.type === 'iSearch'" class="item-max" :name="el.name" :label="el.label"
+          :rules="[{ required: el.required, message: el.message, max: el.max }]">
+            <a-input-search :maxlength="15" :loading="searchLoading" v-model:value="formState[el.name]"
+            @search="handleSearchApi" @input="validateNumber" :disabled="upDisabled" />
+          </a-form-item>
 
           <a-form-item v-if="el.type === 'iText'" :name="el.name" :label="el.label"
             :rules="[{ required: el.required, message: el.message, type: el.email }]">
+            <a-input v-model:value="formState[el.name]" />
+          </a-form-item>
+
+          <a-form-item v-show="!route.query.dni" v-if="el.type === 'iPassword'" :name="el.name" :label="el.label"
+            :rules="[{ required: el.required, message: el.message }]">
             <a-input v-model:value="formState[el.name]" />
           </a-form-item>
 
@@ -44,7 +51,7 @@
       </div>
 
       <a-form-item>
-        <a-button type="primary" html-type="submit" :loading="loading">Registrar usuario</a-button>
+        <a-button type="primary" html-type="submit" :loading="loading">GUARDAR</a-button>
       </a-form-item>
     </a-form>
 
@@ -62,7 +69,6 @@
           placeholder="Agrega vistas para este usuario" @change="handleChange('usuarios')" :options="usuarios" />
       </div>
       <br>
-      <!-- <button @click="handleAsignedViews">Hooola</button> -->
     </section>
   </div>
 </template>
@@ -77,122 +83,119 @@ import { makeRequest } from '@/utils/api.js'
 import { requestNoToken } from '@/utils/noToken.js'
 import { reactive, ref, onMounted } from 'vue';
 import { message } from 'ant-design-vue';
-import { useRouter } from 'vue-router';
 import fields from '@/forms/nuevoUsuario.js'
 import { typeDocuments, geners, disabilities, typeUsers, offices } from '@/utils/selects.js'
 import { usuarios, rutaDigital } from '@/utils/permissions.js'
-import { userId } from '@/utils/cookies.js'
+import { userId } from '@/utils/cookies.js';
+import { useRoute, useRouter } from 'vue-router';
 
+const route = useRoute();
+const router = useRouter();
+const isloading = ref(true);
 const loading = ref(!true);
 const countries = ref([]);
 const sedes = ref([]);
-const router = useRouter();
 const dateFormat = 'YYYY-MM-DD';
+const searchLoading = ref(false);
+const upDisabled = ref(false);
 
 const formState = reactive({
-  nickName: null,
-  password: null,
-  documentType: 1,
-  documentNumber: null,
-  middleName: null,
-  name: null,
-  countryCode: 173,
-  birthdate: ref(dayjs('2000-01-01T05:00:00.000Z', dateFormat)),
+  nick_name: null,
+  birthdate: null,
   gender: null,
-  isDisabled: null,
+  is_disabled: 0,
+  phone_number: null,
+  document_type: 1,
+  document_number: null,
+  last_name: null,
+  middle_name: null,
+  name: null,
+  country_code: 173,
   email: null,
-  phoneNumber: null,
+  password: null,
+  office_code: null,
+  sede_code: 1,
   role: null,
-  officeCode: null,
-  sedeCode: 1,
-  _id: userId
+  created_by: userId,
+  updated_by: userId
 });
 
 const clearFields = () => {
-  formState.nickName = ''
-  formState.password = ''
-  formState.documentType = 1
-  formState.documentNumber = ''
-  formState.lastName = ''
-  formState.middleName = ''
-  formState.name = ''
-  formState.countryCode = 173
-  formState.birthdate = null
-  formState.gender = ''
-  formState.isDisabled = null
-  formState.email = ''
-  formState.phoneNumber = ''
+  formState.document_type = null
+  formState.document_number = null
+  formState.last_name = null
+  formState.middle_name = null
+  formState.name = null
+  formState.country_code = null
+  formState.email = null
+  formState.office_code = null
+  formState.sede_code = null
   formState.role = null
-  formState.officeCode = null
-  formState.sedeCode = null,
-  userRoles.usuarios = [],
-  userRoles.rutaDigital = [],
-  userViews.rutaDigital = false,
-  userViews.usuarios = false
+  formState.password = null
+  formState.gender = null
 }
 
-const userRoles = reactive({
+const userRoles = ref({
   usuarios: [],
   rutaDigital: []
 });
-const userViews = reactive({
+const userViews = ref({
   rutaDigital: false,
   usuarios: false,
 });
 
 const handleChange = value => {
-  if (userRoles[value].length > 0) {
-    userViews[value] = true
+  if (userRoles.value[value].length > 0) {
+    userViews.value[value] = true
   } else {
-    userViews[value] = false
+    userViews.value[value] = false
   }
 };
 
-const convertirAMinusculasConGuiones = (objeto) => {
-  if (typeof objeto === 'string') {
-    return objeto.toLowerCase().replace(/\s+/g, '-');
-  } else if (Array.isArray(objeto)) {
-    return objeto.map(convertirAMinusculasConGuiones);
-  } else if (typeof objeto === 'object') {
-    const resultado = {};
-    for (const clave in objeto) {
-      // eslint-disable-next-line no-prototype-builtins
-      if (objeto.hasOwnProperty(clave)) {
-        resultado[clave] = convertirAMinusculasConGuiones(objeto[clave]);
-      }
-    }
-    return resultado;
-  } else {
-    return objeto;
-  }
-}
-const objectToArray = (obj) => {
-  const newArray = Object.keys(obj)
-    .filter(key => obj[key] === true)
-    .map(key => (key === "rutaDigital" ? "ruta-digital" : key));    //añadir***
-  return newArray;
-}
+// const convertirAMinusculasConGuiones = (objeto) => {
+//   if (typeof objeto === 'string') {
+//     return objeto.toLowerCase().replace(/\s+/g, '-');
+//   } else if (Array.isArray(objeto)) {
+//     return objeto.map(convertirAMinusculasConGuiones);
+//   } else if (typeof objeto === 'object') {
+//     const resultado = {};
+//     for (const clave in objeto) {
+//       // eslint-disable-next-line no-prototype-builtins
+//       if (objeto.hasOwnProperty(clave)) {
+//         resultado[clave] = convertirAMinusculasConGuiones(objeto[clave]);
+//       }
+//     }
+//     return resultado;
+//   } else {
+//     return objeto;
+//   }
+// }
+// const objectToArray = (obj) => {
+//   const newArray = Object.keys(obj)
+//     .filter(key => obj[key] === true)
+//     .map(key => (key === "rutaDigital" ? "ruta-digital" : key));    //añadir***
+//   return newArray;
+// }
 
-const handleAsignedViews = async(idPermission) => {
-  let principal = objectToArray(userViews);
-  let data = convertirAMinusculasConGuiones(userRoles)
-  // return console.log("dataaa", data)
-  const arrays = [data.usuarios, data.rutaDigital];       //añadir***
+const handleAsignedViews = async(idUser) => {
 
-  const allPermisions = [].concat(...principal, ...arrays);
+  const views = Object.fromEntries(
+    Object.entries(userRoles.value).filter(([key, value]) => value.length > 0)
+  );
 
   const payload = {
-    _id: idPermission,
-    created: userId,
-    views: allPermisions,
+    id_user: idUser,
+    created_by: userId,
+    views: views,
     exclusions: null
   }
 
   try {
     const data = await makeRequest({ url: '/permission', method: 'POST', data: payload });
-    clearFields()
-    console.log(data);
-    if(data) message.success("Usuario registrado con éxito")
+
+    message.success(data.message);
+    router.push('/admin/usuarios/lista');
+
   } catch (error) {
     message.error('No se pudo registrar este usuario');
   } finally {
@@ -204,10 +207,10 @@ const onSubmit = async () => {
   const payload = formState
   loading.value = true
   try {
-    const data = await makeRequest({ url: '/register', method: 'POST', data: payload });
-    handleAsignedViews(data.data)
-    console.log("eeeee", data.data);
-    // router.push('/admin/ruta-digital/talleres');
+    const data = await makeRequest({ url: '/register-user', method: 'POST', data: payload });
+    
+    await handleAsignedViews(data.user_id)
+
   } catch (error) {
     message.error('No se pudo registrar este usuario');
   } finally {
@@ -220,14 +223,16 @@ const onSubmitFail = () => {
   message.error('Debes de completar todos los espacios requeridos')
 };
 
-// const handleSearchUser = async searchValue => {
-//   if (!formState.documentType) return message.error('Selecciona el tipo de documento');
-//   if (!searchValue) return message.error('El campo número de documento esta vacío');
-//   console.log(typeof (searchValue))
-// };
-// const validateNumber = () => {
-//   formState.documentNumber = formState.documentNumber.replace(/\D/g, '');
-// };
+const handleSearchApi = async searchValue => {
+  console.log("Hello", searchValue);
+  // if (!formState.documentType) return message.error('Selecciona el tipo de documento');
+  // if (!searchValue) return message.error('El campo número de documento esta vacío');
+  // console.log(typeof (searchValue))
+};
+
+const validateNumber = () => {
+  formState.document_number = formState.document_number.replace(/\D/g, '');
+};
 
 const filterOption = (input, option) => {
   const normalizedInput = input.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "");
@@ -252,9 +257,50 @@ const fetchDataSedes = async () => {
   }
 }
 
+const fetchData = async () => {
+  if(route.query.dni) {
+    try {
+      const { data } = await makeRequest({ url: `user/${route.query.dni}`, method: 'GET' });
+      
+      formState.document_type = data.document_type;
+      formState.document_number = data.document_number
+      upDisabled.value = true
+      formState.last_name = data.last_name
+      formState.middle_name = data.middle_name
+      formState.name = data.name
+      formState.country_code = data.country_code
+      formState.email = data.email
+      formState.office_code = data.office_code
+      formState.sede_code = data.sede_code
+      formState.role = data.role
+      formState.gender = data.gender
+      formState.birthdate = data.birthdate
+      formState.phone_number = data.phone_number
+
+      userRoles.value = data.permission
+
+      isloading.value = false
+
+      if(data.permission.length > 1) {
+        if(userRoles.value.usuarios.length >= 1) userViews.value.usuarios = true
+        if(userRoles.value.rutaDigital.length >= 1) userViews.value.rutaDigital = true
+      }
+
+
+    } catch (error) {
+      console.error('Error de red:', error);
+    }
+
+    return console.log("actualizar usuario")
+  }
+  console.log("crear usuario");
+  isloading.value = false
+}
+
 onMounted(() => {
   fetchDataCountries(),
-  fetchDataSedes()
+  fetchDataSedes(),
+  fetchData()
 });
 
 </script>

@@ -1,22 +1,23 @@
 
 const fields = {
   ruc: {
-    type: 'iText',
-    label: 'RUC',
+    type: 'iSearch',
+    label: 'Ingresar número de RUC',
     name: 'ruc',
     required: true,
-    message: 'Escribe el RUC',
-    disabled: true
+    message: 'Escribe número de documento',
+    disabled: false
   },
   socialReason: {
     type: 'iText',
     label: 'Razón social',
     name: 'socialReason',
     required: true,
-    message: 'Escribe la razón social'
+    message: 'Escribe la razón social',
+    disabled: true
   },
   category: {
-    type: 'iSearch',
+    type: 'iSelect',
     label: 'Rubro',
     name: 'category',
     required: true,

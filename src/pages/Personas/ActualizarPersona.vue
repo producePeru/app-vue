@@ -243,8 +243,8 @@ const fetchData = async() => {
   try {
     const {data} = await makeRequest({ url: `/person-by-dni/${route.query.dni}`, method: 'GET' });
 
-    getProvinces(data.province)
-    getDistricts(data.district)
+    getProvinces(data.department)
+    getDistricts(data.province)
 
     formState.document_type = data.document_type
     formState.number_document = data.number_document

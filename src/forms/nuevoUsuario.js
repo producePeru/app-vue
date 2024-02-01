@@ -1,44 +1,40 @@
 
 const fields = {
-  nickName: {
-    type: 'iText',
-    label: 'Usuario',
-    name: 'nickName',
-    required: true,
-    message: 'Escribe cuenta de usuario'
-  },
-  password: {
-    type: 'iText',
-    label: 'Contraseña',
-    name: 'password',
-    required: true,
-    message: 'Registra la contraseña'
-  },
-  documentType: {
+  // nickName: {
+  //   type: 'iText',
+  //   label: 'Usuario',
+  //   name: 'nickName',
+  //   required: true,
+  //   message: 'Escribe cuenta de usuario'
+  // },
+  document_type: {
     type: 'iSelect',
     label: 'Tipo de documento',
-    name: 'documentType',
+    name: 'document_type',
     required: true,
     message: 'Seleccionar tipo de documento',
+    disabled: true
   },
-  documentNumber: {
-    type: 'iText',
-    label: 'Núm. de documento',
-    name: 'documentNumber',
+  document_number: {
+    type: 'iSearch',
+    label: 'Ingresar número',
+    name: 'document_number',
     required: true,
-    message: 'Error en el tipo de documento'
+    message: 'Escribe número de documento',
+    disabled: false,
+    max: 8
   },
-  lastName: {
+  last_name: {
     type: 'iText',
     label: 'Apellido paterno',
-    name: 'lastName',
+    name: 'last_name',
     required: true,
     message: 'Escribe el apellido paterno'
   },
-  middleName: {
+  middle_name: {
     type: 'iText',
     label: 'Apellido materno',
-    name: 'middleName',
+    name: 'middle_name',
     required: true,
     message: 'Escribe el apellido materno'
   },
@@ -49,10 +45,10 @@ const fields = {
     required: true,
     message: 'Escribe el nombre'
   },
-  countryCode: {
+  country_code: {
     type: 'iSelectWrite',
     label: 'País',
-    name: 'countryCode',
+    name: 'country_code',
     required: true,
     message: 'Seleccionar país'
   },
@@ -64,17 +60,24 @@ const fields = {
     email: 'email',
     message: 'Escribe el correo del usuario'
   },
-  officeCode: {
+  password: {
+    type: 'iPassword',
+    label: 'Contraseña',
+    name: 'password',
+    required: false,
+    message: 'Registra la contraseña'
+  },
+  office_code: {
     type: 'iSelect',
     label: 'Oficina',
-    name: 'officeCode',
+    name: 'office_code',
     required: true,
     message: 'Seleccionar un tipo',
   },
-  sedeCode: {
+  sede_code: {
     type: 'iSelect',
     label: 'Sede donde labora',
-    name: 'sedeCode',
+    name: 'sede_code',
     required: true,
     message: 'Seleccionar un tipo',
   },
@@ -86,13 +89,13 @@ const fields = {
     message: 'Seleccionar un tipo',
   },
 
-  birthdate: {
-    type: 'iDate',
-    label: 'Fecha de nacimiento',
-    name: 'birthdate',
-    required: false,
-    message: 'Seleccionar fecha'
-  },
+  // birthdate: {
+  //   type: 'iDate',
+  //   label: 'Fecha de nacimiento',
+  //   name: 'birthdate',
+  //   required: false,
+  //   message: 'Seleccionar fecha'
+  // },
   gender: {
     type: 'iSelect',
     label: 'Género',
@@ -101,21 +104,21 @@ const fields = {
     message: 'Seleccionar tipo de documento',
   },
   
-  isDisabled: {
-    type: 'iSelect',
-    label: '¿Tiene discapacidad?',
-    name: 'isDisabled',
-    required: false,
-    message: 'Seleccionar un tipo',
-  },
+  // isDisabled: {
+  //   type: 'iSelect',
+  //   label: '¿Tiene discapacidad?',
+  //   name: 'isDisabled',
+  //   required: false,
+  //   message: 'Seleccionar un tipo',
+  // },
  
-  phoneNumber: {
-    type: 'iText',
-    label: 'Celular',
-    name: 'phoneNumber',
-    required: false,
-    message: 'Escribe el celular del usuario'
-  },
+  // phoneNumber: {
+  //   type: 'iText',
+  //   label: 'Celular',
+  //   name: 'phoneNumber',
+  //   required: false,
+  //   message: 'Escribe el celular del usuario'
+  // },
   
   
 }
