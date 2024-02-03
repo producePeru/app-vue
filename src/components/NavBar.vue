@@ -1,7 +1,8 @@
 <template>
   <a-layout-header class="navbar">
 
-    <!-- <MenuOutlined class="ico-menu" /> -->
+    <MenuOutlined class="ico-menu" @click="handleMenuToggle" />
+
     <span></span>
 
     <a-dropdown>
@@ -29,12 +30,13 @@
 
 <script setup>
 import { makeRequest } from '@/utils/api.js'
-import { UserOutlined, PoweroffOutlined, MenuOutlined } from '@ant-design/icons-vue';
+import { PoweroffOutlined, MenuOutlined } from '@ant-design/icons-vue';
 import Cookies from 'js-cookie';
 import { useRouter } from 'vue-router';
+import {ref} from 'vue'
 
 const router = useRouter();
-
+const emit = defineEmits(['toggle-sidebar'])
 const user = JSON.parse(localStorage.getItem('user'));
 
 const handleMenuClick = (e) => {
@@ -46,6 +48,11 @@ const handleMenuClick = (e) => {
   }
 };
 
+
+const handleMenuToggle = () => {
+ 
+}
+
 const logout = async() => {
   try {
       const data = await makeRequest({ url: '/logout', method: 'POST'});
@@ -53,6 +60,7 @@ const logout = async() => {
         localStorage.removeItem('user');
         Cookies.remove('token');
         Cookies.remove('user', data.role);
+        Cookies.remove('usuario')
         localStorage.clear();
         router.push('/');
       }
@@ -61,6 +69,7 @@ const logout = async() => {
       console.error('Error de red:', error);
     }
 }
+
 </script>
 
 <style lang="scss" scoped>

@@ -65,7 +65,10 @@ const onSubmit =async() => {
 
     const data = response.data
     Cookies.set('token', data.access_token); 
-    Cookies.set('user', data.id); 
+    Cookies.set('usuario', data.id); 
+    // Cookies.set('role', CryptoJS.AES.encrypt(data.role, 'role').toString()); 
+
+
 
     const personalData = {
       'idUser': data.id,

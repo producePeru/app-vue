@@ -1,11 +1,13 @@
 <template>
   <a-layout has-sider class="layout">
   
-    <Aside />
+    <SideBar @menuToogle="handleMenuToggle" />
 
-    <a-layout class="layout-content">
+    <a-layout :class=" toggleMenu ? 'layout-content-80' : 'layout-content-200' "        >
       <a-layout-content >
-        <NavBar />
+        
+        <NavBar  ref="hermanoB" />
+
         <div class="main">
           <RouterView />
         </div>
@@ -20,8 +22,16 @@
 </template>
 
 <script setup>
-import Aside from '@/components/SiderBar.vue';
+import { ref } from 'vue';
+import SideBar from '@/components/SiderBar.vue';
 import NavBar from '@/components/NavBar.vue';
+
+const toggleMenu = ref(false);
+
+const handleMenuToggle = (val) => {
+  toggleMenu.value = val
+}
+
 </script>
 
 <style lang="scss" scoped>
@@ -44,8 +54,11 @@ import NavBar from '@/components/NavBar.vue';
 
 @media screen and (min-width: 768px) {
   .layout {
-    &-content {
+    &-content-200 {
       margin-left: 200px;
+    }
+    &-content-80 {
+      margin-left: 80px;
     }
   }
 }

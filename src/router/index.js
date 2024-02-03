@@ -47,7 +47,7 @@ const router = createRouter({
 
    
     {
-      path: '/404',
+      path: '/:pathMatch(.*)*',
       name: 'pagina404',
       component: () => import('../pages/public/NoFound.vue')
     },
@@ -76,6 +76,29 @@ const router = createRouter({
           name: 'patrimonios',
           component: () => import('../pages/Patrimonio/PatrimonioIndex.vue'),
         },
+
+        
+        {
+          path: 'drive',
+          name: 'drive',
+          children: [
+            {
+              path: 'subir-archivo',
+              name: 'subir-archivo',
+              component: () => import('../pages/Drive/DriveSubirArchivo.vue'),
+              // meta: { requiresAuth: true, roles: ['admin', 'user'] },
+            },
+            {
+              path: 'mis-archivos',
+              name: 'mis-archivos',
+              component: () => import('../pages/Drive/DriveVerMisArchivos.vue'),
+              // meta: { requiresAuth: true, roles: ['admin', 'user'] },
+            }
+          ]
+        },
+
+
+
         {
           path: 'asesorias',
           name: 'asesorias',
@@ -139,7 +162,7 @@ const router = createRouter({
         },
         {
           path: 'ruta-digital',
-          name: 'ruta-digital',
+          name: 'rutadigital',
           children: [
             {
               path: 'reportes',
@@ -220,6 +243,7 @@ const router = createRouter({
         {
           path: 'usuarios',
           name: 'usuarios',
+          meta: { requiresAuth: true },
           children: [
             {
               path: 'nuevo-usuario',

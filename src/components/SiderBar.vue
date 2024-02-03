@@ -2,6 +2,7 @@
   <a-layout-sider v-model:collapsed="collapsed" class="my-sider">
     <div class="logo center-center">
       <h1 v-show="!collapsed">PNTE</h1>
+      <!-- <button @click="handleMenuToogle">hooola</button> -->
       <!-- <pre class="bvbvb">{{ views }}</pre> -->
     </div>
 
@@ -16,6 +17,18 @@
         <pie-chart-outlined />
         <span><router-link to="/admin/patrimonios">Patrimonios</router-link></span>
       </a-menu-item> -->
+
+      <!-- Drive  --> 
+      <a-sub-menu key="drive" @click="handleCollapse('drive')">
+        <template #title>
+          <span>
+            <CloudOutlined />
+            <span>Drive</span>
+          </span>
+        </template>
+        <a-menu-item key="subir-archivo"> <router-link to="/admin/drive/subir-archivo">Subir Archivo</router-link> </a-menu-item> 
+        <a-menu-item key="mis-archivos"> <router-link to="/admin/drive/mis-archivos">Mis Archivos</router-link> </a-menu-item> 
+      </a-sub-menu>
 
       <!-- Asesorias  --> 
       <a-sub-menu key="asesorias" v-if="views.includes('asesorias')" @click="handleCollapse('asesorias')">
@@ -54,7 +67,7 @@
         <a-menu-item key="reportes" v-if="views.includes('reportes')"> <router-link to="/admin/ruta-digital/reportes">Reportes</router-link> </a-menu-item> 
         <a-menu-item key="calendario" v-if="views.includes('calendario')"> <router-link to="/admin/ruta-digital/calendario">Calendario</router-link> </a-menu-item>
         <a-menu-item key="talleres" v-if="views.includes('talleres')"> <router-link to="/admin/ruta-digital/talleres">Talleres</router-link> </a-menu-item>
-        <a-menu-item key="mype" v-if="views.includes('mype')"> <router-link to="/admin/ruta-digital/mype">Las MYPE</router-link> </a-menu-item>
+        <a-menu-item key="mype" v-if="views.includes('mype')"> <router-link to="/admin/ruta-digital/mype">MYPEs</router-link> </a-menu-item>
         <a-menu-item key="expositores" v-if="views.includes('expositores')"> <router-link to="/admin/ruta-digital/expositores">Expositores</router-link> </a-menu-item>
       </a-sub-menu>
 
@@ -82,14 +95,15 @@
 </template>
 
 <script setup>
-import { ref } from 'vue';
+import { ref, onMounted } from 'vue';
 import { useRoute } from 'vue-router';
 import CryptoJS from 'crypto-js';
 import {
   PieChartOutlined,
   SolutionOutlined,
   TeamOutlined,
-  BulbOutlined
+  BulbOutlined,
+  CloudOutlined
 } from '@ant-design/icons-vue';
 
 const route = useRoute();
@@ -98,16 +112,30 @@ const openKeys = ref([route.matched[1].name]);
 const collapsed = ref(false);
 const encryptedLocalStore = localStorage.getItem('views');
 const views = CryptoJS.AES.decrypt(encryptedLocalStore, 'appvistas').toString(CryptoJS.enc.Utf8);
+
+const emit = defineEmits(['menuToogle'])
+
+const handleMenuToogle = () => {
+  console.log("Hooola");
+  collapsed.value = !collapsed.value;
+  emit("menuToogle", collapsed.value);
+}
+
 const handleCollapse = (name) => {
+
+  if(openKeys.value[1] == undefined) return console.log(name);
 
   if(openKeys.value[1]) {
     openKeys.value = ["inicio", name]
   } else {
     openKeys.value = ["inicio"]
   }
-  
 }
 
+
+// onMounted(() => {
+//   openKeys.value = ["inicio", ...]
+// });
 </script>
 
 <style lang="scss" scoped>
@@ -126,6 +154,7 @@ const handleCollapse = (name) => {
   left: 0; 
   top: 0;
   bottom: 0;
+  z-index: 99;
   .logo {
     height: 64px;
     color: #fff;

@@ -12,7 +12,7 @@ const apiUrl = window.location.hostname == '127.0.0.1' ? dev : prod;
 export const useFileUploadStore = defineStore('fileUpload', {
 
   state: () => ({
-
+    uploaded: false
   }),
 
   actions: {
@@ -34,7 +34,26 @@ export const useFileUploadStore = defineStore('fileUpload', {
       } catch (error) {
         message.error("Error al subir el archivo PDF, excede el tamaño del archivo permitido");
       }
-    }
+    },
+
+    // async handleUploadDrive(fileList) {
+    //   const payload = {
+    //     created_by: userId,
+    //     files: fileList
+    //   };
+    //   try {
+    //     const {data} = await axios.post(`${apiUrl}/drive/up-files`, payload, {
+    //       headers: {
+    //         'Content-Type': 'multipart/form-data',
+    //         'Authorization': `Bearer ${token}`
+    //       },
+    //     });
+    //     this.uploaded = true;
+    //     message.success(data.message);
+    //   } catch (error) {
+    //     message.error("Error al subir el archivo PDF, excede el tamaño del archivo permitido");
+    //   }
+    // }
   },
   
 });

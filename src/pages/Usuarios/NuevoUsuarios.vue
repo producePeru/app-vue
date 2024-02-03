@@ -262,7 +262,7 @@ const fetchData = async () => {
     try {
       const { data } = await makeRequest({ url: `user/${route.query.dni}`, method: 'GET' });
       
-      formState.document_type = data.document_type;
+      formState.document_type = +data.document_type;
       formState.document_number = data.document_number
       upDisabled.value = true
       formState.last_name = data.last_name

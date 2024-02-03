@@ -4,7 +4,7 @@
     <h3>TALLERES DE RUTA DIGITAL</h3>
 
     <div class="filters">
-      <a-button type="primary" @click="handleOpenModal">NUEVO TALLER</a-button>
+      <a-button type="primary" @click="handleOpenModal">NUEVO</a-button>
     </div>
     
     <a-table 

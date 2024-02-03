@@ -2,13 +2,15 @@
   <div>
     <h3>USUARIOS</h3>
 
-    <div class="filters">
-      <router-link to="nuevo-usuario">
+    <div class="filters" v-if="userRole == 'super'">
+      <router-link to="nuevo-usuario" v-if="userRole == ''">
         <a-button type="primary">
-          NUEVO
+          NUEVO 
         </a-button>
       </router-link>
     </div>
+
+    <br v-else>
 
     <a-table 
     bordered
@@ -41,29 +43,37 @@
           </template>
         </template>
 
-        <template v-if="column.dataIndex == 'actions'">
-          <a-dropdown :trigger="['click']">
-            <a class="ant-dropdown-link" @click.prevent>
-              <a-button shape="circle" :icon="h(MoreOutlined)" size="small" />
-            </a>
-            <template #overlay>
-              <a-menu>
-                <a-menu-item>
-                  <a @click="handleEditUser(record)">Editar</a>
-                </a-menu-item>
-                <a-menu-item>
-                  <a-popconfirm title="¿Eliminar?" @confirm="handleDeleteUser(record)">
-                    <template #icon><question-circle-outlined style="color: red" /></template>
-                    <a>Eliminar</a>
-                  </a-popconfirm>
-                </a-menu-item>
-              </a-menu>
-            </template>
-          </a-dropdown>
+        <template v-if="column.dataIndex == 'rol'">
+          <a-tag color="default" v-if="record.role == 'super'">{{ record.role }}</a-tag>
+          <a-tag color="processing" v-if="record.role == 'admin'">{{ record.role }}</a-tag>
+          <a-tag color="success" v-if="record.role == 'usuario'">{{ record.role }}</a-tag>
+          <a-tag color="warning" v-if="record.role == 'invitado'">{{ record.role }}</a-tag>
         </template>
 
+        <template v-if="column.dataIndex == 'actions'">
+          <div v-if="record.role != 'super'">
+              <a-dropdown :trigger="['click']">
+              <a class="ant-dropdown-link" @click.prevent>
+                <a-button shape="circle" :icon="h(MoreOutlined)" size="small" />
+              </a>
+              <template #overlay>
+                <a-menu>
+                  <a-menu-item>
+                    <a @click="handleEditUser(record)">Editar</a>
+                  </a-menu-item>
+                  <a-menu-item>
+                    <a-popconfirm title="¿Eliminar?" @confirm="handleDeleteUser(record)">
+                      <template #icon><question-circle-outlined style="color: red" /></template>
+                      <a>Eliminar</a>
+                    </a-popconfirm>
+                  </a-menu-item>
+                </a-menu>
+              </template>
+            </a-dropdown>
+          </div>
+        </template>
       </template>
-      
+    
     </a-table>
   </div>
 
@@ -80,7 +90,7 @@ import { useRouter } from 'vue-router';
 import { MoreOutlined, QuestionCircleOutlined } from '@ant-design/icons-vue';
 import { message } from 'ant-design-vue';
 import CryptoJS from 'crypto-js';
-import { userId } from '@/utils/cookies.js';
+import { userId, rolex } from '@/utils/cookies.js';
 
 const router = useRouter();
 const dataSource = ref([])
@@ -88,15 +98,18 @@ const loading = ref(false)
 const total = ref(0)
 const params = ref({ page: 1 })
 
-const columns = [
+const userRole = ref(null);
+
+const columns = ref([
   { title: 'Nombres',             dataIndex: 'name', fixed: 'left', width: 60 },
   { title: 'Apellidos',           dataIndex: 'apellidos', fixed: 'left', width: 50},
   { title: 'N° documento',        dataIndex: 'document_number', align: 'center', width: 40},
+  { title: 'ROL',                 dataIndex: 'rol', align: 'center', width: 35},
   { title: 'Correo electrónico',  dataIndex: 'email', width: 60},
   { title: 'Celular',             dataIndex: 'phone_number', align: 'center', width: 20},
   { title: 'Género',              dataIndex: 'gender', align: 'center', width: 20},
-  { title: '',                    dataIndex: 'actions', align: 'center', width: 30}
-];
+  // { title: '', dataIndex: 'actions', align: 'center', width: 30 }
+]);
 
 
 const handlePaginator = (current) =>{
@@ -130,18 +143,23 @@ const handleDeleteUser = async(val) => {
   } else {
     message.warning("No estas autorizado");
   }
-
 };
 
 
 const fetchData = async() => {
   try {
-
     loading.value = true;
     const data = await makeRequest({ url: '/users', method: 'GET', params:params.value });
     dataSource.value = data.data
     total.value = data.total;
 
+    const role = CryptoJS.AES.decrypt(rolex, 'rol').toString(CryptoJS.enc.Utf8);
+    if(role != 'invitado') {
+      const actions = { title: '', dataIndex: 'actions', align: 'center', width: 30 }
+      columns.value = [...columns.value, actions]
+    }
+    userRole.value = role
+    
   } catch (error) {
     console.error('Error de red:', error);
   } finally {
