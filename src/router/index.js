@@ -86,13 +86,13 @@ const router = createRouter({
               path: 'subir-archivo',
               name: 'subir-archivo',
               component: () => import('../pages/Drive/DriveSubirArchivo.vue'),
-              // meta: { requiresAuth: true, roles: ['admin', 'user'] },
+              meta: { requiresAuth: true },
             },
             {
               path: 'mis-archivos',
               name: 'mis-archivos',
               component: () => import('../pages/Drive/DriveVerMisArchivos.vue'),
-              // meta: { requiresAuth: true, roles: ['admin', 'user'] },
+              meta: { requiresAuth: true },
             }
           ]
         },

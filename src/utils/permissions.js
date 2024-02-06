@@ -3,6 +3,11 @@ const usuarios = [
   {value: 'Lista'}
 ];
 
+const drive = [
+  {value: 'Subir archivo'}, 
+  {value: 'Mis archivos'}
+];
+
 const rutaDigital = [
   {value: 'Reportes'}, 
   {value: 'Calendario'}, 
@@ -16,4 +21,4 @@ const rutaDigital = [
   {value: 'Taller Descripcion'}
 ];
 
-export { usuarios, rutaDigital };
+export { usuarios, rutaDigital, drive };

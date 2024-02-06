@@ -1,8 +1,6 @@
 <template>
   <a-layout-header class="navbar">
 
-    <MenuOutlined class="ico-menu" @click="handleMenuToggle" />
-
     <span></span>
 
     <a-dropdown>
@@ -36,7 +34,7 @@ import { useRouter } from 'vue-router';
 import {ref} from 'vue'
 
 const router = useRouter();
-const emit = defineEmits(['toggle-sidebar'])
+const emit = defineEmits(['toggleSidebar'])
 const user = JSON.parse(localStorage.getItem('user'));
 
 const handleMenuClick = (e) => {

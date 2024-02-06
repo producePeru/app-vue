@@ -58,6 +58,12 @@
 
     <section class="roles">
       <div>
+        <a-checkbox v-model:checked="userViews.drive">Drive</a-checkbox>
+        <a-select v-model:value="userRoles.drive" mode="multiple" style="width: 100%"
+          placeholder="Agrega vistas para este usuario" @change="handleChange('drive')" :options="drive" />
+      </div>
+      <br>
+      <div>
         <a-checkbox v-model:checked="userViews.rutaDigital">Ruta Digital</a-checkbox>
         <a-select v-model:value="userRoles.rutaDigital" mode="multiple" style="width: 100%"
           placeholder="Agrega vistas para este usuario" @change="handleChange('rutaDigital')" :options="rutaDigital" />
@@ -85,7 +91,7 @@ import { reactive, ref, onMounted } from 'vue';
 import { message } from 'ant-design-vue';
 import fields from '@/forms/nuevoUsuario.js'
 import { typeDocuments, geners, disabilities, typeUsers, offices } from '@/utils/selects.js'
-import { usuarios, rutaDigital } from '@/utils/permissions.js'
+import { usuarios, rutaDigital, drive } from '@/utils/permissions.js'
 import { userId } from '@/utils/cookies.js';
 import { useRoute, useRouter } from 'vue-router';
 
@@ -121,27 +127,29 @@ const formState = reactive({
 });
 
 const clearFields = () => {
-  formState.document_type = null
+  formState.document_type = 1
   formState.document_number = null
   formState.last_name = null
   formState.middle_name = null
+  formState.middle_name = null
   formState.name = null
-  formState.country_code = null
+  formState.country_code = 173
   formState.email = null
-  formState.office_code = null
-  formState.sede_code = null
-  formState.role = null
   formState.password = null
-  formState.gender = null
+  formState.office_code = null
+  formState.sede_code = 1
+  formState.role = null
 }
 
 const userRoles = ref({
+  drive: [],
   usuarios: [],
   rutaDigital: []
 });
 const userViews = ref({
   rutaDigital: false,
   usuarios: false,
+  drive: false
 });
 
 const handleChange = value => {
@@ -262,7 +270,7 @@ const fetchData = async () => {
     try {
       const { data } = await makeRequest({ url: `user/${route.query.dni}`, method: 'GET' });
       
-      formState.document_type = +data.document_type;
+      // formState.document_type = data.document_type;
       formState.document_number = data.document_number
       upDisabled.value = true
       formState.last_name = data.last_name
@@ -278,23 +286,21 @@ const fetchData = async () => {
       formState.phone_number = data.phone_number
 
       userRoles.value = data.permission
+ 
+      if(userRoles.value?.drive?.length >= 1) userViews.value.drive = true
+      if(userRoles.value?.usuarios?.length >= 1) userViews.value.usuarios = true
+      if(userRoles.value?.rutaDigital?.length >= 1) userViews.value.rutaDigital = true
+ 
 
       isloading.value = false
-
-      if(data.permission.length > 1) {
-        if(userRoles.value.usuarios.length >= 1) userViews.value.usuarios = true
-        if(userRoles.value.rutaDigital.length >= 1) userViews.value.rutaDigital = true
-      }
-
 
     } catch (error) {
       console.error('Error de red:', error);
     }
-
-    return console.log("actualizar usuario")
+  } else {
+    clearFields()
+    isloading.value = false
   }
-  console.log("crear usuario");
-  isloading.value = false
 }
 
 onMounted(() => {
@@ -325,7 +331,6 @@ onMounted(() => {
 
 .roles {
   .title {
-    // color: #1677ff;
     margin-bottom: .3rem;
     display: block;
   }

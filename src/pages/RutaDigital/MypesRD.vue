@@ -31,6 +31,7 @@
     <a-table 
     bordered
     class="ant-table-striped"
+    sticky
     :scroll="{ x: valueX, y: valueY }" 
     :columns="columns" 
     :data-source="dataSource" 

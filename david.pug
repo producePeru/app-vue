@@ -63,3 +63,16 @@ myStore.addFile();
 //   // Obtener el valor del getter al montar el componente
 //   someValue.value = myStore.getSomeValue;
 // });
+
+
+
+
+// watch
+const props = defineProps({
+  toggleMenu: Boolean
+});
+const toggleMenuRef = toRef(props, 'toggleMenu');
+watch(toggleMenuRef, (newValue, oldValue) => {
+  collapsed.value = !collapsed.value;
+  // console.log(`Toggle menu changed from ${oldValue} to ${newValue}`);
+});

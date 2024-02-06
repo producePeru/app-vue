@@ -11,6 +11,7 @@
             <a-select v-if="el.name == 'province'" v-model:value="formState[el.name]" :options="provinces" @change="handleProvinces" />
             <a-select v-if="el.name == 'district'" v-model:value="formState[el.name]" :options="districts" />
             <a-select v-if="el.name == 'sex'" v-model:value="formState[el.name]" :options="geners" />
+            <a-select v-if="el.name == 'category'" v-model:value="formState[el.name]" :options="categories" :disabled="el.disabled" />
           </a-form-item>
 
           <a-form-item v-if="el.type === 'iText'" :name="el.name" :label="el.label"
@@ -54,6 +55,7 @@ import { esES } from 'ant-design-vue/lib/locale-provider';
 import { makeRequest } from '@/utils/api.js'
 import { requestNoToken } from '@/utils/noToken.js'
 import options from '@/utils/categories.js'
+import { categories } from '@/utils/selects.js'
 
 const props = defineProps(['rucProp'])
 const emit = defineEmits(['handleCloseModal','handleSetData'])
