@@ -63,7 +63,7 @@
           placeholder="Agrega vistas para este usuario" @change="handleChange('drive')" :options="drive" />
       </div>
       <!-- <pre>::::::{{ userId }}</pre> -->
-      <!-- <br> -->
+      <br>
       <!-- <div>
         <a-checkbox v-model:checked="userViews.rutaDigital">Ruta Digital</a-checkbox>
         <a-select v-model:value="userRoles.rutaDigital" mode="multiple" style="width: 100%"
@@ -127,7 +127,7 @@ const formState = reactive({
   sede_code: 1,
   role: null,
   created_by: userId,
-  updated_by: userId
+  update_by: userId
 });
 
 const clearFields = () => {
