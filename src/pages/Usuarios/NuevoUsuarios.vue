@@ -127,7 +127,7 @@ const formState = reactive({
   sede_code: 1,
   role: null,
   created_by: userId,
-  update_by: userId
+  updated_by: userId
 });
 
 const clearFields = () => {
