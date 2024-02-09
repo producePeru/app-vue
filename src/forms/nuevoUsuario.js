@@ -16,7 +16,7 @@ const fields = {
     disabled: true
   },
   document_number: {
-    type: 'iSearch',
+    type: 'iText',
     label: 'Ingresar número',
     name: 'document_number',
     required: true,

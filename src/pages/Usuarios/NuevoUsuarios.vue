@@ -93,9 +93,11 @@ import { message } from 'ant-design-vue';
 import fields from '@/forms/nuevoUsuario.js'
 import { typeDocuments, geners, disabilities, typeUsers, offices } from '@/utils/selects.js'
 import { usuarios, rutaDigital, drive } from '@/utils/permissions.js'
-import { userId } from '@/utils/cookies.js';
 import { useRoute, useRouter } from 'vue-router';
+import Cookies from 'js-cookie';
 
+
+const userId = Cookies.get('usuario');
 const route = useRoute();
 const router = useRouter();
 const isloading = ref(true);
@@ -105,6 +107,7 @@ const sedes = ref([]);
 const dateFormat = 'YYYY-MM-DD';
 const searchLoading = ref(false);
 const upDisabled = ref(false);
+
 
 const formState = reactive({
   nick_name: null,
