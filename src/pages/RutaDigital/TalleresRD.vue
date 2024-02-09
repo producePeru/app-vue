@@ -10,7 +10,7 @@
     <a-table 
     bordered
     class="ant-table-striped"
-    :scroll="{ x: valueX }"
+    :scroll="{ x: valueX, y: valueY }"
     :columns="columns" 
     :data-source="dataSource" 
     :pagination="false"
@@ -150,7 +150,7 @@
 
 <script setup>
 import { makeRequest } from '@/utils/api.js'
-import { ref, onMounted, reactive, h } from 'vue';
+import { ref, onMounted, reactive, h, onBeforeUnmount } from 'vue';
 import { EditOutlined,VideoCameraOutlined,MoreOutlined,DownloadOutlined } from '@ant-design/icons-vue';
 import NuevoTaller from './components/NuevoTaller.vue'
 import { useRouter } from 'vue-router';
@@ -166,8 +166,6 @@ const dataSource = ref([])
 const loading = ref(false)
 const loadingInvitation = ref(false)
 const valueX = ref(1000)
-const valueY = ref('60vh')
-// const dataToSearch = ref('')
 const open = ref(false);
 const total = ref(0)
 const idUserSelected = ref(null)
@@ -175,6 +173,14 @@ const modalCancel = ref(false);
 const modalInvitation = ref(false);
 const titleInvitation = ref('Crear');
 const recordData = ref(null);
+
+const valueY = ref(window.innerHeight - 100);
+const actualizarAltura = () => {
+  valueY.value = window.innerHeight - 300;
+};
+onBeforeUnmount(() => {
+  window.removeEventListener('resize', actualizarAltura);
+});
 
 const editorOptions = {
   theme: 'snow',
@@ -376,9 +382,11 @@ const fetchData = async() => {
   }
 }
 
-onMounted(
-  fetchData
-);
+onMounted(() => {
+  fetchData();
+  window.addEventListener('resize', actualizarAltura);
+  actualizarAltura();
+});
 </script>
 
 <style lang="scss">
