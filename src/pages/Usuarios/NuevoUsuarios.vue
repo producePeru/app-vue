@@ -63,18 +63,18 @@
           placeholder="Agrega vistas para este usuario" @change="handleChange('drive')" :options="drive" />
       </div>
       <!-- <pre>::::::{{ userId }}</pre> -->
-      <!-- <br>
-      <div>
+      <!-- <br> -->
+      <!-- <div>
         <a-checkbox v-model:checked="userViews.rutaDigital">Ruta Digital</a-checkbox>
         <a-select v-model:value="userRoles.rutaDigital" mode="multiple" style="width: 100%"
           placeholder="Agrega vistas para este usuario" @change="handleChange('rutaDigital')" :options="rutaDigital" />
-      </div>
+      </div> -->
       <br>
       <div>
         <a-checkbox v-model:checked="userViews.usuarios">Usuarios</a-checkbox>
         <a-select v-model:value="userRoles.usuarios" mode="multiple" style="width: 100%"
           placeholder="Agrega vistas para este usuario" @change="handleChange('usuarios')" :options="usuarios" />
-      </div> -->
+      </div>
       <br>
     </section>
   </div>
