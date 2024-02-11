@@ -38,7 +38,7 @@ import { UploadOutlined } from '@ant-design/icons-vue';
 import { reactive, ref } from 'vue';
 import { message } from 'ant-design-vue';
 
-const userId = Cookies.get('usuario');
+const storageData = JSON.parse(localStorage.getItem('user'))
 const token = Cookies.get('token');
 
 const prod = import.meta.env.VITE_APP_API_URL_PRODUCTION
@@ -82,7 +82,7 @@ const onSubmit = async () => {
   loading.value = true
 
   const payload = {
-    created_by: userId,
+    created_by: storageData.id,
     files: fileList.value
   };
 

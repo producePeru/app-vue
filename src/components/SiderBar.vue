@@ -26,12 +26,12 @@
           <span>Drive</span>
         </span>
       </template>
-      <a-menu-item key="mis-archivos" v-if="views.includes('mis-archivos')"> <router-link to="/admin/drive/mis-archivos">Mis Archivos</router-link> </a-menu-item> 
-      <a-menu-item key="subir-archivo" v-if="views.includes('subir-archivo')"> <router-link to="/admin/drive/subir-archivo">Subir Archivo</router-link> </a-menu-item> 
+      <a-menu-item key="drive-mis-archivos" v-if="views.includes('drive-mis-archivos')"> <router-link to="/admin/drive/mis-archivos">Mis Archivos</router-link> </a-menu-item> 
+      <a-menu-item key="drive-subir-archivo" v-if="views.includes('drive-subir-archivo')"> <router-link to="/admin/drive/subir-archivo">Subir Archivo</router-link> </a-menu-item> 
     </a-sub-menu>
 
     <!-- Asesorias  --> 
-    <a-sub-menu key="asesorias" v-if="views.includes('asesorias')" @click="handleCollapse('asesorias')">
+    <!-- <a-sub-menu key="asesorias" v-if="views.includes('asesorias')" @click="handleCollapse('asesorias')">
       <template #title>
         <span>
           <BulbOutlined />
@@ -42,7 +42,7 @@
       <a-menu-item key="notarias"> <router-link to="/admin/asesorias/notarias">Notarias</router-link> </a-menu-item> 
       <a-menu-item key="asesores"> <router-link to="/admin/asesorias/asesores">Asesores</router-link> </a-menu-item> 
       <a-menu-item key="supervisores"> <router-link to="/admin/asesorias/supervisores">Supervisores</router-link> </a-menu-item>
-    </a-sub-menu>
+    </a-sub-menu> -->
 
     <!-- Convenios  --> 
       <!-- <a-sub-menu key="convenios" @click="handleCollapse('convenios')">
@@ -57,7 +57,7 @@
       </a-sub-menu> -->
 
     <!-- Ruta Digital  -->
-    <a-sub-menu key="rutadigital" v-if="views.includes('rutadigital')" @click="handleCollapse('rutadigital')">
+    <!-- <a-sub-menu key="rutadigital" v-if="views.includes('rutadigital')" @click="handleCollapse('rutadigital')">
       <template #title>
         <span>
           <SolutionOutlined />
@@ -69,7 +69,7 @@
       <a-menu-item key="talleres" v-if="views.includes('talleres')"> <router-link to="/admin/ruta-digital/talleres">Talleres</router-link> </a-menu-item>
       <a-menu-item key="mype" v-if="views.includes('mype')"> <router-link to="/admin/ruta-digital/mype">MYPEs</router-link> </a-menu-item>
       <a-menu-item key="expositores" v-if="views.includes('expositores')"> <router-link to="/admin/ruta-digital/expositores">Expositores</router-link> </a-menu-item>
-    </a-sub-menu>
+    </a-sub-menu> -->
 
     <!-- Usuarios  -->
     <a-sub-menu key="usuarios" v-if="views.includes('usuarios')" @click="handleCollapse('usuarios')">
@@ -79,8 +79,8 @@
           <span>Personal</span>
         </span>
       </template>
-      <a-menu-item key="nuevo-usuario" v-if="views.includes('nuevo-usuario')"> <router-link to="/admin/usuarios/nuevo-usuario">Nuevo usuario</router-link> </a-menu-item>
-      <a-menu-item key="lista" v-if="views.includes('lista')"> <router-link to="/admin/usuarios/lista">Lista usuarios</router-link> </a-menu-item>
+      <a-menu-item key="usuarios-nuevo" v-if="views.includes('usuarios-nuevo')"> <router-link to="/admin/usuarios/nuevo-usuario">Nuevo usuario</router-link> </a-menu-item>
+      <a-menu-item key="usuarios-lista" v-if="views.includes('usuarios-lista')"> <router-link to="/admin/usuarios/lista">Lista usuarios</router-link> </a-menu-item>
     </a-sub-menu>
 
   </a-menu>

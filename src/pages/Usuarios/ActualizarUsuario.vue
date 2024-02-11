@@ -1,5 +1,5 @@
 <template>
-  <h3>{{ route.query.dni ? 'ACTUALIZAR' : 'REGISTRO DE' }} USUARIO</h3>
+  <h3>ACTUALIZAR USUARIO</h3>
 
   <a-divider />
 
@@ -22,15 +22,9 @@
             <a-select v-if="el.name == 'role'" v-model:value="formState[el.name]" :options="typeUsers" />
           </a-form-item>
 
-          <a-form-item v-if="el.type === 'iSearch'" class="item-max" :name="el.name" :label="el.label"
-          :rules="[{ required: el.required, message: el.message, max: el.max }]">
-            <a-input-search :maxlength="15" :loading="searchLoading" v-model:value="formState[el.name]"
-            @search="handleSearchApi" @input="validateNumber" :disabled="upDisabled" />
-          </a-form-item>
-
           <a-form-item v-if="el.type === 'iText'" :name="el.name" :label="el.label"
             :rules="[{ required: el.required, message: el.message, type: el.email }]">
-            <a-input v-model:value="formState[el.name]" />
+            <a-input v-model:value="formState[el.name]" :disabled="el.disabled" />
           </a-form-item>
 
           <a-form-item v-show="!route.query.dni" v-if="el.type === 'iPassword'" :name="el.name" :label="el.label"
@@ -67,7 +61,7 @@ import { makeRequest } from '@/utils/api.js'
 import { requestNoToken } from '@/utils/noToken.js'
 import { reactive, ref, onMounted } from 'vue';
 import { message } from 'ant-design-vue';
-import fields from '@/forms/nuevoUsuario.js'
+import fields from '@/forms/actualizarUsuario.js'
 import { typeDocuments, geners, disabilities, typeUsers, offices } from '@/utils/selects.js'
 import { useRoute } from 'vue-router';
 
@@ -79,9 +73,7 @@ const loading = ref(!true);
 const countries = ref([]);
 const sedes = ref([]);
 const dateFormat = 'YYYY-MM-DD';
-const searchLoading = ref(false);
-const upDisabled = ref(false);
-
+const idUserUpdate = ref(null)
 
 const formState = reactive({
   birthdate: null,
@@ -95,83 +87,20 @@ const formState = reactive({
   name: null,
   country_code: 173,
   email: null,
-  password: null,
+ 
   office_code: null,
   sede_code: 1,
-  role: 2,
-  created_by: storageData.id,
+
+ 
   updated_by: storageData.id,
 });
 
-const clearFields = () => {
-  formState.birthdate = null
-  formState.gender = null
-  formState.lession = 0
-  formState.phone_number = null
-  formState.document_type = 1
-  formState.document_number = null
-  formState.last_name = null
-  formState.middle_name = null
-  formState.name = null
-  formState.country_code = 173
-  formState.email = null
-  formState.password = null
-  formState.office_code = null
-  formState.sede_code = 1
-  formState.role = 2
-}
-
-// const userRoles = ref({
-//   drive: [],
-//   usuarios: [],
-//   rutaDigital: []
-// });
-// const userViews = ref({
-//   rutaDigital: false,
-//   usuarios: false,
-//   drive: false
-// });
-
-// const handleChange = value => {
-//   if (userRoles.value[value].length > 0) {
-//     userViews.value[value] = true
-//   } else {
-//     userViews.value[value] = false
-//   }
-// };
-
-// const handleAsignedViews = async(idUser) => {
-
-//   const views = Object.fromEntries(
-//     Object.entries(userRoles.value).filter(([key, value]) => value.length > 0)
-//   );
-
-//   const payload = {
-//     id_user: idUser,
-//     created_by: userId,
-//     views: views,
-//     exclusions: null
-//   }
-
-//   try {
-//     const data = await makeRequest({ url: '/permission', method: 'POST', data: payload });
-
-//     message.success(data.message);
-//     router.push('/admin/usuarios/lista');
-
-//   } catch (error) {
-//     message.error('No se pudo registrar este usuario');
-//   } finally {
-//     loading.value = false;
-//   }
-// }
 
 const onSubmit = async () => {
   const payload = formState
   loading.value = true
   try {
-    const data = await makeRequest({ url: '/new-user', method: 'POST', data: payload });
-    clearFields()
+    const data = await makeRequest({ url: `user/${idUserUpdate.value}`, method: 'PUT', data: payload });
     message.success(data.message)
   } catch (error) {
     message.error('No se pudo registrar este usuario');
@@ -184,24 +113,11 @@ const onSubmit = async () => {
 const onSubmitFail = () => {
   message.error('Debes de completar todos los espacios requeridos')
 };
-
-const handleSearchApi = async searchValue => {
-  console.log("Hello", searchValue);
-  // if (!formState.documentType) return message.error('Selecciona el tipo de documento');
-  // if (!searchValue) return message.error('El campo número de documento esta vacío');
-  // console.log(typeof (searchValue))
-};
-
-const validateNumber = () => {
-  formState.document_number = formState.document_number.replace(/\D/g, '');
-};
-
 const filterOption = (input, option) => {
   const normalizedInput = input.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "");
   const normalizedLabel = option.label.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "");
   return normalizedLabel.includes(normalizedInput);
 };
-
 const fetchDataCountries = async () => {
   try {
     const { data } = await requestNoToken({ url: '/countries', method: 'GET' });
@@ -220,7 +136,28 @@ const fetchDataSedes = async () => {
   }
 }
 
+const fetchData = async () => {
+  try {
+    const { data } = await makeRequest({ url: `/user/${route.params.dni}`, method: 'GET' });
+    
+    idUserUpdate.value = data.id
+    formState.document_number = data.document_number
+    formState.last_name = data.last_name
+    formState.middle_name = data.middle_name
+    formState.name = data.name
+    formState.country_code = data.country_code
+    formState.email = data.email
+    formState.office_code = data.office_code
+    formState.sede_code = data.sede_code
+    formState.gender = data.gender
+
+  } catch (error) {
+    console.error('Error de red:', error);
+  }
+}
+
 onMounted(() => {
+  fetchData(),
   fetchDataCountries(),
   fetchDataSedes()
 });

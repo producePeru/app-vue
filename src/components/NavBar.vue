@@ -55,10 +55,7 @@ const logout = async() => {
   try {
       const data = await makeRequest({ url: '/logout', method: 'POST'});
       if(data) {
-        localStorage.removeItem('user');
         Cookies.remove('token');
-        Cookies.remove('user', data.role);
-        Cookies.remove('usuario')
         localStorage.clear();
         router.push('/');
       }

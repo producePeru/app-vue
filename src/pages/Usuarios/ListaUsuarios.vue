@@ -2,15 +2,15 @@
   <div>
     <h3>USUARIOS</h3>
 
-    <div class="filters" v-if="userRole == 'super'">
-      <router-link to="nuevo-usuario" v-if="userRole == ''">
+    <div class="filters" >
+      <router-link to="nuevo-usuario">
         <a-button type="primary">
           NUEVO 
         </a-button>
       </router-link>
     </div>
 
-    <br v-else>
+    <!-- <br v-else> -->
 
     <a-table 
     bordered
@@ -61,6 +61,9 @@
                   <a-menu-item>
                     <a @click="handleEditUser(record)">Editar</a>
                   </a-menu-item>
+                  <!-- <a-menu-item>
+                    <a @click="handleVistas(record)">Vistas</a>
+                  </a-menu-item> -->
                   <a-menu-item>
                     <a-popconfirm title="¿Eliminar?" @confirm="handleDeleteUser(record)">
                       <template #icon><question-circle-outlined style="color: red" /></template>
@@ -89,8 +92,8 @@ import { ref, onMounted, h } from 'vue';
 import { useRouter } from 'vue-router';
 import { MoreOutlined, QuestionCircleOutlined } from '@ant-design/icons-vue';
 import { message } from 'ant-design-vue';
-import CryptoJS from 'crypto-js';
-import { userId, rolex } from '@/utils/cookies.js';
+
+const storageData = JSON.parse(localStorage.getItem('user'))
 
 const router = useRouter();
 const dataSource = ref([])
@@ -108,7 +111,7 @@ const columns = ref([
   { title: 'Correo electrónico',  dataIndex: 'email', width: 60},
   { title: 'Celular',             dataIndex: 'phone_number', align: 'center', width: 20},
   { title: 'Género',              dataIndex: 'gender', align: 'center', width: 20},
-  // { title: '', dataIndex: 'actions', align: 'center', width: 30 }
+  { title: '',                    dataIndex: 'actions', align: 'center', width: 30 }
 ]);
 
 
@@ -117,31 +120,25 @@ const handlePaginator = (current) =>{
   fetchData()
 }
 const handleEditUser = async(val) => {
+  router.push(`/admin/usuarios/actualizar-usuario/${val.document_number}`);
+}
+const handleVistas = async(val) => {
   const query = {
     dni: val.document_number
   }
-  router.push({ name: 'nuevo-usuario', query });
+  router.push({ name: 'usuario-vistas', query });
 }
 const handleDeleteUser = async(val) => {
-  const dni = val.document_number;
-  const user = JSON.parse(localStorage.getItem('user'));
-
-  const role = CryptoJS.AES.decrypt(user.rol, 'rol').toString(CryptoJS.enc.Utf8);
-
-  if(dni === user.dni) {
-    return message.warning("Amiwito no te puedes autoeliminar");
-  }
-
-  if(role === 'super') {
-    try {
-      const data = await makeRequest({ url: `/delete-user/${userId}/${dni}`, method: 'PUT' });
-      message.success(data.message);
-      fetchData()
-    } catch (error) {
-      message.error('No se puede eliminar a este usuario');
-    }
-  } else {
-    message.warning("No estas autorizado");
+  try {
+    loading.value = true;
+    const data = await makeRequest({ url: `delete-user/${val.id}`, method: 'POST', data: {id: storageData.id} });
+    message.success(data.message)
+    fetchData()
+  } catch (error) {
+    // console.error('Error de red:', error.response.data.message);
+    message.error(error.response.data.message)
+  } finally {
+    loading.value = false;
   }
 };
 
@@ -152,14 +149,6 @@ const fetchData = async() => {
     const data = await makeRequest({ url: '/users', method: 'GET', params:params.value });
     dataSource.value = data.data
     total.value = data.total;
-
-    const role = CryptoJS.AES.decrypt(rolex, 'rol').toString(CryptoJS.enc.Utf8);
-    if(role != 'invitado') {
-      const actions = { title: '', dataIndex: 'actions', align: 'center', width: 30 }
-      columns.value = [...columns.value, actions]
-    }
-    userRole.value = role
-    
   } catch (error) {
     console.error('Error de red:', error);
   } finally {

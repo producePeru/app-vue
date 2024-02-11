@@ -84,13 +84,13 @@ const router = createRouter({
           children: [
             {
               path: 'subir-archivo',
-              name: 'subir-archivo',
+              name: 'drive-subir-archivo',
               component: () => import('../pages/Drive/DriveSubirArchivo.vue'),
               meta: { requiresAuth: true },
             },
             {
               path: 'mis-archivos',
-              name: 'mis-archivos',
+              name: 'drive-mis-archivos',
               component: () => import('../pages/Drive/DriveVerMisArchivos.vue'),
               meta: { requiresAuth: true },
             }
@@ -247,13 +247,24 @@ const router = createRouter({
           children: [
             {
               path: 'nuevo-usuario',
-              name: 'nuevo-usuario',
+              name: 'usuarios-nuevo',
               component: () => import('../pages/Usuarios/NuevoUsuarios.vue'),
               meta: { requiresAuth: true },
             },
             {
+              path: 'actualizar-usuario/:dni',
+              name: 'usuarios-actualizar',
+              component: () => import('../pages/Usuarios/ActualizarUsuario.vue'),
+            
+            },
+            {
+              path: 'usuario-vistas',
+              name: 'usuarios-vistas',
+              component: () => import('../pages/Usuarios/VistasUsuarios.vue'),
+            },
+            {
               path: 'lista',
-              name: 'lista',
+              name: 'usuarios-lista',
               component: () => import('../pages/Usuarios/ListaUsuarios.vue'),
               meta: { requiresAuth: true },
             }          

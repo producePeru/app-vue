@@ -1,76 +1,65 @@
 <template>
   <div>
     <h3>ARCHIVOS</h3>
+
     <div class="w-search" v-show="!loading">
       <!-- <router-link to="/admin/drive/subir-archivo"><a-button >SUBIR ARCHIVO</a-button></router-link> -->
-      
-      <a-input-search
-      v-model:value="searchFile"
-      placeholder="Buscar por nombre del archivo"
-      style="width: 250px"
-      :loading="loadingSearch"
-      @search="handleSearchFilesName"/>
 
-      <a-select
-      v-if="role != 'usuario'"
-      v-model:value="inputSearch"
-      show-search
-      placeholder="Buscar"
+      <a-input-search v-model:value="searchFile" placeholder="Buscar por nombre del archivo" style="width: 250px"
+        :loading="loadingSearch" @search="handleSearchFilesName" />
+
+      <a-select 
+      v-model:value="inputSearch" 
+      show-search 
+      placeholder="Buscar" 
       style="width: 220px"
-      :options="options"
-      :filter-option="filterOption"
+      :options="options" 
+      :filter-option="filterOption" 
       @change="handleChange" />
 
     </div>
 
-    <a-table 
-    bordered
-    class="ant-table-striped"
-    sticky
-    :scroll="{ y: valueY }" 
-    :columns="columns" 
-    :data-source="dataSource" 
-    :pagination="false"
-    :loading="loading"
-    size="small">
-      <template v-slot:bodyCell="{column, record}">
-    
+    <a-table bordered class="ant-table-striped" sticky :scroll="{ y: valueY }" :columns="columns"
+      :data-source="dataSource" :pagination="false" :loading="loading" size="small">
+      <template v-slot:bodyCell="{ column, record }">
+
         <template v-if="column.dataIndex == 'date'">
-          <div>{{formatDate(record.created_at)}}</div>
+          <div>{{ formatDate(record.created_at) }}</div>
         </template>
 
         <template v-if="column.dataIndex == 'actions'">
-          <a-button size="small" @click="handleDownloadFile(record.path)" type="primary" ghost :loading="loadingDrive[record.path]">
+          <a-button size="small" @click="handleDownloadFile(record.path)" type="primary" ghost
+            :loading="loadingDrive[record.path]">
             <template #icon>
               <DownloadOutlined />
             </template>
             Descargar
           </a-button>
         </template>
-        
-     
+
+
       </template>
     </a-table>
   </div>
 
-  <div class="paginator">
-    <a-pagination size="small" :pageSize="50" :total="total"  @change="handlePaginator" :showSizeChanger="false" />
+  
+  <div class="paginator-drive">
+    <span><a-tag color="blue"><b>{{ dataSource.length }}</b></a-tag> Archivos Subidos</span>
+    <a-pagination size="small" :pageSize="50" :total="total" @change="handlePaginator" :showSizeChanger="false" />
   </div>
-
 </template>
 
 <script setup>
 import axios from 'axios';
-import CryptoJS from 'crypto-js';
+
 import { makeRequest } from '@/utils/api.js'
 import { ref, onMounted, onBeforeUnmount } from 'vue';
 import Cookies from 'js-cookie';
 import { DownloadOutlined } from '@ant-design/icons-vue';
 import moment from 'moment';
 
-const idUser = Cookies.get('usuario')
-const userRole =  JSON.parse(localStorage.getItem('user')).rol;
-const role = CryptoJS.AES.decrypt(userRole, 'rol').toString(CryptoJS.enc.Utf8);
+const storageData = JSON.parse(localStorage.getItem('user'))
+
 const prod = import.meta.env.VITE_APP_API_URL_PRODUCTION
 const dev = import.meta.env.VITE_APP_API_URL_LOCAL
 const apiUrl = window.location.hostname == '127.0.0.1' ? dev : prod;
@@ -85,15 +74,15 @@ const options = ref([]);
 const searchFile = ref('');
 const loadingSearch = ref(false);
 
-const handleChange = async(value) => {
+const handleChange = async (value) => {
   try {
-    
-    if(value === 0) return fetchData();
-    
+
+    if (value === 0) return fetchData();
+
     loading.value = true;
     const url = `/drive/author/${value}`
-    
-    const data = await makeRequest({ url, method: 'GET', params:params.value });
+
+    const data = await makeRequest({ url, method: 'GET', params: params.value });
 
     dataSource.value = data
 
@@ -103,17 +92,17 @@ const handleChange = async(value) => {
     loading.value = false;
   }
 };
-const handleSearchFilesName = async(searchValue) => {
+const handleSearchFilesName = async (searchValue) => {
   try {
     loadingSearch.value = true;
 
-    if(!searchValue) {
+    if (!searchValue) {
       inputSearch.value = 0
-      return fetchData(); 
+      return fetchData();
     }
 
-    const url = `/drive/search-file/${searchValue}/${idUser}`
-    const {data} = await makeRequest({ url, method: 'GET' });
+    const url = `/drive/search-file/${searchValue}/${storageData.id}`
+    const { data } = await makeRequest({ url, method: 'GET' });
     dataSource.value = data.data
   } catch (error) {
     console.error('Error de red:', error);
@@ -129,7 +118,7 @@ const handleDownloadFile = async (path) => {
   try {
     const response = await axios.get(`${apiUrl}/drive/download/${path}`, {
       responseType: 'blob',
-      headers: { 
+      headers: {
         'Accept': 'application/json',
         'Authorization': `Bearer ${token}`
       }
@@ -172,32 +161,32 @@ const params = ref({
 })
 
 const columns = [
-  { title: 'Autor',                 dataIndex: 'user', fixed: 'left', width: 180},
-  { title: 'Nombre archivo',        dataIndex: 'filename', width: 140},
-  { title: 'Fecha de carga',        dataIndex: 'date', width: 120, align: 'center'},
-  { title: '',                      dataIndex: 'actions', width: 120, align: 'center'}
+  { title: 'Autor', dataIndex: 'user', fixed: 'left', width: 180 },
+  { title: 'Nombre archivo', dataIndex: 'filename', width: 140 },
+  { title: 'Fecha de carga', dataIndex: 'date', width: 120, align: 'center' },
+  { title: '', dataIndex: 'actions', width: 120, align: 'center' }
 ];
 
-const handlePaginator = (current) =>{
+const handlePaginator = (current) => {
   params.value.page = current;
   fetchData()
 }
 
 
-const fetchData = async() => {
+const fetchData = async () => {
   let url = null
-  console.log("rol", role);
-  
-  if(role == 'administrador' || role == 'super') {
+
+
+  if (storageData.role == '100' || storageData.role == '10') {
     url = '/drive/files/admin'
 
   } else {
-    url = `/drive/files/${idUser}`
+    url = `/drive/files/${storageData.id}`
   }
 
   try {
     loading.value = true;
-    const {data} = await makeRequest({ url, method: 'GET', params:params.value });
+    const { data } = await makeRequest({ url, method: 'GET', params: params.value });
     dataSource.value = data
 
     const uniqueUsersMap = new Map(data.map(user => [user.idUser, user.user]));
@@ -224,15 +213,18 @@ onMounted(() => {
 });
 </script>
 
+
 <style lang="scss">
 .table-footer {
   background-color: #fafafa;
 }
-.paginator {
+
+.paginator-drive {
   display: flex;
-  justify-content: flex-end;
+  justify-content: space-between;
   margin-top: 1.5rem;
 }
+
 .w-search {
   display: flex;
   justify-content: space-between;

@@ -59,29 +59,25 @@ const onSubmit =async() => {
   loading.value = true
   try {
     const payload = formState
-    const response = await requestNoToken({ url: '/login', method: 'POST', data:  payload });
+    const {data} = await requestNoToken({ url: '/login', method: 'POST', data:  payload });
 
-    if(response.status === 404) return message.warning(response.message);
+    Cookies.set('token', data.access_token)
 
-    const data = response.data
-    Cookies.set('token', data.access_token); 
-    Cookies.set('usuario', data.id); 
-    // Cookies.set('role', CryptoJS.AES.encrypt(data.role, 'role').toString()); 
+    const me = {
+      access_token: data.access_token,
+      id: data.id,
+      document_number: data.document_number,
+      last_name: data.last_name,
+      middle_name: data.middle_name,
+      name: data.name,
+      email: data.email,
+      role: data.role
+    };
+    
+    localStorage.setItem('user', JSON.stringify(me));
 
+    if(data) fetchDataViews(data.id)
 
-
-    const personalData = {
-      'idUser': data.id,
-      'access_token': data.access_token,
-      'dni': data.dni,
-      'email': data.email,
-      'name': data.name,
-      'rol': CryptoJS.AES.encrypt(data.role, 'rol').toString()
-    }
-
-    localStorage.setItem('user', JSON.stringify(personalData));
-
-    if(data.access_token) await fetchDataViews(data.dni);
 
   } catch (error) {
     message.error("Las credenciales son incorrectas")
@@ -90,8 +86,8 @@ const onSubmit =async() => {
   }
 };
 
-const fetchDataViews = async(dni) => {
-  const { data } = await makeRequest({ url: `/permission/${dni}`, method: 'GET' });
+const fetchDataViews = async(id) => {
+  const { data } = await makeRequest({ url: `/views/${id}`, method: 'GET' });
   const encryptedData = CryptoJS.AES.encrypt(JSON.stringify(data), 'appvistas').toString();
 
   try {

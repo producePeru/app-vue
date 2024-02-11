@@ -8,13 +8,15 @@ router.beforeEach((to, from, next) => {
 
   let viewsStorage = [];
 
-  if(isAuthenticated) {
+  if (isAuthenticated) {
     const encryptedLocalStore = localStorage.getItem('views');
-    viewsStorage = CryptoJS.AES.decrypt(encryptedLocalStore, 'appvistas').toString(CryptoJS.enc.Utf8);
+    if (encryptedLocalStore) {
+      const decryptedViews = CryptoJS.AES.decrypt(encryptedLocalStore, 'appvistas').toString(CryptoJS.enc.Utf8);
+      viewsStorage = JSON.parse(decryptedViews); 
+    }
   }
 
-  
-  
+
   if (to.matched.some((record) => record.meta.requiresAuth)) {
     if (isAuthenticated) {
  
@@ -23,6 +25,7 @@ router.beforeEach((to, from, next) => {
       } else {
         next('/admin/inicio'); 
       }
+
     } else {
 
       localStorage.removeItem('user');

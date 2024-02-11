@@ -21,7 +21,7 @@ const fields = {
     name: 'document_number',
     required: true,
     message: 'Escribe número de documento',
-    disabled: false,
+    disabled: true,
     max: 8
   },
   last_name: {
@@ -60,13 +60,13 @@ const fields = {
     email: 'email',
     message: 'Escribe el correo del usuario'
   },
-  password: {
-    type: 'iPassword',
-    label: 'Contraseña',
-    name: 'password',
-    required: false,
-    message: 'Registra la contraseña'
-  },
+  // password: {
+  //   type: 'iPassword',
+  //   label: 'Contraseña',
+  //   name: 'password',
+  //   required: false,
+  //   message: 'Registra la contraseña'
+  // },
   office_code: {
     type: 'iSelect',
     label: 'Oficina',
