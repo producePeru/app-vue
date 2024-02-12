@@ -57,7 +57,7 @@
       </a-sub-menu> -->
 
     <!-- Ruta Digital  -->
-    <!-- <a-sub-menu key="rutadigital" v-if="views.includes('rutadigital')" @click="handleCollapse('rutadigital')">
+    <a-sub-menu key="rutadigital" v-if="views.includes('rutadigital')" @click="handleCollapse('rutadigital')">
       <template #title>
         <span>
           <SolutionOutlined />
@@ -69,7 +69,7 @@
       <a-menu-item key="talleres" v-if="views.includes('talleres')"> <router-link to="/admin/ruta-digital/talleres">Talleres</router-link> </a-menu-item>
       <a-menu-item key="mype" v-if="views.includes('mype')"> <router-link to="/admin/ruta-digital/mype">MYPEs</router-link> </a-menu-item>
       <a-menu-item key="expositores" v-if="views.includes('expositores')"> <router-link to="/admin/ruta-digital/expositores">Expositores</router-link> </a-menu-item>
-    </a-sub-menu> -->
+    </a-sub-menu>
 
     <!-- Usuarios  -->
     <a-sub-menu key="usuarios" v-if="views.includes('usuarios')" @click="handleCollapse('usuarios')">

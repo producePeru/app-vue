@@ -37,7 +37,8 @@
           </template>
           <template v-if="record.testin_id">
             <a-button type="link">
-              <router-link :to="`/test-entrada/${record.slug}`">Link</router-link>
+              <!-- <router-link :to="`/test-entrada/${record.slug}`">Link</router-link> -->
+              <a :href="`${apiUrl}/test-entrada/${record.slug}`" target="_blank">Link</a>
             </a-button >
             <EditOutlined @click="handleEditInTest(record)" />
           </template>
@@ -49,7 +50,8 @@
           </template>
           <template v-if="record.testout_id">
             <a-button type="link">
-              <router-link :to="`/test-salida/${record.slug}`">Link</router-link>
+              <!-- <router-link :to="`/test-salida/${record.slug}`">Link</router-link> -->
+              <a :href="`${apiUrl}/test-salida/${record.slug}`" target="_blank">Link</a>
             </a-button>
             <EditOutlined @click="handleEditEndTest(record)" />
           </template>
@@ -61,7 +63,7 @@
           </template>
           <template v-if="record.invitation_id">
             <a-button type="link">
-              <router-link :to="`/invitacion/${record.slug}`">Link</router-link>
+              <a :href="`${apiUrl}/invitacion/${record.slug}`" target="_blank">Link</a>
             </a-button>
             <EditOutlined @click="handleInvitationModal('edit', record)" />
           </template>
@@ -91,6 +93,10 @@
 
         <template v-if="column.dataIndex == 'details'">
           <a-button size="small" @click="handleShowDetails(record)">Ver detalles</a-button>
+        </template>
+
+        <template v-if="column.dataIndex == 'registered_c'">
+          <b>{{ record.registered_count }}</b>
         </template>
 
         <template v-if="column.dataIndex == 'options'">
@@ -159,6 +165,10 @@ import { requestNoToken } from '@/utils/noToken.js'
 import { QuillEditor } from '@vueup/vue-quill';
 import 'quill/dist/quill.snow.css';
 
+const prod = "https://apituempresa.soporte-pnte.com"
+const dev = "http://127.0.0.1:5173"
+const apiUrl = window.location.hostname == '127.0.0.1' ? dev : prod;
+
 const contenido = ref('');
 const isIdUpdate = ref(null);
 const router = useRouter();
@@ -215,7 +225,7 @@ const columns = [
   { title: 'T. Entrada',          dataIndex: 'test_in', align: 'center', width: 80},
   { title: 'T. Salida',           dataIndex: 'test_out', align: 'center', width: 80},
   { title: 'Estado',              dataIndex: 'status', align: 'center', width: 100},
-  { title: 'Inscriptos',          dataIndex: 'registered_count', align: 'center', width: 100},
+  { title: 'Inscriptos',          dataIndex: 'registered_c', align: 'center', width: 100},
   { title: 'Link',                dataIndex: 'link_sala', align: 'center', width: 80},
   { title: 'RRSS',                dataIndex: 'rrss', align: 'center', width: 70},
   { title: 'SMS',                 dataIndex: 'sms', align: 'center', width: 70},

@@ -29,24 +29,15 @@
           </a-form-item>
         </template>
 
-        <div>
-          <h4>¿Cómo te enteraste del taller?</h4>
-          <a-radio-group class="group-radios" v-model:value="addSocial">
-            <a-radio class="item-radio" value="rrss">Redes sociales</a-radio>
-            <a-radio class="item-radio" value="sms">SMS</a-radio>
-            <a-radio class="item-radio" value="correo">Correo</a-radio>
-          </a-radio-group>
-        </div>
-
         <a-form-item class="btn-send">
-          <a-button type="primary" html-type="submit" :loading="loading">PARTICIPAR</a-button>
+          <a-button type="primary" html-type="submit" :loading="loading">CONTINUAR</a-button>
         </a-form-item>
 
       </div>
     </a-form>
   </div>
 </template>
-s
+
 <script setup>
 import { reactive, ref, onMounted } from 'vue';
 import fieldsJs from '@/forms/nuevaPersonaCompany.js'
@@ -57,6 +48,8 @@ import { userId } from '@/utils/cookies.js'
 import { typePerson, categories } from '@/utils/selects.js'
 
 const props = defineProps(['idWorkshop'])
+const storageData = JSON.parse(localStorage.getItem('user'))
+const emit = defineEmits(['handleCreateItem'])
 
 const fields = ref(fieldsJs)
 const route = useRoute();
@@ -289,29 +282,51 @@ const getDistricts = async(id) => {
   }
 };
 
-
 const onSubmit = async () => {
-  const payload = formState
   loading.value = true
   try {
-    const data = await requestNoToken({ url: '/public/accepted-invitation', method: 'POST', data: payload });
-    if(data) {
-      
-      const query = {
-        status: 'success',
-        title: '¡Gracias por participar de este formulario!',
-        subTitle: 'Se te enviará un correo incluyendo el link del taller ♥'
-      }
-
-      await requestNoToken({ url: `/public/add-point/${props.idWorkshop}/${addSocial.value}`, method: 'PUT' });
-
-      router.push({ name: 'enviado', query });
-
-      disabled()
-      clearFields()
+    
+    const company = {
+      ruc: formState.ruc,
+      social_reason: formState.social_reason,
+      category: formState.category,
+      person_type: formState.person_type,
+      department: formState.department,
+      province: formState.province,
+      district: formState.district,
+      email: formState.email,
+      phone: formState.phone,
+      created_by: storageData ? storageData.id : null,
+      update_by: storageData ? storageData.id : null
     }
+    const person = {
+      document_type: formState.document_type,
+      number_document: formState.number_document,
+      last_name: formState.last_name,
+      middle_name: formState.middle_name,
+      name: formState.name,
+      department: formState.department,
+      province: formState.province,
+      district: formState.district,
+      email: formState.email,
+      phone: formState.phone,
+      created_by: storageData ? storageData.id : null,
+      update_by: storageData ? storageData.id : null,
+      post: 4
+    }
+    const companyPerson = {
+      ruc: formState.ruc,
+      number_document: formState.number_document,
+    }
+    
+    await requestNoToken({ url: '/public/company', method: 'POST', data: company });
+    await requestNoToken({ url: '/public/new-person', method: 'POST', data: person });
+    await requestNoToken({ url: '/public/company-user', method: 'POST', data: companyPerson });
+
+    emit('registerMYPE', companyPerson)
+
   } catch (error) {
-    message.error('Error al registrar');
+    // message.error('Error al registrar');
   } finally {
     loading.value = false
   }

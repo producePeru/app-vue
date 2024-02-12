@@ -1,7 +1,12 @@
 <template>
   <a-result
-    status="success"
-    title="¡Gracias por participar de este formulario!"
-    sub-title="Se te enviará un correo incluyendo el link del taller">
+    :status="route.query.status"
+    :title="route.query.title"
+    :sub-title="route.query.subTitle">
   </a-result>
 </template>
+
+<script setup>
+import { useRoute } from 'vue-router';
+const route = useRoute();
+</script>

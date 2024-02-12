@@ -7,10 +7,15 @@
     </a-breadcrumb>
     <br>
     <div>
-      <span>Resultados de las evaluaciones</span>
-      <h3 class="c-primary">{{ $route.query.taller }}</h3>
+      <span>Detalles:</span>
+      <h3 class="c-primary details-title">{{ $route.query.taller }}</h3>
       <span>fecha del taller</span>
       <h3>{{ $route.query.date }}</h3>
+      <span>Total inscritas</span>
+      <div>
+        <a-tag color="processing">{{ total }}</a-tag>
+      </div>
+
     </div>
     
     <!-- <div>
@@ -232,6 +237,7 @@ const fetchData = async() => {
     loading.value = false;
   }
 }
+
 const fetchAllQuestions = async(idWorkshop) => {
   try {
     const data = await makeRequest({ url: `/test-all-questions/${idWorkshop}`, method: 'GET'});
@@ -240,12 +246,16 @@ const fetchAllQuestions = async(idWorkshop) => {
     console.error('Error de red:', error);
   }
 }
-onMounted(
-  fetchData
-);
+onMounted(() => {
+  fetchData()
+
+});
 </script>
 
 <style scoped>
+.details-title {
+  margin: 10px 0;
+}
 .filters {
   margin: 1rem 0;
 }

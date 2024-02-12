@@ -109,7 +109,7 @@ onMounted(() => {
   color: #fff;
   padding: 1rem 0;
   h3 {
-    font-weight: 500;
+    font-weight: 600;
     margin: 0;
     font-size: 17px;
   }

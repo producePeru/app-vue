@@ -1,370 +1,189 @@
 <template>
-  <div class="background">
-    <section class="container">
-      <div class="questionary">
-        <div class="box">
-          <div class="text-center">
-            <img src="../../assets/img/tuempresa.png" alt="">
-            <h1 class="title">Test de salida</h1>
-          </div>
-          
-          <a-divider />
-          
-          <div class="box-info-workshop">
-            <span><b>Taller: </b>{{ testInfo.title }}</span>
-            <span><b>Expositor: </b>{{ testInfo.exponent }}</span>
-            <span><b>Fecha del taller:</b> {{ testInfo.workShopDate }}</span>
-            <span><b>Fecha de expiración del cuestionario:</b> {{ formattedDate}}</span>
-          </div>
+  <section class="invitation">
+
+    <a-spin v-if="isloading" />
+
+    <div v-else class="container">
+      <div class="header">
+        <img class="logo-ruta" src="../../assets/img/logorutadigital.png" alt="">
+      </div>
+
+      <div class="lazing">
+        <h3>TEST DE SALIDA</h3>
+      </div>
+
+      <div v-if="workshop" class="invitacion-info text-html"> 
+        <div>
+          <p>
+            ¡Capacítate con <b>#RUTADIGITAL</b> del Ministerio de Producción del Perú, a través de <b>#TuEmpresa</b>!
+          </p>
+          <br>
+          <p><b>Taller: </b> {{ workshop.title }}</p>
+          <p><b>Exponente: </b> {{ workshop.exponent_name }}</p>
+          <p><b>Fecha: </b> {{ workshop.workshop_date }}</p>
+          <!-- <p><b>Fecha de expiración del cuestionario: </b>
+            <p>{{ workshop.test_out_date }}</p>
+          </p> -->
+   
         </div>
 
-        <a-form layout="vertical" :model="formState" autocomplete="off" @finish="onSubmit" @finishFailed="onFinishFailed">
-          <div class="box">
-            <a-form-item class="search-ruc f-15" name="ruc" label="Número de RUC"
-              :rules="[{ required: true, message: 'Es importante el número de RUC' }]">
-              <a-input-search :maxlength="15" :loading="searchLoading" size="large" v-model:value="formState.ruc"
-                enter-button @search="handleSearchMype" @input="validateNumber" />
-            </a-form-item>
-            <div class="personal-info" v-if="formDataSearch.name">
-              <h4 class="c-primary">Mis Datos</h4>
-              <div>
-                <span class="name">Nombres y Apellidos: </span>
-                <span>{{ formDataSearch.name }}</span>
-              </div>
-              <div>
-                <span class="name">Correo electrónico: </span>
-                <span>{{ formDataSearch.email }}</span>
-              </div>
-              <div>
-                <span class="name">Número de contácto: </span>
-                <span>{{ formDataSearch.phone }}</span>
-              </div>
-              <br>
-              <!-- <a-button>Editar datos</a-button> -->
-            </div>
-          </div>
-
-
-          <div v-if="dataTestArr">
-            <div class="box" v-for="(item, idx) in 5" :key="idx">
-              <span class="box-mensagge">Pregunta {{ idx+1 }}</span>
-              <h3 class="box-title">{{ dataTestArr['question'+(idx+1)] }}</h3>
-
-              <a-form-item :name="`ts${idx+1}`" :rules="[{ required: true, message: 'Escoge una respuesta' }]">
-                <a-radio-group class="group-radios" v-model:value="formState[`ts${idx+1}`]">
-
-                  <template v-for="(radio, jdx) in 3" :key="jdx">
-                    <a-radio class="item-radio" :value="jdx+1">{{ dataTestArr[`question${idx+1}_opt${jdx+1}`] }}</a-radio>
-                  </template>
-                </a-radio-group>
-              </a-form-item>
-            </div>
-          </div>
-
-          <div class="box rate" v-if="dataTestArr">
-            <!-- <span class="box-mensagge">Opcional</span> -->
-            <div>
-              <h3 class="box-title">{{ dataTestArr.satistaction1 }}</h3>
-              <a-rate class="star-rate" v-model:value="formState.rate_1" />
-            </div>
-            <div class="rate-wrapper">
-              <h3 class="box-title">{{ dataTestArr.satistaction2 }}</h3>
-              <a-rate class="star-rate" v-model:value="formState.rate_2" />
-            </div>
-            <div>
-              <h3 class="box-title">{{ dataTestArr.satistaction3 }}</h3>
-              <a-rate class="star-rate" v-model:value="formState.rate_3" />
-            </div>
-          </div>
-
-          <div class="box" v-if="dataTestArr">
-            <span class="box-mensagge">Sugerencias</span>
-            <h3 class="box-title">{{ dataTestArr.comments }}</h3>
-            <a-textarea v-model:value="formState.comments" allow-clear />
-          </div>
-
-          <div class="box-btn">
-            <a-button type="primary" html-type="submit" size="large" :loading="submitLoading">Enviar respuestas</a-button>
-          </div>
-
-        </a-form>
+        <div >
+          <!-- <img class="img-wom" src="../../assets/img/imgInvitacion.jpg" alt=""> -->
+          <img class="img-taller" src="https://img.freepik.com/vector-gratis/proyecto-inicio-negocio-lanzar-idea-exitosa_107791-13390.jpg" alt="">
+        </div>
       </div>
-    </section>
 
-    <RegistroMYPE :open="open" @handleCloseModal="open = false" :rucProp="rucProp" @handleSetData="handleSetData"/>
-
-  </div>
+      <br>
+      
+      <EmpresaUsuario v-if="!isRegister"  @registerMYPE="handleRegisterSuccess" />
+      <TestSalida v-else :workshop="workshop" :rucdni="rucdni" />
+    
+    </div>
+  </section>
 </template>
 
+
 <script setup>
-import { ref, reactive, onMounted, computed } from 'vue';
-import { message } from 'ant-design-vue';
-import RegistroMYPE from './components/ModalRegistroMYPE.vue'
-import { makeRequest } from '@/utils/api.js'
-import { useRouter,useRoute } from 'vue-router';
-import moment from 'moment';
+import { ref, onMounted } from 'vue';
 import { requestNoToken } from '@/utils/noToken.js'
+import { useRoute } from 'vue-router';
+import EmpresaUsuario from './components/EmpresaUsuario.vue'
+import TestSalida from './components/TestSalidaQuestions.vue'
 
+const isloading = ref(true);
 const route = useRoute();
-const router = useRouter();
+const workshop = ref(null);
+const isRegister = ref(!false);
+const rucdni = ref(null);
 
-const open = ref(false);
-const searchLoading = ref(false)
-const submitLoading = ref(false)
-const rucProp = ref(null)
-const dataTestArr = ref(null)
-
-const testInfo = reactive({
-  id: null,
-  exponent: null,
-  idIn: null,
-  idOut: null,
-  dateTestIn: null,
-  dateTestOut: null,
-  title: null,
-  workShopDate: null,
-});
-const formDataSearch = reactive({
-  name: null,
-  email: null,
-  phone: null,
-  ruc: null,
-  dni: null,
-})
-
-const formState = reactive({
-  ruc: null,
-  dni: null,
-  ts1: null,
-  ts2: null,
-  ts3: null,
-  ts4: null,
-  ts5: null,
-  rate_1: null,
-  rate_2: null,
-  rate_3: null,
-  comments: null
-});
-
-
-const formattedDate = computed(() => {
-  return moment(testInfo.dateTestOut).format('DD-MM-YYYY'); 
-});
-const validateNumber = () => {
-  formState.ruc = formState.ruc.replace(/\D/g, '');
-};
-const handleSetData = (data) => {
-  formDataSearch.name = data.name_complete
-  formDataSearch.email = data.email
-  formDataSearch.phone = data.phone
-  formDataSearch.ruc = data.ruc
-  formDataSearch.dni = data.dni_number
+const handleRegisterSuccess = (val) => {
+  isRegister.value = true
+  rucdni.value = val
 }
 
-
-const handleSearchMype = async () => {
-  let ruc = formState.ruc
-  if (!ruc) {
-    return message.warning('Ingresa el número de RUC');
-  } 
-  searchLoading.value = true
-
-  try {
-    const {data} = await requestNoToken({ url: `/data-mype/${ruc}`, method: 'GET' });
-    
-    if (data.ruc) {
-      formDataSearch.ruc = data.ruc;
-      formDataSearch.name = data.name_complete;
-      formDataSearch.email = data.email;
-      formDataSearch.phone = data.phone
-      formDataSearch.dni = data.dni_number
-    }
-  } catch (error) {
-    console.error('Error de red:', error.response.status);
-
-    formDataSearch.name = null;
-    formDataSearch.email = null;
-    formDataSearch.phone = null;
-    formDataSearch.dni = null;
-
-    if(error.response.status == 404) {
-      try {
-        const {data} = await requestNoToken({ url: `/api-data-mype/${formState.ruc}`, method: 'GET' });
-        const result = {
-          razonSocial: data.razonSocial,
-          numeroDocumento: data.numeroDocumento
-        }
-        rucProp.value = result
-        open.value = true;
-      } catch (error) {
-        message.warning("El número de RUC no es válido")
-        console.error('Error de red:', error);
-      }
-    }
-  } finally {
-    searchLoading.value = false;
-  }
-}
-const scrollTop = () => {
-  window.scrollTo({
-    top: 200,
-    behavior: 'smooth'
-  });
-}
-const onSubmit = async() => {
-  if(formDataSearch.name == null && formDataSearch.dni == null && formDataSearch.ruc == null) {
-    handleSearchMype()
-    message.warning('Revisando sus respuestas')
-    scrollTop()
-    return 
-  }
-
-  const payload = {
-    ts1: formState.ts1,
-    ts2: formState.ts2,
-    ts3: formState.ts3,
-    ts4: formState.ts4,
-    ts5: formState.ts5,
-    c1: formState.rate_1,
-    c2: formState.rate_2,
-    c3: formState.rate_3,
-    suggestions: formState.comments,
-
-    ruc_mype: formDataSearch.ruc,
-    dni_mype: formDataSearch.dni,
-    workshop_id: testInfo.id
-  }
-
-  submitLoading.value = true;
-  try {
-    const data = await requestNoToken({ url: `/sending-test-answers/${testInfo.id}`, method: 'POST', data:payload });
-    message.success(data.message);
-    router.push({name: 'enviado'});
-  } catch (error) {
-    console.error('Error:', error.response.data.errors[0]);
-  } finally {
-    submitLoading.value = false;
-  }
-};
-const onFinishFailed = () => {
-  message.error('Debes de completar todos los datos');
-};
-
-const fetchOut = async(idx) => {
-  console.log("uuuu", idx);
-  try {
-    const {data} = await requestNoToken({ url: `/testout-questions/${idx}`, method: 'GET' });
-    dataTestArr.value = data
-  } catch (error) {
-    console.error('Error de red:', error);
-  }
-}
 const fetchData = async() => {
   try {
     const data = await requestNoToken({ url: `/get-workshop-slug/${route.params.slug}`, method: 'GET' });
-    testInfo.id = data.workshop.id;
-    testInfo.exponent = data.workshop.exponent_name;
-    testInfo.idIn = data.workshop.id_in;
-    testInfo.idOut = data.workshop.id_out;
-    testInfo.dateTestIn = data.workshop.test_in_date;
-    testInfo.dateTestOut = data.workshop.test_out_date;
-    testInfo.title = data.workshop.title;
-    testInfo.workShopDate = data.workshop.workshop_date;
-
-    await fetchOut(data.workshop.id)
-
+    workshop.value = data.workshop
+    isloading.value = false;
   } catch (error) {
     console.error('Error de red:', error);
   }
 }
 
-onMounted(
-  fetchData
-);
+onMounted(() => {
+  fetchData()
+});
+
 </script>
 
 <style lang="scss" scoped>
-@import url('https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,300;0,400;0,500;0,700;1,300&display=swap');
-.background {
-  background-color: #f6f6f6;
-  padding: 1rem 0;
+.img-taller {
+  height: 200px;
+  width: 100%;
+}
+.invitation {
+  background-color: #f9f9f9;
+  padding: 0 0 1rem 0;
+  min-height: 100vh;
 }
 .container {
-  max-width: 960px;
-  width: 100%;
-  width: calc(100% - 1rem);
+  max-width: 800px;
   margin: auto;
-  img {
-    width: 200px;
-  }
-  h1 {
-    margin: 0;
-    font-family: 'Roboto', sans-serif;
-  }
-  .box {
-    padding: 50px;
-    background: #fff;
-    border-radius: 8px;
-    margin-bottom: .6rem;
-    .title {
-      margin-top: 1rem;
-      color: #e31d1a;
-    }
-    .box-title {
-      font-size: 18px;
-    }
-    .box-info-workshop {
-      display: flex;
-      flex-direction: column;
-      line-height: 1.6;
-      font-family: 'Roboto', sans-serif;
-      b {
-        color: #d9363e;
-        font-size: 15px;
-      }
-    }
-    .box-mensagge {
-      font-size: 15px;
-      margin-bottom: .2rem;
-      display: block;
-      color: #e31d1a;
-    }
-    .group-radios {
-      display: flex;
-      flex-direction: column;
-      .item-radio {
-        border: 1px solid #d9d9d9;
-        padding: .6rem;
-        font-size: 15px;
-        margin: 5px 0;
-        border-radius: 4px;
-      }
-    }
-  }
-  .box-btn {
-    text-align: center;
-    margin-bottom: 3rem;
-    margin-top: 2rem;
-    .btn {
-      margin: 0 !important;
-    }
-  }
+  min-width: 300px;
+  // border: 1px solid #d1d1d1;
+  padding-bottom: 2rem;
+  background-color: #fff;
+  border-radius: 6px;
 }
-.rate {
+
+.header {
+  background-image: url("../../assets/img/header.png");
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: cover;
+  height: 140px;
+  position: relative;
+  margin-bottom: 1rem;
+}
+.logo-ruta {
+  width: 100%;
+  max-width: 240px;
+  position: absolute;
+  right: 50%;
+  top: 25%;
+  transform: translate(50%, 50%);
+}
+
+.lazing {
+  background-color: #1d71b8;
+  text-align: center;
+  color: #fff;
+  padding: 1rem 0;
   h3 {
-    margin: 0 !important;
-  }
-  .rate-wrapper {
-    margin: 2rem 0;
-  }
-  .star-rate {
-    font-size: 32px;
+    font-weight: 600;
+    margin: 0;
+    font-size: 17px;
   }
 }
 
-.search-ruc {
-  @media screen and (min-width: 768px) {
-    width: 350px;
+.invitacion-info {
+  display: grid;
+  grid-template-columns: 50% 50%;
+  margin-top: 1rem;
+  grid-gap: 1rem;
+  padding: .5rem 1rem;
+  .img-wom {
+    width: 95%;
+  }
+  .logo-clock {
+    width: 30px;
+    margin-right: .3rem;
+    position: relative;
+    top: -.1rem;
+  }
+  .horario {
+    // color: red;
+    font-size: 15px;
+    font-weight: 500;
+  }
+}
+.plataforma {
+  display: flex;
+  align-items: center;
+  gap: .6rem;
+  h3 {
+    color: #1d71b8;
+    padding-top: .3rem;
+    margin: 0;
+  }
+  .logo-zoom {
+    width: 100px;
+  }
+}
+</style>
+
+<style lang="scss">
+.horario {
+  color: rgba(0, 0, 0, 0.88);
+  font-family: -apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,'Helvetica Neue',Arial,'Noto Sans',sans-serif,'Apple Color Emoji','Segoe UI Emoji','Segoe UI Symbol','Noto Color Emoji';
+}
+.text-html {
+  h2 {
+    font-size: 22px;
+  }
+  h3 {
+    font-size: 16px;
+  }
+  p {
+    font-size: 14px;
+    line-height: 1.3;
+    color: rgba(0, 0, 0, 0.88);
+    white-space: initial;
+    margin-bottom: .5rem;
+  }
+  h2, p {
+    font-family: -apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,'Helvetica Neue',Arial,'Noto Sans',sans-serif,'Apple Color Emoji','Segoe UI Emoji','Segoe UI Symbol','Noto Color Emoji';
   }
 }
 </style>
