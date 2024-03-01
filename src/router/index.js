@@ -14,6 +14,11 @@ const router = createRouter({
       component: () => import('../pages/FormalizacionPge.vue')
     },
     {
+      path: '/formalizacion-digital-mapa',
+      name: 'formalizacion-mapa',
+      component: () => import('../pages/Formalizacion/FormalizacionMapa.vue')
+    },
+    {
       path: '/cuestionario/:id',
       name: 'questionary',
       component: () => import('../pages/public/QuestionaryId.vue')

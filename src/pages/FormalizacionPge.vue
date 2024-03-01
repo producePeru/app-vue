@@ -23,6 +23,7 @@
     </div>
   </section>
 
+
   <section class="form">
     <div class="container">
       <div class="form-wrapper">
@@ -30,7 +31,7 @@
         <h2 class="ff title">Formulario de formalización digital</h2>
         
         <a-form class="form-values" :model="formState" name="basic" layout="vertical" autocomplete="off"
-          @finish="onFinish" @finishFailed="onFinishFailed">
+          @finish="onSubmit" @finishFailed="onFinishFailed">
 
           <a-form-item label="Número DNI" name="dni"
             :rules="[{ required: true, message: 'Por favor ingresa tu número de DNI', min:8, max:8 }]">
@@ -48,7 +49,7 @@
           </a-form-item>
 
           <a-form-item label="Número de celular" name="phone"
-            :rules="[{ required: true, message: 'Por favor ingresa tu número de celular' }]">
+            :rules="[{ required: true, message: 'Por favor ingresa tu número de celular', min:9, max:9 }]">
             <div class="number-cel">
               <div class="flat-51">
                 <img src="../assets/formalizate/flat.png" alt="peru">
@@ -76,7 +77,7 @@
           </a-form-item>
 
           <a-form-item>
-            <a-button class="form-button" type="primary" html-type="submit">FORMALIZAR</a-button>
+            <a-button :loading="loading" class="form-button" type="primary" html-type="submit">CONTINUAR</a-button>
           </a-form-item>
         </a-form>
 
@@ -107,18 +108,16 @@
         </div>
 
       </div>
-
-      
-
     </div>
-
-    
   </footer>
 </template>
 
 <script setup>
 import { reactive, ref, onMounted, onUnmounted } from 'vue';
 import { requestNoToken } from '@/utils/noToken.js'
+import { message } from 'ant-design-vue';
+import Cookies from 'js-cookie';
+import { useRouter } from 'vue-router';
 
 const formState = reactive({
   dni: null,
@@ -128,17 +127,34 @@ const formState = reactive({
   departament: null,
   province: null,
   district: null,
-  address: null
+  address: null,
+  id_cde: null
 });
 
+const loading = ref(false);
 const navBar = ref(null);
 const isFloating = ref(false);
 const departments = ref([]);
 const provinces = ref([]);
 const districts = ref([]);
 
-const onFinish = values => {
-  console.log('Success:', values);
+const router = useRouter();
+
+const onSubmit = async () => {
+  Cookies.remove('formalizacion');
+  loading.value = true
+  try {
+    const data = await requestNoToken({ url: '/public/formalization', method: 'POST', data: formState });
+    
+    if(data) {
+      Cookies.set('formalization-data', JSON.stringify(formState));
+      router.push({ name: 'formalizacion-mapa' });
+    }
+  } catch (error) {
+    message.error('Error al registrar');
+  } finally {
+    loading.value = false
+  }
 };
 const onFinishFailed = errorInfo => {
   console.log('Failed:', errorInfo);
@@ -165,8 +181,8 @@ const getDepartaments = async() => {
   }
 };
 const getProvinces = async (id) => {
-  // formState.province = null
-  // formState.district = null
+  formState.province = null
+  formState.district = null
   provinces.value = []
   districts.value = []
   try {
@@ -387,7 +403,7 @@ footer {
 
 @media screen and (max-width: 900px) {
   .title {
-    font-size: 24px;
+    font-size: 20px;
     color: $color-title;
     font-weight: 600;
   }
