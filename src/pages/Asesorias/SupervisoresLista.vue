@@ -78,7 +78,7 @@ const params = ref({ page: 1 })
 
 const columns = [
   { title: 'Apellidos',           dataIndex: 'lastName', fixed: 'left', width: 200 },
-  { title: 'Nombres',             dataIndex: 'name', fixed: 'left', width: 120 },
+  { title: 'Nombres',             dataIndex: 'name', fixed: 'left', width: 140 },
   { title: 'Tipo documento',      dataIndex: 'document_type', align: 'center', width: 100},
   { title: 'Num. documento',      dataIndex: 'number_document', align: 'center', width: 120},
   { title: 'Departamento',        dataIndex: 'departamento', align: 'center', width: 140},

@@ -12,8 +12,8 @@ const geners = [
 ];
 
 const disabilities = [
-  { label: 'Si', value: 2 },
-  { label: 'No', value: 1 },
+  { label: 'Si', value: 1 },
+  { label: 'No', value: 0 },
 ];
 
 const typeUsers = [
@@ -86,7 +86,26 @@ const categories = [
   {value: 31,label: 'TRANSPORTES Y ADUANAS'},
   {value: 32,label: 'VEHICULOS Y ADUANAS'},
   {value: 33,label: 'VIAJES Y TURISMOS'}
-]
+];
+
+const economicSectors = [
+  { label: 'Industria', value: 1 },
+  { label: 'Servicio', value: 2 },
+  { label: 'Comercio', value: 3 }
+];
+
+const modality = [
+  { label: 'Virtual', value: 1 },
+  { label: 'Presencial', value: 2 }
+];
+
+const regimen = [
+  { label: 'SA', value: 'sa' },
+  { label: 'SAC', value: 'sac'},
+  { label: 'EIRL', value: 'eirl' },
+  { label: 'SRL', value: 'srl' },
+  { label: 'SACS', value: 'sacs' }
+];
 
 export { 
   typeDocuments, 
@@ -98,5 +117,8 @@ export {
   convenioComponent,
   entities,
   typePerson,
-  categories
+  categories,
+  economicSectors,
+  modality,
+  regimen
 };

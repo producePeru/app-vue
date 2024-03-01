@@ -81,6 +81,28 @@ const fields = {
     message: 'Número de contacto y 9 max',
     email: 'email',
     disabled: false
+  },
+  birthdate: {
+    type: 'iDate',
+    label: 'Fecha de nacimiento',
+    name: 'birthdate',
+    required: false,
+    message: 'Seleccionar fecha',
+    disabled: false
+  },
+  gender: {
+    type: 'iSelect',
+    label: 'Género',
+    name: 'gender',
+    required: false,
+    message: 'Seleccionar tipo de documento',
+  },
+  lession: {
+    type: 'iSelect',
+    label: '¿Tiene discapacidad?',
+    name: 'lession',
+    required: false,
+    message: 'Seleccionar un tipo',
   }
 }
 

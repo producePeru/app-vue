@@ -31,18 +31,19 @@
     </a-sub-menu>
 
     <!-- Asesorias  --> 
-    <!-- <a-sub-menu key="asesorias" v-if="views.includes('asesorias')" @click="handleCollapse('asesorias')">
+    <a-sub-menu key="asesorias" v-if="views.includes('asesorias')" @click="handleCollapse('asesorias')">
       <template #title>
         <span>
           <BulbOutlined />
           <span>Asesorias</span>
         </span>
       </template>
+      <a-menu-item key="asesorias-formalizaciones"> <router-link to="/admin/asesorias/asesorias-formalizaciones">Registro</router-link> </a-menu-item> 
       <a-menu-item key="solicitantes"> <router-link to="/admin/asesorias/solicitantes">Solicitantes</router-link> </a-menu-item> 
       <a-menu-item key="notarias"> <router-link to="/admin/asesorias/notarias">Notarias</router-link> </a-menu-item> 
       <a-menu-item key="asesores"> <router-link to="/admin/asesorias/asesores">Asesores</router-link> </a-menu-item> 
       <a-menu-item key="supervisores"> <router-link to="/admin/asesorias/supervisores">Supervisores</router-link> </a-menu-item>
-    </a-sub-menu> -->
+    </a-sub-menu>
 
     <!-- Convenios  --> 
       <!-- <a-sub-menu key="convenios" @click="handleCollapse('convenios')">

@@ -9,6 +9,11 @@ const router = createRouter({
       component: () => import('../pages/LoginPage.vue')
     },
     {
+      path: '/formalizacion-digital',
+      name: 'formalizacion',
+      component: () => import('../pages/FormalizacionPge.vue')
+    },
+    {
       path: '/cuestionario/:id',
       name: 'questionary',
       component: () => import('../pages/public/QuestionaryId.vue')
@@ -103,6 +108,12 @@ const router = createRouter({
           path: 'asesorias',
           name: 'asesorias',
           children: [
+            {
+              path: 'asesorias-formalizaciones',
+              name: 'asesorias-formalizaciones',
+              component: () => import('../pages/Asesorias/AsesoriasFormalizaciones.vue'),
+              // meta: { requiresAuth: true },
+            },
             {
               path: 'solicitantes',
               name: 'solicitantes',
@@ -267,15 +278,20 @@ const router = createRouter({
               name: 'usuarios-lista',
               component: () => import('../pages/Usuarios/ListaUsuarios.vue'),
               meta: { requiresAuth: true },
-            }          
+            },     
           ]
         },
-
-        // {
-        //   path: 'mis-datos',
-        //   name: 'mis-datos',
-        //   component: () => import('../pages/Usuarios/MiPerfil.vue')
-        // },
+        {
+          path: 'mi-perfil',
+          name: 'mi-perfil',
+          component: () => import('../pages/Usuarios/MiPerfil.vue')
+        },  
+        {
+          path: 'cambiar-clave',
+          name: 'cambiar-clave',
+          component: () => import('../pages/Usuarios/CambiarClave.vue')
+        },  
+       
 
       ]
     }

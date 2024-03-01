@@ -1,5 +1,8 @@
 <template>
-
+  <a-breadcrumb>
+    <a-breadcrumb-item><a @click="comeBack">Atrás</a></a-breadcrumb-item>
+  </a-breadcrumb>
+  <br>
   <h3 class="uppercase">ACTUALIZAR {{ route.query.rol }}</h3>
 
   <br>
@@ -18,6 +21,8 @@
             <a-select v-if="el.name == 'department'" v-model:value="formState[el.name]" :options="departments" @change="handleDepartaments" :disabled="el.disabled" />
             <a-select v-if="el.name == 'province'" v-model:value="formState[el.name]" :options="provinces" @change="handleProvinces" :disabled="el.disabled" />
             <a-select v-if="el.name == 'district'" v-model:value="formState[el.name]" :options="districts" :disabled="el.disabled" />
+            <a-select v-if="el.name == 'lession'" v-model:value="formState[el.name]" :options="disabilities" :disabled="el.disabled" />
+            <a-select v-if="el.name == 'gender'" v-model:value="formState[el.name]" :options="geners" :disabled="el.disabled" />
           </a-form-item>
 
           <a-form-item v-if="el.type === 'iSearch'" class="item-max" :name="el.name" :label="el.label"
@@ -30,6 +35,12 @@
             :rules="[{ required: el.required, message: el.message, type: el.email, max: el.max }]">
             <a-input v-model:value="formState[el.name]" :disabled="el.disabled" />
           </a-form-item>
+
+          <a-form-item v-if="el.type === 'iDate'" :name="el.name" :label="el.label"
+            :rules="[{ required: el.required, message: el.message }]">
+            <a-date-picker :locale="locale" v-model:value="birthdateDate" style="width: 100%;" :format="dateFormat" :disabled="el.disabled" />
+          </a-form-item>
+
         </template>
       </div>
       <!-- <pre>{{ formState }}</pre> -->
@@ -41,18 +52,26 @@
 </template>
 
 <script setup>
+import locale from 'ant-design-vue/es/date-picker/locale/es_ES';
+import dayjs from 'dayjs';
+import 'dayjs/locale/es';
+dayjs.locale('es');
 import { reactive, ref, onMounted } from 'vue';
 import fieldsJs from '@/forms/actualizarPersona.js'
 import { requestNoToken } from '@/utils/noToken.js'
 import { makeRequest } from '@/utils/api.js'
 import { message } from 'ant-design-vue';
 import { useRoute, useRouter } from 'vue-router';
-import { userId } from '@/utils/cookies.js'
+import { geners, disabilities } from '@/utils/selects.js'
+
+const storageData = JSON.parse(localStorage.getItem('user'))
 
 const fields = ref(fieldsJs)
 const route = useRoute();
 const router = useRouter();
 
+const dateFormat = 'YYYY-MM-DD';
+const birthdateDate = ref(null);
 const isloading = ref(true);
 const searchLoading = ref(false)
 const loading = ref(false);
@@ -77,8 +96,12 @@ const formState = reactive({
   district: null,
   phone: null,
   email: null,
-  created_by: userId,
-  update_by: userId,
+  birthdate: null,
+  gender: null,
+  lession: null,
+
+  created_by: storageData.id,
+  update_by: storageData.id,
   post: route.query.access
 });
 
@@ -162,10 +185,15 @@ const handleProvinces = (id, evt) => {
   getDistricts(evt.value)
 }
 const comeBack = () => {
-  const url = route.query.access
-  if(url == 1) router.push(`/admin/asesorias/supervisores`);
-  if(url == 2) router.push(`/admin/asesorias/asesores`);
-  if(url == 3) router.push(`/admin/asesorias/solicitantes`);
+  if(route.query.dni) {
+    const query = { dni: route.query.dni }
+    router.push({ name: 'asesorias-formalizaciones', query });
+  } else {
+    const url = route.query.access
+    if(url == 1) router.push(`/admin/asesorias/supervisores`);
+    if(url == 2) router.push(`/admin/asesorias/asesores`);
+    if(url == 3) router.push(`/admin/asesorias/solicitantes`);
+  }
 }
 
 const getDepartaments = async() => {
@@ -256,6 +284,9 @@ const fetchData = async() => {
     formState.district = data.district
     formState.phone = data.phone
     formState.email = data.email
+    formState.gender = data.gender;
+    formState.lession = data.lession;
+    if(data.birthdate) birthdateDate.value = dayjs(data.birthdate, dateFormat)
 
     isloading.value = false
 

@@ -61,10 +61,10 @@ import { message } from 'ant-design-vue';
 import fields from '@/forms/nuevaNotaria.js'
 import { makeRequest } from '@/utils/api.js';
 import { requestNoToken } from '@/utils/noToken.js'
-import { userId } from '@/utils/cookies.js'
 
 const props = defineProps(['isIdUpdate'])
 const emit = defineEmits(['handleCloseModal', 'refreshTable'])
+const storageData = JSON.parse(localStorage.getItem('user'))
 
 onUpdated(() => {
   if (props.isIdUpdate) {
@@ -154,7 +154,7 @@ const formState = reactive({
   address: null,
   normal_rate: null,
   social_rate: null,
-  created_by: userId
+  created_by: storageData.id
 });
 
 const handleCloseModal = () => {

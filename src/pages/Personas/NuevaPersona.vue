@@ -1,4 +1,8 @@
 <template>
+  <a-breadcrumb>
+    <a-breadcrumb-item><a @click="comeBack">Atrás</a></a-breadcrumb-item>
+  </a-breadcrumb>
+  <br>
   <h3 class="uppercase">REGISTRO DE {{ route.query.rol }}</h3>
 
   <br>
@@ -17,6 +21,9 @@
             <a-select v-if="el.name == 'department'" v-model:value="formState[el.name]" :options="departments" @change="handleDepartaments" :disabled="el.disabled" />
             <a-select v-if="el.name == 'province'" v-model:value="formState[el.name]" :options="provinces" @change="handleProvinces" :disabled="el.disabled" />
             <a-select v-if="el.name == 'district'" v-model:value="formState[el.name]" :options="districts" :disabled="el.disabled" />
+            <a-select v-if="el.name == 'gender'" v-model:value="formState[el.name]" :options="geners" :disabled="el.disabled" />
+            <a-select v-if="el.name == 'lession'" v-model:value="formState[el.name]" :options="disabilities" :disabled="el.disabled" />
+            <a-select v-if="el.name == 'supervisor'" v-model:value="formState[el.name]" :options="supervisores" :disabled="el.disabled" />
           </a-form-item>
 
           <a-form-item v-if="el.type === 'iSearch'" class="item-max" :name="el.name" :label="el.label"
@@ -29,9 +36,15 @@
             :rules="[{ required: el.required, message: el.message, type: el.email, max: el.max }]">
             <a-input v-model:value="formState[el.name]" :disabled="el.disabled" />
           </a-form-item>
+
+          <a-form-item v-if="el.type === 'iDate'" :name="el.name" :label="el.label"
+            :rules="[{ required: el.required, message: el.message }]">
+            <a-date-picker :locale="locale" v-model:value="birthdateDate" style="width: 100%;" :format="dateFormat" :disabled="el.disabled" />
+          </a-form-item>
+
         </template>
       </div>
-      <!-- <pre>{{ formState }}</pre> -->
+  <!-- <pre>{{ formState }}</pre> -->
       <a-form-item>
         <a-button type="primary" html-type="submit" :loading="loading">GUARDAR</a-button>
       </a-form-item>
@@ -40,24 +53,34 @@
 </template>
 
 <script setup>
+import locale from 'ant-design-vue/es/date-picker/locale/es_ES';
+import dayjs from 'dayjs';
+import 'dayjs/locale/es';
+dayjs.locale('es');
+
 import { reactive, ref, onMounted } from 'vue';
 import fieldsJs from '@/forms/nuevaPersona.js'
 import { requestNoToken } from '@/utils/noToken.js'
 import { makeRequest } from '@/utils/api.js'
 import { message } from 'ant-design-vue';
 import { useRoute, useRouter } from 'vue-router';
-import { userId } from '@/utils/cookies.js'
+import { geners, disabilities } from '@/utils/selects.js'
+
+const storageData = JSON.parse(localStorage.getItem('user'))
 
 const fields = ref(fieldsJs)
 const route = useRoute();
 const router = useRouter();
 
+const supervisores = ref([]);
 const isloading = ref(true);
 const searchLoading = ref(false)
 const loading = ref(false);
 const departments = ref([]);
 const provinces = ref([]);
 const districts = ref([]);
+const dateFormat = 'YYYY-MM-DD';
+const birthdateDate = ref(null);
 const typeDocuments = [
   { label: 'DNI', value: 'dni' },
   { label: 'CE', value: 'ce' },
@@ -76,8 +99,12 @@ const formState = reactive({
   district: null,
   phone: null,
   email: null,
-  created_by: userId,
-  update_by: userId,
+  birthdate: null,
+  gender: null,
+  lession: null,
+
+  created_by: storageData.id,
+  update_by: storageData.id,
   post: route.query.access
 });
 
@@ -102,6 +129,9 @@ const enabled = () => {
   fields.value.district.disabled = false
   fields.value.phone.disabled = false
   fields.value.email.disabled = false
+  fields.value.birthdate.disabled = false
+  fields.value.gender.disabled = false
+  fields.value.lession.disabled = false
 }
 const disabled = () => {
   fields.value.last_name.disabled = true
@@ -112,6 +142,22 @@ const disabled = () => {
   fields.value.district.disabled = true
   fields.value.phone.disabled = true
   fields.value.email.disabled = true
+  fields.value.birthdate.disabled = true
+  fields.value.gender.disabled = true
+  fields.value.lession.disabled = true
+}
+const isAsesor = () => {
+  const role = route.query.rol
+  if(role === 'asesor') {
+    const supervisor = {
+      type: 'iSelect',
+      label: 'Supervisor',
+      name: 'supervisor',
+      required: true,
+      message: 'Seleccionar el supervisor'
+    }
+    fields.value = {...fields.value, supervisor}
+  }
 }
 
 const validateNumber = () => {
@@ -147,10 +193,14 @@ const handleSearchApi = async () => {
       if(data.email) formState.email = data.email
       if(data.phone) formState.phone = data.phone
 
+      if(data.birthdate) birthdateDate.value = dayjs(data.birthdate, dateFormat);
+      if(data.gender) formState.gender = data.gender;
+      
+      formState.lession = data.lession;
+
       enabled()
 
     } catch (error) {
-
       console.log("Hhhhh", error);
     } finally {
       searchLoading.value = false
@@ -175,10 +225,15 @@ const handleProvinces = (id, evt) => {
   getDistricts(evt.value)
 }
 const comeBack = () => {
-  const url = route.query.access
-  if(url == 1) router.push(`/admin/asesorias/supervisores`);
-  if(url == 2) router.push(`/admin/asesorias/asesores`);
-  if(url == 3) router.push(`/admin/asesorias/solicitantes`);
+  if(route.query.dni) {
+    const query = { dni: route.query.dni }
+    router.push({ name: 'asesorias-formalizaciones', query });
+  } else {
+    const url = route.query.access
+    if(url == 1) router.push(`/admin/asesorias/supervisores`);
+    if(url == 2) router.push(`/admin/asesorias/asesores`);
+    if(url == 3) router.push(`/admin/asesorias/solicitantes`);
+  }
 }
 
 const getDepartaments = async() => {
@@ -197,6 +252,7 @@ const getDepartaments = async() => {
     isloading.value = false
 
     disabled()
+    isAsesor()
 
   } catch (error) {
     console.log(error);
@@ -233,16 +289,20 @@ const getDistricts = async(id) => {
 
 
 const onSubmit = async () => {
+
+  formState.birthdate = birthdateDate.value ? dayjs(birthdateDate.value).format('YYYY-MM-DD') : null;
   const payload = formState
+
   loading.value = true
+
   try {
     const data = await makeRequest({ url: '/new-person', method: 'POST', data: payload });
     if(data) {
       clearFields()
       disabled()
       formState.document_type = 'dni'
+      message.success(data.message);
       comeBack()
-      message.success('Registro exitoso');
     }
   } catch (error) {
 
@@ -261,9 +321,39 @@ const onSubmitFail = () => {
   message.error('Debes de completar todos los espacios requeridos')
 };
 
-onMounted(
-  getDepartaments
-);
+const getAllSupervisores = async() => {                   //lista los supervisores
+  try {
+    const data = await makeRequest({ url: '/supervisores', method: 'GET' });
+    supervisores.value = data
+  } catch (error) {
+    console.error('Error de red:', error);
+  }
+}
+
+const isApplicantNew = async() => {
+  if(route.query.dni) {
+    const data = await makeRequest({ url: `/person/dni/${route.query.dni}`, method: 'GET' });
+
+    if(data.status == 404) {
+      formState.number_document = route.query.dni
+    } else {
+      formState.number_document = route.query.dni
+      formState.last_name = data.data.apellidoPaterno
+      formState.middle_name = data.data.apellidoMaterno
+      formState.name = data.data.nombres
+    }
+    enabled()
+    isloading.value = false
+  }
+}
+
+onMounted(() => {
+  getDepartaments();
+  isApplicantNew();
+
+  if(route.query.rol === 'asesor') getAllSupervisores();
+
+});
 </script>
 
 <style lang="scss" scoped>

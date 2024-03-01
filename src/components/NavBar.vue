@@ -12,10 +12,10 @@
       </a>
       <template #overlay>
         <a-menu @click="handleMenuClick">
-          <!-- <a-menu-item key="1">
+          <a-menu-item key="1">
             <UserOutlined />
             Ver Perfil
-          </a-menu-item> -->
+          </a-menu-item>
           <a-menu-item key="2">
             <PoweroffOutlined />
             Cerrar Sesión
@@ -28,7 +28,7 @@
 
 <script setup>
 import { makeRequest } from '@/utils/api.js'
-import { PoweroffOutlined, MenuOutlined } from '@ant-design/icons-vue';
+import { PoweroffOutlined, UserOutlined } from '@ant-design/icons-vue';
 import Cookies from 'js-cookie';
 import { useRouter } from 'vue-router';
 import {ref} from 'vue'
@@ -39,7 +39,7 @@ const user = JSON.parse(localStorage.getItem('user'));
 
 const handleMenuClick = (e) => {
   if(e.key == 1) {
-    router.push('/admin/mis-datos');
+    router.push('/admin/mi-perfil');
   }
   if(e.key == 2) {
     logout()
