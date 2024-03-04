@@ -37,7 +37,7 @@
 
           <a-form-item label="Número DNI" name="dni"
             :rules="[{ required: true, message: 'Por favor ingresa tu número de DNI', min:8, max:8 }]">
-            <a-input v-model:value="formState.dni" @input="validateNumber" />
+            <a-input v-model:value="formState.dni" @input="validateNumber('dni')" />
           </a-form-item>
 
           <a-form-item label="Nombres y Apellidos" name="name_lastname"
@@ -57,7 +57,7 @@
                 <img src="../assets/formalizate/flat.png" alt="peru">
                 <span>+51</span>
               </div>
-              <a-input v-model:value="formState.phone" />
+              <a-input v-model:value="formState.phone" @input="validateNumber('phone')" />
             </div>
           </a-form-item>
 
@@ -79,7 +79,16 @@
           </a-form-item>
 
           <a-form-item>
+            <a-checkbox v-model:checked="accept" name="type" @change="handleCheckTerminos">
+              He leído y acepto los términos y condiciones
+              <router-link to="/politicas-privacidad" target="_blank" style="margin-left: .5rem;">Ver términos y condiciones</router-link>
+            </a-checkbox>
+            <div v-if="showerror" class="error-msn">Acepta los términos y condiciones</div>
+          </a-form-item>
+
+          <a-form-item>
             <a-button :loading="loading" class="form-button" type="primary" html-type="submit">CONTINUAR</a-button>
+            
           </a-form-item>
         </a-form>
 
@@ -108,9 +117,11 @@ const formState = reactive({
   province: null,
   district: null,
   address: null,
-  id_cde: null
+  id_cde: null,
 });
 
+const showerror = ref(false);
+const accept = ref(false);
 const loading = ref(false);
 const navBar = ref(null);
 const isFloating = ref(false);
@@ -120,7 +131,16 @@ const districts = ref([]);
 
 const router = useRouter();
 
+const handleCheckTerminos = () => {
+  if(showerror.value) showerror.value = false
+}
 const onSubmit = async () => {
+
+  if(!accept.value){
+    showerror.value = true;
+    return message.error('Completa los valores del formulario');
+  }
+
   Cookies.remove('formalizacion');
   loading.value = true
   try {
@@ -136,12 +156,12 @@ const onSubmit = async () => {
     loading.value = false
   }
 };
-const onFinishFailed = errorInfo => {
-  console.log('Failed:', errorInfo);
+const onFinishFailed = () => {
+  message.error('Completa los valores del formulario');
 };
 
-const validateNumber = () => {
-  formState.dni = formState.dni.replace(/\D/g, '');
+const validateNumber = (val) => {
+  formState[val] = formState[val].replace(/\D/g, '');
 };
 const filterOption = (input, option) => {
   const normalizedInput = input.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "");
@@ -238,38 +258,7 @@ header {
   border-radius: 2px;
   box-shadow: 0px 1px 10px #cbcbcb;
 }
-// .container {
-//   width: 100%;
-//   margin-right: auto;
-//   margin-left: auto;
-//   padding-right: 15px;
-//   padding-left: 15px;
-//   box-sizing: border-box;
-// }
 
-// @media (min-width: 576px) {
-//   .container {
-//     max-width: 540px;
-//   }
-// }
-
-// @media (min-width: 768px) {
-//   .container {
-//     max-width: 720px;
-//   }
-// }
-
-// @media (min-width: 992px) {
-//   .container {
-//     max-width: 960px;
-//   }
-// }
-
-// @media (min-width: 1200px) {
-//   .container {
-//     max-width: 1140px;
-//   }
-// }
 
 .ff {
   font-family: "Inter", sans-serif;
@@ -363,7 +352,10 @@ header {
   }
 }
 
-
+.error-msn {
+  color: #ff4d4f;
+  font-size: 12px;
+}
 
 @media screen and (max-width: 900px) {
   .title {
@@ -394,10 +386,6 @@ header {
   }
 }
 </style>
-
-
-
-
 
 
 <style>

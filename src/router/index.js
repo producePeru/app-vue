@@ -9,6 +9,11 @@ const router = createRouter({
       component: () => import('../pages/LoginPage.vue')
     },
     {
+      path: '/politicas-privacidad',
+      name: 'politicas',
+      component: () => import('../pages/PoliticasPrivacidad.vue')
+    },
+    {
       path: '/formalizacion-digital',
       name: 'formalizacion',
       component: () => import('../pages/FormalizacionPge.vue')
