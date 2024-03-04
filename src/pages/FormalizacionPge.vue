@@ -8,7 +8,7 @@
   </header>
 
 
-  <section class="container">
+  <!-- <section class="container">
     <div class="baner">
       <div>
         <img class="baner-img" src="../assets/formalizate/image 18.png" alt="">
@@ -21,7 +21,7 @@
         </p>
       </div>
     </div>
-  </section>
+  </section> -->
 
 
   <section class="form">
@@ -30,8 +30,10 @@
 
         <h2 class="ff title">Formulario de formalización digital</h2>
         
-        <a-form class="form-values" :model="formState" name="basic" layout="vertical" autocomplete="off"
-          @finish="onSubmit" @finishFailed="onFinishFailed">
+        <a-form class="form-values" :model="formState" name="basic" layout="vertical" autocomplete="off" @finish="onSubmit" @finishFailed="onFinishFailed">
+
+          <h2 class="ff title2">Paso 1: Registro de datos</h2>
+          <!-- <br><br><br> -->
 
           <a-form-item label="Número DNI" name="dni"
             :rules="[{ required: true, message: 'Por favor ingresa tu número de DNI', min:8, max:8 }]">
@@ -301,7 +303,12 @@ header {
   font-weight: 700;
   // text-align: center;
 }
-
+.title2 {
+  font-size: 18px;
+  color: $color-title;
+  font-weight: 700;
+  margin-bottom: .8rem;
+}
 //banner
 .baner {
   display: flex;
@@ -335,7 +342,7 @@ header {
     flex-direction: column;
     padding: 5rem 0 4rem 0;
     h2 {
-      margin-bottom: 3rem;
+      // margin-bottom: 3rem;
     }
   }
 }

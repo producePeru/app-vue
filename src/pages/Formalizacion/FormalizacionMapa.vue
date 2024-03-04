@@ -5,12 +5,17 @@
       <img src="../../assets/formalizate/logo-tuempresa.png" alt="logo-tu-empresa">
     </div>
   </header>
-  <pre>{{ markerInfo }}</pre>
+  <!-- <pre>{{ markerInfo }}</pre> -->
 
   <section class="form-map">
     <div class="container">
       <div class="background-map">
-        <h2 class="title ff">Puntos de atención sugeridos</h2>
+        <h2 class="title2 ff">Paso 2: Selección de puntos de atención</h2>
+        <div class="info-gps">
+          <span>Este ícono
+          <img src="../../assets/formalizate/gps-ico.png" alt="formalizate ubicación">
+          represeta la ubicación geográfica de nuestros centros de desarrollo empresarial, pulse en el mapa a continuación para elegir el de su preferencia.</span>
+        </div>
         <!-- <input type="text" ref="searchInput" placeholder="Buscar lugar..." /> -->
         <!-- <br>
         <br> -->
@@ -85,6 +90,9 @@ const showModal = (data) => {
 
 const onSubmit = async () => {
   let payload = Cookies.get('formalization-data');
+
+  if(!payload) router.push({ name: 'formalizacion' });
+
   payload = JSON.parse(payload);
   payload.id_gps_cdes = markerInfo.value.title;
   loading.value = true
@@ -250,12 +258,22 @@ header {
   font-family: "Inter", sans-serif;
   font-optical-sizing: auto;
 }
-
-.title {
-  font-size: 23px;
+.info-gps {
+  display: flex;
+  align-items: center;
+  margin-bottom: 1rem;
+  span {
+    font-size: 14px;
+  }
+  img {
+    width: 30px;
+  }
+}
+.title2 {
+  font-size: 18px;
   color: $color-title;
   font-weight: 700;
-  // text-align: center;
+  margin-bottom: .8rem;
 }
 
 //banner
