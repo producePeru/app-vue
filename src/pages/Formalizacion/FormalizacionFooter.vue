@@ -15,11 +15,11 @@
           <p>016162291</p>
         </div>
 
-        <div class="footer-redes">
+        <!-- <div class="footer-redes">
           <a href=""><img src="../../assets/formalizate/ico-fb.png" alt="tu empresa facebook"></a>
           <a href=""><img src="../../assets/formalizate/ico-fb.png" alt="tu empresa facebook"></a>
           <a href=""><img src="../../assets/formalizate/ico-fb.png" alt="tu empresa facebook"></a>
-        </div>
+        </div> -->
 
       </div>
     </div>

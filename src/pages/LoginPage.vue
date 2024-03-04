@@ -1,5 +1,5 @@
 <template>
-  <div class="container">
+  <div class="container-login">
 
     <img class="hero" src="https://soporte-pnte.com/tuempresa/assets/images/fondo.jpeg" alt="">
 
@@ -106,7 +106,7 @@ const onFinishFailed = () => {
 </script>
 
 <style lang="scss" scoped>
-.container {
+.container-login {
   display: grid;
   grid-template-columns: 1fr;
   min-height: 100vh;

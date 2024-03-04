@@ -84,6 +84,7 @@ const onSubmit = async () => {
   try {
     const data = await requestNoToken({ url: '/public/formalization', method: 'POST', data: payload });
     if(data.status == 200) {
+      await requestNoToken({ url: `/public/formalization-email/${payload.dni}`, method: 'POST' });
       msgOk.value = true;
       msgOkText.value = data.message
     }
