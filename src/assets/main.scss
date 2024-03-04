@@ -107,6 +107,11 @@ h1 {
 //   border-color: var(--color-3)!important;
 // }
 
+$color-primary: #BA0F0F;
+$color-title: #2D3748;
+$color-text: #4A5568;
+$color-background: #F7F7FA;
+
 .c-primary {
   color: #d9363e;
 }
@@ -119,3 +124,42 @@ h1 {
     font-size: 13px;
   }
 }
+
+.container {
+  width: 100%;
+  margin-right: auto;
+  margin-left: auto;
+  padding-right: 15px;
+  padding-left: 15px;
+  box-sizing: border-box;
+}
+
+@media (min-width: 576px) {
+  .container {
+    max-width: 540px;
+  }
+}
+
+@media (min-width: 768px) {
+  .container {
+    max-width: 720px;
+  }
+}
+
+@media (min-width: 992px) {
+  .container {
+    max-width: 960px;
+  }
+}
+
+@media (min-width: 1200px) {
+  .container {
+    max-width: 1140px;
+  }
+}
+
+.ff {
+  font-family: "Inter", sans-serif;
+  font-optical-sizing: auto;
+}
+

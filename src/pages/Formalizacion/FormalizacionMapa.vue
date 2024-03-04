@@ -27,41 +27,23 @@
 
   
   <a-modal v-model:open="open" title="" width="350px" :footer="false">
-    <div class="modal-info ff">
+    <div class="modal-info ff ">
       <span>Quiero atenderme aquí</span>
       <h3>{{ markerInfo.title }}</h3>
     </div>
     <a-button @click="onSubmit" :loading="loading" class="form-button" type="primary" html-type="submit">ESCOGER</a-button>
   </a-modal>
 
-
-  <footer>
-    <div class="container">
-      <div class="footer-wrapper">
-        <div class="footer-tuempresa-info">
-          <img src="../../assets/formalizate/logo-tuempresa.png" alt="footer logo tu empresa">
-          <p class="ff">Programa Nacional "Tu Empresa" Brindamos a los emprendedores acompañamiento en formalización y
-            constitución de empresas.</p>
-        </div>
-
-        <div></div>
-
-        <div>
-          <b>Contáctanos</b>
-          <p>Lima - Guardia Civil : Av. Guardia Civil N° 834 - Primer Piso, San Isidro - Lima - Lima - San Isidro - Perú
-          </p>
-          <p>016162291</p>
-        </div>
-
-        <div class="footer-redes">
-          <a href=""><img src="../../assets/formalizate/ico-fb.png" alt="tu empresa facebook"></a>
-          <a href=""><img src="../../assets/formalizate/ico-fb.png" alt="tu empresa facebook"></a>
-          <a href=""><img src="../../assets/formalizate/ico-fb.png" alt="tu empresa facebook"></a>
-        </div>
-
-      </div>
+  <a-modal v-model:open="msgOk" title="" width="450px" :footer="false" @cancel="handleCancelModalFinal">
+    <div class="modal-info ff msg-ok">
+      <p class="ff">Un asesor se comunicará contigo dentro de las <b>24 horas</b></p>
+      <p>(No considerar sábados, domingos ni feriados), gracias</p>
     </div>
-  </footer>
+    <a-button @click="handleOkFinal" class="form-button" type="primary" html-type="submit">OK</a-button>
+  </a-modal>
+
+  <FooterFormalization />
+  
 </template>
 
 <script setup>
@@ -69,6 +51,8 @@ import { ref, onMounted } from 'vue';
 import { requestNoToken } from '@/utils/noToken.js'
 import { useRouter } from 'vue-router';
 import { message } from 'ant-design-vue';
+import FooterFormalization from './FormalizacionFooter.vue'
+import Cookies from 'js-cookie';
 
 const router = useRouter();
 
@@ -81,7 +65,8 @@ const navBar = ref(null);
 const isFloating = ref(false);
 const markers = ref([]);
 const markerInfo = ref(null);
-import Cookies from 'js-cookie';
+const msgOk = ref(false);
+const msgOkText = ref(null);
 
 const showModal = (data) => {
   markerInfo.value = data
@@ -99,23 +84,32 @@ const onSubmit = async () => {
   try {
     const data = await requestNoToken({ url: '/public/formalization', method: 'POST', data: payload });
     if(data.status == 200) {
-      router.push({ name: 'formalizacion' });
-      message.success(data.message);
-      Cookies.remove('formalization-data');
+      msgOk.value = true;
+      msgOkText.value = data.message
     }
   } catch (error) {
-    message.error('Error al registrar xd');
+    message.error('Error al registrar');
   } finally {
     loading.value = false
   }
 };
 
+const handleOkFinal = () => {
+  router.push({ name: 'formalizacion' });
+  Cookies.remove('formalization-data');
+}
 const handleScroll = () => {
   if (window.pageYOffset > 10) {
     isFloating.value = true;
   } else {
     isFloating.value = false;
   }
+};
+const scrollTop = () => {
+  window.scrollTo({
+    top: 0,
+    behavior: 'smooth'
+  });
 };
 const locationsCdes = async() => {
   try {
@@ -133,10 +127,14 @@ const locationsCdes = async() => {
     console.log(error);
   }
 };
-
+const handleCancelModalFinal = () => {
+  handleOkFinal()
+}
 
 onMounted(async () => {
   window.addEventListener('scroll', handleScroll);
+
+  scrollTop();
 
   await locationsCdes();
 
@@ -221,43 +219,6 @@ header {
   box-shadow: 0px 1px 10px #cbcbcb;
 }
 
-.container {
-  width: 100%;
-  margin-right: auto;
-  margin-left: auto;
-  padding-right: 15px;
-  padding-left: 15px;
-  box-sizing: border-box;
-}
-
-@media (min-width: 576px) {
-  .container {
-    max-width: 540px;
-  }
-}
-
-@media (min-width: 768px) {
-  .container {
-    max-width: 720px;
-  }
-}
-
-@media (min-width: 992px) {
-  .container {
-    max-width: 960px;
-  }
-}
-
-@media (min-width: 1200px) {
-  .container {
-    max-width: 1140px;
-  }
-}
-
-.ff {
-  font-family: "Inter", sans-serif;
-  font-optical-sizing: auto;
-}
 .info-gps {
   display: flex;
   align-items: center;
@@ -317,7 +278,7 @@ header {
   }
 }
 .modal-info {
-  margin-top: 1rem;
+  margin-top: 1.5rem;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -368,32 +329,12 @@ header {
   }
 }
 
-footer {
-  padding: 3rem;
-
-  p,
-  b {
-    font-size: 13px;
-    color: $color-text;
-    line-height: 1.3;
+.msg-ok {
+  text-align: center;
+  p {
+    margin: 0;
   }
-
-  .footer-wrapper {
-    display: grid;
-    grid-template-columns: 1.5fr 1fr 1.7fr .6fr;
-  }
-
-  .footer-tuempresa-info {
-    img {
-      width: 100px;
-    }
-  }
-
-  .footer-redes {
-    img {
-      width: 45px;
-    }
-  }
+  
 }
 
 @media screen and (max-width: 900px) {
@@ -430,12 +371,7 @@ footer {
     padding: 2rem 0;
   }
 
-  footer {
-    .footer-wrapper {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-    }
-  }
+ 
 }</style>
 
 

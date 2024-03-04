@@ -87,31 +87,8 @@
     </div>
   </section>
 
-  <footer>
-    <div class="container">
-      <div class="footer-wrapper">
-        <div class="footer-tuempresa-info">
-          <img src="../assets/formalizate/logo-tuempresa.png" alt="footer logo tu empresa">
-          <p class="ff">Programa Nacional "Tu Empresa" Brindamos a los emprendedores acompañamiento en formalización y constitución de empresas.</p>
-        </div>
-
-        <div></div>
-       
-        <div>
-          <b>Contáctanos</b>
-          <p>Lima - Guardia Civil : Av. Guardia Civil N° 834 - Primer Piso, San Isidro - Lima - Lima - San Isidro - Perú</p>
-          <p>016162291</p>
-        </div>
-
-        <div class="footer-redes">
-          <a href=""><img src="../assets/formalizate/ico-fb.png" alt="tu empresa facebook"></a>
-          <a href=""><img src="../assets/formalizate/ico-fb.png" alt="tu empresa facebook"></a>
-          <a href=""><img src="../assets/formalizate/ico-fb.png" alt="tu empresa facebook"></a>
-        </div>
-
-      </div>
-    </div>
-  </footer>
+  <FooterFormalization />
+  
 </template>
 
 <script setup>
@@ -120,6 +97,7 @@ import { requestNoToken } from '@/utils/noToken.js'
 import { message } from 'ant-design-vue';
 import Cookies from 'js-cookie';
 import { useRouter } from 'vue-router';
+import FooterFormalization from './Formalizacion/FormalizacionFooter.vue'
 
 const formState = reactive({
   dni: null,
@@ -260,38 +238,38 @@ header {
   border-radius: 2px;
   box-shadow: 0px 1px 10px #cbcbcb;
 }
-.container {
-  width: 100%;
-  margin-right: auto;
-  margin-left: auto;
-  padding-right: 15px;
-  padding-left: 15px;
-  box-sizing: border-box;
-}
+// .container {
+//   width: 100%;
+//   margin-right: auto;
+//   margin-left: auto;
+//   padding-right: 15px;
+//   padding-left: 15px;
+//   box-sizing: border-box;
+// }
 
-@media (min-width: 576px) {
-  .container {
-    max-width: 540px;
-  }
-}
+// @media (min-width: 576px) {
+//   .container {
+//     max-width: 540px;
+//   }
+// }
 
-@media (min-width: 768px) {
-  .container {
-    max-width: 720px;
-  }
-}
+// @media (min-width: 768px) {
+//   .container {
+//     max-width: 720px;
+//   }
+// }
 
-@media (min-width: 992px) {
-  .container {
-    max-width: 960px;
-  }
-}
+// @media (min-width: 992px) {
+//   .container {
+//     max-width: 960px;
+//   }
+// }
 
-@media (min-width: 1200px) {
-  .container {
-    max-width: 1140px;
-  }
-}
+// @media (min-width: 1200px) {
+//   .container {
+//     max-width: 1140px;
+//   }
+// }
 
 .ff {
   font-family: "Inter", sans-serif;
@@ -385,28 +363,7 @@ header {
   }
 }
 
-footer {
-  padding: 3rem;
-  p, b {
-    font-size: 13px;
-    color: $color-text;
-    line-height: 1.3;
-  }
-  .footer-wrapper {
-    display: grid;
-    grid-template-columns: 1.5fr 1fr 1.7fr .6fr;
-  }
-  .footer-tuempresa-info {
-    img {
-      width: 100px;
-    }
-  }
-  .footer-redes {
-    img {
-      width: 45px;
-    }
-  }
-}
+
 
 @media screen and (max-width: 900px) {
   .title {
@@ -434,13 +391,6 @@ footer {
   }
   .form {
     padding: 2rem 0;
-  }
-
-  footer {
-    .footer-wrapper {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-    }
   }
 }
 </style>
