@@ -186,9 +186,17 @@ const handleProvinces = (id, evt) => {
 }
 const comeBack = () => {
   const url = route.query.access
-  if(url == 1) router.push(`/admin/asesorias/supervisores`);
-  if(url == 2) router.push(`/admin/asesorias/asesores`);
-  if(url == 3) router.push(`/admin/asesorias/solicitantes`)
+  if(route.query.dni) {
+    const query = {
+      dni: route.query.dni,
+      typedoc: route.query.typedoc
+    }
+    router.push({ name: 'asesorias-formalizaciones', query });
+  } else {
+    if(url == 1) router.push(`/admin/asesorias/supervisores`);
+    if(url == 2) router.push(`/admin/asesorias/asesores`);
+    if(url == 3) router.push(`/admin/asesorias/solicitantes`)
+  }
 }
 
 const getDepartaments = async() => {
@@ -236,6 +244,8 @@ const getDistricts = async(id) => {
 
 
 const onSubmit = async () => {
+  
+  formState.birthdate = birthdateDate.value ? dayjs(birthdateDate.value).format('YYYY-MM-DD') : null;
   const payload = formState
   loading.value = true
   try {

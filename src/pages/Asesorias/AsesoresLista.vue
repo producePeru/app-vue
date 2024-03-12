@@ -2,7 +2,7 @@
   <div>
     <h3>ASESORES</h3>
 
-    <div class="filters">
+    <div class="filters-asesorias">
       <a-button type="primary" @click="handleOpenModal">AGREGAR</a-button>
     </div>
     
@@ -158,7 +158,7 @@ onMounted(() => {
 </script>
 
 <style>
-.filters {
+.filters-asesorias {
   margin: 1rem 0;
 }
 .paginator {

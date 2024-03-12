@@ -8,7 +8,7 @@ const typeDocuments = [
 const geners = [
   { label: 'Masculino', value: 'h' },
   { label: 'Femenino', value: 'm' },
-  { label: '...', value: 3 }
+  // { label: '...', value: 3 }
 ];
 
 const disabilities = [
