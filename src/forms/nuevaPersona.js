@@ -44,7 +44,7 @@ const fields = {
     type: 'iSelect',
     label: 'Departamento',
     name: 'department',
-    required: false,
+    required: true,
     message: 'Seleccionar departamento',
     disabled: false
   },
@@ -52,7 +52,7 @@ const fields = {
     type: 'iSelect',
     label: 'Provincia',
     name: 'province',
-    required: false,
+    required: true,
     message: 'Seleccionar provincia',
     disabled: false
   },
@@ -60,7 +60,7 @@ const fields = {
     type: 'iSelect',
     label: 'Distrito',
     name: 'district',
-    required: false,
+    required: true,
     message: 'Seleccionar distrito',
     disabled: false
   },
@@ -77,7 +77,7 @@ const fields = {
     type: 'iText',
     label: 'Correo electrónico',
     name: 'email',
-    required: false,
+    required: true,
     message: 'Número de contacto y 9 max',
     email: 'email',
     disabled: false

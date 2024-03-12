@@ -185,15 +185,10 @@ const handleProvinces = (id, evt) => {
   getDistricts(evt.value)
 }
 const comeBack = () => {
-  if(route.query.dni) {
-    const query = { dni: route.query.dni }
-    router.push({ name: 'asesorias-formalizaciones', query });
-  } else {
-    const url = route.query.access
-    if(url == 1) router.push(`/admin/asesorias/supervisores`);
-    if(url == 2) router.push(`/admin/asesorias/asesores`);
-    if(url == 3) router.push(`/admin/asesorias/solicitantes`);
-  }
+  const url = route.query.access
+  if(url == 1) router.push(`/admin/asesorias/supervisores`);
+  if(url == 2) router.push(`/admin/asesorias/asesores`);
+  if(url == 3) router.push(`/admin/asesorias/solicitantes`)
 }
 
 const getDepartaments = async() => {

@@ -1,14 +1,15 @@
 <template>
-  <div>
-    <div class="ugo">
-      
-      <h3 v-if="open1">FORMALIZACIÓN CON RUC 20</h3>
-      <h3 v-else-if ="open2">FORMALIZACIÓN CON RUC 10</h3>
-      <h3 v-else-if ="open3">ASESORÍA</h3>
-      <h3 v-else>REGISTRO</h3>
-      
-      <div class="ugo-search">
-        <label class="label">Ingresar número de documento</label>
+  <div class="asesorias">
+    <div style="max-width: 450px;">
+      <div>
+        <h3 v-if="open1">FORMALIZACIÓN CON RUC 20</h3>
+        <h3 v-else-if ="open2">FORMALIZACIÓN CON RUC 10</h3>
+        <h3 v-else-if ="open3">ASESORÍA</h3>
+        <h3 v-else>REGISTRO</h3>
+      </div>
+
+      <div class="search" style="max-width: 300px;">
+        <label>Ingresar número de documento</label>
         <a-input-search
         v-model:value="dniNumber"
         placeholder=""
@@ -18,90 +19,93 @@
         :maxlength="8" />
       </div>
 
-      <div v-if="infoUser" class="ugo-info">
-        <div>
-          <b>Apellidos y nombres:</b>
-          <p class="name-edit">
-            <span>{{ infoUser.last_name }} {{ infoUser.middle_name }}, {{ infoUser.name }}</span>
-            <span class="ico" @click="handleEditUserData"><FormOutlined /></span>
-          </p>
+      <template v-if="infoUser.length != 0">
+  
+        <div class="buttons">
+          <a-button @click="handleStartRuc20" :loading="loading1" :class="open1 && 'actived'">Crear empresa</a-button>
+          <a-button @click="open2 = true" :class="open2 && 'actived'" class="mx-1">RUC persona natural</a-button>
+          <a-button @click="open3 = true" :class="open3 && 'actived'">Asesoría</a-button>
         </div>
-        <!-- <div>
-          <b>Número de DNI:</b>
-          <span>{{ infoUser.number_document }}</span>
-        </div> -->
-        <div>
-          <b>Número de celular:</b>
-          <span>{{ infoUser.phone ? infoUser.phone : '-' }}</span>
-        </div>
-        <div>
-          <b>Correo electrónico:</b>
-          <span>{{ infoUser.email ? infoUser.email : '-' }}</span>
-        </div>
-      </div>
-    </div>
 
-    <div v-if="infoUser" class="group-buttons">
-      <a-button @click="handleStartRuc20" :loading="loading1" :class="open1 && 'actived'">Crear empresa</a-button>
-      <a-button @click="open2 = true" :class="open2 && 'actived'" class="mx-1">RUC persona natural</a-button>
-      <a-button @click="open3 = true" :class="open3 && 'actived'">Asesoría</a-button>
+        <div class="info-personal">
+          <span>Apellidos y nombres: </span>
+          <span>{{ infoUser.last_name }} {{ infoUser.middle_name }}, {{ infoUser.name }}</span> 
+          <span>Número de celular:</span>
+          <span><span>{{ infoUser.phone ? infoUser.phone : '-' }}</span></span>
+          <span>Correo electrónico:</span>
+          <span>{{ infoUser.email ? infoUser.email : '-' }}</span>
+          <!-- <pre>{{ historial }}</pre> -->
+          <template v-if="historial.length >= 1">
+            <span>Asesorías:</span>
+            <b>{{ historial[0]?.adv.length }}</b>
+            <span>Formalizaciones RUC 20:</span>
+            <b>{{ historial[0]?.ruc20.length }}</b>
+            <span>Formalizaciones RUC 10:</span>
+            <b>{{ historial[0]?.ruc10.length }}</b>
+          </template>
+        </div>
+
+      </template>
     </div>
-<!-- <pre>{{ information2 }}</pre> -->
-<pre>{{ current }}</pre>
+   
+    <HISTORIAL :info="historial" v-if="infoUser.length != 0"  />
+
+  </div>
+
+  <section>
     <a-drawer
       width="510"
       title="Formalización con RUC 20"
       v-model:open="open1"
       placement="right">
-
       <a-steps :current="current" size="small" class="steps">
         <a-step v-for="item in steps" :key="item.title" :title="item.title" />
       </a-steps>
-
       <div class="steps-content">
         <ReservaNombre    v-if="current == 0" :info="information" @closeDraw="open1 = false, dataPndingRequest = false" />
         <ActoConstitutivo v-if="current == 1" :info="information2" @closeDraw="open1 = false, dataPndingRequest = false" />
         <MypeFinal        v-if="current == 2" :info="information2" @closeDraw="open1 = false, dataPndingRequest = false" />
-
-        <span v-if="current == 3">
-          Hola
-        </span>
-
       </div>
     </a-drawer>
 
     <a-drawer
-      width="500"
       title="Formalización con RUC 10"
       v-model:open="open2"
       placement="right">
-      <Formalizacion10 />
+      <Formalizacion10 :info="infoUser" @closeDraw="open2 = false, handleSearchApi()" />
     </a-drawer>
 
     <a-drawer
-      width="500"
       title="Nueva asesoría"
       v-model:open="open3"
       placement="right">
-      <AsesoriaNuevo />
+      <AsesoriaNuevo :info="infoUser" @closeDraw="open3 = false, handleSearchApi()" />
     </a-drawer>
 
     <a-modal v-model:open="openModal" title="Pendientes" :closable="true" cancelText="Cerrar" :footer="null" :maskClosable="false" width="380px">
-      <div v-for="(item, key) in dataPndingRequest" :key="key" class="request-pendient" @click="handleSelectRequest(item.id)">
-        <div v-if="item.step == 0"><b>Paso</b> <a-tag color="error">Reserva de nombre</a-tag></div>
-        <div v-if="item.step == 1"><b>Siguiente paso</b> <a-tag color="warning">Acto constitutivo</a-tag></div>
-        <div v-if="item.step == 2"><b>Siguiente paso</b> <a-tag color="success">Formalizar</a-tag></div>
-        <div><b>Código SID SUNARP</b> <strong>{{ item.code_sid_sunarp }}</strong></div>
-        <div><b>Última consulta</b><span>{{ formatDate(item.updated_at) }}</span></div>
-      </div>
+      
+      <a-spin :spinning="spinning">
+        <div v-for="(item, key) in dataPndingRequest" :key="key" class="pendient" @click="handleSelectRequest(item.id)">
+          <div class="info-tag" v-if="item.step == 0"><b>Paso</b> <a-tag color="error">Reserva de nombre</a-tag></div>
+          <div class="info-tag" v-if="item.step == 1"><b>Siguiente paso</b> <a-tag color="warning">Acto constitutivo</a-tag></div>
+          <div class="info-tag" v-if="item.step == 2"><b>Siguiente paso</b> <a-tag color="success">Formalizar</a-tag></div>
+          <div class="info">
+            <b>Código SID SUNARP</b> 
+            <span>{{ item.code_sid_sunarp }}</span>
+            <b>Última consulta</b>
+            <span>{{ formatDate(item.updated_at) }}</span>
+          </div>
+        </div>
+        <div class="pendient pendient-btn" @click="open1 = true, openModal = false, current = 0">
+          <div style="text-align: center;">NUEVO TRÁMITE</div>
+        </div>
+      </a-spin>
 
-      <div class="request-pendient request-border" @click="open1 = true, openModal = false, current = 0">
-        <div style="text-align: center;">NUEVO TRÁMITE</div>
-      </div>
+
+
     </a-modal>
+  </section>
 
-
-  </div>
 </template>
 
 <script setup>
@@ -116,10 +120,12 @@ import { makeRequest } from '@/utils/api.js';
 import { useRouter, useRoute } from 'vue-router';
 import { FormOutlined } from '@ant-design/icons-vue';
 import moment from 'moment';
+import HISTORIAL from './components/AsesoriasHistorial.vue'
 
 const router = useRouter();
 const route = useRoute();
 
+const spinning = ref(false);
 const information = ref(false);
 const information2 = ref(false);
 const openModal = ref(false);
@@ -128,10 +134,11 @@ const open1 = ref(false);
 const open2 = ref(false);
 const open3 = ref(false);
 const dniNumber = ref('');
-const infoUser = ref(false);
+const infoUser = ref([]);
 const searchLoading = ref(false)
 const current = ref(0);
 const loading1 = ref(false);
+const historial = ref([]);
 
 const formatDate = (date) => {
   return moment(date).format('DD/MM/YYYY HH:mm A');
@@ -139,6 +146,8 @@ const formatDate = (date) => {
 const validateNumber = () => {
   dniNumber.value = dniNumber.value.replace(/\D/g, '');
 };
+
+
 
 const steps = [
   { title: 'Reserva de nombre' },
@@ -182,12 +191,24 @@ const handleStartRuc20 = async() => {
 }
 // SI TIENE MÁS DE UN TRÁMITE DEBE DE ELEGIR CON CUAL CONTINUAR
 const handleSelectRequest = async(id) => {
+  spinning.value = true
   try {
     const {data} = await makeRequest({ url: `find-formalization20/${id}`, method: 'GET' });
     current.value = data.step
     openModal.value = false
     open1.value = true
     information2.value = data
+  } catch (error) {
+    console.log(error);
+  } finally {
+    spinning.value = false
+  }
+}
+const handleHistorial = async(datax) => {
+  historial.value = []
+  try {
+    const data = await makeRequest({ url: `/historial-formalization/${datax.number_document}/${datax.id}`, method: 'GET' });
+    historial.value = [...historial.value, data]
   } catch (error) {
     console.log(error);
   } 
@@ -211,8 +232,11 @@ const handleSearchApi = async () => {
         dni: dniNumber.value
       }
       router.push({ name: 'registrar-persona', query });
+
     } else {
+
       infoUser.value = data
+      handleHistorial(data);
     }
 
   } catch (error) {
@@ -225,6 +249,7 @@ const handleSetDataUser = async() => {
   const data = await makeRequest({ url: `/applicant-new/${route.query.dni}`, method: 'GET' });
   dniNumber.value = data.number_document
   infoUser.value = data
+  await handleHistorial(data);
 }
 
 
@@ -233,111 +258,67 @@ onMounted(() => {
 });
 </script>
 
-<style scoped lang="scss">
-.request-border {
-  margin-top: 1.2rem !important;
-  border-color: #1677ff !important;
-  color: #1677ff !important;
-  &:hover {
-    color: #fff !important;
+<style lang="scss" scoped>
+.asesorias {
+  .search {
+    max-width: 450px;
+    label {
+      margin-bottom: 5px;
+      display: inline-block;
+    }
+  }
+  .buttons {
+    margin: 1rem 0 2rem 0;
+    display: flex;
+    gap: 1rem;
+  }
+
+  .info-personal {
+    display: grid;
+    grid-template-columns: 1.3fr 1.5fr;
+    max-width: 550px;
+    margin-bottom: 3rem;
+    line-height: 1.8;
   }
 }
-.request-pendient {
-  border: 1px solid #f0f0f0;
-  padding: .5rem;
-  margin: .5rem 0;
-  border-radius: 6px;
+
+.pendient {
+  border: 1px solid #1677ff;
+  display: flex;
+  flex-direction: column;
+  border-radius: 4px;
+  padding: .6rem;
+  margin: 10px 0;
+  line-height: 1.7;
   cursor: pointer;
   b {
     font-weight: 400;
-    // color: #1677ff;
-    margin-right: 6px;
   }
-  &:hover {
-    background-color: #1677ff;
-    color: #fff;
-    b {
-      color: #fff;
+  .info-tag {
+    display: grid;
+    grid-template-columns: 4fr 1fr;
+    span {
+      margin: 0;
+    }
+  }
+  .info {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    span {
+      text-align: right;
     }
   }
 }
-.name-edit {
-  display: flex;
-  margin: 0; 
-  .ico {
-    margin-left: 1.5rem;
-    color: #1677ff;
-    font-size: 15px;
-    position: relative;
-    top: -3px;
-    cursor: pointer;
-  }
-}
-.ugo {
-  margin-bottom: 1.5rem;
-  &-search {
-    max-width: 300px;
-  }
-  h3 {
-    margin-bottom: 1rem;
-  }
-  .label {
-    margin-bottom: 8px;
-    display: block;
-  }
-  &-info {
-    line-height: 1.45;
-    margin-top: 1rem;
-    div {
-      display: flex;
-      flex-direction: column;
-      margin-bottom: .6rem;
-    }
-  }
-}
-
-.steps {
-  max-width: 800px;
-}
-.group-buttons {
-  margin-bottom: 2rem;
-  // display: none;
-}
-.mx-1 {
-  margin: 0 1rem;
-}
-.actived {
-  background: #FFC107;
-  border: 1px solid #FFC107;
+.pendient-btn {
+  background-color: #1677ff;
   color: #fff;
-  &:active, &:hover {
-    border: 1px solid #FFC107;
-    color: #fff;
-  }
-}
-
-.ant-steps-item-active {
-  font-weight: 500;
-}
-.ant-steps-item-wait, .ant-steps-item-finish  {
-  opacity: .4;
 }
 </style>
 
 <style>
-.ant-drawer-close {
-  position: absolute !important;
-  right: 1rem !important;
-  opacity: 1;
-}
-@media screen and (min-width: 550px) {
-  .ant-drawer-close {
-    position: absolute !important;
-    right: 1rem !important;
-    opacity: 0 !important;
-  }
+.ant-drawer-content-wrapper {
+  width: 100%;
+  min-width: 600px;
 }
 </style>
-
-
 

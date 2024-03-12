@@ -220,15 +220,15 @@ onMounted(() => {
   grid-gap: 0 1rem;
   .ant-form-item:nth-child(1) {
     grid-column: 1/4;
-    max-width: 300px;
+    max-width: 297px;
   }
   .ant-form-item:nth-child(2) {
     grid-column: 1/4;
-    max-width: 300px;
+    max-width: 297px;
   }
   .ant-form-item:nth-child(3) {
     grid-column: 1/4;
-    max-width: 300px;
+    max-width: 297px;
   }
   .ant-form-item:nth-child(7) {
     grid-column: 1/4;

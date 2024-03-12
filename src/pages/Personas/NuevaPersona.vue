@@ -1,10 +1,12 @@
 <template>
-  <a-breadcrumb>
+  <a-breadcrumb v-if="!route.query.dni">
     <a-breadcrumb-item><a @click="comeBack">Atrás</a></a-breadcrumb-item>
   </a-breadcrumb>
+  
   <br>
+  
   <h3 class="uppercase">REGISTRO DE {{ route.query.rol }}</h3>
-
+  <!-- <pre>{{ route.query.rol == 'asesor'  }}</pre> -->
   <br>
 
   <a-spin v-if="isloading" />
@@ -298,6 +300,44 @@ const onSubmit = async () => {
   try {
     const data = await makeRequest({ url: '/new-person', method: 'POST', data: payload });
     if(data) {
+
+      let role = null
+
+      if(route.query.rol == 'supervisor') role = 30
+      if(route.query.rol == 'asesor') role = 31
+
+      if(route.query.rol == 'supervisor' || route.query.rol == 'asesor') {
+        const payload2 = {
+          birthdate: formState.birthdate,
+          gender: formState.gender,
+          lession: formState.lession,
+          phone_number: formState.phone,
+          document_type: formState.document_type == 'dni' ? 1 : formState.document_type == 'ce' ? 2 : 3,
+          document_number: formState.number_document,
+          last_name: formState.last_name,
+          middle_name: formState.middle_name,
+          name: formState.name,
+          country_code: 173,
+          email: formState.email,
+          password: formState.number_document,
+          office_code: 1,
+          sede_code: 1,
+          role: role,
+          created_by: storageData.id,
+          updated_by: storageData.id,
+        }
+        await makeRequest({ url: '/new-user', method: 'POST', data: payload2 });
+
+        const payload3 = {
+          'id_supervisor': formState.supervisor,
+          'created_by': formState.created_by,
+          'number_document': formState.number_document
+        }
+
+        if(route.query.rol == 'asesor') await makeRequest({ url: '/user-asesor', method: 'POST', data: payload3 });
+
+      }
+
       clearFields()
       disabled()
       formState.document_type = 'dni'

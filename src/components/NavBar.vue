@@ -11,7 +11,7 @@
         </a-avatar>
       </a>
       <template #overlay>
-        <a-menu @click="handleMenuClick">
+        <a-menu @click="handleMenuClick" style="width: 140px">
           <a-menu-item key="1">
             <UserOutlined />
             Ver Perfil
@@ -53,16 +53,16 @@ const handleMenuToggle = () => {
 
 const logout = async() => {
   try {
-      const data = await makeRequest({ url: '/logout', method: 'POST'});
-      if(data) {
-        Cookies.remove('token');
-        localStorage.clear();
-        router.push('/');
-      }
-    
-    } catch (error) {
-      console.error('Error de red:', error);
+    const data = await makeRequest({ url: '/logout', method: 'POST'});
+    if(data) {
+      Cookies.remove('token');
+      localStorage.clear();
+      router.push('/');
     }
+  
+  } catch (error) {
+    console.error('Error de red:', error);
+  }
 }
 
 </script>

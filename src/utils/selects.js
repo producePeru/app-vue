@@ -89,14 +89,14 @@ const categories = [
 ];
 
 const economicSectors = [
-  { label: 'Industria', value: 1 },
-  { label: 'Servicio', value: 2 },
-  { label: 'Comercio', value: 3 }
+  { label: 'INDUSTRIA', value: 1 },
+  { label: 'SERVICIO', value: 2 },
+  { label: 'COMERCIO', value: 3 }
 ];
 
 const modality = [
-  { label: 'Virtual', value: 1 },
-  { label: 'Presencial', value: 2 }
+  { label: 'VIRTUAL', value: 1 },
+  { label: 'PRESENCIAL', value: 2 }
 ];
 
 const regimen = [
@@ -106,6 +106,26 @@ const regimen = [
   { label: 'SRL', value: 'srl' },
   { label: 'SACS', value: 'sacs' }
 ];
+
+const prodecure_detail = [
+  { label: 'ACTIVACIÓN RUC', value: 1 },
+  { label: 'CAMBIO DE CATEGORÍA', value: 2 },
+  { label: 'CAMBIO DE CLAVE SOL', value: 3 },
+  { label: 'CAMBIO DE RÉGIMEN', value: 4 },
+  { label: 'CAMBIO TIPO DE CONTRIBUYENTE', value: 5 },
+  { label: 'REACTIVACIÓN RUC', value: 6 },
+  { label: 'RECUPERACIÓN DE CLAVE SOL', value: 7 },
+  { label: 'SOLICITUD DE CLAVE SOL', value: 8 }
+];
+
+const components = [
+  { label: 'ACTIVACIÓN', value: 1 },
+  { label: 'DESARROLLO PRODUCTIVO', value: 2 },
+  { label: 'DIGITALIZACIÓN', value: 3 },
+  { label: 'FINANCIAMIENTO', value: 4 },
+  { label: 'FORMALIZACIÓN', value: 5 },
+  { label: 'GESTIÓN EMPRESARIAL', value: 6 }
+]
 
 export { 
   typeDocuments, 
@@ -120,5 +140,7 @@ export {
   categories,
   economicSectors,
   modality,
-  regimen
+  regimen,
+  prodecure_detail,
+  components
 };

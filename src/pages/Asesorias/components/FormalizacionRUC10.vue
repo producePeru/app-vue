@@ -8,22 +8,9 @@
 
           <a-form-item class="item-max" v-if="el.type === 'iSelect'" :name="el.name" :label="el.label"
             :rules="[{ required: el.required, message: el.message }]">
-
-
-            
-            <a-select v-if="el.name == 'modality'" v-model:value="formState[el.name]" :options="modality"
-              :disabled="el.disabled" />
-            <a-select v-if="el.name == 'economic_sector'" v-model:value="formState[el.name]" :options="economicSectors"
-              :disabled="el.disabled" />
-
-
-
-          </a-form-item>
-
-          <a-form-item v-if="el.type === 'iSearch'" class="item-max" :name="el.name" :label="el.label"
-            :rules="[{ required: el.required, message: el.message }]">
-            <a-input-search :maxlength="15" :loading="searchLoading" v-model:value="formState[el.name]"
-              @search="handleSearchApi" @input="validateNumber" />
+            <a-select v-if="el.name == 'detail_procedure'" v-model:value="formState[el.name]" :options="prodecure_detail" />
+            <a-select v-if="el.name == 'modality'" v-model:value="formState[el.name]" :options="modality" />
+            <a-select v-if="el.name == 'economy_sector'" v-model:value="formState[el.name]" :options="economicSectors" />
           </a-form-item>
 
           <a-form-item v-if="el.type === 'iText'" :name="el.name" :label="el.label"
@@ -31,81 +18,142 @@
             <a-input v-model:value="formState[el.name]" :disabled="el.disabled" />
           </a-form-item>
 
-          <a-form-item v-if="el.type === 'iDate'" :name="el.name" :label="el.label"
-            :rules="[{ required: el.required, message: el.message }]">
-            <a-date-picker :locale="locale" v-model:value="birthdateDate" style="width: 100%;" :format="dateFormat"
-              :disabled="el.disabled" />
+          <a-form-item class="item-max" v-if="el.type === 'iSelectWrite'" :name="el.name" :label="el.label" :rules="[{ required: el.required, message: el.message }]">
+            <a-select v-if="el.name == 'category'" v-model:value="formState[el.name]" show-search :options="activities" :filter-option="filterOption">
+              <template #dropdownRender="{ menuNode: menu }">
+                <v-nodes :vnodes="menu" />
+                <a-divider style="margin: 4px 0" />
+                <a-space style="padding: 4px 8px">
+                  <a-input ref="inputRef" v-model:value="name" placeholder="Nueva actividad" />
+                  <a-button type="text" @click="handleAddItem" :loading="loadingcategory">
+                    <template #icon>
+                      <PlusOutlined />
+                    </template>
+                    Agregar
+                  </a-button>
+                </a-space>
+              </template>
+            </a-select>
+            
+            <a-select v-if="el.name == 'department'" v-model:value="formState[el.name]" show-search :options="departments" :filter-option="filterOption" @change="getProvinces" />
+            <a-select v-if="el.name == 'province'" v-model:value="formState[el.name]" show-search :options="provinces" :filter-option="filterOption" @change="getDistricts" />
+            <a-select v-if="el.name == 'district'" v-model:value="formState[el.name]" show-search :options="districts" :filter-option="filterOption" />
           </a-form-item>
 
         </template>
       </div>
-      <!-- <pre>{{ ructen }}</pre> -->
+
       <a-form-item>
         <a-button type="primary" html-type="submit" :loading="loading">GUARDAR</a-button>
       </a-form-item>
+
+
+      <!-- <pre>:::: {{ counter.count }}</pre> -->
+      
     </a-form>
+
   </div>
 </template>
 
 <script setup>
 import { ructen } from '@/forms/asesorias.js'
-import { reactive, ref, onMounted } from 'vue';
+import { reactive, ref, onMounted, defineComponent } from 'vue';
 import { requestNoToken } from '@/utils/noToken.js'
 import { economicSectors } from '@/utils/selects.js'
-import { modality } from '@/utils/selects.js'
+import { modality, prodecure_detail } from '@/utils/selects.js'
+import { makeRequest } from '@/utils/api.js';
+import { PlusOutlined } from '@ant-design/icons-vue'
+import { message } from 'ant-design-vue';
+import { useCounterStore } from '@/stores/someEvents.js'
 
+const VNodes = defineComponent({
+  props: {
+    vnodes: {
+      type: Object,
+      required: true,
+    },
+  },
+  render() {
+    return this.vnodes;
+  },
+});
+
+const pageStore = useCounterStore()
+const props = defineProps(['info']);
+const storageData = JSON.parse(localStorage.getItem('user'));
+const emit = defineEmits(['closeDraw']);
+
+const name = ref();
 const departments = ref([]);
 const provinces = ref([]);
 const districts = ref([]);
+const activities = ref([]);
 const loading = ref(false);
+const loadingcategory = ref(false);
+
 const formState = reactive({
-  document_type: 'dni',
-  number_document: null,
-  last_name: null,
-  middle_name: null,
-  name: null,
+  detail_procedure: null,
+  modality: null,
+  economy_sector: null,
+  category: null,
   department: null,
   province: null,
   district: null,
-  phone: null,
-  email: null,
-  birthdate: null,
-  gender: null,
-  lession: null,
-
-  // created_by: userId,
-  // update_by: userId,
-  // post: route.query.access
+  id_person: props.info.id,
+  created_by: storageData.id,
+  created_dni: storageData.document_number
 });
 
+const filterOption = (input, option) => {
+  const normalizedInput = input.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "");
+  const normalizedLabel = option.label.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "");
+  return normalizedLabel.includes(normalizedInput);
+};
+
 const onSubmit = async () => {
-  // formState.birthdate = dayjs(birthdateDate.value).format('YYYY-MM-DD')
-  // const payload = formState
-  // loading.value = true
+  const payload = formState
+  loading.value = true
+  try {
+    const data = await makeRequest({ url: '/formalization10', method: 'POST', data: payload });
 
-  // try {
-  //   const data = await makeRequest({ url: '/new-person', method: 'POST', data: payload });
-  //   if(data) {
-  //     clearructen()
-  //     disabled()
-  //     formState.document_type = 'dni'
-  //     comeBack()
-  //     message.success('Registro exitoso');
-  //   }
-  // } catch (error) {
+    if(data.status == 400) {
+      message.error(data.message);
+      return pageStore.logout()
+    }
+    
+    if(data) {
+      message.success(data.message);
+  
+      formState.detail_procedure = null
+      formState.modality = null
+      formState.economy_sector = null
+      formState.category = null
+      formState.department = null
+      formState.province = null
+      formState.district = null
 
-  //   if(error.response.status == 550) {
-  //     return message.error('El usuario ya se encuentra registrado');
-  //   }
-
-  //   message.error('Error al registrar');
-
-  // } finally {
-  //   loading.value = false
-  // }
+      emit('closeDraw', true)
+    }
+  } catch (error) {
+    message.error('Error al registrar');
+  } finally {
+    loading.value = false
+  }
+};
+const handleAddItem = async() => {
+  loadingcategory.value = true;
+  try {
+    await makeRequest({ url: '/create-comercial-activities', method: 'POST', data: {name: name.value} });
+    categories()
+    name.value = ''
+  } catch (error) {
+    message.error('Error al registrar');
+  } finally {
+    loadingcategory.value = false;
+  }
 };
 const onSubmitFail = () => {
-  // message.error('Debes de completar todos los espacios requeridos')
+  message.warning('Debes de completar todos los espacios requeridos')
 };
 
 const getDepartaments = async () => {
@@ -151,20 +199,46 @@ const getDistricts = async (id) => {
   }
 };
 
-onMounted(
-  getDepartaments
-);
+const categories = async () => {
+  try {
+    const { data } = await makeRequest({ url: `/comercial-activities`, method: 'GET' });
+    activities.value = data
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+onMounted(() => {
+  getDepartaments(),
+  categories()
+});
 </script>
 
 <style scoped lang="scss">
 .wrapper-booking {
   max-width: 700px;
-  // margin-top: 2rem;
   h3 {
     margin-bottom: 2rem;
   }
 }
 .grid-booking {
-  max-width: 250px;
+  display: grid;
+  grid-template-columns: repeat(3,1fr);
+  grid-gap: 0 1rem;
+  .ant-form-item:nth-child(1) {
+    grid-column: 1/3;
+  }
+  .ant-form-item:nth-child(2) {
+    grid-column: 1/3;
+  }
+  .ant-form-item:nth-child(3) {
+    grid-column: 1/3;
+  }
+  .ant-form-item:nth-child(4) {
+    grid-column: 1/3;
+  }
+  .ant-form-item:nth-child(5) {
+    grid-column: 1/2;
+  }
 }
 </style>

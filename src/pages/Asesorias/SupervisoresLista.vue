@@ -86,7 +86,7 @@ const columns = [
   { title: 'Distrito',            dataIndex: 'distrite', align: 'center', width: 140},
   { title: 'Correo',              dataIndex: 'email', width: 180},
   { title: 'Celular',             dataIndex: 'phone', width: 100},
-  { title: '',                    dataIndex: 'actions', align: 'center', width: 50}
+  // { title: '',                    dataIndex: 'actions', align: 'center', width: 50}
 ];
 
 const handlePaginator = (current) =>{

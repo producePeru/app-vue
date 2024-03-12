@@ -88,7 +88,6 @@
 
           <a-form-item>
             <a-button :loading="loading" class="form-button" type="primary" html-type="submit">CONTINUAR</a-button>
-            
           </a-form-item>
         </a-form>
 
@@ -134,8 +133,21 @@ const router = useRouter();
 const handleCheckTerminos = () => {
   if(showerror.value) showerror.value = false
 }
-const onSubmit = async () => {
+const getToken = () => {
+  return new Promise((resolve, reject) => {
+    window.grecaptcha.ready(() => {
+      window.grecaptcha.execute('6LcQMYopAAAAAHSEhhbYKcmXQuwDPScDljW1ZBUu', { action: 'submit' })
+        .then(token => {
+          resolve(token);
+        })
+        .catch(error => {
+          reject(error);
+        });
+    });
+  });
+}
 
+const onSubmit = async () => {
   if(!accept.value){
     showerror.value = true;
     return message.error('Completa los valores del formulario');
@@ -143,13 +155,21 @@ const onSubmit = async () => {
 
   Cookies.remove('formalizacion');
   loading.value = true
+
   try {
-    const data = await requestNoToken({ url: '/public/formalization', method: 'POST', data: formState });
-    
-    if(data) {
-      Cookies.set('formalization-data', JSON.stringify(formState));
-      router.push({ name: 'formalizacion-mapa' });
+    const token = await getToken();
+    const captcha = await requestNoToken({ url: '/public/formalization-recaptcha', method: 'POST', data: {recaptcha_token: token} });
+
+    if(captcha.success) {
+      const data = await requestNoToken({ url: '/public/formalization', method: 'POST', data: formState });
+      if(data) {
+        Cookies.set('formalization-data', JSON.stringify(formState));
+        router.push({ name: 'formalizacion-mapa' });
+      }
+    } else {
+      message.warning('No verificado')
     }
+
   } catch (error) {
     message.error('Error al registrar');
   } finally {
@@ -220,6 +240,12 @@ const handleScroll = () => {
 };
 
 onMounted(() => {
+  const script = document.createElement('script');
+  script.src = 'https://www.google.com/recaptcha/api.js?render=6LcQMYopAAAAAHSEhhbYKcmXQuwDPScDljW1ZBUu';
+  script.async = true;
+  script.defer = true;
+  document.head.appendChild(script);
+
   getDepartaments()
   window.addEventListener('scroll', handleScroll);
 });

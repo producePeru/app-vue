@@ -119,38 +119,46 @@ const router = createRouter({
           name: 'asesorias',
           children: [
             {
+              path: 'asesorias',
+              name: 'asesorias',
+              component: () => import('../pages/Asesorias/AsesoriasLista.vue'),
+              meta: { requiresAuth: true },
+            },
+            {
               path: 'asesorias-formalizaciones',
               name: 'asesorias-formalizaciones',
               component: () => import('../pages/Asesorias/AsesoriasFormalizaciones.vue'),
-              // meta: { requiresAuth: true },
+              meta: { requiresAuth: true },
             },
             {
               path: 'solicitantes',
               name: 'solicitantes',
               component: () => import('../pages/Asesorias/SolicitantesLista.vue'),
-              // meta: { requiresAuth: true },
+              meta: { requiresAuth: true },
             },
             {
               path: 'notarias',
               name: 'notarias',
               component: () => import('../pages/Asesorias/NotariasLista.vue'),
-              // meta: { requiresAuth: true },
+              meta: { requiresAuth: true },
             },
             {
               path: 'supervisores',
               name: 'supervisores',
               component: () => import('../pages/Asesorias/SupervisoresLista.vue'),
-              // meta: { requiresAuth: true },
+              meta: { requiresAuth: true },
             },
             {
               path: 'asesores',
               name: 'asesores',
               component: () => import('../pages/Asesorias/AsesoresLista.vue'),
-              // meta: { requiresAuth: true },
+              meta: { requiresAuth: true },
             },
                   
           ]
         },
+
+        
         {
           path: 'convenios',
           name: 'convenios',

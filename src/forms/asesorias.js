@@ -114,10 +114,10 @@ const final = {
 };
 
 const ructen = {
-  details: {
-    type: 'iText',
+  detail_procedure: {
+    type: 'iSelect',
     label: 'Detalle del trámite',
-    name: 'details',
+    name: 'detail_procedure',
     required: true,
     message: 'Escribir número de RUC',
     disabled: false
@@ -126,24 +126,48 @@ const ructen = {
     type: 'iSelect',
     label: 'Modalidad de atención',
     name: 'modality',
-    required: false,
+    required: true,
     message: 'Seleccionar modalidad',
     disabled: false
   },
-  commercial: {
-    type: 'iSelect',
-    label: 'Actividad comercial',
-    name: 'commercial',
-    required: false,
-    message: 'Seleccionar modalidad',
-    disabled: false
-  },
-  economic_sector: {
+  economy_sector: {
     type: 'iSelect',
     label: 'Sector económico',
-    name: 'economic_sector',
+    name: 'economy_sector',
     required: true,
-    message: 'Seleccionar tipo de documento',
+    message: 'Seleccionar el sector económico',
+    disabled: false
+  },
+  category: {
+    type: 'iSelectWrite',
+    label: 'Actividad comercial',
+    name: 'category',
+    required: true,
+    message: 'Seleccionar la actividad comercial',
+    disabled: false
+  },
+  department: {
+    type: 'iSelectWrite',
+    label: 'Departamento',
+    name: 'department',
+    required: true,
+    message: 'Seleccionar departamento',
+    disabled: false
+  },
+  province: {
+    type: 'iSelectWrite',
+    label: 'Provincia',
+    name: 'province',
+    required: true,
+    message: 'Seleccionar provincia',
+    disabled: false
+  },
+  district: {
+    type: 'iSelectWrite',
+    label: 'Distrito',
+    name: 'district',
+    required: true,
+    message: 'Seleccionar distrito',
     disabled: false
   },
 };
@@ -153,26 +177,58 @@ const asesoria = {
     type: 'iSelect',
     label: 'Componente',
     name: 'component',
-    required: false,
-    message: 'Seleccionar modalidad',
+    required: true,
+    message: 'Seleccionar un componente',
     disabled: false
   },
   tema_compoment: {
-    type: 'iSelect',
+    type: 'iSelectWrite',
     label: 'Tema del componente',
     name: 'tema_compoment',
-    required: false,
+    required: true,
+    message: 'Seleccionar un tema del componente',
+    disabled: false
+  },
+  modality: {
+    type: 'iSelect',
+    label: 'Modalidad de atención',
+    name: 'modality',
+    required: true,
     message: 'Seleccionar modalidad',
+    disabled: false
+  },
+  department: {
+    type: 'iSelectWrite',
+    label: 'Departamento',
+    name: 'department',
+    required: true,
+    message: 'Seleccionar departamento',
+    disabled: false
+  },
+  province: {
+    type: 'iSelectWrite',
+    label: 'Provincia',
+    name: 'province',
+    required: true,
+    message: 'Seleccionar provincia',
+    disabled: false
+  },
+  district: {
+    type: 'iSelectWrite',
+    label: 'Distrito',
+    name: 'district',
+    required: true,
+    message: 'Seleccionar distrito',
     disabled: false
   },
   description: {
     type: 'iTextarea',
-    label: 'Sector económico',
+    label: 'Observaciones',
     name: 'description',
-    required: true,
+    required: false,
     message: 'Seleccionar tipo de documento',
     disabled: false
-  },
+  }
 };
 
 export {

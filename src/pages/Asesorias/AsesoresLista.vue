@@ -8,7 +8,7 @@
     
     <a-table 
     bordered
-    :scroll="{ x: valueX }"
+    :scroll="{ x: valueX, y: valueY }" 
     class="ant-table-striped"
     :columns="columns" 
     :data-source="dataSource" 
@@ -62,8 +62,8 @@
 </template>
 
 <script setup>
+import { ref, onMounted, h, onBeforeUnmount } from 'vue';
 import { makeRequest } from '@/utils/api.js'
-import { ref, onMounted, h } from 'vue';
 import { MoreOutlined } from '@ant-design/icons-vue';
 import { message } from 'ant-design-vue';
 import { useRouter } from 'vue-router';
@@ -74,10 +74,18 @@ const access = ref(2);
 
 const dataSource = ref([])
 const loading = ref(false)
-const valueX = ref(1000)
 const total = ref(0)
 const router = useRouter();
 const params = ref({ page: 1 })
+
+const valueX = ref(1200)
+const valueY = ref(window.innerHeight - 100);
+const actualizarAltura = () => {
+  valueY.value = window.innerHeight - 300;
+};
+onBeforeUnmount(() => {
+  window.removeEventListener('resize', actualizarAltura);
+});
 
 const columns = [
   { title: 'Apellidos',           dataIndex: 'lastName', fixed: 'left', width: 200 },
@@ -142,9 +150,11 @@ const fetchData = async() => {
   }
 }
 
-onMounted(
-  fetchData
-);
+onMounted(() => {
+  fetchData();
+  window.addEventListener('resize', actualizarAltura);
+  actualizarAltura();
+});
 </script>
 
 <style>
@@ -160,4 +170,3 @@ onMounted(
   width: 200px;
 }
 </style>
-

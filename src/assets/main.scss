@@ -102,7 +102,9 @@ h1 {
 .ant-menu-submenu-title:active {
   background-color: var(--primary-hover) !important;
 }
-
+.uppercase {
+  text-transform: uppercase;
+}
 // :where(.css-dev-only-do-not-override-185kyl0).ant-input-search .ant-input:hover, :where(.css-dev-only-do-not-override-185kyl0).ant-input-search .ant-input:focus {
 //   border-color: var(--color-3)!important;
 // }
