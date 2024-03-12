@@ -74,7 +74,6 @@
       <h4 >HISTORIAL</h4>
       <HISTORIAL :info="historial" />
     </a-card>
-
   </div>
 
   <section>
