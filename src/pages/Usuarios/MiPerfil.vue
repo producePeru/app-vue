@@ -53,7 +53,11 @@
         <a-button type="primary" html-type="submit" :loading="loading">GUARDAR</a-button>
       </a-form-item>
     </a-form>
+
+    <PHOTOUSER />
+
   </div>
+ 
 </template>
 
 <script setup>
@@ -69,6 +73,7 @@ import { message } from 'ant-design-vue';
 import fields from '@/forms/miperfil.js'
 import { typeDocuments, geners, disabilities, typeUsers, offices } from '@/utils/selects.js'
 import { useRoute } from 'vue-router';
+import PHOTOUSER from './components/userPhotoCropper.vue'
 
 const storageData = JSON.parse(localStorage.getItem('user'))
 
@@ -103,18 +108,34 @@ const onSubmit = async () => {
 
   formState.birthdate = dayjs(birthdateDate.value).format('YYYY-MM-DD')
   const payload = formState
+  
+  const payload2 = {
+    last_name: formState.last_name,
+    middle_name : formState.middle_name,
+    name: formState.name,
+    email: formState.email,
+    birthdate: formState.birthdate,
+    gender: formState.gender,
+    lession: formState.lession,
+    phone: formState.phone_number
+  }
+
   loading.value = true
 
   try {
+    
     const data = await makeRequest({ url: `user/${idUserUpdate.value}`, method: 'PUT', data: payload });
+
+    await makeRequest({ url: `/update-profile/${formState.document_number}`, method: 'PATCH', data: payload2 });
+
     message.success(data.message)
+  
   } catch (error) {
     message.error('No se pudo registrar este usuario');
   } finally {
     loading.value = false;
   }
 };
-
 
 const onSubmitFail = () => {
   message.error('Debes de completar todos los espacios requeridos')
@@ -128,6 +149,7 @@ const fetchDataCountries = async () => {
   try {
     const { data } = await requestNoToken({ url: '/countries', method: 'GET' });
     countries.value = data;
+    isloading.value = false
   } catch (error) {
     console.error('Error de red:', error);
   }
@@ -136,7 +158,7 @@ const fetchDataSedes = async () => {
   try {
     const { data } = await makeRequest({ url: '/sedes', method: 'GET' });
     sedes.value = data;
-    isloading.value = false
+    
   } catch (error) {
     console.error('Error de red:', error);
   }
@@ -167,10 +189,10 @@ const fetchData = async () => {
   }
 }
 
-onMounted(() => {
-  fetchData(),
-  fetchDataCountries(),
-  fetchDataSedes()
+onMounted(async() => {
+  await fetchData(),
+  await fetchDataCountries(),
+  await fetchDataSedes()
 });
 
 </script>

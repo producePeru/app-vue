@@ -165,3 +165,10 @@ $color-background: #F7F7FA;
   font-optical-sizing: auto;
 }
 
+.btn-produce {
+  background-color: #BA0F0F;
+  &:hover, &:active {
+    background-color: #cd1616 !important;
+
+  }
+}

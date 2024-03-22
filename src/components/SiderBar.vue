@@ -34,11 +34,12 @@
     <a-sub-menu key="asesorias" v-if="views.includes('asesorias')" @click="handleCollapse('asesorias')">
       <template #title>
         <span>
-          <BulbOutlined />
-          <span>Asesorias</span>
+          <AuditOutlined />
+          <span>Formalizaciones</span>
         </span>
       </template>
-      <a-menu-item key="asesorias" v-if="views.includes('asesorias')"> <router-link to="/admin/asesorias/asesorias">Asesorías</router-link> </a-menu-item> 
+      <a-menu-item key="solicitudes" v-if="views.includes('asesorias')"> <router-link to="/admin/asesorias/solicitudes">Solicitudes</router-link> </a-menu-item> 
+      <a-menu-item key="asesorias" v-if="views.includes('asesorias')"> <router-link to="/admin/asesorias/asesorias">Listado</router-link> </a-menu-item> 
       <a-menu-item key="asesorias-formalizaciones" v-if="views.includes('asesorias-formalizaciones')"> <router-link to="/admin/asesorias/asesorias-formalizaciones">Registro</router-link> </a-menu-item> 
       <a-menu-item key="solicitantes" v-if="views.includes('solicitantes')"> <router-link to="/admin/asesorias/solicitantes">Solicitantes</router-link> </a-menu-item> 
       <a-menu-item key="notarias" v-if="views.includes('notarias')"> <router-link to="/admin/asesorias/notarias">Notarias</router-link> </a-menu-item> 
@@ -98,7 +99,7 @@ import {
   HomeOutlined,
   SolutionOutlined,
   TeamOutlined,
-  BulbOutlined,
+  AuditOutlined,
   CloudOutlined
 } from '@ant-design/icons-vue';
 

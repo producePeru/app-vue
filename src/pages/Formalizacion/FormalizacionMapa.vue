@@ -1,37 +1,27 @@
 <template>
-  <header class="header" ref="navBar" :class="{ floatingNav: isFloating }">
-    <div class="container header-wrapper">
-      <img src="../../assets/formalizate/logo-produce.png" alt="logo-produce">
-      <img src="../../assets/formalizate/logo-tuempresa.png" alt="logo-tu-empresa">
+  <div class="background-map">
+    <!-- <pre>{{ props.stepData2 }}</pre> -->
+    <h2 class="title2 ff">Paso 2: Selección de puntos de atención</h2>
+    <div class="info-gps">
+      <span>Este ícono
+        <img src="../../assets/formalizate/gps-ico.png" alt="formalizate ubicación">
+        represeta la ubicación geográfica de nuestros centros de desarrollo empresarial, pulse en el mapa a
+        continuación para elegir el de su preferencia.</span>
     </div>
-  </header>
-  <!-- <pre>{{ markerInfo }}</pre> -->
-
-  <section class="form-map">
-    <div class="container">
-      <div class="background-map">
-        <h2 class="title2 ff">Paso 2: Selección de puntos de atención</h2>
-        <div class="info-gps">
-          <span>Este ícono
-          <img src="../../assets/formalizate/gps-ico.png" alt="formalizate ubicación">
-          represeta la ubicación geográfica de nuestros centros de desarrollo empresarial, pulse en el mapa a continuación para elegir el de su preferencia.</span>
-        </div>
-        <!-- <input type="text" ref="searchInput" placeholder="Buscar lugar..." /> -->
-        <!-- <br>
+    <!-- <input type="text" ref="searchInput" placeholder="Buscar lugar..." /> -->
+    <!-- <br>
         <br> -->
-        <div ref="mapContainer" style="height: 500px;"></div>
+    <div ref="mapContainer" style="height: 500px;"></div>
 
-      </div>
-    </div>
-  </section>
+  </div>
 
-  
   <a-modal v-model:open="open" title="" width="350px" :footer="false">
     <div class="modal-info ff ">
       <span>Quiero atenderme aquí</span>
       <h3>{{ markerInfo.title }}</h3>
     </div>
-    <a-button @click="onSubmit" :loading="loading" class="form-button" type="primary" html-type="submit">ESCOGER</a-button>
+    <a-button @click="onSubmit" :loading="loading" class="form-button" type="primary"
+      html-type="submit">ESCOGER</a-button>
   </a-modal>
 
   <a-modal v-model:open="msgOk" title="" width="450px" :footer="false" @cancel="handleCancelModalFinal">
@@ -42,8 +32,8 @@
     <a-button @click="handleOkFinal" class="form-button" type="primary" html-type="submit">OK</a-button>
   </a-modal>
 
-  <FooterFormalization />
-  
+
+
 </template>
 
 <script setup>
@@ -51,17 +41,17 @@ import { ref, onMounted } from 'vue';
 import { requestNoToken } from '@/utils/noToken.js'
 import { useRouter } from 'vue-router';
 import { message } from 'ant-design-vue';
-import FooterFormalization from './FormalizacionFooter.vue'
 import Cookies from 'js-cookie';
 
 const router = useRouter();
+const props = defineProps(['stepData2']);
+const emit = defineEmits(['endForm']);
 
 let map;
 const mapContainer = ref(null);
 let searchInput;
 const loading = ref(false);
 const open = ref(false);
-const navBar = ref(null);
 const isFloating = ref(false);
 const markers = ref([]);
 const markerInfo = ref(null);
@@ -74,20 +64,16 @@ const showModal = (data) => {
 };
 
 const onSubmit = async () => {
-  let payload = Cookies.get('formalization-data');
-
-  if(!payload) router.push({ name: 'formalizacion' });
-
-  payload = JSON.parse(payload);
-  payload.id_gps_cdes = markerInfo.value.title;
+  const payload = {
+    'dni_person': props.stepData2.number_document,
+    'id_gps': markerInfo.value.id,
+  }
   loading.value = true
   try {
-    const data = await requestNoToken({ url: '/public/formalization', method: 'POST', data: payload });
-    if(data.status == 200) {
-      await requestNoToken({ url: `/public/formalization-email/${payload.dni}`, method: 'POST' });
-      msgOk.value = true;
-      msgOkText.value = data.message
-    }
+    
+    const data = await requestNoToken({ url: '/public/formalization-digital', method: 'POST', data: payload });
+    if(data.status == 200) msgOk.value = true
+    
   } catch (error) {
     message.error('Error al registrar');
   } finally {
@@ -96,8 +82,7 @@ const onSubmit = async () => {
 };
 
 const handleOkFinal = () => {
-  router.push({ name: 'formalizacion' });
-  Cookies.remove('formalization-data');
+  emit('endForm', true)
 }
 const handleScroll = () => {
   if (window.pageYOffset > 10) {
@@ -112,15 +97,16 @@ const scrollTop = () => {
     behavior: 'smooth'
   });
 };
-const locationsCdes = async() => {
+const locationsCdes = async () => {
   try {
-    const {data} = await requestNoToken({ url: `/public/location-cdes`, method: 'GET' });
+    const { data } = await requestNoToken({ url: `/public/location-cdes`, method: 'GET' });
     const formattedData = data.map(item => ({
       position: {
         lat: parseFloat(item.position.lat),
         lng: parseFloat(item.position.lng)
       },
-      title: item.title
+      title: item.title,
+      id: item.id
     }));
 
     markers.value = [...markers.value, formattedData];
@@ -133,6 +119,12 @@ const handleCancelModalFinal = () => {
 }
 
 onMounted(async () => {
+  const script = document.createElement('script');
+  script.src = 'https://maps.googleapis.com/maps/api/js?key=AIzaSyA-1EbJ1tJdcJ7nmzaJzMGYxSIA661QThA&libraries=places';
+  script.async = true;
+  script.defer = true;
+  document.head.appendChild(script);
+
   window.addEventListener('scroll', handleScroll);
 
   scrollTop();
@@ -224,13 +216,16 @@ header {
   display: flex;
   align-items: center;
   margin-bottom: 1rem;
+
   span {
     font-size: 14px;
   }
+
   img {
     width: 30px;
   }
 }
+
 .title2 {
   font-size: 18px;
   color: $color-title;
@@ -258,47 +253,56 @@ header {
     line-height: 1.5;
   }
 }
+
 .background-map {
   background-color: #fff;
   border-radius: 8px;
-  padding: 2rem;
+  padding: 0 2rem;
 }
+
 .form-map {
   padding: 2rem 0;
   background-color: $color-background;
 
   &-wrapper {
-    
+
     display: flex;
     align-items: center;
     justify-content: center;
     flex-direction: column;
+
     h2 {
       margin-bottom: 3rem;
     }
   }
 }
+
 .modal-info {
   margin-top: 1.5rem;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
+
   h3 {
     margin: .5rem 0 0 0;
   }
 }
+
 .form-button {
+  background-color: $color-primary;
+  padding: 1.2rem 3rem;
+  display: flex;
+  align-items: center;
+  margin: 1rem auto 0 auto;
+  font-size: 15px;
+
+  &:active,
+  &:hover {
     background-color: $color-primary;
-    padding: 1.2rem 3rem;
-    display: flex;
-    align-items: center;
-    margin: 1rem auto 0 auto;
-    font-size: 15px;
-    &:active, &:hover {
-      background-color: $color-primary;
-    }
   }
+}
+
 .form-values {
   max-width: 600px !important;
   width: 100%;
@@ -332,10 +336,11 @@ header {
 
 .msg-ok {
   text-align: center;
+
   p {
     margin: 0;
   }
-  
+
 }
 
 @media screen and (max-width: 900px) {
@@ -372,18 +377,22 @@ header {
     padding: 2rem 0;
   }
 
- 
-}</style>
+
+}
+</style>
 
 
-<style>.ant-input,
+<style>
+.ant-input,
 .ant-select-selector {
   height: 38px !important;
   /* background-color: #fbfbfb; */
 }
+
 .ant-form-item-label {
   padding: 0 0 4px !important;
 }
+
 .gm-style-mtc-bbw {
   display: none !important;
 }

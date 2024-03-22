@@ -1,5 +1,6 @@
 <template>
   <div class="wrapper-booking">
+    <!-- <pre>{{ info }}</pre> -->
     <!-- <h3>RESERVA DE NOMBRE</h3> -->
     <a-form layout="vertical" :model="formState" name="basic" autocomplete="off" @finish="onSubmit"
       @finishFailed="onSubmitFail">
@@ -7,6 +8,7 @@
         <template v-for="(el, idx) in fields" :key="idx">
 
           <a-form-item class="item-max" v-if="el.type === 'iSelect'" :name="el.name" :label="el.label" :rules="[{ required: el.required, message: el.message }]">
+            <a-select v-if="el.name == 'type_regimen'" v-model:value="formState[el.name]" :options="regimen" />
             <a-select v-if="el.name == 'economy_sector'" v-model:value="formState[el.name]" :options="economicSectors" />
           </a-form-item>
             
@@ -53,7 +55,7 @@
 import { fields } from '@/forms/asesorias.js'
 import { reactive, ref, onMounted, defineComponent } from 'vue';
 import { requestNoToken } from '@/utils/noToken.js'
-import { economicSectors } from '@/utils/selects.js'
+import { economicSectors, regimen } from '@/utils/selects.js'
 import { message } from 'ant-design-vue';
 import { makeRequest } from '@/utils/api.js';
 import { PlusOutlined } from '@ant-design/icons-vue'
@@ -86,6 +88,7 @@ const formState = reactive({
   id_person: null,
   dni: null,
   step: 1, 
+  type_regimen: null,
   code_sid_sunarp: null,
   economy_sector: null,
   department: null,
@@ -126,6 +129,7 @@ const onSubmit = async () => {
     
     if(data) {
       message.success('Registro exitoso');
+      formState.type_regimen = null;
       formState.code_sid_sunarp = null;
       formState.economy_sector = null;
       formState.department = null;
@@ -230,9 +234,19 @@ onMounted(() => {
     grid-column: 1/4;
     max-width: 297px;
   }
-  .ant-form-item:nth-child(7) {
+  .ant-form-item:nth-child(3) {
     grid-column: 1/4;
-    grid-row: 5;
+    max-width: 297px;
+  }
+  .ant-form-item:nth-child(4) {
+    grid-column: 1/4;
+    grid-row: 4;
+    max-width: 297px;
+  }
+  .ant-form-item:nth-child(8) {
+    grid-column: 1/4;
+    grid-row: 7;
+    max-width: 297px;
   }
 }
 </style>

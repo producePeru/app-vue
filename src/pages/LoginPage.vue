@@ -46,10 +46,13 @@ import { useRouter } from 'vue-router';
 import Cookies from 'js-cookie';
 import { makeRequest } from '@/utils/api.js'
 import CryptoJS from 'crypto-js';
-
+import axios from 'axios';
 
 const loading = ref(false)
 const router = useRouter();
+const apiUrl = window.location.hostname == '127.0.0.1' ? import.meta.env.VITE_APP_API_URL_LOCAL : import.meta.env.VITE_APP_API_URL_PRODUCTION
+const token = Cookies.get('token');
+
 const formState = reactive({
   email: '',
   password: '',
@@ -67,14 +70,41 @@ const onSubmit =async() => {
       access_token: data.access_token,
       id: data.id,
       document_number: data.document_number,
-      last_name: data.last_name,
-      middle_name: data.middle_name,
-      name: data.name,
-      email: data.email,
+      // last_name: data.last_name,
+      // middle_name: data.middle_name,
+      // name: data.name,
+      // email: data.email,
       role: data.role
     };
+
     
     localStorage.setItem('user', JSON.stringify(me));
+
+    
+
+    const personData = await makeRequest({ url: `/personal-data/${data.document_number}`, method: 'GET' });
+    const personalData = {
+      id: personData.data.id,
+      name: personData.data.name,
+      last_name: personData.data.last_name,
+      middle_name: personData.data.middle_name,
+      email: personData.data.email,
+      dni: personData.data.number_document
+    }
+
+    localStorage.setItem('info', JSON.stringify(personalData));
+
+
+    const response = await axios.get(`${apiUrl}/profile-photo/${personData.data.id}/${personData.data.number_document}`, {
+      responseType: 'blob',
+      headers: {
+        'Accept': 'application/json',
+        'Authorization': `Bearer ${data.access_token}`
+      }
+    });
+    const url = window.URL.createObjectURL(new Blob([response.data]));
+    localStorage.setItem('photo', JSON.stringify(url));
+    
 
     if(data) fetchDataViews(data.id)
 

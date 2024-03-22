@@ -146,4 +146,7 @@ const findcomponents = (id) => {
     z-index: 99;
   }
 }
+.steps .ant-progress-text {
+  display: none !important;
+}
 </style>

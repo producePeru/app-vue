@@ -38,7 +38,7 @@
           <template v-if="record.testin_id">
             <a-button type="link">
               <!-- <router-link :to="`/test-entrada/${record.slug}`">Link</router-link> -->
-              <a :href="`${apiUrl}/test-entrada/${record.slug}`" target="_blank">Link</a>
+              <a :href="`${apiUrl}test-entrada/${record.slug}`" target="_blank">Link</a>
             </a-button >
             <EditOutlined @click="handleEditInTest(record)" />
           </template>
@@ -51,7 +51,7 @@
           <template v-if="record.testout_id">
             <a-button type="link">
               <!-- <router-link :to="`/test-salida/${record.slug}`">Link</router-link> -->
-              <a :href="`${apiUrl}/test-salida/${record.slug}`" target="_blank">Link</a>
+              <a :href="`${apiUrl}test-salida/${record.slug}`" target="_blank">Link</a>
             </a-button>
             <EditOutlined @click="handleEditEndTest(record)" />
           </template>
@@ -63,7 +63,7 @@
           </template>
           <template v-if="record.invitation_id">
             <a-button type="link">
-              <a :href="`${apiUrl}/invitacion/${record.slug}`" target="_blank">Link</a>
+              <a :href="`${apiUrl}invitacion/${record.slug}`" target="_blank">Link</a>
             </a-button>
             <EditOutlined @click="handleInvitationModal('edit', record)" />
           </template>
@@ -165,8 +165,8 @@ import { requestNoToken } from '@/utils/noToken.js'
 import { QuillEditor } from '@vueup/vue-quill';
 import 'quill/dist/quill.snow.css';
 
-const prod = "https://apituempresa.soporte-pnte.com"
-const dev = "http://127.0.0.1:5173"
+const prod = import.meta.env.VITE_APP_URL_PRODUCTION
+const dev = import.meta.env.VITE_APP_URL_LOCAL
 const apiUrl = window.location.hostname == '127.0.0.1' ? dev : prod;
 
 const contenido = ref('');

@@ -6,9 +6,13 @@
     <a-dropdown>
       <a class="ant-dropdown-link" @click.prevent>
         <span class="name-user">{{ user.name }}</span>
-        <a-avatar size="default" style="background-color: #cf1322">
+        
+
+        <a-avatar v-if="photo" :src="photo" />
+        <a-avatar v-else size="default" style="background-color: #cf1322">
           {{ user.name.charAt(0) }}
         </a-avatar>
+
       </a>
       <template #overlay>
         <a-menu @click="handleMenuClick" style="width: 140px">
@@ -35,7 +39,9 @@ import {ref} from 'vue'
 
 const router = useRouter();
 const emit = defineEmits(['toggleSidebar'])
-const user = JSON.parse(localStorage.getItem('user'));
+const user = JSON.parse(localStorage.getItem('info'));
+const photo = JSON.parse(localStorage.getItem('photo'));
+
 
 const handleMenuClick = (e) => {
   if(e.key == 1) {

@@ -8,8 +8,6 @@
           <a-form-item class="item-max" v-if="el.type === 'iSelect'" :name="el.name" :label="el.label"
             :rules="[{ required: el.required, message: el.message }]">
 
-            <a-select v-if="el.name == 'type_regimen'" v-model:value="formState[el.name]" :options="regimen"
-              :disabled="el.disabled" />
             <a-select v-if="el.name == 'id_notary'" v-model:value="formState[el.name]" :options="notaries"
               :disabled="el.disabled" />
             <a-select v-if="el.name == 'modality'" v-model:value="formState[el.name]" :options="modality"
@@ -48,7 +46,7 @@
 <script setup>
 import { acto } from '@/forms/asesorias.js'
 import { reactive, ref, onMounted } from 'vue';
-import { modality, regimen } from '@/utils/selects.js'
+import { modality } from '@/utils/selects.js'
 import { makeRequest } from '@/utils/api.js';
 import { message } from 'ant-design-vue';
 
@@ -65,7 +63,7 @@ const formState = reactive({
   code_sid_sunarp: null,
 
   social_reason: null,
-  type_regimen: null,
+  
   num_notary: null,
   id_notary: null,
   modality: null,
@@ -82,7 +80,7 @@ const onSubmit = async () => {
     if(data) {
       message.success(data.message);
       formState.social_reason = null;
-      formState.type_regimen = null;
+      
       formState.id_notary = null;
       formState.num_notary = null;
       formState.modality = null;

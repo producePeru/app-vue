@@ -63,6 +63,8 @@ export async function makeRequest({ method, url, data, params }) {
       response = await api.post(url, data, config); 
     } else if (method === 'PUT') {
       response = await api.put(url, data, config); 
+    } else if (method === 'PATCH') {
+      response = await api.patch(url, data, config); 
     } else if (method === 'DELETE') {
       response = await api.delete(url, config); 
     } else {

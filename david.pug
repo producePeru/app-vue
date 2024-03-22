@@ -76,3 +76,13 @@ watch(toggleMenuRef, (newValue, oldValue) => {
   collapsed.value = !collapsed.value;
   // console.log(`Toggle menu changed from ${oldValue} to ${newValue}`);
 });
+
+
+//
+const { data } = await makeRequest({ url: '/actives-cdes-digitals', method: 'GET' });
+const newItem = {
+  value: 0,
+  label: 'Ver Todos'
+};
+
+cedes.value = [...cedes.value, data, newItem];

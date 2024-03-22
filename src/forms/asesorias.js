@@ -23,6 +23,14 @@ const fields = {
     message: 'Seleccionar tipo de documento',
     disabled: false
   },
+  type_regimen: {
+    type: 'iSelect',
+    label: 'Tipo de régimen societario',
+    name: 'type_regimen',
+    required: true,
+    message: 'Seleccionar tipo de documento',
+    disabled: false
+  },
   department: {
     type: 'iSelectWrite',
     label: 'Departamento',
@@ -64,14 +72,6 @@ const acto = {
     name: 'social_reason',
     required: true,
     message: 'Escribir apellido',
-    disabled: false
-  },
-  type_regimen: {
-    type: 'iSelect',
-    label: 'Tipo de régimen societario',
-    name: 'type_regimen',
-    required: true,
-    message: 'Seleccionar tipo de documento',
     disabled: false
   },
   num_notary: {

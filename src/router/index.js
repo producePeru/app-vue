@@ -16,13 +16,13 @@ const router = createRouter({
     {
       path: '/formalizacion-digital',
       name: 'formalizacion',
-      component: () => import('../pages/FormalizacionPge.vue')
+      component: () => import('../pages/FormalizacionDigital.vue')
     },
-    {
-      path: '/formalizacion-digital-mapa',
-      name: 'formalizacion-mapa',
-      component: () => import('../pages/Formalizacion/FormalizacionMapa.vue')
-    },
+    // {
+    //   path: '/formalizacion-digital-mapa',
+    //   name: 'formalizacion-mapa',
+    //   component: () => import('../pages/Formalizacion/FormalizacionMapa.vue')
+    // },
     {
       path: '/cuestionario/:id',
       name: 'questionary',
@@ -119,6 +119,12 @@ const router = createRouter({
           name: 'asesorias',
           children: [
             {
+              path: 'solicitudes',
+              name: 'solicitudes',
+              component: () => import('../pages/Asesorias/SolicitudesLista.vue'),
+              // meta: { requiresAuth: true },
+            },
+            {
               path: 'asesorias',
               name: 'asesorias',
               component: () => import('../pages/Asesorias/AsesoriasLista.vue'),
@@ -153,8 +159,7 @@ const router = createRouter({
               name: 'asesores',
               component: () => import('../pages/Asesorias/AsesoresLista.vue'),
               meta: { requiresAuth: true },
-            },
-                  
+            }  
           ]
         },
 
