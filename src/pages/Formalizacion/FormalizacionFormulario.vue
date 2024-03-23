@@ -155,6 +155,7 @@ const onSubmit = async () => {
       const values = {
         'dni_person': formState.number_document,
         'id_gps': null,
+        'count': 1
       }
 
       await requestNoToken({ url: '/public/formalization-digital', method: 'POST', data: values });
