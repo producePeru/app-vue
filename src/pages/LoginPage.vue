@@ -110,7 +110,7 @@ const onSubmit =async() => {
 
 
   } catch (error) {
-    message.error("Las credenciales son incorrectas")
+    message.error("Las credenciales son incorrectas", error)
   } finally {
     loading.value = false
   }
