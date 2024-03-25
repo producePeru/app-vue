@@ -77,24 +77,19 @@ const onSubmit =async() => {
       role: data.role
     };
 
-    
     localStorage.setItem('user', JSON.stringify(me));
 
-    
-
     const personData = await makeRequest({ url: `/personal-data/${data.document_number}`, method: 'GET' });
+    const personalData = {
+      id: personData.data.id,
+      name: personData.data.name,
+      last_name: personData.data.last_name,
+      middle_name: personData.data.middle_name,
+      email: personData.data.email,
+      dni: personData.data.number_document
+    }
 
-    console.log("qqqqq", personData)
-    // const personalData = {
-    //   id: personData.data.id,
-    //   name: personData.data.name,
-    //   last_name: personData.data.last_name,
-    //   middle_name: personData.data.middle_name,
-    //   email: personData.data.email,
-    //   dni: personData.data.number_document
-    // }
-
-    // localStorage.setItem('info', JSON.stringify(personalData));
+    localStorage.setItem('info', JSON.stringify(personalData));
 
 
     // const response = await axios.get(`${apiUrl}/profile-photo/${personData.data.id}/${personData.data.number_document}`, {
