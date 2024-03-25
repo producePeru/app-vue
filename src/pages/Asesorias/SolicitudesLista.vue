@@ -164,7 +164,7 @@ const columns = [
   { title: 'Correo',              dataIndex: 'email', width: 200},
   { title: 'Atendido',            dataIndex: 'statu', align: 'center', width: 100},
   { title: 'Reserva de nombre',   dataIndex: 'reserva', align: 'center', width: 160},
-  { title: 'Count',               dataIndex: 'countx', align: 'center', width: 60},
+  //{ title: 'Count',               dataIndex: 'countx', align: 'center', width: 60},
   { title: '',                    dataIndex: 'actions', align: 'center', width: 50}
 ];
 
