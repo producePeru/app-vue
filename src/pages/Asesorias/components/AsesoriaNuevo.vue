@@ -50,6 +50,7 @@ import { useCounterStore } from '@/stores/someEvents.js'
 const pageStore = useCounterStore()
 const props = defineProps(['info']);
 const storageData = JSON.parse(localStorage.getItem('user'));
+const personData = JSON.parse(localStorage.getItem('info'));
 const emit = defineEmits(['closeDraw']);
 
 const departments = ref([]);
@@ -67,8 +68,8 @@ const formState = reactive({
   district: null,
   description: null,
   id_person: props.info.id,
-  created_by: storageData.id,
-  created_dni: storageData.document_number
+  created_by: personData.id,
+  created_dni: personData.document_number
 });
 
 const filterOption = (input, option) => {
