@@ -69,7 +69,7 @@ const formState = reactive({
   description: null,
   id_person: props.info.id,
   created_by: personData.id,
-  created_dni: personData.document_number
+  created_dni: personData.dni
 });
 
 const filterOption = (input, option) => {
