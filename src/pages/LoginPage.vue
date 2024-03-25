@@ -95,15 +95,15 @@ const onSubmit =async() => {
     localStorage.setItem('info', JSON.stringify(personalData));
 
 
-    const response = await axios.get(`${apiUrl}/profile-photo/${personData.data.id}/${personData.data.number_document}`, {
-      responseType: 'blob',
-      headers: {
-        'Accept': 'application/json',
-        'Authorization': `Bearer ${data.access_token}`
-      }
-    });
-    const url = window.URL.createObjectURL(new Blob([response.data]));
-    localStorage.setItem('photo', JSON.stringify(url));
+    // const response = await axios.get(`${apiUrl}/profile-photo/${personData.data.id}/${personData.data.number_document}`, {
+    //   responseType: 'blob',
+    //   headers: {
+    //     'Accept': 'application/json',
+    //     'Authorization': `Bearer ${data.access_token}`
+    //   }
+    // });
+    // const url = window.URL.createObjectURL(new Blob([response.data]));
+    // localStorage.setItem('photo', JSON.stringify(url));
     
 
     if(data) fetchDataViews(data.id)
