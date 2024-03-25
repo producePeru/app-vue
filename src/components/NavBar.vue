@@ -8,10 +8,12 @@
         <span class="name-user">{{ user.name }}</span>
         
 
-        <a-avatar v-if="photo" :src="photo" />
+        <!-- <a-avatar v-if="photo" :src="photo" />
         <a-avatar v-else size="default" style="background-color: #cf1322">
           {{ user.name.charAt(0) }}
-        </a-avatar>
+        </a-avatar> -->
+
+        <a-avatar>{{ user.name.charAt(0) }}</a-avatar>
 
       </a>
       <template #overlay>
