@@ -50,7 +50,8 @@ import { modality } from '@/utils/selects.js'
 import { makeRequest } from '@/utils/api.js';
 import { message } from 'ant-design-vue';
 
-const storageData = JSON.parse(localStorage.getItem('user'))
+const storageData = JSON.parse(localStorage.getItem('user'));
+const personData = JSON.parse(localStorage.getItem('info'));
 const props = defineProps(['info']);
 const emit = defineEmits(['closeDraw']);
 
@@ -67,7 +68,10 @@ const formState = reactive({
   num_notary: null,
   id_notary: null,
   modality: null,
-  updated_by: storageData.id
+  updated_by: personData.id,
+
+  created_by: personData.id,
+  created_dni: personData.dni
 });
 
 const onSubmit = async () => {

@@ -72,7 +72,8 @@ const VNodes = defineComponent({
   },
 });
 
-const storageData = JSON.parse(localStorage.getItem('user'))
+const storageData = JSON.parse(localStorage.getItem('user'));
+const personData = JSON.parse(localStorage.getItem('info'));
 const props = defineProps(['info']);
 const emit = defineEmits(['closeDraw']);
 
@@ -95,7 +96,8 @@ const formState = reactive({
   province: null,
   district: null,
   address: null,
-  created_by: storageData.id
+  created_by: personData.id,
+  created_dni: personData.dni
 });
 
 

@@ -30,7 +30,8 @@ import { reactive, ref } from 'vue';
 import { message } from 'ant-design-vue';
 import { makeRequest } from '@/utils/api.js';
 
-const storageData = JSON.parse(localStorage.getItem('user'))
+const storageData = JSON.parse(localStorage.getItem('user'));
+const personData = JSON.parse(localStorage.getItem('info'));
 const props = defineProps(['info']);
 const emit = defineEmits(['closeDraw']);
 
@@ -43,7 +44,10 @@ const formState = reactive({
   code_sid_sunarp: null,
 
   ruc: null,
-  updated_by: storageData.id
+  updated_by: personData.id,
+
+  created_by: personData.id,
+  created_dni: personData.dni
 });
 
 const onSubmit = async () => {
