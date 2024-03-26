@@ -6,10 +6,17 @@
       <h3 :class="{'hdactive' : active == 'ruc20'}" @click="fetchData('ruc20')">FORMALIZACIONES RUC 20</h3>
     </div>
 <!-- <pre>:::{{ params.page }}</pre> -->
-    <div class="filters">
+    <div class="filters-dig">
       <a-button @click="handleDownloadAsesorias" :loading="loadingexc">
         <img width="20" style="margin-right: 6px;" src="@/assets/img/icoexcel.png" /> DESCARGAR
       </a-button>
+
+      <a-input-search
+      v-model:value="searchUser"
+      placeholder=""
+      enter-button="Buscar"
+      @search="handleSearch" />
+
     </div>
     
     <a-table 
@@ -71,7 +78,8 @@ const total = ref(0)
 const params = ref({ page: 0 });
 const active = ref('asesorias');
 const pageSize = 20;
-
+const searchUser = ref('');
+const url = ref('/asesorias')
 const valueX = ref(1200)
 const valueY = ref(window.innerHeight - 100);
 const actualizarAltura = () => {
@@ -152,6 +160,44 @@ const handlePaginator = (current) =>{
   params.value.page = current;
   fetchData()
 }
+
+
+const handleSearch = async() => {
+  loading.value = true;
+  let url = null
+  
+  if(active.value == 'ruc20') {
+    params.value.page = 0
+    active.value = 'ruc20'
+    columns.value = columnsRuc20.value
+    url = `/formalizations-20?search=${searchUser.value}`
+    if(searchUser.value == '') url = '/formalizations-20';
+  }
+
+  if(active.value == 'ruc10') {
+    params.value.page = 0
+    active.value = 'ruc10'
+    columns.value = columnsRuc10.value
+    url = `/formalizations-10?search=${searchUser.value}`
+    if(searchUser.value == '') url = '/formalizations-10';
+  }
+
+  if(active.value == 'asesorias') {
+    params.value.page = 0
+    active.value = 'asesorias'
+    columns.value = columnsAsesoria.value
+    url = `/asesorias?search=${searchUser.value}`
+    if(searchUser.value == '') url = '/asesorias';
+  }
+
+  let parx = params.value.page == 0 ? '' : params.value
+  const data = await makeRequest({ url: url, method: 'GET', params:parx });
+  dataSource.value = data.data
+  total.value = data.total;
+  loading.value = false;
+}
+
+
 
 const handleDownloadAsesorias = async() => {
   loadingexc.value = true
@@ -243,6 +289,8 @@ const computeIndex = computed(() => (index) => {
   let numb = params.value.page == 0 ? 1 : params.value.page
   return  (numb - 1) * pageSize + index + 1;
 });
+
+
 onMounted(() => {
   fetchData();
   window.addEventListener('resize', actualizarAltura);
@@ -251,6 +299,19 @@ onMounted(() => {
 </script>
 
 <style lang="scss" scoped>
+.filters-dig {
+  margin: 1rem 0;
+  /* display: flex;
+  align-items: center;
+  justify-content: space-between; */
+  display: grid;
+  grid-template-columns: 1fr;
+  grid-gap: 1rem;
+  @media screen and (min-width: 900px) {
+    grid-template-columns: 150px 260px;
+    justify-content: space-between;
+  }
+}
 .header-rep {
   display: flex; 
   // gap: 0 1rem;
