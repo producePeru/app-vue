@@ -10,6 +10,7 @@
           <a-form-item class="item-max" v-if="el.type === 'iSelect'" :name="el.name" :label="el.label" :rules="[{ required: el.required, message: el.message }]">
             <a-select v-if="el.name == 'type_regimen'" v-model:value="formState[el.name]" :options="regimen" />
             <a-select v-if="el.name == 'economy_sector'" v-model:value="formState[el.name]" :options="economicSectors" />
+            <a-select v-if="el.name == 'modality'" v-model:value="formState[el.name]" :options="modality" />
           </a-form-item>
             
           <a-form-item class="item-max" v-if="el.type === 'iSelectWrite'" :name="el.name" :label="el.label" :rules="[{ required: el.required, message: el.message }]">
@@ -58,7 +59,8 @@ import { requestNoToken } from '@/utils/noToken.js'
 import { economicSectors, regimen } from '@/utils/selects.js'
 import { message } from 'ant-design-vue';
 import { makeRequest } from '@/utils/api.js';
-import { PlusOutlined } from '@ant-design/icons-vue'
+import { PlusOutlined } from '@ant-design/icons-vue';
+import { modality } from '@/utils/selects.js'
 
 const VNodes = defineComponent({
   props: {
@@ -96,6 +98,7 @@ const formState = reactive({
   province: null,
   district: null,
   address: null,
+  modality: null,
   created_by: personData.id,
   created_dni: personData.dni
 });
@@ -138,6 +141,7 @@ const onSubmit = async () => {
       formState.province = null;
       formState.district = null;
       formState.address = null;
+      formState.modality = null;
       emit('closeDraw', true)
     }
   } catch (error) {
@@ -246,9 +250,14 @@ onMounted(() => {
     max-width: 297px;
   }
   .ant-form-item:nth-child(8) {
-    grid-column: 1/4;
+    grid-column: 1/3;
     grid-row: 7;
-    max-width: 297px;
+    // max-width: 297px;
+  }
+  .ant-form-item:nth-child(9) {
+    grid-column: 3/4;
+    grid-row: 7;
+    // max-width: 297px;
   }
 }
 </style>

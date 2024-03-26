@@ -63,6 +63,14 @@ const fields = {
     message: 'Escribir apellido',
     disabled: false
   },
+  modality: {
+    type: 'iSelect',
+    label: 'Modalidad de atención',
+    name: 'modality',
+    required: true,
+    message: 'Seleccionar modalidad',
+    disabled: false
+  }
 };
 
 const acto = {
@@ -90,14 +98,14 @@ const acto = {
     message: 'Seleccionar notaría',
     disabled: false
   },
-  modality: {
-    type: 'iSelect',
-    label: 'Modalidad de atención',
-    name: 'modality',
-    required: false,
-    message: 'Seleccionar modalidad',
-    disabled: false
-  }
+  // modality: {
+  //   type: 'iSelect',
+  //   label: 'Modalidad de atención',
+  //   name: 'modality',
+  //   required: false,
+  //   message: 'Seleccionar modalidad',
+  //   disabled: false
+  // }
 };
 
 const final = {

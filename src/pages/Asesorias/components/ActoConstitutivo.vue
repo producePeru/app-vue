@@ -10,8 +10,8 @@
 
             <a-select v-if="el.name == 'id_notary'" v-model:value="formState[el.name]" :options="notaries"
               :disabled="el.disabled" />
-            <a-select v-if="el.name == 'modality'" v-model:value="formState[el.name]" :options="modality"
-              :disabled="el.disabled" />
+            <!-- <a-select v-if="el.name == 'modality'" v-model:value="formState[el.name]" :options="modality"
+              :disabled="el.disabled" /> -->
 
           </a-form-item>
 
@@ -67,7 +67,7 @@ const formState = reactive({
   
   num_notary: null,
   id_notary: null,
-  modality: null,
+  // modality: null,
   updated_by: personData.id,
 
   created_by: personData.id,
@@ -87,7 +87,7 @@ const onSubmit = async () => {
       
       formState.id_notary = null;
       formState.num_notary = null;
-      formState.modality = null;
+      // formState.modality = null;
       emit('closeDraw', true)
     }
   } catch (error) {
