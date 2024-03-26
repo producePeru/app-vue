@@ -28,15 +28,13 @@
             <a-select v-if="el.name == 'supervisor'" v-model:value="formState[el.name]" :options="supervisores" :disabled="el.disabled" />
           </a-form-item>
 
-          <a-form-item v-if="el.type === 'iSearch'" class="item-max" :name="el.name" :label="el.label"
-          :rules="[{ required: el.required, message: el.message }]">
-            <a-input-search :maxlength="15" :loading="searchLoading" v-model:value="formState[el.name]"
-            @search="handleSearchApi" @input="validateNumber" />
+          <a-form-item v-if="el.type === 'iSearch'" class="item-max" :name="el.name" :label="el.label" :rules="[{ required: el.required, message: el.message }]">
+            <a-input-search :loading="searchLoading" v-model:value="formState[el.name]" @search="handleSearchApi" @input="validateNumber" :maxlength="formState.document_type == 'dni' ? 8 : 20" />
           </a-form-item>
 
           <a-form-item v-if="el.type === 'iText'" :name="el.name" :label="el.label"
             :rules="[{ required: el.required, message: el.message, type: el.email, max: el.max }]">
-            <a-input v-model:value="formState[el.name]" :disabled="el.disabled" />
+            <a-input v-model:value="formState[el.name]" :disabled="el.disabled" :maxlength="el.max" />
           </a-form-item>
 
           <a-form-item v-if="el.type === 'iDate'" :name="el.name" :label="el.label"
@@ -46,7 +44,7 @@
 
         </template>
       </div>
-  <!-- <pre>{{ formState }}</pre> -->
+  <!-- <pre>{{ formState.document_type }}</pre> -->
       <a-form-item>
         <a-button type="primary" html-type="submit" :loading="loading">GUARDAR</a-button>
       </a-form-item>

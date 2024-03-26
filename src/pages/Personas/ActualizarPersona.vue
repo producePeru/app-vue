@@ -33,7 +33,7 @@
 
           <a-form-item v-if="el.type === 'iText'" :name="el.name" :label="el.label"
             :rules="[{ required: el.required, message: el.message, type: el.email, max: el.max }]">
-            <a-input v-model:value="formState[el.name]" :disabled="el.disabled" />
+            <a-input v-model:value="formState[el.name]" :disabled="el.disabled" :maxlength="el.max" />
           </a-form-item>
 
           <a-form-item v-if="el.type === 'iDate'" :name="el.name" :label="el.label"

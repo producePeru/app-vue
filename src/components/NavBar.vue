@@ -13,7 +13,7 @@
           {{ user.name.charAt(0) }}
         </a-avatar> -->
 
-        <a-avatar>{{ user.name.charAt(0) }}</a-avatar>
+        <a-avatar style="background-color: #cf1322">{{ user.name.charAt(0) }}</a-avatar>
 
       </a>
       <template #overlay>
