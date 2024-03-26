@@ -12,6 +12,7 @@
       </a-button>
 
       <a-input-search
+      class="asesorias-search"
       v-model:value="searchUser"
       placeholder=""
       enter-button="Buscar"
@@ -346,3 +347,10 @@ onMounted(() => {
 }
 </style>
 
+<style>
+.asesorias-search {
+  button {
+    background-color: #cf1322;
+  }
+}
+</style>
