@@ -37,8 +37,11 @@
         <template v-if="column.dataIndex === 'sol_genero'">
           <a-tag class="uppercase" :color="record.sol_genero == 'H' ? 'default' : 'error'">{{ record.sol_genero }}</a-tag>
         </template>
+        
         <template v-if="column.dataIndex === 'modality'">
-          <a-tag :color="record.modalidad == 'VIRTUAL' ? 'orange' : 'green'">{{ record.modalidad }}</a-tag>
+          <a-tag v-if="record.modalidad == 0" color="orange">PRESENCIAL</a-tag>
+          <a-tag v-else-if="record.modalidad == 1" color="green">VIRTUAL</a-tag>
+          <a-tag v-else>-</a-tag>
         </template>
 
       </template>
