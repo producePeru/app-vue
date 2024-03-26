@@ -104,7 +104,7 @@ onBeforeUnmount(() => {
   const columnsRuc10 = ref([
     { title: '#',                         dataIndex: 'idx', fixed: 'left', align: 'center', width: 50},
     { title: 'Fecha',                     dataIndex: 'ase_fecha', fixed: 'left', align: 'center', width: 100},
-    { title: 'Asesor',                    dataIndex: 'reg_nombres', width: 180 },
+    { title: 'Asesor',                    dataIndex: 'reg_nombres', width: 200 },
     { title: 'Solicitante Apellidos',     dataIndex: 'sol_apellidos', width: 180 },
     { title: 'Solicitante Nombres',       dataIndex: 'sol_nombres', width: 180 },
     { title: 'Solicitante género',        dataIndex: 'sol_genero', width: 140, align: 'center' },
