@@ -48,6 +48,9 @@ import { makeRequest } from '@/utils/api.js'
 import CryptoJS from 'crypto-js';
 import axios from 'axios';
 
+import { useCounterStore } from '@/stores/someEvents.js'
+const pageStore = useCounterStore()
+
 const loading = ref(false)
 const router = useRouter();
 const apiUrl = window.location.hostname == '127.0.0.1' ? import.meta.env.VITE_APP_API_URL_LOCAL : import.meta.env.VITE_APP_API_URL_PRODUCTION
@@ -90,7 +93,7 @@ const onSubmit =async() => {
     }
 
     localStorage.setItem('info', JSON.stringify(personalData));
-
+    pageStore.imgProfile()
 
     // const response = await axios.get(`${apiUrl}/profile-photo/${personData.data.id}/${personData.data.number_document}`, {
     //   responseType: 'blob',
@@ -109,9 +112,8 @@ const onSubmit =async() => {
   } catch (error) {
     message.error("Las credenciales son incorrectas")
     console.log("Error: " + error)
-  } finally {
     loading.value = false
-  }
+  } 
 };
 
 const fetchDataViews = async(id) => {
@@ -123,6 +125,8 @@ const fetchDataViews = async(id) => {
   } catch (localStorageError) {
     console.error('Error al guardar en localStorage:', localStorageError);
     return; 
+  } finally {
+    loading.value = false
   }
 
   router.push('/admin/inicio');

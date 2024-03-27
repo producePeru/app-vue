@@ -17,9 +17,8 @@
       placeholder=""
       enter-button="Buscar"
       @search="handleSearch" />
-
     </div>
-    
+
     <a-table 
     bordered
     :scroll="{ x: valueX, y: valueY }" 
@@ -80,7 +79,6 @@ const params = ref({ page: 0 });
 const active = ref('asesorias');
 const pageSize = 20;
 const searchUser = ref('');
-const url = ref('/asesorias')
 const valueX = ref(1200)
 const valueY = ref(window.innerHeight - 100);
 const actualizarAltura = () => {

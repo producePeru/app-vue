@@ -3,17 +3,15 @@
 
     <span></span>
 
+    <!-- <pre>:::   {{nameProfile.name}}</pre> -->
+
     <a-dropdown>
       <a class="ant-dropdown-link" @click.prevent>
         <span class="name-user">{{ user.name }}</span>
         
-
-        <!-- <a-avatar v-if="photo" :src="photo" />
-        <a-avatar v-else size="default" style="background-color: #cf1322">
-          {{ user.name.charAt(0) }}
-        </a-avatar> -->
-
-        <a-avatar>{{ user.name.charAt(0) }}</a-avatar>
+        <!-- <pre>{{photoProfile}}</pre> -->
+        <a-avatar v-if="photoProfile" :src="photoProfile"></a-avatar>
+        <a-avatar v-else>{{ user.name.charAt(0) }}</a-avatar>
 
       </a>
       <template #overlay>
@@ -33,16 +31,21 @@
 </template>
 
 <script setup>
+import { computed } from 'vue';
 import { makeRequest } from '@/utils/api.js'
 import { PoweroffOutlined, UserOutlined } from '@ant-design/icons-vue';
 import Cookies from 'js-cookie';
 import { useRouter } from 'vue-router';
-import {ref} from 'vue'
+import { useCounterStore } from '@/stores/someEvents.js'
+const store = useCounterStore()
+const photoProfile = computed(() => store.getPhotoUser);
+const nameProfile = computed(() => store.getNameUser)
+
 
 const router = useRouter();
 const emit = defineEmits(['toggleSidebar'])
 const user = JSON.parse(localStorage.getItem('info'));
-const photo = JSON.parse(localStorage.getItem('photo'));
+const photo = JSON.parse(localStorage.getItem('photoUser'));
 
 
 const handleMenuClick = (e) => {

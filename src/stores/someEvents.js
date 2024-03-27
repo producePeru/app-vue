@@ -6,17 +6,31 @@ import axios from 'axios';
 
 export const useCounterStore = defineStore('pagestore', {
   state: () => ({
-    count: 0,
-    userPhoto: null
+    count: 5,
+    userPhoto: null,
+    userName: null,
   }),
 
-  actions: {
-    increment() {
-      count++
+  getters: {
+    getPhotoUser(state) {
+      if(state.userPhoto) {
+        return state.userPhoto
+      }
+
+      if(localStorage.getItem('photoUser'))
+        return JSON.parse(localStorage.getItem('photoUser'));
     },
+    getNameUser(state) {
+      if(state.userName) {
+        return state.userName
+      }
+      return JSON.parse(localStorage.getItem('info'));
+    },
+  },
+
+  actions: {
 
     async logout() {
-
       const prod = import.meta.env.VITE_APP_URL_PRODUCTION
       const dev = import.meta.env.VITE_APP_URL_LOCAL
       const apiUrl = window.location.hostname == import.meta.env.VITE_URL_LOCAL ? dev : prod;
@@ -33,8 +47,24 @@ export const useCounterStore = defineStore('pagestore', {
       }
     },
 
+    async setPhotoProfile(img) {
+      if(img) {
+        localStorage.setItem('photoUser', JSON.stringify(img));
+        this.userPhoto = img;
+      }
+    },
+
+    async setUserName(name) {
+      if(name) {
+        let user = JSON.parse(localStorage.getItem('info'));
+        user.name = name;
+        localStorage.setItem('info', JSON.stringify(user));
+
+        this.userName = name;
+      }
+    },
+
     async imgProfile() {
-      console.log("aaaaaalalalalllll");
       try {
         const apiUrl = window.location.hostname == '127.0.0.1' ? import.meta.env.VITE_APP_API_URL_LOCAL : import.meta.env.VITE_APP_API_URL_PRODUCTION
         const token = Cookies.get('token');
@@ -48,9 +78,17 @@ export const useCounterStore = defineStore('pagestore', {
           }
         });
 
-        const url = window.URL.createObjectURL(new Blob([response.data]));
-        this.userPhoto = url;
-       
+        console.log("QUEEE", response.data.type);
+
+        if(response.data.type == 'application/json') {
+          return console.log('none')
+        } else {
+          const url = window.URL.createObjectURL(new Blob([response.data]));
+          this.userPhoto = url;
+          localStorage.setItem('photoUser', JSON.stringify(url));
+        }
+
+
 
       } catch (error) {
         console.error('Error al descargar el archivo', error);

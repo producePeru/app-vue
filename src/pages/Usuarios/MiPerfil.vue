@@ -74,7 +74,9 @@ import fields from '@/forms/miperfil.js'
 import { typeDocuments, geners, disabilities, typeUsers, offices } from '@/utils/selects.js'
 import { useRoute } from 'vue-router';
 import PHOTOUSER from './components/userPhotoCropper.vue'
+import { useCounterStore } from '@/stores/someEvents.js'
 
+const pageStore = useCounterStore();
 const storageData = JSON.parse(localStorage.getItem('user'))
 
 const route = useRoute();
@@ -128,7 +130,9 @@ const onSubmit = async () => {
 
     await makeRequest({ url: `/update-profile/${formState.document_number}`, method: 'PATCH', data: payload2 });
 
-    message.success(data.message)
+    message.success(data.message);
+
+    pageStore.setUserName(payload.name)
   
   } catch (error) {
     message.error('No se pudo registrar este usuario');

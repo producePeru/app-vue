@@ -45,8 +45,6 @@ import { makeRequest } from '@/utils/api.js';
 import { message } from 'ant-design-vue';
 import { useCounterStore } from '@/stores/someEvents.js'
 
-
-
 const pageStore = useCounterStore()
 const props = defineProps(['info']);
 const storageData = JSON.parse(localStorage.getItem('user'));

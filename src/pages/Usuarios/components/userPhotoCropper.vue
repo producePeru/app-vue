@@ -28,6 +28,9 @@ import "vue-advanced-cropper/dist/style.css";
 import Stencil from "./Stencil.vue";
 import { makeRequest } from '@/utils/api.js';
 import Cookies from 'js-cookie';
+import { useCounterStore } from '@/stores/someEvents.js'
+
+const pageStore = useCounterStore();
 
 export default {
   data() {
@@ -60,9 +63,12 @@ export default {
         this.imageCroppered = result.canvas.toDataURL("image/jpeg")
         this.open = false
 
-        localStorage.removeItem('photo');
-        window.location.reload();
-        localStorage.setItem('photo', JSON.stringify(result.canvas.toDataURL("image/jpeg")));
+        localStorage.removeItem('photoUser');
+        // window.location.reload();
+        // localStorage.setItem('photo', JSON.stringify(result.canvas.toDataURL("image/jpeg")));
+
+        pageStore.setPhotoProfile(result.canvas.toDataURL("image/jpeg"))
+
       }
       
     },
@@ -101,8 +107,6 @@ export default {
       } catch (error) {
         console.error('Error al descargar el archivo', error);
       }
-
-
     }
   },
 
