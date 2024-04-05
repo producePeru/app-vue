@@ -1,6 +1,4 @@
 <template>
-
-
   <section class=" top-txt ">
     <div class="head container ">
       <div class="head-txt ">
@@ -37,8 +35,8 @@
         <img src="https://i.postimg.cc/t403yfn9/home2.jpg" alt="img ">
       </div>
       <div class="home_txt ">
-        <p class="collectio ">SUMMER COLLECTION</p>
-        <h2>FALL - WINTER<br>Collection 2023</h2>
+        <p class="collectio ">PRODUCE</p>
+        <h2>CYBER WOW 2024</h2>
         <div class="home_label ">
           <p>A specialist label creating luxury essentials. Ethically crafted<br>with an unwavering commitment to
             exceptional quality.</p>
