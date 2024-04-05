@@ -1,5 +1,5 @@
 <template>
-  <section class=" top-txt ">
+  <!-- <section class=" top-txt ">
     <div class="head container ">
       <div class="head-txt ">
         <p>Free shipping, 30-day return or refxxxund guarantee.</p>
@@ -9,8 +9,8 @@
         <a href="# ">SIGN UP</a>
       </div>
     </div>
-  </section>
-  <nav class="navbar">
+  </section> -->
+  <!-- <nav class="navbar">
     <div class="navbar-container">
       <input type="checkbox" name="" id="checkbox">
       <div class="hamburger-lines">
@@ -25,16 +25,17 @@
         <li><a href="#contact">Contact</a></li>
       </ul>
       <div class="logo">
-        <img src="https://i.postimg.cc/TP6JjSTt/logo.webp" alt="">
+       
+        CYBERWOW
       </div>
     </div>
-  </nav>
+  </nav> -->
   <section id="home">
     <div class="home_page ">
       <div class="home_img ">
-        <img src="https://i.postimg.cc/t403yfn9/home2.jpg" alt="img ">
+        <img src="../../assets/img/wow/wow.jpg" alt="img " style="height: 100vh;">
       </div>
-      <div class="home_txt ">
+      <!-- <div class="home_txt ">
         <p class="collectio ">PRODUCE</p>
         <h2>CYBER WOW 2024</h2>
         <div class="home_label ">
@@ -48,7 +49,7 @@
           <a href="#"><i class='bx bxl-pinterest'></i></a>
           <a href="#"><i class='bx bxl-instagram'></i></a>
         </div>
-      </div>
+      </div> -->
     </div>
   </section>
 
@@ -103,7 +104,7 @@
               </div>
             </div>
             <div class="buy-now">
-              <button><a href="https://codepen.io/sanketbodke/full/mdprZOq">Buy Now</a></button>
+              <button><a href="#" style="color: #fff;">COMPRAR</a></button>
             </div>
             <!-- <div class="add-cart">
                             <button>Add To Cart</button>
@@ -132,7 +133,7 @@
               </div>
             </div>
             <div class="buy-now">
-              <button><a href="https://codepen.io/sanketbodke/full/mdprZOq">Buy Now</a></button>
+              <button><a href="#" style="color: #fff;">COMPRAR</a></button>
             </div>
           </div>
         </div>
@@ -158,7 +159,7 @@
               </div>
             </div>
             <div class="buy-now">
-              <button><a href="https://codepen.io/sanketbodke/full/mdprZOq">Buy Now</a></button>
+              <button><a href="#" style="color: #fff;">COMPRAR</a></button>
             </div>
           </div>
         </div>
@@ -184,7 +185,7 @@
               </div>
             </div>
             <div class="buy-now">
-              <button><a href="https://codepen.io/sanketbodke/full/mdprZOq">Buy Now</a></button>
+              <button><a href="#" style="color: #fff;">COMPRAR</a></button>
             </div>
           </div>
         </div>
@@ -215,7 +216,7 @@
               </div>
             </div>
             <div class="buy-now">
-              <button><a href="https://codepen.io/sanketbodke/full/mdprZOq">Buy Now</a></button>
+              <button><a href="#" style="color: #fff;">COMPRAR</a></button>
             </div>
           </div>
         </div>
@@ -241,7 +242,7 @@
               </div>
             </div>
             <div class="buy-now">
-              <button><a href="https://codepen.io/sanketbodke/full/mdprZOq">Buy Now</a></button>
+              <button><a href="#" style="color: #fff;">COMPRAR</a></button>
             </div>
           </div>
         </div>
@@ -267,7 +268,7 @@
               </div>
             </div>
             <div class="buy-now">
-              <button><a href="https://codepen.io/sanketbodke/full/mdprZOq">Buy Now</a></button>
+              <button><a href="#" style="color: #fff;">COMPRAR</a></button>
             </div>
           </div>
         </div>
@@ -293,7 +294,7 @@
               </div>
             </div>
             <div class="buy-now">
-              <button><a href="https://codepen.io/sanketbodke/full/mdprZOq">Buy Now</a></button>
+              <button><a href="#" style="color: #fff;">COMPRAR</a></button>
             </div>
           </div>
         </div>
@@ -324,7 +325,7 @@
               </div>
             </div>
             <div class="buy-now">
-              <button><a href="https://codepen.io/sanketbodke/full/mdprZOq">Buy Now</a></button>
+              <button><a href="#" style="color: #fff;">COMPRAR</a></button>
             </div>
           </div>
         </div>
@@ -350,7 +351,7 @@
               </div>
             </div>
             <div class="buy-now">
-              <button><a href="https://codepen.io/sanketbodke/full/mdprZOq">Buy Now</a></button>
+              <button><a href="#" style="color: #fff;">COMPRAR</a></button>
             </div>
           </div>
         </div>
@@ -376,7 +377,7 @@
               </div>
             </div>
             <div class="buy-now">
-              <button><a href="https://codepen.io/sanketbodke/full/mdprZOq">Buy Now</a></button>
+              <button><a href="#" style="color: #fff;">COMPRAR</a></button>
             </div>
           </div>
         </div>
@@ -402,7 +403,7 @@
               </div>
             </div>
             <div class="buy-now">
-              <button><a href="https://codepen.io/sanketbodke/full/mdprZOq">Buy Now</a></button>
+              <button><a href="#" style="color: #fff;">COMPRAR</a></button>
             </div>
           </div>
         </div>
@@ -455,36 +456,7 @@
       </div>
     </div>
   </section>
-  <section id="contact">
-    <div class="contact container">
-      <div class="map">
-        <iframe
-          src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3782.121169986175!2d73.90618951442687!3d18.568575172551647!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3bc2c131ed5b54a7%3A0xad718b8b2c93d36d!2sSky%20Vista!5e0!3m2!1sen!2sin!4v1654257749399!5m2!1sen!2sin"
-          width="600" height="450" style="border:0;" allowfullscreen="" loading="lazy"
-          referrerpolicy="no-referrer-when-downgrade"></iframe>
-      </div>
-      <form action="https://formspree.io/f/xzbowpjq" method="POST">
-        <div class="form">
-          <div class="form-txt">
-            <h4>INFORMATION</h4>
-            <h1>Contact Us</h1>
-            <span>As you might expect of a company that began as a high-end interiors contractor, we pay strict
-              attention.</span>
-            <h3>USA</h3>
-            <p>195 E Parker Square Dr, Parker, CO 801<br>+43 982-314-0958</p>
-            <h3>India</h3>
-            <p>HW95+C9C, Lorem ipsum dolor sit.<br>411014</p>
-          </div>
-          <div class="form-details">
-            <input type="text" name="name" id="name" placeholder="Name" required>
-            <input type="email" name="email" id="email" placeholder="Email" required>
-            <textarea name="message" id="message" cols="52" rows="7" placeholder="Message" required></textarea>
-            <button>SEND MESSAGE</button>
-          </div>
-        </div>
-      </form>
-    </div>
-  </section>
+
   <footer>
     <div class="footer-container container">
       <div class="content_1">
@@ -494,31 +466,31 @@
       </div>
       <div class="content_2">
         <h4>SHOPPING</h4>
-        <a href="#sellers">Clothing Store</a>
+        <!-- <a href="#sellers">Clothing Store</a>
         <a href="#sellers">Trending Shoes</a>
         <a href="#sellers">Accessories</a>
-        <a href="#sellers">Sale</a>
+        <a href="#sellers">Sale</a> -->
       </div>
       <div class="content_3">
         <h4>SHOPPING</h4>
-        <a href="./contact.html">Contact Us</a>
+        <!-- <a href="./contact.html">Contact Us</a>
         <a href="https://payment-method-sb.netlify.app/" target="_blank">Payment Method</a>
         <a href="https://delivery-status-sb.netlify.app/" target="_blank">Delivery</a>
-        <a href="https://codepen.io/sandeshbodake/full/Jexxrv" target="_blank">Return and Exchange</a>
+        <a href="https://codepen.io/sandeshbodake/full/Jexxrv" target="_blank">Return and Exchange</a> -->
       </div>
       <div class="content_4">
         <h4>NEWLETTER</h4>
-        <p>Be the first to know about new<br>arrivals, look books, sales & promos!</p>
+        <!-- <p>Be the first to know about new<br>arrivals, look books, sales & promos!</p>
         <div class="f-mail">
           <input type="email" placeholder="Your Email">
           <i class='bx bx-envelope'></i>
-        </div>
+        </div> -->
         <hr>
       </div>
     </div>
     <div class="f-design">
       <div class="f-design-txt container">
-        <p>Design and Code by code.sanket</p>
+        <!-- <p>Design and Code by code.sanket</p> -->
       </div>
     </div>
   </footer>
@@ -590,7 +562,7 @@ body {
   box-shadow: 0 5px 4px rgb(146 161 176 / 15%);
   position: sticky;
   top: 0;
-  background: var(--white);
+  background: #fff;
   color: var(--black);
   z-index: 100;
 }
