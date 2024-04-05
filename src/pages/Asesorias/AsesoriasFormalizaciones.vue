@@ -7,15 +7,22 @@
       <div class="wrapper-s">
         <div>
           <label class="label">Seleccione el tipo de documento</label>
-          <a-radio-group v-model:value="type_document" @change="handleResetDocument">
+          <a-radio-group v-model:value="type_document" @change="handleResetDocument" class="radio-produce">
             <a-radio :value="1">DNI</a-radio>
             <a-radio :value="2">CE</a-radio>
           </a-radio-group>
         </div>
         <div>
           <label class="label">Digite el número de documento</label>
-          <a-input-search enter-button="BUSCAR" v-model:value="dniNumber" placeholder="" :loading="searchLoading"
-            @search="handleSearchApi" @input="validateNumber" :maxlength="type_document == 1 ? 8 : 20" />
+          <a-input-search 
+          enter-button="BUSCAR" 
+          v-model:value="dniNumber" 
+          placeholder="" 
+          :loading="searchLoading"
+          @search="handleSearchApi" 
+          @input="validateNumber" 
+          class="search-produce"
+          :maxlength="type_document == 1 ? 8 : 20" />
         </div>
       </div>
     </a-card>
@@ -28,43 +35,42 @@
         </div>
         <div class="info-personal">
           <span>Apellidos y nombres: </span>
-          <span>{{ infoUser.last_name }} {{ infoUser.middle_name }}, {{ infoUser.name }}</span>
+          <span>{{ infoUser.lastname }} {{ infoUser.middlename }}, {{ infoUser.name }}</span>
           <span>Número de celular:</span>
           <span><span>{{ infoUser.phone ? infoUser.phone : '-' }}</span></span>
           <span>Correo electrónico:</span>
           <span>{{ infoUser.email ? infoUser.email : '-' }}</span>
+          
           <span>Asesorías:</span>
-          <b>{{ historial[0]?.adv ? historial[0]?.adv.length : '' }}</b>
+          <b>{{ infoUser?.idadvisory.length }}</b>
           <span>Formalizaciones RUC 20:</span>
           
           <div class="alert-incomplete">
-            <b>{{ historial[0]?.ruc20 ? historial[0]?.ruc20.length : '' }}</b>
-            <span class="alert" v-if="historial[0]?.ruc20.filter(item => item.step === 1 || item.step === 2).length >= 1">
+            <b>{{ infoUser?.idformalization20.length }}</b>
+            <!-- <span class="alert" v-if="historial[0]?.ruc20.filter(item => item.step === 1 || item.step === 2).length >= 1">
               <ExclamationCircleOutlined />
               <span class="small">Tienes {{ historial[0]?.ruc20.filter(item => item.step === 1 || item.step === 2).length }} procesos pendientes</span>
-            </span>
-            
+            </span> -->
           </div>
 
           <span>Formalizaciones RUC 10:</span>
-          <b>{{ historial[0]?.ruc10 ? historial[0]?.ruc10.length : '' }}</b> 
+          <b>{{ infoUser?.idformalization10.length }}</b> 
+
         </div>
       </a-card>
       
       <a-card class="card-as" v-if="infoUser.length != 0">
         <h4>¿DESEA REGISTRAR UN NUEVO SERVICIO?</h4>
-        
         <div class="card-as-btn">
           <a-select style="min-width: 200px;" v-model:value="value1" :options="options1" />
-          <a-button type="primary" @click="handleSelectAction">REGISTRAR</a-button>
+          <a-button class="btn-produce" type="primary" @click="handleSelectAction">REGISTRAR</a-button>
         </div>
-
       </a-card>
     </div>
 
     <!-- <template v-if="infoUser.length != 0">
         <div class="buttons">
-          <a-button @click="handleStartRuc20" :loading="loading1" :class="open1 && 'actived'">Crear empresa</a-button>
+          <a-button @click="handleProccessRUC20" :loading="loading1" :class="open1 && 'actived'">Crear empresa</a-button>
           <a-button @click="open2 = true" :class="open2 && 'actived'" class="mx-1">RUC persona natural</a-button>
           <a-button @click="open3 = true" :class="open3 && 'actived'">Asesoría</a-button>
         </div>
@@ -72,59 +78,86 @@
 
     <a-card class="card-as" v-if="infoUser.length != 0">
       <h4 >HISTORIAL</h4>
-      <HISTORIAL :info="historial" />
+      <HISTORIAL :info="infoUser" />
     </a-card>
   </div>
 
+
   <section>
+
+
     <a-drawer width="510" title="Formalización con RUC 20" v-model:open="open1" placement="right">
       <a-steps :current="current" size="small" class="steps">
         <a-step v-for="item in steps" :key="item.title" :title="item.title" />
       </a-steps>
+      
       <div class="steps-content">
-        <ReservaNombre v-if="current == 0" :info="information" @closeDraw="open1 = false, dataPndingRequest = false, handleSearchApi()" />
-        <ActoConstitutivo v-if="current == 1" :info="information2" @closeDraw="open1 = false, dataPndingRequest = false, handleSearchApi()" />
-        <MypeFinal v-if="current == 2" :info="information2" @closeDraw="open1 = false, dataPndingRequest = false, handleSearchApi()" />
+        <ReservaNombre 
+        v-if="current == 0" 
+        :info="setValues" 
+        @closeDraw="open1 = false, handleUpdateValues()" />
+        
+        <ActoConstitutivo 
+        v-if="current == 1" 
+        :info="setValues" 
+        :itemSelectedF20="itemSelectedF20"
+        @closeDraw="open1 = false, handleUpdateValues()" />
+        
+        <MypeFinal 
+        v-if="current == 2" 
+        :itemSelectedF20="itemSelectedF20"
+        @closeDraw="open1 = false, handleUpdateValues()" />
       </div>
     </a-drawer>
 
-    <a-drawer title="Formalización con RUC 10" v-model:open="open2" placement="right">
-      <Formalizacion10 :info="infoUser" @closeDraw="open2 = false, handleSearchApi()" />
+    <a-drawer 
+      title="Formalización con RUC 10" 
+      v-model:open="open2" 
+      placement="right">
+      <Formalizacion10 
+        :info="infoUser" 
+        @closeDraw="open2 = false, handleUpdateValues()" />
     </a-drawer>
 
-    <a-drawer title="Nueva asesoría" v-model:open="open3" placement="right">
-      <AsesoriaNuevo :info="infoUser" @closeDraw="open3 = false, handleSearchApi()" />
+    <a-drawer 
+      title="Nueva asesoría" 
+      v-model:open="open3" 
+      placement="right">
+      <AsesoriaNuevo 
+        :info="infoUser" 
+        @closeDraw="open3 = false, handleUpdateValues()" />
     </a-drawer>
 
-    <a-modal v-model:open="openModal" title="Pendientes" :closable="true" cancelText="Cerrar" :footer="null"
-      :maskClosable="false" width="380px">
-
+    <!-- MODAL MAS DE UNA SOLICITUD -->
+    <a-modal v-model:open="openModal" title="Pendientes" :closable="true" cancelText="Cerrar" :footer="null" :maskClosable="false" width="380px">
       <a-spin :spinning="spinning">
-        <div v-for="(item, key) in dataPndingRequest" :key="key" class="pendient" @click="handleSelectRequest(item.id)">
-          <div class="info-tag" v-if="item.step == 0"><b>Paso</b> <a-tag color="error">Reserva de nombre</a-tag></div>
-          <div class="info-tag" v-if="item.step == 1"><b>Siguiente paso</b> <a-tag color="warning">Acto
-              constitutivo</a-tag></div>
-          <div class="info-tag" v-if="item.step == 2"><b>Siguiente paso</b> <a-tag color="success">Formalizar</a-tag>
-          </div>
-          <div class="info">
-            <b>Código SID SUNARP</b>
-            <span>{{ item.code_sid_sunarp }}</span>
-            <b>Última consulta</b>
-            <span>{{ formatDate(item.updated_at) }}</span>
+        <div v-for="(item, key) in dataPndingRequest" :key="key" @click="handleSelectRequest(item)">
+          <div  class="pendient">
+            <div class="info-tag" v-if="item.task == 0"><b>Paso</b> <a-tag color="error">Reserva de nombre</a-tag></div>
+              <div class="info-tag" v-if="item.task == 1"><b>Siguiente paso</b> <a-tag color="warning">Acto
+                  constitutivo</a-tag></div>
+              <div class="info-tag" v-if="item.task == 2"><b>Siguiente paso</b> <a-tag color="success">Formalizar</a-tag>
+            </div>
+            <div class="info">
+              <b>Código SID SUNARP</b>
+              <span><b class="code-number">{{ item.codesunarp }}</b></span>
+              <b>Última consulta</b>
+              <span>{{ formatDate(item.updated_at) }}</span>
+            </div>
           </div>
         </div>
-        <div class="pendient pendient-btn" @click="open1 = true, openModal = false, current = 0">
+        <div class="pendient pendient-btn btn-produce" @click="handleStartProcessRUC20">
           <div style="text-align: center;">NUEVO TRÁMITE</div>
         </div>
       </a-spin>
-
     </a-modal>
-  </section>
+    <!-- MODAL MAS DE UNA SOLICITUD -->
 
+  </section>
 </template>
 
 <script setup>
-import { ref, onMounted, reactive } from 'vue';
+import { ref, onMounted } from 'vue';
 import ReservaNombre from './components/ReservaNombre.vue';
 import ActoConstitutivo from './components/ActoConstitutivo.vue';
 import MypeFinal from './components/MypeFinal.vue'
@@ -142,16 +175,15 @@ const route = useRoute();
 
 const type_document = ref(1);
 
-const value1 = ref();
+const value1 = ref(null);
 const options1 = ref([
   {value: 'asesoria',label: 'ASESORÍA'},
   {value: 'ruc20',label: 'RUC 20'},
   {value: 'ruc10',label: 'RUC 10'}
 ])
 
+const setValues = ref(null);
 const spinning = ref(false);
-const information = ref(false);
-const information2 = ref(false);
 const openModal = ref(false);
 const dataPndingRequest = ref(false);
 const open1 = ref(false);
@@ -163,6 +195,7 @@ const searchLoading = ref(false)
 const current = ref(0);
 const loading1 = ref(false);
 const historial = ref([]);
+const itemSelectedF20 = ref(null);
 
 const formatDate = (date) => {
   return moment(date).format('DD/MM/YYYY HH:mm A');
@@ -180,10 +213,13 @@ const handleResetDocument = () => {
   router.push({ name: 'asesorias-formalizaciones' });
 }
 const handleSelectAction = () => {
-  if(!value1.value) return message.warning('Selecciona un tipo de servicio')
+  setValues.value = null;
+  setValues.value = infoUser.value;
+
+  if(!value1.value) return message.warning('Seleccionar un tipo de servicio')
   if(value1.value == 'asesoria') open3.value = true
   if(value1.value == 'ruc10') open2.value = true;
-  if(value1.value == 'ruc20') handleStartRuc20();
+  if(value1.value == 'ruc20') handleProccessRUC20();
 };
 
 const steps = [
@@ -203,45 +239,46 @@ const handleEditUserData = () => {
   router.push({ name: 'actualizar-persona', query });
 }
 
-// CREAR EMPRESA
-const handleStartRuc20 = async () => {
+// CREAR EMPRESA RUC 20
+const handleStartProcessRUC20 =  () => {
+  current.value = 0
+  open1.value = true;
+  openModal.value = false
+}
+
+const handleProccessRUC20 = async() => {
   try {
-    information.value = {
-      id: infoUser.value.id,
-      dni: infoUser.value.number_document
-    }
     loading1.value = true;
-    if (dataPndingRequest.value) return openModal.value = true
-    const { data } = await makeRequest({ url: `/my-formalizations20/${infoUser.value.number_document}`, method: 'GET' });
-    if (data.length >= 1) {
-      dataPndingRequest.value = data
-      openModal.value = true
-      return;
-    }
 
-    open1.value = true
+    const data = await makeRequest({ url: `formalization/list-ruc-20/${infoUser.value.id}`, method: 'GET' });
 
+    if(data.length < 1) {
+      return handleStartProcessRUC20()
+    } 
+      
+    dataPndingRequest.value = data
+    openModal.value = true
+    
   } catch (error) {
     console.log(error);
   } finally {
     loading1.value = false;
   }
 }
+
 // SI TIENE MÁS DE UN TRÁMITE DEBE DE ELEGIR CON CUAL CONTINUAR
-const handleSelectRequest = async (id) => {
+const handleSelectRequest = async (item) => {
   spinning.value = true
-  try {
-    const { data } = await makeRequest({ url: `find-formalization20/${id}`, method: 'GET' });
-    current.value = data.step
-    openModal.value = false
-    open1.value = true
-    information2.value = data
-  } catch (error) {
-    console.log(error);
-  } finally {
-    spinning.value = false
-  }
+  current.value = item.task
+  itemSelectedF20.value = item
+  setTimeout(() => {
+  spinning.value = false
+  open1.value = true
+  openModal.value = false
+  }, 400);
+  
 }
+
 const handleHistorial = async (datax) => {
   historial.value = []
   try {
@@ -252,36 +289,43 @@ const handleHistorial = async (datax) => {
   }
 }
 
-const handleSearchApi = async () => {
-  dataPndingRequest.value = false;
-  current.value = 0;
+const handleUpdateValues = async () => {
+  searchLoading.value = true;
+  const data = await makeRequest({ url: `person/found/${type_document.value}/${dniNumber.value}`, method: 'GET' });
+  if(data.status == 200) {
+    infoUser.value = data.data;
+    return searchLoading.value = false;
+  }
+}
 
-  if(type_document.value == 1)
-    if (dniNumber.value.length < 8) return message.warning('El número a buscar es incorrecto')
+const handleSearchApi = async (val) => {
+  searchLoading.value = true;
+  if (!val) {
+    message.warning("Ingresa un número de documento")
+    return searchLoading.value = false
+  }
 
-  searchLoading.value = true
-
-  try {
-    const data = await makeRequest({ url: `/applicant-new/${dniNumber.value}`, method: 'GET' });
-
-    if (data.status == 205) {
-      const query = {
-        rol: 'solicitante',
-        access: 3,
-        dni: dniNumber.value
-      }
-      router.push({ name: 'registrar-persona', query });
-
-    } else {
-
-      infoUser.value = data
-      handleHistorial(data);
+  if (type_document.value == 1) {
+    if (dniNumber.value.length < 8) {
+      message.warning("El número de DNI está incompleto")
+      searchLoading.value = false
+      return 
     }
+  }
 
-  } catch (error) {
-    console.log("You have an error", error);
-  } finally {
-    searchLoading.value = false
+  const data = await makeRequest({ url: `person/found/${type_document.value}/${dniNumber.value}`, method: 'GET' });
+  if(data.status == 200) {
+    infoUser.value = data.data
+    return searchLoading.value = false;
+  }
+  
+  if (data.status === 404) {
+    const query = {
+      type: type_document.value,
+      access: 'asesorias',
+      number: dniNumber.value
+    }
+    router.push({ name: 'registrar-persona', query });
   }
 }
 const handleSetDataUser = async () => {
@@ -294,13 +338,15 @@ const handleSetDataUser = async () => {
   await handleHistorial(data);
 }
 
-
 onMounted(() => {
   if (route.query.dni) handleSetDataUser();
 });
 </script>
 
 <style lang="scss" scoped>
+.code-number {
+  font-weight: 500 !important;
+}
 .ico-reload {
   color: #1677ff;
   cursor: pointer;
@@ -378,7 +424,7 @@ onMounted(() => {
 }
 
 .pendient {
-  border: 1px solid #1677ff;
+  border: 1px solid #ccc;
   display: flex;
   flex-direction: column;
   border-radius: 4px;
@@ -408,11 +454,18 @@ onMounted(() => {
       text-align: right;
     }
   }
+  &:hover {
+    border: 1px solid var(--primary);
+    .code-number {
+      color: var(--primary);
+    }
+  }
 }
 
 .pendient-btn {
-  background-color: #1677ff;
+  // background-color: #1677ff;
   color: #fff;
+  // border-color: transparent !important;
 }
 </style>
 

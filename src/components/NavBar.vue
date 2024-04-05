@@ -7,11 +7,11 @@
 
     <a-dropdown>
       <a class="ant-dropdown-link" @click.prevent>
-        <span class="name-user">{{ user.name }}</span>
+        <span class="name-user">{{ user?.name }}</span>
         
         <!-- <pre>{{photoProfile}}</pre> -->
-        <a-avatar v-if="photoProfile" :src="photoProfile"></a-avatar>
-        <a-avatar v-else>{{ user.name.charAt(0) }}</a-avatar>
+        <!-- <a-avatar v-if="photoProfile" :src="photoProfile"></a-avatar> -->
+        <a-avatar >{{ user.name.charAt(0) }}</a-avatar>
 
       </a>
       <template #overlay>
@@ -41,10 +41,10 @@ const store = useCounterStore()
 const photoProfile = computed(() => store.getPhotoUser);
 const nameProfile = computed(() => store.getNameUser)
 
+const user = JSON.parse(localStorage.getItem('profile'));
 
 const router = useRouter();
 const emit = defineEmits(['toggleSidebar'])
-const user = JSON.parse(localStorage.getItem('info'));
 const photo = JSON.parse(localStorage.getItem('photoUser'));
 
 
@@ -57,20 +57,14 @@ const handleMenuClick = (e) => {
   }
 };
 
-
-const handleMenuToggle = () => {
- 
-}
-
 const logout = async() => {
   try {
-    const data = await makeRequest({ url: '/logout', method: 'POST'});
+    const data = await makeRequest({ url: 'user/logout', method: 'POST'});
     if(data) {
       Cookies.remove('token');
       localStorage.clear();
       router.push('/');
     }
-  
   } catch (error) {
     console.error('Error de red:', error);
   }

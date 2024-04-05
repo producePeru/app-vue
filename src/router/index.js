@@ -18,6 +18,11 @@ const router = createRouter({
       name: 'formalizacion',
       component: () => import('../pages/FormalizacionDigital.vue')
     },
+    {
+      path: '/landing',
+      name: 'landing',
+      component: () => import('../pages/Landing/LandingPage.vue')
+    },
     // {
     //   path: '/formalizacion-digital-mapa',
     //   name: 'formalizacion-mapa',

@@ -3,7 +3,7 @@ import Cookies from 'js-cookie';
 
 const prod = import.meta.env.VITE_APP_API_URL_PRODUCTION
 const dev = import.meta.env.VITE_APP_API_URL_LOCAL
-const apiUrl = window.location.hostname == '127.0.0.1' ? dev : prod;
+const apiUrl = window.location.hostname == 'localhost' ? dev : prod;
 
 const api = axios.create({
   baseURL: apiUrl
@@ -66,7 +66,7 @@ export async function makeRequest({ method, url, data, params }) {
     } else if (method === 'PATCH') {
       response = await api.patch(url, data, config); 
     } else if (method === 'DELETE') {
-      response = await api.delete(url, config); 
+      response = await api.delete(url); 
     } else {
       throw new Error('Método de solicitud no válido');
     }

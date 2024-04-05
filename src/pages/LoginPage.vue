@@ -33,28 +33,22 @@
         <a-form-item>
           <a-button size="large" block type="primary" html-type="submit" class="btn-login" :loading="loading">Ingresar</a-button>
         </a-form-item>
+ 
       </a-form>
     </div>
   </div>
 </template>
 <script setup>
-import { requestNoToken } from '@/utils/noToken.js'
 import { reactive, ref } from 'vue';
 import { UserOutlined, LockOutlined } from '@ant-design/icons-vue';
 import { message } from 'ant-design-vue';
 import { useRouter } from 'vue-router';
-import Cookies from 'js-cookie';
 import { makeRequest } from '@/utils/api.js'
 import CryptoJS from 'crypto-js';
-import axios from 'axios';
-
-import { useCounterStore } from '@/stores/someEvents.js'
-const pageStore = useCounterStore()
+import Cookies from 'js-cookie';
 
 const loading = ref(false)
 const router = useRouter();
-const apiUrl = window.location.hostname == '127.0.0.1' ? import.meta.env.VITE_APP_API_URL_LOCAL : import.meta.env.VITE_APP_API_URL_PRODUCTION
-const token = Cookies.get('token');
 
 const formState = reactive({
   email: '',
@@ -62,75 +56,29 @@ const formState = reactive({
 });
 
 const onSubmit =async() => {
-  loading.value = true
+  loading.value = true;
   try {
-    const payload = formState
-    const {data} = await requestNoToken({ url: '/login', method: 'POST', data:  payload });
+    const data = await makeRequest({ url: `login`, method: 'POST', data:  formState });
 
-    Cookies.set('token', data.access_token)
+    localStorage.setItem('token', JSON.stringify(data.token));
+    localStorage.setItem('profile', JSON.stringify(data.profile));
+    localStorage.setItem('role', JSON.stringify(data.role));
 
-    const me = {
-      access_token: data.access_token,
-      id: data.id,
-      document_number: data.document_number,
-      // last_name: data.last_name,
-      // middle_name: data.middle_name,
-      // name: data.name,
-      // email: data.email,
-      role: data.role
-    };
+    const encViews = CryptoJS.AES.encrypt(JSON.stringify(data.views), 'appvistas').toString();
+    localStorage.setItem('views', encViews);
 
-    localStorage.setItem('user', JSON.stringify(me));
+    Cookies.set('token', data.token);
 
-    const personData = await makeRequest({ url: `/personal-data/${data.document_number}`, method: 'GET' });
-    const personalData = {
-      id: personData.data.id,
-      name: personData.data.name,
-      last_name: personData.data.last_name,
-      middle_name: personData.data.middle_name,
-      email: personData.data.email,
-      dni: personData.data.number_document
-    }
-
-    localStorage.setItem('info', JSON.stringify(personalData));
-    pageStore.imgProfile()
-
-    // const response = await axios.get(`${apiUrl}/profile-photo/${personData.data.id}/${personData.data.number_document}`, {
-    //   responseType: 'blob',
-    //   headers: {
-    //     'Accept': 'application/json',
-    //     'Authorization': `Bearer ${data.access_token}`
-    //   }
-    // });
-    // const url = window.URL.createObjectURL(new Blob([response.data]));
-    // localStorage.setItem('photo', JSON.stringify(url));
-    
-
-    if(data) fetchDataViews(data.id)
-
+    router.push('/admin/inicio');
 
   } catch (error) {
     message.error("Las credenciales son incorrectas")
     console.log("Error: " + error)
-    loading.value = false
-  } 
-};
-
-const fetchDataViews = async(id) => {
-  const { data } = await makeRequest({ url: `/views/${id}`, method: 'GET' });
-  const encryptedData = CryptoJS.AES.encrypt(JSON.stringify(data), 'appvistas').toString();
-
-  try {
-    localStorage.setItem('views', encryptedData);
-  } catch (localStorageError) {
-    console.error('Error al guardar en localStorage:', localStorageError);
-    return; 
   } finally {
     loading.value = false
   }
+};
 
-  router.push('/admin/inicio');
-}
 
 const onFinishFailed = () => {
   message.error('Sin acceso');

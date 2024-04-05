@@ -1,25 +1,25 @@
 <template>
   <div class="wrapper-booking">
-    <!-- <pre>{{ info }}</pre> -->
-    <!-- <h3>RESERVA DE NOMBRE</h3> -->
     <a-form layout="vertical" :model="formState" name="basic" autocomplete="off" @finish="onSubmit"
       @finishFailed="onSubmitFail">
       <div class="grid-booking">
         <template v-for="(el, idx) in fields" :key="idx">
 
           <a-form-item class="item-max" v-if="el.type === 'iSelect'" :name="el.name" :label="el.label" :rules="[{ required: el.required, message: el.message }]">
-            <a-select v-if="el.name == 'type_regimen'" v-model:value="formState[el.name]" :options="regimen" />
-            <a-select v-if="el.name == 'economy_sector'" v-model:value="formState[el.name]" :options="economicSectors" />
-            <a-select v-if="el.name == 'modality'" v-model:value="formState[el.name]" :options="modality" />
+            <a-select v-if="el.name == 'regime_id'" v-model:value="formState[el.name]" :options="store.regimes" />
+            <a-select v-if="el.name == 'economicsector_id'" v-model:value="formState[el.name]" :options="store.economicSectors" />
+            <a-select v-if="el.name == 'modality_id'" v-model:value="formState[el.name]" :options="store.modalities" />
           </a-form-item>
-            
-          <a-form-item class="item-max" v-if="el.type === 'iSelectWrite'" :name="el.name" :label="el.label" :rules="[{ required: el.required, message: el.message }]">
-            <a-select v-if="el.name == 'category'" v-model:value="formState[el.name]" show-search :options="activities" :filter-option="filterOption">
+
+          <a-form-item class="item-max" v-if="el.type === 'iSelectWrite'" :name="el.name" :label="el.label"
+            :rules="[{ required: el.required, message: el.message }]">
+            <a-select v-if="el.name == 'comercialactivity_id'" v-model:value="formState[el.name]" show-search :options="store.comercialActivities"
+              :filter-option="filterOption">
               <template #dropdownRender="{ menuNode: menu }">
                 <v-nodes :vnodes="menu" />
                 <a-divider style="margin: 4px 0" />
                 <a-space style="padding: 4px 8px">
-                  <a-input ref="inputRef" v-model:value="name" placeholder="Nueva actividad" />
+                  <a-input ref="inputRef" v-model:value="nameNewItem" placeholder="Nueva actividad" />
                   <a-button type="text" @click="handleAddItem" :loading="loadingcategory">
                     <template #icon>
                       <PlusOutlined />
@@ -29,11 +29,14 @@
                 </a-space>
               </template>
             </a-select>
-            
-            <a-select v-if="el.name == 'department'" v-model:value="formState[el.name]" show-search :options="departments" :filter-option="filterOption" @change="getProvinces" />
-            <a-select v-if="el.name == 'province'" v-model:value="formState[el.name]" show-search :options="provinces" :filter-option="filterOption" @change="getDistricts" />
-            <a-select v-if="el.name == 'district'" v-model:value="formState[el.name]" show-search :options="districts" :filter-option="filterOption" />
-            
+
+            <a-select v-if="el.name == 'city_id'" v-model:value="formState[el.name]" show-search :options="store.cities" 
+              :filter-option="filterOption" @change="handleDepartaments" />
+            <a-select v-if="el.name == 'province_id'" v-model:value="formState[el.name]" show-search :options="store.provinces"
+              :filter-option="filterOption" @change="handleProvinces" />
+            <a-select v-if="el.name == 'district_id'" v-model:value="formState[el.name]" show-search :options="store.districts"
+              :filter-option="filterOption" />
+
           </a-form-item>
 
           <a-form-item v-if="el.type === 'iText'" :name="el.name" :label="el.label"
@@ -43,24 +46,22 @@
 
         </template>
       </div>
-      <!-- <pre>{{ props.info }}</pre> -->
-      <!-- <pre>:::::{{ formState }}</pre> -->
+      <!-- <pre>{{ props.info }}</pre>
+      <pre>:::::{{ formState }}</pre> -->
       <a-form-item>
-        <a-button type="primary" html-type="submit" :loading="loading">GUARDAR</a-button>
+        <a-button class="btn-produce" type="primary" html-type="submit" :loading="loading">GUARDAR</a-button>
       </a-form-item>
     </a-form>
   </div>
 </template>
 
 <script setup>
+import { reactive, ref, defineComponent } from 'vue';
+import { useCounterStore } from '@/stores/selectes.js';
 import { fields } from '@/forms/asesorias.js'
-import { reactive, ref, onMounted, defineComponent } from 'vue';
-import { requestNoToken } from '@/utils/noToken.js'
-import { economicSectors, regimen } from '@/utils/selects.js'
-import { message } from 'ant-design-vue';
 import { makeRequest } from '@/utils/api.js';
+import { message } from 'ant-design-vue';
 import { PlusOutlined } from '@ant-design/icons-vue';
-import { modality } from '@/utils/selects.js'
 
 const VNodes = defineComponent({
   props: {
@@ -74,146 +75,102 @@ const VNodes = defineComponent({
   },
 });
 
-const storageData = JSON.parse(localStorage.getItem('user'));
-const personData = JSON.parse(localStorage.getItem('info'));
+const storageData = JSON.parse(localStorage.getItem('profile'));
 const props = defineProps(['info']);
 const emit = defineEmits(['closeDraw']);
-
-const departments = ref([]);
-const provinces = ref([]);
-const districts = ref([]);
-const activities = ref([]);
-const loading = ref(false);
-const name = ref();
 const loadingcategory = ref(false);
+const nameNewItem = ref(null);
+
+const loading = ref(false);
+const store = useCounterStore();
+store.$patch({ cities: store.cities });
+store.$patch({ modalities: store.modalities });
+store.$patch({ economicSectors: store.economicSectors });
+store.$patch({ comercialActivities: store.comercialActivities });
+store.$patch({ regimes: store.regimes });
+
+store.fetchEconomicSectors();
+store.fetchComercialActivities();
+store.fetchRegimes();
+store.fetchCities();
+store.fetchModalities();
 
 const formState = reactive({
-  id_person: null,
-  dni: null,
-  step: 1, 
-  type_regimen: null,
-  code_sid_sunarp: null,
-  economy_sector: null,
-  department: null,
-  province: null,
-  district: null,
+  task: 1,
+  codesunarp: null,
+  economicsector_id: null,
+  comercialactivity_id: null,
+  regime_id: null,
+  city_id: null,
+  province_id: null,
+  district_id: null,
   address: null,
-  modality: null,
-  created_by: personData.id,
-  created_dni: personData.dni
+  modality_id: null,
+  user_id: storageData.id
 });
 
-
 const handleAddItem = async() => {
-  loadingcategory.value = true;
   try {
-    await makeRequest({ url: '/create-comercial-activities', method: 'POST', data: {name: name.value} });
-    categories()
-    name.value = ''
-  } catch (error) {
-    message.error('Error al registrar');
+    loadingcategory.value = true;
+    const payload = {
+      name: nameNewItem.value
+    }
+    const data = await makeRequest({ url: 'create/comercial-activities', method: 'POST', data: payload});
+    if(data.status == 200) {
+      nameNewItem.value = null;
+      store.fetchComercialActivities();
+    }
+  } catch(e) {
+    console.log(e);
   } finally {
     loadingcategory.value = false;
   }
-};
-
-const onSubmit = async () => {
-  formState.id_person = props.info.id;
-  formState.dni = props.info.dni;
-  loading.value = true;
-
-  const payload2 = {
-    number: props.info.dni,
-    id_post: 3
-  }
-
-  try {
-    const data = await makeRequest({ url: '/formalization20', method: 'POST', data: formState });
-    
-    await makeRequest({ url: '/person-post', method: 'POST', data: payload2 });
-    
-    if(data) {
-      message.success('Registro exitoso');
-      formState.type_regimen = null;
-      formState.code_sid_sunarp = null;
-      formState.economy_sector = null;
-      formState.department = null;
-      formState.province = null;
-      formState.district = null;
-      formState.address = null;
-      formState.modality = null;
-      emit('closeDraw', true)
-    }
-  } catch (error) {
-    message.error('Error al registrar');
-  } finally {
-    loading.value = false
-  }
-};
-const onSubmitFail = () => {
-  message.error('Debes de completar todos los espacios requeridos')
-};
+}
+const handleDepartaments = (id) => {
+  formState.province_id = null
+  formState.district_id = null
+  store.fetchProvinces(id);
+}
+const handleProvinces = (id) => {
+  formState.district_id = null
+  store.fetchDistricts(id)
+}
 const filterOption = (input, option) => {
   const normalizedInput = input.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "");
   const normalizedLabel = option.label.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "");
   return normalizedLabel.includes(normalizedInput);
 };
 
-const getDepartaments = async () => {
+const onSubmit = async () => {
+  loading.value = true;
+  formState.people_id = props.info.id;
   try {
-    const { data } = await requestNoToken({ url: '/departaments', method: 'GET' });
-    let arr = data.map(item => ({
-      label: item.label,
-      value: item.id
-    }));
-    departments.value = [...departments.value, ...arr];
-  } catch (error) {
-    console.log(error);
-  }
-};
-const getProvinces = async (id) => {
-  formState.province = null
-  formState.district = null
-  provinces.value = []
-  districts.value = []
-  try {
-    const { data } = await requestNoToken({ url: `/province/${id}`, method: 'GET' });
-    let provincesArray = data.map(item => ({
-      label: item.label,
-      value: item.id
-    }));
-    provinces.value = [...provinces.value, ...provincesArray];
-  } catch (error) {
-    console.log(error);
-  }
-};
-const getDistricts = async (id) => {
-  formState.district = null
-  districts.value = []
-  try {
-    const { data } = await requestNoToken({ url: `/district/${id}`, method: 'GET' });
-    let arr = data.map(item => ({
-      label: item.label,
-      value: item.id
-    }));
-    districts.value = [...districts.value, ...arr];
-  } catch (error) {
-    console.log(error);
-  }
-};
-const categories = async () => {
-  try {
-    const { data } = await makeRequest({ url: `/comercial-activities`, method: 'GET' });
-    activities.value = data
-  } catch (error) {
-    console.log(error);
-  }
-};
+    const response = await makeRequest({ url: 'formalization/ruc20-step1', method: 'POST', data: formState});
+    if (response.status === 200) {
+      message.success(response.message);
+   
+      formState.codesunarp = null;
+      formState.economicsector_id = null;
+      formState.comercialactivity_id = null;
+      formState.regime_id = null;
+      formState.city_id = null;
+      formState.province_id = null;
+      formState.district_id = null;
+      formState.address = null;
+      formState.modality_id = null;
+    
+      emit('closeDraw', true)
 
-onMounted(() => {
-  getDepartaments(),
-  categories()
-});
+    }
+  } catch (error) {
+    console.log("Error: " + error);
+  } finally {
+    loading.value = false;
+  }
+}
+const onSubmitFail = () => {
+  message.warning('Debes de completar todos los espacios requeridos')
+};
 </script>
 
 <style scoped lang="scss">

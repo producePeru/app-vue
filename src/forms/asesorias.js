@@ -1,56 +1,56 @@
 const fields = {
-  code_sid_sunarp: {
+  codesunarp: {
     type: 'iText',
     label: 'Código SID sunarp',
-    name: 'code_sid_sunarp',
+    name: 'codesunarp',
     required: true,
     message: 'Escribir apellido',
     disabled: false
   },
-  economy_sector: {
+  economicsector_id: {
     type: 'iSelect',
     label: 'Sector económico',
-    name: 'economy_sector',
+    name: 'economicsector_id',
     required: true,
     message: 'Seleccionar tipo de documento',
     disabled: false
   },
-  category: {
+  comercialactivity_id: {
     type: 'iSelectWrite',
     label: 'Actividad comercial',
-    name: 'category',
+    name: 'comercialactivity_id',
     required: true,
     message: 'Seleccionar tipo de documento',
     disabled: false
   },
-  type_regimen: {
+  regime_id: {
     type: 'iSelect',
     label: 'Tipo de régimen societario',
-    name: 'type_regimen',
+    name: 'regime_id',
     required: true,
     message: 'Seleccionar tipo de documento',
     disabled: false
   },
-  department: {
+  city_id: {
     type: 'iSelectWrite',
     label: 'Departamento',
-    name: 'department',
+    name: 'city_id',
     required: true,
     message: 'Seleccionar departamento',
     disabled: false
   },
-  province: {
+  province_id: {
     type: 'iSelectWrite',
     label: 'Provincia',
-    name: 'province',
+    name: 'province_id',
     required: true,
     message: 'Seleccionar provincia',
     disabled: false
   },
-  district: {
+  district_id: {
     type: 'iSelectWrite',
     label: 'Distrito',
-    name: 'district',
+    name: 'district_id',
     required: true,
     message: 'Seleccionar distrito',
     disabled: false
@@ -63,10 +63,10 @@ const fields = {
     message: 'Escribir apellido',
     disabled: false
   },
-  modality: {
+  modality_id: {
     type: 'iSelect',
     label: 'Modalidad de atención',
-    name: 'modality',
+    name: 'modality_id',
     required: true,
     message: 'Seleccionar modalidad',
     disabled: false
@@ -74,26 +74,26 @@ const fields = {
 };
 
 const acto = {
-  social_reason: {
+  name: {
     type: 'iText',
     label: 'Nombre empresa',
-    name: 'social_reason',
+    name: 'name',
     required: true,
     message: 'Escribir apellido',
     disabled: false
   },
-  num_notary: {
+  numbernotary: {
     type: 'iText',
     label: 'Número de solicitud de envio a Notaría',
-    name: 'num_notary',
+    name: 'numbernotary',
     required: false,
     message: 'Seleccionar departamento',
     disabled: false
   },
-  id_notary: {
+  notary_id: {
     type: 'iSelect',
     label: 'Notaría',
-    name: 'id_notary',
+    name: 'notary_id',
     required: false,
     message: 'Seleccionar notaría',
     disabled: false
@@ -122,58 +122,58 @@ const final = {
 };
 
 const ructen = {
-  detail_procedure: {
+  detailprocedure_id: {
     type: 'iSelect',
     label: 'Detalle del trámite',
-    name: 'detail_procedure',
+    name: 'detailprocedure_id',
     required: true,
     message: 'Escribir número de RUC',
     disabled: false
   },
-  modality: {
+  modality_id: {
     type: 'iSelect',
     label: 'Modalidad de atención',
-    name: 'modality',
+    name: 'modality_id',
     required: true,
     message: 'Seleccionar modalidad',
     disabled: false
   },
-  economy_sector: {
+  economicsector_id: {
     type: 'iSelect',
     label: 'Sector económico',
-    name: 'economy_sector',
+    name: 'economicsector_id',
     required: true,
     message: 'Seleccionar el sector económico',
     disabled: false
   },
-  category: {
+  comercialactivity_id: {
     type: 'iSelectWrite',
     label: 'Actividad comercial',
-    name: 'category',
+    name: 'comercialactivity_id',
     required: true,
     message: 'Seleccionar la actividad comercial',
     disabled: false
   },
-  department: {
+  city_id: {
     type: 'iSelectWrite',
     label: 'Departamento',
-    name: 'department',
+    name: 'city_id',
     required: true,
     message: 'Seleccionar departamento',
     disabled: false
   },
-  province: {
+  province_id: {
     type: 'iSelectWrite',
     label: 'Provincia',
-    name: 'province',
+    name: 'province_id',
     required: true,
     message: 'Seleccionar provincia',
     disabled: false
   },
-  district: {
+  district_id: {
     type: 'iSelectWrite',
     label: 'Distrito',
-    name: 'district',
+    name: 'district_id',
     required: true,
     message: 'Seleccionar distrito',
     disabled: false
@@ -181,58 +181,58 @@ const ructen = {
 };
 
 const asesoria = {
-  component: {
+  component_id: {
     type: 'iSelect',
     label: 'Componente',
-    name: 'component',
+    name: 'component_id',
     required: true,
     message: 'Seleccionar un componente',
     disabled: false
   },
-  tema_compoment: {
+  theme_id: {
     type: 'iSelectWrite',
     label: 'Tema del componente',
-    name: 'tema_compoment',
+    name: 'theme_id',
     required: true,
     message: 'Seleccionar un tema del componente',
     disabled: false
   },
-  modality: {
+  modality_id: {
     type: 'iSelect',
     label: 'Modalidad de atención',
-    name: 'modality',
+    name: 'modality_id',
     required: true,
     message: 'Seleccionar modalidad',
     disabled: false
   },
-  department: {
+  city_id: {
     type: 'iSelectWrite',
     label: 'Departamento',
-    name: 'department',
+    name: 'city_id',
     required: true,
     message: 'Seleccionar departamento',
     disabled: false
   },
-  province: {
+  province_id: {
     type: 'iSelectWrite',
     label: 'Provincia',
-    name: 'province',
+    name: 'province_id',
     required: true,
     message: 'Seleccionar provincia',
     disabled: false
   },
-  district: {
+  district_id: {
     type: 'iSelectWrite',
     label: 'Distrito',
-    name: 'district',
+    name: 'district_id',
     required: true,
     message: 'Seleccionar distrito',
     disabled: false
   },
-  description: {
+  observations: {
     type: 'iTextarea',
     label: 'Observaciones',
-    name: 'description',
+    name: 'observations',
     required: false,
     message: 'Seleccionar tipo de documento',
     disabled: false

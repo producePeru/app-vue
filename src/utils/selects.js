@@ -13,7 +13,7 @@ const geners = [
 
 const disabilities = [
   { label: 'Si', value: 1 },
-  { label: 'No', value: 0 },
+  { label: 'No', value: 2 },
 ];
 
 const typeUsers = [

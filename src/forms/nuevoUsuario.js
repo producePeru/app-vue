@@ -1,57 +1,4 @@
-
 const fields = {
-  // nickName: {
-  //   type: 'iText',
-  //   label: 'Usuario',
-  //   name: 'nickName',
-  //   required: true,
-  //   message: 'Escribe cuenta de usuario'
-  // },
-  document_type: {
-    type: 'iSelect',
-    label: 'Tipo de documento',
-    name: 'document_type',
-    required: true,
-    message: 'Seleccionar tipo de documento',
-    disabled: true
-  },
-  document_number: {
-    type: 'iText',
-    label: 'Ingresar número',
-    name: 'document_number',
-    required: true,
-    message: 'Escribe número de documento',
-    disabled: false,
-    max: 8
-  },
-  last_name: {
-    type: 'iText',
-    label: 'Apellido paterno',
-    name: 'last_name',
-    required: true,
-    message: 'Escribe el apellido paterno'
-  },
-  middle_name: {
-    type: 'iText',
-    label: 'Apellido materno',
-    name: 'middle_name',
-    required: true,
-    message: 'Escribe el apellido materno'
-  },
-  name: {
-    type: 'iText',
-    label: 'Nombres',
-    name: 'name',
-    required: true,
-    message: 'Escribe el nombre'
-  },
-  country_code: {
-    type: 'iSelectWrite',
-    label: 'País',
-    name: 'country_code',
-    required: true,
-    message: 'Seleccionar país'
-  },
   email: {
     type: 'iText',
     label: 'Correo',
@@ -60,67 +7,90 @@ const fields = {
     email: 'email',
     message: 'Escribe el correo del usuario'
   },
-  password: {
-    type: 'iPassword',
-    label: 'Contraseña',
-    name: 'password',
-    required: false,
-    message: 'Registra la contraseña'
-  },
-  office_code: {
-    type: 'iSelect',
-    label: 'Oficina',
-    name: 'office_code',
-    required: true,
-    message: 'Seleccionar un tipo',
-  },
-  sede_code: {
-    type: 'iSelect',
-    label: 'Sede donde labora',
-    name: 'sede_code',
-    required: true,
-    message: 'Seleccionar un tipo',
-  },
-  // role: {
-  //   type: 'iSelect',
-  //   label: 'Tipo de usuario',
-  //   name: 'role',
+  // password: {
+  //   type: 'iPassword',
+  //   label: 'Contraseña',
+  //   name: 'password',
   //   required: true,
-  //   message: 'Seleccionar un tipo',
+  //   message: 'Registra la contraseña'
   // },
-
-  // birthdate: {
-  //   type: 'iDate',
-  //   label: 'Fecha de nacimiento',
-  //   name: 'birthdate',
-  //   required: false,
-  //   message: 'Seleccionar fecha'
-  // },
-  gender: {
+  name: {
+    type: 'iText',
+    label: 'Nombres',
+    name: 'name',
+    required: true,
+    message: 'Escribe el apellido paterno'
+  },
+  lastname: {
+    type: 'iText',
+    label: 'Apellido paterno',
+    name: 'lastname',
+    required: true,
+    message: 'Escribe el apellido paterno'
+  },
+  middlename: {
+    type: 'iText',
+    label: 'Apellido materno',
+    name: 'middlename',
+    required: true,
+    message: 'Escribe el apellido paterno'
+  },
+  documentnumber: {
+    type: 'iText',
+    label: 'Número de DNI',
+    name: 'documentnumber',
+    required: true,
+    message: 'Escribe el apellido paterno',
+    max: 8
+  },
+  birthday: {
+    type: 'iDate',
+    label: 'Fecha de nacimiento',
+    name: 'birthday',
+    required: false,
+    message: 'año-mes-día'
+  },
+  phone: {
+    type: 'iText',
+    label: 'Ingresar número celular',
+    name: 'phone',
+    required: true,
+    message: 'Escribe número de documento',
+    disabled: false,
+    max: 9
+  },
+  gender_id: {
     type: 'iSelect',
     label: 'Género',
-    name: 'gender',
-    required: false,
+    name: 'gender_id',
+    required: true,
     message: 'Seleccionar tipo de documento',
+    disabled: true
   },
-  
-  // isDisabled: {
-  //   type: 'iSelect',
-  //   label: '¿Tiene discapacidad?',
-  //   name: 'isDisabled',
-  //   required: false,
-  //   message: 'Seleccionar un tipo',
-  // },
- 
-  // phoneNumber: {
-  //   type: 'iText',
-  //   label: 'Celular',
-  //   name: 'phoneNumber',
-  //   required: false,
-  //   message: 'Escribe el celular del usuario'
-  // },
-  
-  
+  cde_id: {
+    type: 'iSelect',
+    label: 'CDE',
+    name: 'cde_id',
+    required: true,
+    message: 'Seleccionar tipo de documento',
+    disabled: true
+  },
+  office_id: {
+    type: 'iSelect',
+    label: 'Oficina',
+    name: 'office_id',
+    required: true,
+    message: 'Seleccionar tipo de documento',
+    disabled: true
+  },
+  role_id: {
+    type: 'iSelect',
+    label: 'Rol',
+    name: 'role_id',
+    required: true,
+    message: 'Seleccionar tipo de documento',
+    disabled: true
+  }
 }
 
 export default fields;

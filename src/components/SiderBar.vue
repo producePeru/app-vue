@@ -19,7 +19,7 @@
     </a-menu-item> -->
 
     <!-- Drive  --> 
-    <a-sub-menu key="drive" @click="handleCollapse('drive')" v-if="views.includes('drive')">
+    <!-- <a-sub-menu key="drive" @click="handleCollapse('drive')" v-if="views.includes('drive')">
       <template #title>
         <span>
           <CloudOutlined />
@@ -28,7 +28,7 @@
       </template>
       <a-menu-item key="drive-mis-archivos" v-if="views.includes('drive-mis-archivos')"> <router-link to="/admin/drive/mis-archivos">Mis Archivos</router-link> </a-menu-item> 
       <a-menu-item key="drive-subir-archivo" v-if="views.includes('drive-subir-archivo')"> <router-link to="/admin/drive/subir-archivo">Subir Archivo</router-link> </a-menu-item> 
-    </a-sub-menu>
+    </a-sub-menu> -->
 
     <!-- Asesorias  --> 
     <a-sub-menu key="asesorias" v-if="views.includes('asesorias')" @click="handleCollapse('asesorias')">
@@ -46,6 +46,7 @@
       <a-menu-item key="asesores" v-if="views.includes('asesores')"> <router-link to="/admin/asesorias/asesores">Asesores</router-link> </a-menu-item> 
       <a-menu-item key="supervisores" v-if="views.includes('supervisores')"> <router-link to="/admin/asesorias/supervisores">Supervisores</router-link> </a-menu-item>
     </a-sub-menu>
+    
 
     <!-- Convenios  --> 
       <!-- <a-sub-menu key="convenios" @click="handleCollapse('convenios')">
@@ -60,7 +61,7 @@
       </a-sub-menu> -->
 
     <!-- Ruta Digital  -->
-    <a-sub-menu key="rutadigital" v-if="views.includes('rutadigital')" @click="handleCollapse('rutadigital')">
+    <!-- <a-sub-menu key="rutadigital" v-if="views.includes('rutadigital')" @click="handleCollapse('rutadigital')">
       <template #title>
         <span>
           <SolutionOutlined />
@@ -72,7 +73,7 @@
       <a-menu-item key="talleres" v-if="views.includes('talleres')"> <router-link to="/admin/ruta-digital/talleres">Talleres</router-link> </a-menu-item>
       <a-menu-item key="mype" v-if="views.includes('mype')"> <router-link to="/admin/ruta-digital/mype">MYPEs</router-link> </a-menu-item>
       <a-menu-item key="expositores" v-if="views.includes('expositores')"> <router-link to="/admin/ruta-digital/expositores">Expositores</router-link> </a-menu-item>
-    </a-sub-menu>
+    </a-sub-menu> -->
 
     <!-- Usuarios  -->
     <a-sub-menu key="usuarios" v-if="views.includes('usuarios')" @click="handleCollapse('usuarios')">
@@ -122,7 +123,7 @@ const onCollapse = (collapsed, type) => {
   console.log("collapsed, type");
 };
 const onBreakpoint = broken => {
-  console.log("broken");
+  // console.log("broken");
 };
 
 </script>

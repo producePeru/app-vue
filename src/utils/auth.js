@@ -30,7 +30,13 @@ router.beforeEach((to, from, next) => {
     }
   
   } else if (to.path !== '/' && !isAuthenticated) {
+
+    if(to.name === 'landing') {
+      return next();
+    }
+
     next('/'); 
+    
   } else {
     next(); 
   }

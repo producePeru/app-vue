@@ -1,36 +1,36 @@
 
 const fields = {
-  document_type: {
+  typedocument_id: {
     type: 'iSelect',
     label: 'Tipo de documento',
-    name: 'document_type',
+    name: 'typedocument_id',
     required: true,
     message: 'Seleccionar tipo de documento',
     disabled: false
   },
-  number_document: {
+  documentnumber: {
     type: 'iSearch',
     label: 'Ingresar número',
-    name: 'number_document',
+    name: 'documentnumber',
     required: true,
     message: 'Escribe número de documento',
-    disabled: false
+    disabled: true
   },
-  last_name: {
+  lastname: {
     type: 'iText',
     label: 'Apellido Paterno',
-    name: 'last_name',
+    name: 'lastname',
     required: true,
     message: 'Escribir apellido',
-    disabled: false
+    disabled: true
   },
-  middle_name: {
+  middlename: {
     type: 'iText',
     label: 'Apellido Materno',
-    name: 'middle_name',
+    name: 'middlename',
     required: true,
     message: 'Escribir apellido',
-    disabled: false
+    disabled: true
   },
   name: {
     type: 'iText',
@@ -38,40 +38,40 @@ const fields = {
     name: 'name',
     required: true,
     message: 'Escribir nombre',
-    disabled: false
+    disabled: true
   },
-  department: {
+  city_id: {
     type: 'iSelect',
     label: 'Departamento',
-    name: 'department',
+    name: 'city_id',
     required: true,
     message: 'Seleccionar departamento',
-    disabled: false
+    disabled: true
   },
-  province: {
+  province_id: {
     type: 'iSelect',
     label: 'Provincia',
-    name: 'province',
+    name: 'province_id',
     required: true,
     message: 'Seleccionar provincia',
-    disabled: false
+    disabled: true
   },
-  district: {
+  district_id: {
     type: 'iSelect',
     label: 'Distrito',
-    name: 'district',
+    name: 'district_id',
     required: true,
     message: 'Seleccionar distrito',
-    disabled: false
+    disabled: true
   },
   phone: {
     type: 'iText',
     label: 'Número Telefónico del contacto',
     name: 'phone',
-    required: false,
-    message: 'Número de contacto y 9 max',
+    required: true,
+    message: 'Número de celular',
     max: 9,
-    disabled: false
+    disabled: true
   },
   email: {
     type: 'iText',
@@ -80,29 +80,31 @@ const fields = {
     required: true,
     message: 'Número de contacto y 9 max',
     email: 'email',
-    disabled: false
+    disabled: true
   },
-  birthdate: {
+  birthday: {
     type: 'iDate',
     label: 'Fecha de nacimiento',
-    name: 'birthdate',
+    name: 'birthday',
     required: false,
     message: 'Seleccionar fecha',
-    disabled: false
+    disabled: true
   },
-  gender: {
+  gender_id: {
     type: 'iSelect',
     label: 'Género',
-    name: 'gender',
-    required: false,
+    name: 'gender_id',
+    required: true,
     message: 'Seleccionar tipo de documento',
+    disabled: true
   },
   lession: {
     type: 'iSelect',
     label: '¿Tiene discapacidad?',
     name: 'lession',
-    required: false,
+    required: true,
     message: 'Seleccionar un tipo',
+    disabled: true
   },
 }
 
