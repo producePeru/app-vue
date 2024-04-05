@@ -10,7 +10,7 @@
       </div>
     </div>
   </section> -->
-  <!-- <nav class="navbar">
+  <nav class="navbar">
     <div class="navbar-container">
       <input type="checkbox" name="" id="checkbox">
       <div class="hamburger-lines">
@@ -26,14 +26,14 @@
       </ul>
       <div class="logo">
        
-        CYBERWOW
+        <img src="https://i.ytimg.com/vi/gjtYPGzJh2c/maxresdefault.jpg" alt="" width="80">
       </div>
     </div>
-  </nav> -->
+  </nav>
   <section id="home">
     <div class="home_page ">
       <div class="home_img ">
-        <img src="../../assets/img/wow/wow.jpg" alt="img " style="height: 100vh;">
+        <img src="../../assets/img/wow/wow.jpg" alt="img " style="height: 90vh;">
       </div>
       <!-- <div class="home_txt ">
         <p class="collectio ">PRODUCE</p>
