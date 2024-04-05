@@ -20,9 +20,9 @@
       </div>
       <ul class="menu-items">
         <li><a href="#home">Home</a></li>
-        <li><a href="#sellers">Shop</a></li>
+        <!-- <li><a href="#sellers">Shop</a></li>
         <li><a href="#news">Blog</a></li>
-        <li><a href="#contact">Contact</a></li>
+        <li><a href="#contact">Contact</a></li> -->
       </ul>
       <div class="logo">
        
