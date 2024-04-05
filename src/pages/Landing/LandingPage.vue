@@ -4,7 +4,7 @@
   <section class=" top-txt ">
     <div class="head container ">
       <div class="head-txt ">
-        <p>Free shipping, 30-day return or refund guarantee.</p>
+        <p>Free shipping, 30-day return or refxxxund guarantee.</p>
       </div>
       <div class="sing_in_up ">
         <a href="# ">SIGN IN</a>
