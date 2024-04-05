@@ -19,7 +19,7 @@ const router = createRouter({
       component: () => import('../pages/FormalizacionDigital.vue')
     },
     {
-      path: '/ferias',
+      path: '/cyberwowpnte',
       name: 'landing',
       component: () => import('../pages/Landing/LandingPage.vue')
     },

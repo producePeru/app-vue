@@ -35,7 +35,7 @@
       </div>
 
       <a-form-item>
-        <a-button type="primary" html-type="submit" :loading="loading">GUARDAR</a-button>
+        <a-button class="btn-produce" type="primary" html-type="submit" :loading="loading">GUARDAR</a-button>
       </a-form-item>
     </a-form>
   </div>
@@ -102,12 +102,18 @@ const clearFields = () => {
   formState.email = null,
   formState.password = null
   formState.role_id = null
+  
 }
 
 const onSubmit = async () => {
   loading.value = true
   formState.password = formState.documentnumber
   formState.birthday = birthdateDate.value ? dayjs(birthdateDate.value).format('YYYY-MM-DD') : null;
+
+
+
+
+
 
   try {
     const data = await makeRequest({ url: 'user/create', method: 'POST', data: formState });

@@ -29,24 +29,77 @@
     :loading="loading"
     size="small">
       <template v-slot:bodyCell="{column, record, index}">
-        
+      
         <template v-if="column.dataIndex == 'idx'">
           {{ computeIndex(index) }}
         </template>
-
-        <template v-if="column.dataIndex == 'solName'">
-          {{ record.person.last_name }} {{ record.person.middle_name }}, {{ record.person.name }}
+        <template v-if="column.dataIndex == 'ase_fecha'">
+          {{ record.created_at }}
+        </template>
+        <template v-if="column.dataIndex == 'reg_nombres'">
+          {{ record.user.profile.name }} {{ record.user.profile.lastname }} {{ record.user.profile.middlename }}
+        </template>
+        <template v-if="column.dataIndex == 'sol_apellidos'">
+          {{ record.people.lastname }} {{ record.people.middlename }}
+        </template>
+        <template v-if="column.dataIndex == 'sol_nombres'">
+          {{ record.people.name }}
+        </template>
+        <template v-if="column.dataIndex == 'sol_email'">
+          {{ record.people.email }}
+        </template>
+        <template v-if="column.dataIndex == 'sol_phone'">
+          {{ record.people.phone }}
+        </template>
+        <template v-if="column.dataIndex == 'mype_region'">
+          {{ record.city.name }}
+        </template>
+        <template v-if="column.dataIndex == 'mype_provincia'">
+          {{ record.province.name }}
+        </template>
+        <template v-if="column.dataIndex == 'mype_distrito'">
+          {{ record.district.name }}
         </template>
 
-        <template v-if="column.dataIndex === 'sol_discapacidad'">
-          <a-tag :color="record.sol_discapacidad == 'NO' ? 'blue' : 'pink'">{{ record.sol_discapacidad }}</a-tag>
+        <template v-if="column.dataIndex == 'componente'">
+          {{ record.component.name }}
         </template>
-        <template v-if="column.dataIndex === 'sol_genero'">
-          <a-tag class="uppercase" :color="record.sol_genero == 'H' ? 'default' : 'error'">{{ record.sol_genero }}</a-tag>
+        <template v-if="column.dataIndex == 'tema_componente'">
+          {{ record.theme.name }}
+        </template>
+
+        <template v-if="column.dataIndex == 'detalle_tramite'">
+          {{ record.detailprocedure?.name }}
+        </template>
+        <template v-if="column.dataIndex == 'sector_economico'">
+          {{ record.economicsector?.name }}
+        </template>
+        <template v-if="column.dataIndex == 'atividad_comercial'">
+          {{ record?.comercialactivity?.name }}
+        </template>
+
+        <template v-if="column.dataIndex == 'mype_direccion'">
+          {{ record?.address }}
+        </template>
+
+        <template v-if="column.dataIndex == 'mype_nombre'">
+          {{ record.mype?.name }}
+        </template>
+        <template v-if="column.dataIndex == 'tipo_regimen'">
+          {{ record.regime?.name }}
+        </template>
+        <template v-if="column.dataIndex == 'numero_envio_notaria'">
+          {{ record.numbernotary }}
+        </template>
+        <template v-if="column.dataIndex == 'notaria'">
+          {{ record.notary?.name }}
+        </template>
+        <template v-if="column.dataIndex == 'codesunarp'">
+          {{ record.codesunarp }}
         </template>
         
         <template v-if="column.dataIndex === 'modality'">
-          <a-tag :color="record.modalidad == 'VIRTUAL' ? 'orange' : 'green'">{{ record.modalidad }}</a-tag>
+          <a-tag :color="record.modality.name == 'Presencial' ? 'green' : 'orange'">{{ record.modality.name }}</a-tag>
         </template>
 
       </template>
@@ -96,15 +149,13 @@ onBeforeUnmount(() => {
     { title: 'Asesor',                    dataIndex: 'reg_nombres', width: 200 },
     { title: 'Solicitante Apellidos',     dataIndex: 'sol_apellidos', width: 180 },
     { title: 'Solicitante Nombres',       dataIndex: 'sol_nombres', width: 180 },
-    { title: 'Solicitante género',        dataIndex: 'sol_genero', width: 140, align: 'center' },
-    { title: 'Solicitante discapacidad',  dataIndex: 'sol_discapacidad', width: 176, align: 'center' },
-    { title: 'Solicitante telf.',         dataIndex: 'sol_telefono', width: 120, align: 'center' },
-    { title: 'Solicitante correo',        dataIndex: 'sol_correo', width: 180},
+    { title: 'Solicitante Email',         dataIndex: 'sol_email', width: 200 },
+    { title: 'Solicitante Celular',       dataIndex: 'sol_phone', width: 160 },
     { title: 'Supervisor',                dataIndex: 'misupervisor', width: 200},
     { title: 'Región',                    dataIndex: 'mype_region', width: 140},
     { title: 'Provincia',                 dataIndex: 'mype_provincia', width: 160},
     { title: 'Distrito',                  dataIndex: 'mype_distrito', width: 160},
-    { title: 'Componente',                dataIndex: 'componente', width: 200},
+    { title: 'Componente',                dataIndex: 'componente', width: 180},
     { title: 'Tema',                      dataIndex: 'tema_componente', width: 180},
     { title: 'Modalidad',                 dataIndex: 'modality', width: 120, align: 'center'},
   ]);
@@ -115,10 +166,10 @@ onBeforeUnmount(() => {
     { title: 'Asesor',                    dataIndex: 'reg_nombres', width: 200 },
     { title: 'Solicitante Apellidos',     dataIndex: 'sol_apellidos', width: 180 },
     { title: 'Solicitante Nombres',       dataIndex: 'sol_nombres', width: 180 },
-    { title: 'Solicitante género',        dataIndex: 'sol_genero', width: 140, align: 'center' },
-    { title: 'Solicitante discapacidad',  dataIndex: 'sol_discapacidad', width: 176, align: 'center' },
-    { title: 'Solicitante telf.',         dataIndex: 'sol_telefono', width: 120, align: 'center' },
-    { title: 'Solicitante correo',        dataIndex: 'sol_correo', width: 180},
+    // { title: 'Solicitante género',        dataIndex: 'sol_genero', width: 140, align: 'center' },
+    // { title: 'Solicitante discapacidad',  dataIndex: 'sol_discapacidad', width: 176, align: 'center' },
+    { title: 'Solicitante Celular',       dataIndex: 'sol_phone', width: 160 },
+    { title: 'Solicitante Email',         dataIndex: 'sol_email', width: 200 },
     { title: 'Supervisor',                dataIndex: 'misupervisor', width: 180},
     { title: 'Región',                    dataIndex: 'mype_region', width: 130},
     { title: 'Provincia',                 dataIndex: 'mype_provincia', width: 180},
@@ -135,10 +186,9 @@ onBeforeUnmount(() => {
     { title: 'Asesor',                    dataIndex: 'reg_nombres', width: 180 },
     { title: 'Solicitante Apellidos',     dataIndex: 'sol_apellidos', width: 180 },
     { title: 'Solicitante Nombres',       dataIndex: 'sol_nombres', width: 180 },
-    { title: 'Solicitante género',        dataIndex: 'sol_genero', width: 140, align: 'center' },
-    { title: 'Solicitante discapacidad',  dataIndex: 'sol_discapacidad', width: 176, align: 'center' },
-    { title: 'Solicitante telf.',         dataIndex: 'sol_telefono', width: 120, align: 'center' },
-    { title: 'Solicitante correo',        dataIndex: 'sol_correo', width: 180},
+    { title: 'Código SUNARP',        dataIndex: 'codesunarp', width: 140, align: 'center' },
+    // { title: 'Solicitante discapacidad',  dataIndex: 'sol_discapacidad', width: 176, align: 'center' },
+    { title: 'Solicitante Celular',       dataIndex: 'sol_phone', width: 160 },
     { title: 'Supervisor',                dataIndex: 'misupervisor', width: 180},
     { title: 'Tipo de formalización',     dataIndex: 'tipo_formalizacion', width: 130},
     { title: 'Sector económico',          dataIndex: 'sector_economico', width: 130},
@@ -248,28 +298,33 @@ const handleDownloadAsesorias = async() => {
 const fetchData = async(val) => {
   try {
     loading.value = true;
-    let url = '/asesorias';
+    
+    
+    let url = `historial/advisories/2`;
+    
+    
+    
     columns.value = columnsAsesoria.value
 
     if(val == 'asesorias') {
       params.value.page = 0
       active.value = val
       columns.value = columnsAsesoria.value
-      url = '/asesorias'
+      url = `historial/advisories/2`
     }   
 
     if(val == 'ruc10') {
       params.value.page = 0
       active.value = val
       columns.value = columnsRuc10.value
-      url = '/formalizations-10'
+      url = `historial/formalizations-10/2`
     }  
 
     if(val == 'ruc20') {
       params.value.page = 0
       active.value = val
       columns.value = columnsRuc20.value
-      url = '/formalizations-20'
+      url = `historial/formalizations-20/2`
     }  
 
     let parx = params.value.page == 0 ? '' : params.value
