@@ -19,7 +19,7 @@ const router = createRouter({
       component: () => import('../pages/FormalizacionDigital.vue')
     },
     {
-      path: '/landing',
+      path: '/ferias',
       name: 'landing',
       component: () => import('../pages/Landing/LandingPage.vue')
     },
