@@ -3,7 +3,7 @@
     <h3>ASESORES</h3>
 
     <div class="filters-asesorias">
-      <a-button type="primary" @click="handleOpenModal">AGREGAR</a-button>
+      <!-- <a-button type="primary" @click="handleOpenModal">AGREGAR</a-button> -->
     </div>
     
     <a-table 

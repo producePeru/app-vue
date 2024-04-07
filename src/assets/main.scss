@@ -1,10 +1,4 @@
 :root {
-  // --font-size-base: 14px;
-  // --screen-xl: 1200px;
-  // --screen-lg: 992px;
-  // --screen-md: 768px;
-  // --screen-sm: 576px;
-  // --screen-xs: 480px;
   --component-background: #ffffff;
   --background-color-light: #ffffff;
   --popover-bg: #ffffff;
@@ -12,34 +6,6 @@
   --primary: #cf1322;
   --primary-hover: #f5222d;
   --color-3: #ffa39e;
-
-  --text-color: rgba(0, 0, 0, 0.88);
-  --text-color-secondary: rgba(0, 0, 0, 0.65);
-  --text-color-inverse: #fff;
-  --heading-color: rgba(0, 0, 0, 0.88);
-  --disabled-color: rgba(0, 0, 0, 0.25);
-  --layout-sider-background: #001529;
-  --btn-primary-color: #fff;
-  --heading-3-size: 24px;
-  --red-6: #f5222d;
-  --tag-default-bg: hsv(0, 0, 98%);
-  --green-6: #52c41a;
-  --background-color-base: #fff;
-  --font-size-lg: 16px;
-  --highlight-color: #ff4d4f;
-  --avatar-size-base: 32px;
-  --avatar-size-lg: 40px;
-  --avatar-size-sm: 24px;
-  --shadow-color: rgba(0, 0, 0, 0.15);
-  --border-color-base: #d9d9d9;
-  --border-color-split: rgba(5, 5, 5, 0.06);
-  --border-width-base: 1;
-  --border-style-base: solid;
-  --border-radius-base: 6;
-  --menu-dark-bg: #001529;
-  --menu-dark-bg-85: #001529d9;
-  --menu-dark-bg-65: #001529a6;
-  --ease-in-out: cubic-bezier(0.645, 0.045, 0.355, 1);
 }
 
 h1 {
@@ -206,4 +172,16 @@ $color-background: #F7F7FA;
 }
 :where(.css-dev-only-do-not-override-1qb1s0s).ant-progress .ant-progress-steps-item-active {
   background-color: #52c41a;
+}
+.ant-drawer-content-wrapper {
+  // min-width: 100%;
+  width: 100% !important;
+  @media screen and (min-width: 550px) {
+    width: 550px !important;
+  }
+}
+.quill-editor {
+  .ql-editor {
+    height: 100px;
+  }
 }

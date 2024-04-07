@@ -3,7 +3,7 @@
     <h3>SUPERVISORES</h3>
 
     <div class="filters">
-      <a-button type="primary" @click="handleOpenModal">AGREGAR</a-button>
+      <!-- <a-button type="primary" @click="handleOpenModal">AGREGAR</a-button> -->
     </div>
     
     <a-table 

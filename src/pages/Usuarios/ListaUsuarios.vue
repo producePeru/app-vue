@@ -6,7 +6,7 @@
       <a-select
       v-model:value="cedeSelected"
       placeholder="Filtrar por CDES"
-      :options="cedes"
+      :options="store.cdes"
       @change="handleFilter" />
 
       <a-input-search
@@ -81,6 +81,15 @@
     <a-pagination size="small" :total="total" :pageSize="pageSize"  @change="handlePaginator" :showSizeChanger="false" />
   </div>
 
+  <a-drawer
+      v-model:open="open"
+      class="draw-notary"
+      title="Editar Perfil"
+      placement="right"
+      @after-open-change="afterOpenChange">
+      <EditarProfileUsuario />
+    </a-drawer>
+
 </template>
 
 <script setup>
@@ -90,7 +99,19 @@ import { MoreOutlined } from '@ant-design/icons-vue';
 import { message } from 'ant-design-vue';
 import { useRouter } from 'vue-router';
 import { QuestionCircleOutlined } from '@ant-design/icons-vue';
+import { useCounterStore } from '@/stores/selectes.js';
+import EditarProfileUsuario from './components/EditarPerfil.componente.vue'
 
+const store = useCounterStore();
+store.$patch({ cdes: store.cdes });
+
+const open = ref(false);
+const afterOpenChange = bool => {
+  console.log('open', bool);
+};
+const showDrawer = () => {
+  open.value = true;
+};
 const spinning = ref(false);
 const openModal = ref(false);
 const open1 = ref(false);
@@ -127,13 +148,13 @@ const steps = [
 const columns = [
   { title: '#',                   dataIndex: 'idx', fixed: 'left', align: 'center', width: 50},
   { title: 'DNI',                 dataIndex: 'documentnumber', fixed: 'left', width: 100 },
-  { title: 'Nombres',             dataIndex: 'name', fixed: 'left', width: 120 },
-  { title: 'Apellidos',           dataIndex: 'lastname', fixed: 'left', width: 120 },
+  { title: 'Nombres',             dataIndex: 'name', width: 120 },
+  { title: 'Apellidos',           dataIndex: 'lastname', width: 120 },
   { title: 'Celular',             dataIndex: 'email', width: 180},
   { title: 'Correo',              dataIndex: 'phone', width: 180, align: 'center'},
   { title: 'Oficina',             dataIndex: 'office', width: 140},
   { title: 'CDE',                 dataIndex: 'cde', width: 140},
-  { title: '',                    dataIndex: 'actions', align: 'center', width: 50}
+  { title: '',                    dataIndex: 'actions', align: 'center', width: 50, fixed: 'right'}
 ];
 
 const bookings = ref([
@@ -148,13 +169,8 @@ const handlePaginator = (current) =>{
 }
 
 const handleEditUser = (data) => {
-  const query = {
-    rol: rol.value,
-    dni: data.number_document,
-    access: access.value
-  }
-
-  router.push({ name: 'actualizar-persona', query });
+  console.log(data);
+  open.value = true;
 }
 const handleFormalization20 = async(val) => {
   try {
@@ -182,13 +198,13 @@ const handleFormalization20 = async(val) => {
 }
 
 const handleFilter = (val) => {
-  if(val != 1000) {
-    url.value = `/formalization-digital?department=${val}`
-    fetchData()
-    return
-  }
-  url.value = '/formalization-digital'
-  fetchData()
+  // if(val != 1000) {
+  //   url.value = `/formalization-digital?department=${val}`
+  //   fetchData()
+  //   return
+  // }
+  // url.value = '/formalization-digital'
+  // fetchData()
 }
 const handleSearch = () => {
   if(searchUser.value) {
