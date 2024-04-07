@@ -3,9 +3,10 @@ const fields = {
     type: 'iText',
     label: 'Correo',
     name: 'email',
-    required: true,
+    required: false,
     email: 'email',
-    message: 'Escribe el correo del usuario'
+    message: 'Escribe el correo del usuario',
+    disabled: true
   },
   // password: {
   //   type: 'iPassword',

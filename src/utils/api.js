@@ -3,13 +3,13 @@ import Cookies from 'js-cookie';
 
 const prod = import.meta.env.VITE_APP_API_URL_PRODUCTION
 const dev = import.meta.env.VITE_APP_API_URL_LOCAL
-const apiUrl = window.location.hostname == 'localhost' ? dev : prod;
+const apiUrl = window.location.hostname == 'localhost' || window.location.hostname == '127.0.0.1' ? dev : prod;
 
 const api = axios.create({
   baseURL: apiUrl
 });
 
-// Agregar un interceptor para solicitudes
+// Agregar un interceptor para solicitudes 127.0.0.1
 api.interceptors.request.use(
   (config) => {
     // Verificar si config.headers existe y, si no, inicializarlo como un objeto vacío

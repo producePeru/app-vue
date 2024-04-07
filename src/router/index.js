@@ -23,6 +23,11 @@ const router = createRouter({
       name: 'landing',
       component: () => import('../pages/Landing/LandingPage.vue')
     },
+    {
+      path: '/notarias',
+      name: 'lasnotarias',
+      component: () => import('../pages/Landing/NotariasPage.vue')
+    },
     // {
     //   path: '/formalizacion-digital-mapa',
     //   name: 'formalizacion-mapa',

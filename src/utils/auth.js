@@ -31,7 +31,7 @@ router.beforeEach((to, from, next) => {
   
   } else if (to.path !== '/' && !isAuthenticated) {
 
-    if(to.name === 'landing') {
+    if(to.name === 'landing' || to.name === 'lasnotarias') {
       return next();
     }
 

@@ -60,7 +60,7 @@
             <template #overlay>
               <a-menu>
                 <a-menu-item>
-                  <!-- <a @click="handleEditUser(record)">Editar</a> -->
+                  <a @click="handleEditUser(record)">Editar</a>
                 </a-menu-item>
                 <a-menu-item>
                   <a-popconfirm title="¿Seguro de eliminar?" @confirm="handleDeleteUser(record)">
@@ -80,10 +80,6 @@
   <div class="paginator">
     <a-pagination size="small" :total="total" :pageSize="pageSize"  @change="handlePaginator" :showSizeChanger="false" />
   </div>
-
-
-
-
 
 </template>
 
@@ -222,10 +218,9 @@ const fetchData = async() => {
     let parms = params.value.page == 1 ? '' : params.value
     
     const data = await makeRequest({ url: url.value, method: 'GET', params:parms });
-    const filteredArray = data.data.filter((value) => value !== null);
-    
-    dataSource.value = filteredArray
-    total.value = filteredArray.length;
+    dataSource.value = data.data
+    total.value = data.total;
+
   } catch (error) {
     console.error('Error de red:', error);
   } finally {

@@ -7,13 +7,14 @@
     <a-form layout="vertical" :model="formState" name="basic" autocomplete="off" @finish="onSubmit"
       @finishFailed="onSubmitFail">
       <div class="grid-item">
-        <template v-for="(el, idx) in fields" :key="idx">
+        <template v-for="(el, idx) in fieldx" :key="idx">
 
           <a-form-item class="item-max" v-if="el.type === 'iSelect'" :name="el.name" :label="el.label" :rules="[{ required: el.required, message: el.message }]">
             <a-select v-if="el.name == 'gender_id'" v-model:value="formState[el.name]" :options="store.genders" />
             <a-select v-if="el.name == 'cde_id'" v-model:value="formState[el.name]" :options="store.cdes" />
             <a-select v-if="el.name == 'office_id'" v-model:value="formState[el.name]" :options="store.Offices" />
-            <a-select v-if="el.name == 'role_id'" v-model:value="formState[el.name]" :options="store.roles" />
+            <a-select v-if="el.name == 'role_id'" v-model:value="formState[el.name]" :options="store.roles" @change="handleSelectSupervisor" />
+            <a-select v-if="el.name == 'supervisor_id'" v-model:value="formState[el.name]" :options="store.supervisores" />
           </a-form-item>
 
           <a-form-item v-if="el.type === 'iSearch'" class="item-max" :name="el.name" :label="el.label"
@@ -24,7 +25,7 @@
 
           <a-form-item v-if="el.type === 'iText'" :name="el.name" :label="el.label"
             :rules="[{ required: el.required, message: el.message, type: el.email }]">
-            <a-input v-model:value="formState[el.name]" :maxlength="el.max" />
+            <a-input v-model:value="formState[el.name]" :maxlength="el.max" :disabled="el.disabled" />
           </a-form-item>
 
           <a-form-item v-if="el.type === 'iDate'" :name="el.name" :label="el.label"
@@ -48,11 +49,12 @@ import 'dayjs/locale/es';
 dayjs.locale('es');
 
 import { makeRequest } from '@/utils/api.js'
-import { reactive, ref } from 'vue';
+import { h, reactive, ref } from 'vue';
 import { message } from 'ant-design-vue';
 import fields from '@/forms/nuevoUsuario.js'
 import { useRoute } from 'vue-router';
 import { useCounterStore } from '@/stores/selectes.js';
+import { Modal } from 'ant-design-vue';
 
 const storageData = JSON.parse(localStorage.getItem('profile'))
 const store = useCounterStore();
@@ -61,11 +63,14 @@ store.$patch({ genders: store.genders });
 store.$patch({ cdes: store.cdes });
 store.$patch({ Offices: store.Offices });
 store.$patch({ roles: store.roles });
+store.$patch({ supervisores: store.supervisores });
+
 store.fetchGenders()
 store.fetchCdes()
 store.fetchOffices()
 store.fetchRoles()
 
+const fieldx = ref(fields)
 const birthdateDate = ref(null);
 const route = useRoute();
 const loading = ref(!true);
@@ -105,20 +110,49 @@ const clearFields = () => {
   
 }
 
+const handleSelectSupervisor = (val) => {
+  const supervisor_id = {
+    type: 'iSelect',
+    label: 'Supervisador',
+    name: 'supervisor_id',
+    required: true,
+    message: 'Seleccionar tipo de documento',
+    disabled: true
+  };
+
+  if (val === 2) {
+    store.fetchSupervisores();
+    fieldx.value = { ...fieldx.value, supervisor_id };
+  } else {
+    const { supervisor_id: removed, ...newValue } = fieldx.value;
+    fieldx.value = newValue;
+  }
+
+}
 const onSubmit = async () => {
   loading.value = true
+  formState.email = formState.name.substring(0, 2).toLowerCase() + formState.lastname.toLowerCase() + "@pnte.com";
   formState.password = formState.documentnumber
   formState.birthday = birthdateDate.value ? dayjs(birthdateDate.value).format('YYYY-MM-DD') : null;
 
-
-
-
-
-
   try {
     const data = await makeRequest({ url: 'user/create', method: 'POST', data: formState });
-    clearFields()
-    message.success(data.message)
+    
+    Modal.success({
+      title: 'La cuenta ha sido registrada',
+      content: h('div', {}, [
+        h('br'),
+        h('p', `Correo: ${formState.email}`),
+        h('p', 'Contraseña es el número de DNI ingresado'),
+      ]),
+      onOk() {
+        clearFields()
+        message.success(data.message)
+        const { supervisor_id: removed, ...newValue } = fieldx.value;
+        fieldx.value = newValue;
+      }
+    });
+
   } catch (error) {
     message.error('No se pudo registrar este usuario');
   } finally {
@@ -127,7 +161,7 @@ const onSubmit = async () => {
 };
 
 const onSubmitFail = () => {
-  message.error('Debes de completar todos los espacios requeridos')
+  message.error('Debes de completar todos los espacios requeridos');
 };
 
 const handleSearchApi = async searchValue => {
@@ -165,5 +199,8 @@ const validateNumber = () => {
     margin-bottom: .3rem;
     display: block;
   }
+}
+.ant-input-disabled {
+  color: #000000e0;
 }
 </style>

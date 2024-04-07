@@ -20,7 +20,8 @@ export const useCounterStore = defineStore('counter', {
       economicSectors: null,
       comercialActivities: null,
       regimes: null,
-      notaries: null
+      notaries: null,
+      supervisores: null
     }
   },
 
@@ -167,6 +168,14 @@ export const useCounterStore = defineStore('counter', {
       try {
         const { data } = await makeRequest({ url: `select/notaries`, method: 'GET' });
         this.notaries = data;
+      } catch (error) {
+        console.error('Error de red:', error);
+      }
+    },
+    async fetchSupervisores() {
+      try {
+        const { data } = await makeRequest({ url: `select/supervisores`, method: 'GET' });
+        this.supervisores = data;
       } catch (error) {
         console.error('Error de red:', error);
       }

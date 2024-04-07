@@ -43,9 +43,9 @@ import { reactive, ref } from 'vue';
 import { UserOutlined, LockOutlined } from '@ant-design/icons-vue';
 import { message } from 'ant-design-vue';
 import { useRouter } from 'vue-router';
-import { makeRequest } from '@/utils/api.js'
 import CryptoJS from 'crypto-js';
 import Cookies from 'js-cookie';
+import { requestNoToken } from '@/utils/noToken.js'
 
 const loading = ref(false)
 const router = useRouter();
@@ -56,9 +56,10 @@ const formState = reactive({
 });
 
 const onSubmit =async() => {
+  // return console.log("iaiiaia", window.location.hostname);
   loading.value = true;
   try {
-    const data = await makeRequest({ url: `login`, method: 'POST', data:  formState });
+    const data = await requestNoToken({ url: `login`, method: 'POST', data:  formState });
 
     localStorage.setItem('token', JSON.stringify(data.token));
     localStorage.setItem('profile', JSON.stringify(data.profile));

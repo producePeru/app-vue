@@ -67,6 +67,9 @@ const logout = async() => {
     }
   } catch (error) {
     console.error('Error de red:', error);
+    Cookies.remove('token');
+    localStorage.clear();
+    router.push('/');
   }
 }
 
