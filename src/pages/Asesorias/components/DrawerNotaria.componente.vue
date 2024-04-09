@@ -1,6 +1,4 @@
 <template>
-
-
   <a-form layout="vertical" :model="formState" name="basic" autocomplete="off" @finish="onSubmit">
     <div class="grid-notary">
       <template v-for="(el, idx) in fields" :key="idx">
@@ -31,18 +29,17 @@
       </template>
     </div>
 
+    <div>{{ update(props.updateNotary) }}</div>
+
     <div class="wrapper-form_btn">
-      <a-button class="btn-produce" type="primary" html-type="submit" :loading="loading">{{ !isIdUpdate ? 'GUARDAR' : 'Actualizar' }}</a-button>
+      <a-button class="btn-produce" type="primary" html-type="submit" :loading="loading">GUARDAR</a-button>
     </div>
-
-    <pre>{{ formState }}</pre>
   </a-form>
-
-
+  
 </template>
 
 <script setup>
-import { reactive, ref, onUpdated, onMounted } from 'vue'; 
+import { reactive, ref } from 'vue'; 
 import { message } from 'ant-design-vue';
 import { makeRequest } from '@/utils/api.js';
 import fields from '@/forms/nuevaNotaria.js';
@@ -50,22 +47,23 @@ import { useCounterStore } from '@/stores/selectes.js';
 import { QuillEditor } from '@vueup/vue-quill';
 import 'quill/dist/quill.snow.css';
 
+const storageData = JSON.parse(localStorage.getItem('profile'))
 const store = useCounterStore();
+const emit = defineEmits(['closeDraw']);
+const props = defineProps(['updateNotary'])
+
 store.$patch({ cities: store.cities });
+store.fetchCities();
 
 const editorOptions = {
   theme: 'snow',
   modules: {
-    
     toolbar: [
       [{ header: [1, 2, false] }],
       ['bold', 'italic', 'underline', 'strike'],
       [{ align: [] }],
-      // ['link', 'image', 'video'],
       [{ list: 'ordered' }, { list: 'bullet' }],
-      // ['blockquote', 'code-block'],
       [{ script: 'sub' }, { script: 'super' }],
-      // [{ indent: '-1' }, { indent: '+1' }],
       [{ color: [] }, { background: [] }],
       ['clean'],
     ],
@@ -73,20 +71,20 @@ const editorOptions = {
   contentType: 'html', 
 };
 
+const loading = ref(false);
 const formState = reactive({
   city_id: null,
   province_id: null,
   district_id: null,
   address: null,
   name: null,
-  istestimonio: null,
+  istestimonio: false,
   price: null,
   conditions: null,
   sociointerveniente: null,
   biometrico: null,
   infocontacto: null,
-
-  // created_by: storageData.id
+  user_id : storageData.id,     //creador
 });
 
 const handleDepartaments = (id) => {
@@ -98,6 +96,70 @@ const handleProvinces = (id) => {
   formState.district_id = null
   store.fetchDistricts(id)
 }
+
+const clearFields = () => {
+  formState.city_id = null
+  formState.province_id = null
+  formState.district_id = null
+  formState.address = null
+  formState.name = null
+  formState.istestimonio = false
+  formState.price = '</p>'
+  formState.conditions = '</p>'
+  formState.sociointerveniente = '</p>'
+  formState.biometrico = '</p>'
+  formState.infocontacto = '</p>'
+}
+
+const update = (val) => {
+  if(val) {
+    formState.city_id = val.city.id
+    handleDepartaments(val.city.id)
+    formState.province_id = val.province.id
+    handleProvinces(val.province.id)
+    formState.district_id = val.district.id
+    formState.address = val.address
+    formState.name = val.name
+    formState.istestimonio = val.istestimonio == 0 ? false : true
+    formState.price = val.price
+    formState.conditions = val.conditions
+    formState.sociointerveniente = val.sociointerveniente
+    formState.biometrico = val.biometrico
+    formState.infocontacto = val.infocontacto
+  } else {
+    clearFields()
+  }
+}
+
+
+const onSubmit = async () => {
+  let payload = formState
+  loading.value = true;
+  try {
+
+    let url = null, method = null;
+
+    if(props.updateNotary) {
+      url = `notary/update/${props.updateNotary.id}`;
+      method = 'PATCH';
+    } else {
+      url = 'notary/create';
+      method = 'POST';
+    }
+
+    const data = await makeRequest({ url, method, data: payload });
+
+    clearFields()
+    emit('closeDraw', true)
+    message.success(data.message)
+
+  } catch (error) {
+    message.error('No se pudo registrar este usuario');
+  } finally {
+    loading.value = false;
+  }
+};
+
 </script>
 
 <style lang="scss" scoped>
