@@ -87,7 +87,7 @@
       title="Editar Perfil"
       placement="right"
       @after-open-change="afterOpenChange">
-      <EditarProfileUsuario />
+      <EditarProfileUsuario :updateUser="updateUser" @closeDraw="handleCloseDrawopen" />
     </a-drawer>
 
 </template>
@@ -112,6 +112,8 @@ const afterOpenChange = bool => {
 const showDrawer = () => {
   open.value = true;
 };
+
+const updateUser = ref(null);
 const spinning = ref(false);
 const openModal = ref(false);
 const open1 = ref(false);
@@ -157,11 +159,11 @@ const columns = [
   { title: '',                    dataIndex: 'actions', align: 'center', width: 50, fixed: 'right'}
 ];
 
-const bookings = ref([
-  { value: 1, label: 'Aprobado'},
-  { value: 2, label: 'Desaprobado'},
-  { value: 3, label: 'Pendiente'}
-]);
+
+const handleCloseDrawopen = () => {
+  fetchData();
+  open.value = false;
+}
 
 const handlePaginator = (current) =>{
   params.value.page = current;
@@ -169,7 +171,7 @@ const handlePaginator = (current) =>{
 }
 
 const handleEditUser = (data) => {
-  console.log(data);
+  updateUser.value = data
   open.value = true;
 }
 const handleFormalization20 = async(val) => {
