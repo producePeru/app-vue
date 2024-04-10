@@ -1,12 +1,19 @@
 <template>
   <div>
-    <h3>Inicio</h3>
 
+    <iframe
+      src="https://app.powerbi.com/view?r=eyJrIjoiNTBkNDY1OGUtMTdlZi00MjExLTg5YmEtODRiYThjOTAzZjc3IiwidCI6Ijc1MDRlMzE4LThlMWUtNGQ1NS1iZmZkLTg3NWI0ZGVlODI2MCIsImMiOjR9"
+      frameborder="0" allowFullScreen="true">
+    </iframe>
 
-    <!-- <a-card style="width: 300px">
-      <a-statistic title="Usuarios Activos" :value="0" style="margin-right: 50px" />
-    </a-card> -->
-
-    
   </div>
 </template>
+
+<style>
+iframe {
+  display: block;
+  border: none;
+  height: 83vh;
+  width: 100%;
+}
+</style>
