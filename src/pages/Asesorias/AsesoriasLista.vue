@@ -11,12 +11,13 @@
         <img width="20" style="margin-right: 6px;" src="@/assets/img/icoexcel.png" /> DESCARGAR
       </a-button>
 
-      <a-input-search
+      <!-- <a-input-search
       class="asesorias-search"
       v-model:value="searchUser"
       placeholder=""
       enter-button="Buscar"
-      @search="handleSearch" />
+      @search="handleSearch" /> -->
+
     </div>
 
     <a-table 
@@ -169,14 +170,14 @@ onBeforeUnmount(() => {
   const columnsRuc10 = ref([
     { title: '#',                         dataIndex: 'idx', fixed: 'left', align: 'center', width: 50},
     { title: 'Fecha',                     dataIndex: 'ase_fecha', fixed: 'left', align: 'center', width: 100},
-    { title: 'Asesor',                    dataIndex: 'reg_nombres', width: 200 },
+    // { title: 'Asesor',                    dataIndex: 'reg_nombres', width: 200 },
     { title: 'Solicitante Apellidos',     dataIndex: 'sol_apellidos', width: 180 },
     { title: 'Solicitante Nombres',       dataIndex: 'sol_nombres', width: 180 },
     // { title: 'Solicitante género',        dataIndex: 'sol_genero', width: 140, align: 'center' },
     // { title: 'Solicitante discapacidad',  dataIndex: 'sol_discapacidad', width: 176, align: 'center' },
     { title: 'Solicitante Celular',       dataIndex: 'sol_phone', width: 160 },
     { title: 'Solicitante Email',         dataIndex: 'sol_email', width: 200 },
-    { title: 'Supervisor',                dataIndex: 'misupervisor', width: 180},
+    // { title: 'Supervisor',                dataIndex: 'misupervisor', width: 180},
     { title: 'Región',                    dataIndex: 'mype_region', width: 130},
     { title: 'Provincia',                 dataIndex: 'mype_provincia', width: 180},
     { title: 'Distrito',                  dataIndex: 'mype_distrito', width: 180},
@@ -189,14 +190,14 @@ onBeforeUnmount(() => {
   const columnsRuc20 = ref([
     { title: '#',                         dataIndex: 'idx', fixed: 'left', align: 'center', width: 50},
     { title: 'Fecha',                     dataIndex: 'ase_fecha', fixed: 'left', align: 'center', width: 100},
-    { title: 'Asesor',                    dataIndex: 'reg_nombres', width: 180 },
+    // { title: 'Asesor',                    dataIndex: 'reg_nombres', width: 180 },
     { title: 'Solicitante Apellidos',     dataIndex: 'sol_apellidos', width: 180 },
     { title: 'Solicitante Nombres',       dataIndex: 'sol_nombres', width: 180 },
     { title: 'Código SUNARP',        dataIndex: 'codesunarp', width: 140, align: 'center' },
     // { title: 'Solicitante discapacidad',  dataIndex: 'sol_discapacidad', width: 176, align: 'center' },
     { title: 'Solicitante Celular',       dataIndex: 'sol_phone', width: 160 },
-    { title: 'Supervisor',                dataIndex: 'misupervisor', width: 180},
-    { title: 'Tipo de formalización',     dataIndex: 'tipo_formalizacion', width: 130},
+    // { title: 'Supervisor',                dataIndex: 'misupervisor', width: 180},
+    // { title: 'Tipo de formalización',     dataIndex: 'tipo_formalizacion', width: 130},
     { title: 'Sector económico',          dataIndex: 'sector_economico', width: 130},
     { title: 'Actividad comercial',       dataIndex: 'atividad_comercial', width: 160},
     { title: 'Región',                    dataIndex: 'mype_region', width: 130},

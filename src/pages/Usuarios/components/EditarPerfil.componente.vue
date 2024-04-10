@@ -29,7 +29,7 @@
     <div>{{ update(props.updateUser) }}</div>
     <!-- <pre>{{ props.updateUser }}</pre> -->
     <a-form-item>
-      <a-button type="primary" html-type="submit" :loading="loading">GUARDAR</a-button>
+      <a-button class="btn-produce" type="primary" html-type="submit" :loading="loading">GUARDAR</a-button>
     </a-form-item>
   </a-form>
 </template>

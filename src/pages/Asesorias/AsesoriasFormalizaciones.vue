@@ -8,8 +8,8 @@
         <div>
           <label class="label">Seleccione el tipo de documento</label>
           <a-radio-group v-model:value="type_document" @change="handleResetDocument" class="radio-produce">
-            <a-radio :value="1">DNI</a-radio>
-            <a-radio :value="2">CE</a-radio>
+            <a-radio value="1">DNI</a-radio>
+            <a-radio value="2">CE</a-radio>
           </a-radio-group>
         </div>
         <div>
@@ -152,8 +152,20 @@
       </a-spin>
     </a-modal>
     <!-- MODAL MAS DE UNA SOLICITUD -->
+    <!-- <pre>{{ type_document }}</pre> -->
 
+    <a-drawer
+    v-model:open="open"
+    class="draw-notary"
+    root-class-name="root-class-name"
+    title="Datos del solicitante"
+    placement="right">
+      <SolicitanteEditar @closeDraw="handleCloseDrawopen" :updateValues="updateValues" />
+    </a-drawer>
   </section>
+
+  
+
 </template>
 
 <script setup>
@@ -168,12 +180,14 @@ import { makeRequest } from '@/utils/api.js';
 import { useRouter, useRoute } from 'vue-router';
 import { ExclamationCircleOutlined, EditOutlined, RedoOutlined } from '@ant-design/icons-vue';
 import moment from 'moment';
-import HISTORIAL from './components/AsesoriasHistorial.vue'
+import HISTORIAL from './components/AsesoriasHistorial.vue';
+import SolicitanteEditar from './components/DrawerSolicitante.componente.vue';
+
 
 const router = useRouter();
 const route = useRoute();
 
-const type_document = ref(1);
+const type_document = ref(0);
 
 const value1 = ref(null);
 const options1 = ref([
@@ -182,6 +196,8 @@ const options1 = ref([
   {value: 'ruc10',label: 'RUC 10'}
 ])
 
+const updateValues = ref(null);
+const open = ref(false);
 const setValues = ref(null);
 const spinning = ref(false);
 const openModal = ref(false);
@@ -197,6 +213,10 @@ const loading1 = ref(false);
 const historial = ref([]);
 const itemSelectedF20 = ref(null);
 
+const handleCloseDrawopen = () => {
+  handleSearchApi(dniNumber.value);
+  open.value = false;
+}
 const formatDate = (date) => {
   return moment(date).format('DD/MM/YYYY HH:mm A');
 }
@@ -229,14 +249,16 @@ const steps = [
 ];
 
 const handleEditUserData = () => {
-  const query = {
-    rol: 'solicitante',
-    access: 3,
-    dni: dniNumber.value,
-    type: 'asesoria',
-    typedoc: type_document.value == 1 ? 'dni' : 'ce'
-  }
-  router.push({ name: 'actualizar-persona', query });
+  // const query = {
+  //   rol: 'solicitante',
+  //   access: 3,
+  //   dni: dniNumber.value,
+  //   type: 'asesoria',
+  //   typedoc: type_document.value == 1 ? 'dni' : 'ce'
+  // }
+  // router.push({ name: 'actualizar-persona', query });
+  updateValues.value = infoUser.value
+  open.value = true;
 }
 
 // CREAR EMPRESA RUC 20
@@ -299,9 +321,15 @@ const handleUpdateValues = async () => {
 }
 
 const handleSearchApi = async (val) => {
+
   searchLoading.value = true;
   if (!val) {
     message.warning("Ingresa un número de documento")
+    return searchLoading.value = false
+  }
+
+  if (type_document.value == 0) {
+    message.warning("Seleccionar el tipo de documento")
     return searchLoading.value = false
   }
 
@@ -328,18 +356,14 @@ const handleSearchApi = async (val) => {
     router.push({ name: 'registrar-persona', query });
   }
 }
-const handleSetDataUser = async () => {
 
-  route.query.typedoc == 'ce' ? type_document.value = 2 : type_document.value = 1
-
-  const data = await makeRequest({ url: `/applicant-new/${route.query.dni}`, method: 'GET' });
-  dniNumber.value = data.number_document
-  infoUser.value = data
-  await handleHistorial(data);
-}
 
 onMounted(() => {
-  if (route.query.dni) handleSetDataUser();
+  if (route.query.type) {
+    console.log("ooaoooaoaa", route.query.type);
+    type_document.value = route.query.type
+    dniNumber.value = route.query.number
+  }
 });
 </script>
 

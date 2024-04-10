@@ -1,5 +1,6 @@
 <template>
   <div class="wrapper-booking">
+    <a-spin :spinning="spinning">
     <a-form layout="vertical" :model="formState" name="basic" autocomplete="off" @finish="onSubmit"
       @finishFailed="onSubmitFail">
       <div class="grid-booking">
@@ -29,11 +30,13 @@
         </template>
       </div>
 
+      <div>{{ update() }}</div>
       <a-form-item>
         <a-button type="primary" class="btn-produce" html-type="submit" :loading="loading">GUARDAR</a-button>
       </a-form-item>
       <!-- <pre>{{ props.info }}</pre> -->
     </a-form>
+    </a-spin>
   </div>
 </template>
 
@@ -54,14 +57,16 @@ store.$patch({ components: store.components });
 store.$patch({ componentThemes: store.componentThemes });
 store.$patch({ modalities: store.modalities });
 store.$patch({ cities: store.cities });
-store.$patch({ provinces: store.provinces });
-store.$patch({ districts: store.districts });
+// store.$patch({ provinces: store.provinces });
+// store.$patch({ districts: store.districts });
 
 store.fetchComponents();
 store.fetchComponentThemes();
 store.fetchModalities();
 store.fetchCities();
 store.fetchGenders();
+
+const spinning = ref(true);
 
 const formState = reactive({
   observations: null,
@@ -75,6 +80,9 @@ const formState = reactive({
   district_id: null,
 });
 
+const update = () => {
+  if(store.cities) spinning.value = false;
+}
 const handleSelectComponent = (id) => {
   formState.theme_id = null
   store.fetchComponentThemes(id);

@@ -44,7 +44,7 @@
           {{ record.gender?.name }}
         </template>
         <template v-if="column.dataIndex == 'sickx'">
-          <a-tag :color="record.sick == 'no' ? 'pink' : 'blue'">{{ record.sick == 'no' ? 'NO' : 'SI' }}</a-tag>
+          <a-tag :color="record.sick == 'no' ? 'blue' : 'pink'">{{ record.sick == 'no' ? 'NO' : 'SI' }}</a-tag>
         </template>
 
         <template v-if="column.dataIndex == 'actions'">

@@ -173,6 +173,9 @@ $color-background: #F7F7FA;
 :where(.css-dev-only-do-not-override-1qb1s0s).ant-progress .ant-progress-steps-item-active {
   background-color: #52c41a;
 }
+:where(.css-dev-only-do-not-override-1qb1s0s).ant-menu-dark:not(.ant-menu-horizontal) .ant-menu-item:not(.ant-menu-item-selected):active {
+  background-color: #f44336 !important;
+}
 .ant-drawer-content-wrapper {
   // min-width: 100%;
   width: 100% !important;

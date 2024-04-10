@@ -87,9 +87,6 @@ const lessions = [
   {label: "No", value: "no"}
 ]
 const update = (val) => {
-
-
-
   if(store.genders?.length) spinning.value = false;
 
   if (val) {
