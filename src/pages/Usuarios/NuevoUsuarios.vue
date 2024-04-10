@@ -182,7 +182,7 @@ const handleSelectSupervisor = (val) => {
     disabled: true
   };
 
-  if (val === 2) {
+  if (val === 1) {
     store.fetchSupervisores();
     fieldx.value = { ...fieldx.value, supervisor_id };
   } else {
