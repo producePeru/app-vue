@@ -23,7 +23,7 @@
           {{ record.district?.name }}
         </template>
         <template v-if="column.dataIndex == 'namenotary'">
-          <h4 style="font-size: 18px; font-weight: 700;">{{ record.name }}</h4>
+          <h4 style="font-size: 16px; font-weight: 700;">{{ record.name }}</h4>
         </template>
         <template v-if="column.dataIndex == 'pricex'">
           <div class="gastos">
@@ -64,7 +64,7 @@ const columns = [
   { title: 'DIRECCION', fixed: 'left', dataIndex: 'address', align: 'center', width: 140 },
   { title: 'NOTARIA', fixed: 'left', dataIndex: 'namenotary', align: 'center', width: 180 },
   { title: 'GASTOS NOTARIALES', dataIndex: 'pricex', align: 'center', width: 280 },
-  { title: 'CONDICIONES', dataIndex: 'pricedescriptionx', align: 'center', width: 240 },
+  { title: 'CONDICIONES', dataIndex: 'pricedescriptionx', align: 'center', width: 260 },
   { title: 'SOCIO O INTERVINIENTE ADICIONAL', dataIndex: 'socio', align: 'center', width: 200 },
   { title: 'BIOMETRICO', dataIndex: 'bio', align: 'center', width: 180 },
   { title: 'DATOS DE CONTACTO', dataIndex: 'contact', align: 'center', width: 260 },

@@ -122,7 +122,7 @@ const columns = [
   { title: 'DIRECCION', fixed: 'left', dataIndex: 'address', align: 'center', width: 140 },
   { title: 'NOTARIA', fixed: 'left', dataIndex: 'namenotary', align: 'center', width: 180 },
   { title: 'GASTOS NOTARIALES', dataIndex: 'pricex', align: 'center', width: 280 },
-  { title: 'CONDICIONES', dataIndex: 'pricedescriptionx', align: 'center', width: 240 },
+  { title: 'CONDICIONES', dataIndex: 'pricedescriptionx', align: 'center', width: 260 },
   { title: 'SOCIO O INTERVINIENTE ADICIONAL', dataIndex: 'socio', align: 'center', width: 200 },
   { title: 'BIOMETRICO', dataIndex: 'bio', align: 'center', width: 180 },
   { title: 'DATOS DE CONTACTO', dataIndex: 'contact', align: 'center', width: 260 },
@@ -246,6 +246,92 @@ onMounted(() => {
     color: #ff0000;
     font-size: 22px;
     margin-bottom: 2rem;
+  }
+}
+</style>
+
+<style lang="scss">
+.all-notaries {
+  table th, table td {
+  border: 1px solid #c3c3c3;
+}
+  .ant-table-thead {
+    .ant-table-cell:nth-child(1),
+    .ant-table-cell:nth-child(2),
+    .ant-table-cell:nth-child(3),
+    .ant-table-cell:nth-child(4),
+    .ant-table-cell:nth-child(5),
+    .ant-table-cell:nth-child(6),
+    .ant-table-cell:nth-child(7),
+    .ant-table-cell:nth-child(8),
+    .ant-table-cell:nth-child(9),
+    .ant-table-cell:nth-child(10),
+    .ant-table-cell:nth-child(11) {
+      background-color: #8eaadb !important;
+      font-weight: 700;
+      font-size: 15px;
+    }
+  }
+  .ant-table-row  {
+    .ant-table-cell:nth-child(2),
+    .ant-table-cell:nth-child(3),
+    .ant-table-cell:nth-child(4) {
+      background-color: #e7e6e6 !important;
+    }
+  }
+  .ant-table-row  {
+    .ant-table-cell:nth-child(6)   {
+      background-color: #cfe2f3 !important;
+    }
+  }
+  .ant-table-row  {
+    .ant-table-cell:nth-child(7)   {
+      // position: relative;
+    }
+    .ant-table-cell:nth-child(8)   {
+      // position: relative;
+    }
+  }
+}
+
+.style-price {
+  h1 strong, h2 strong {
+    font-size: 18px;
+    font-weight: 700;
+  }
+  strong {
+    font-weight: 500;
+    font-size: 13px;
+  }
+}
+.style-conditions {
+  h1 strong, h2 strong {
+    font-size: 14px;
+  }
+}
+.style-price, .style-conditions {
+  h1 strong, h2 strong {
+    // outline: 1px solid red;
+    width: 100%;
+    display: block;
+    height: 20px;
+  }
+  strong {
+    // outline: 1px solid green;
+    width: 100%;
+    display: block;
+    // height: 20px;
+  }
+}
+
+.style-contact {
+  p {
+    margin: 4px;
+  }
+  p strong {
+    font-weight: 500;
+    font-size: 14px;
+    display: block;
   }
 }
 </style>
