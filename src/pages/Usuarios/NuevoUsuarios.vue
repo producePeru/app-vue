@@ -33,7 +33,6 @@
               </template>
             </a-select>
           
-          
           </a-form-item>
 
           <a-form-item v-if="el.type === 'iSearch'" class="item-max" :name="el.name" :label="el.label"

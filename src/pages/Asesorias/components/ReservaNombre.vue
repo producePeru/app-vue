@@ -1,5 +1,6 @@
 <template>
   <div class="wrapper-booking">
+    <a-spin :spinning="spinning">
     <a-form layout="vertical" :model="formState" name="basic" autocomplete="off" @finish="onSubmit"
       @finishFailed="onSubmitFail">
       <div class="grid-booking">
@@ -48,10 +49,12 @@
       </div>
       <!-- <pre>{{ props.info }}</pre>
       <pre>:::::{{ formState }}</pre> -->
+      <div>{{ update() }}</div>
       <a-form-item>
         <a-button class="btn-produce" type="primary" html-type="submit" :loading="loading">GUARDAR</a-button>
       </a-form-item>
     </a-form>
+    </a-spin>
   </div>
 </template>
 
@@ -80,7 +83,7 @@ const props = defineProps(['info']);
 const emit = defineEmits(['closeDraw']);
 const loadingcategory = ref(false);
 const nameNewItem = ref(null);
-
+const spinning = ref(true);
 const loading = ref(false);
 const store = useCounterStore();
 store.$patch({ cities: store.cities });
@@ -108,6 +111,9 @@ const formState = reactive({
   modality_id: null,
   user_id: storageData.user_id
 });
+const update = () => {
+  if(store.regimes?.length) spinning.value = false;
+}
 
 const handleAddItem = async() => {
   try {

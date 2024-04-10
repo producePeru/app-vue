@@ -9,7 +9,26 @@
             :rules="[{ required: el.required, message: el.message }]">
             <a-select v-if="el.name == 'detailprocedure_id'" v-model:value="formState[el.name]" :options="store.detailProcedures" />
             <a-select v-if="el.name == 'modality_id'" v-model:value="formState[el.name]" :options="store.modalities" />
-            <a-select v-if="el.name == 'economicsector_id'" v-model:value="formState[el.name]" :options="store.economicSectors" />
+            <!-- <a-select v-if="el.name == 'economicsector_id'" v-model:value="formState[el.name]" :options="store.economicSectors" /> -->
+
+            <a-select v-if="el.name == 'economicsector_id'" v-model:value="formState[el.name]" show-search :options="store.economicSectors"
+              :filter-option="filterOption">
+              <template #dropdownRender="{ menuNode: menu }">
+                <v-nodes :vnodes="menu" />
+                <a-divider style="margin: 4px 0" />
+                <a-space style="padding: 4px 8px">
+                  <a-input ref="inputRef" v-model:value="nameNewItemSector" placeholder="Nuevo registro" />
+                  <a-button type="text" @click="handleAddItemSector" :loading="loadingNewItenSector">
+                    <template #icon>
+                      <PlusOutlined />
+                    </template>
+                    Agregar
+                  </a-button>
+                </a-space>
+              </template>
+            </a-select>
+
+
           </a-form-item>
 
           <a-form-item v-if="el.type === 'iText'" :name="el.name" :label="el.label"
@@ -81,6 +100,9 @@ const emit = defineEmits(['closeDraw']);
 
 const loading = ref(false);
 const nameNewItem = ref(null);
+const nameNewItemSector = ref(null);
+const loadingNewItenSector = ref(false);
+
 const store = useCounterStore();
 const loadingcategory = ref(false);
 store.$patch({ cities: store.cities });
@@ -139,6 +161,23 @@ const filterOption = (input, option) => {
   const normalizedLabel = option.label.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "");
   return normalizedLabel.includes(normalizedInput);
 };
+const handleAddItemSector = async() => {
+  try {
+    loadingNewItenSector.value = true;
+    const payload = {
+      name: nameNewItemSector.value
+    }
+    const data = await makeRequest({ url: 'create/economic-sector', method: 'POST', data: payload});
+    if(data.status == 200) {
+      nameNewItemSector.value = null;
+      store.fetchEconomicSectors();
+    }
+  } catch(e) {
+    console.log(e);
+  } finally {
+    loadingNewItenSector.value = false;
+  }
+}
 const onSubmit = async () => {
   loading.value = true;
   formState.people_id = props.info.id;

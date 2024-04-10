@@ -1,5 +1,6 @@
 <template>
   <div class="wrapper-booking">
+    <a-spin :spinning="spinning">
     <a-form layout="vertical" :model="formState" name="basic" autocomplete="off" @finish="onSubmit"
       @finishFailed="onSubmitFail">
       <div class="grid-booking">
@@ -17,10 +18,13 @@
         </template>
       </div>
       <!-- <pre>{{ formState }}</pre> -->
+      <div>{{ update() }}</div>
+
       <a-form-item>
         <a-button class="btn-produce" type="primary" html-type="submit" :loading="loading">GUARDAR</a-button>
       </a-form-item>
     </a-form>
+    </a-spin>
   </div>
 </template>
 
@@ -39,6 +43,7 @@ const emit = defineEmits(['closeDraw']);
 store.$patch({ notaries: store.notaries });
 store.fetchNotaries();
 
+const spinning = ref(true);
 const loading = ref(false);
 const formState = reactive({
   task: 2,
@@ -48,6 +53,9 @@ const formState = reactive({
   user_id: storageData.user_id,
   userupdated_id: storageData.id
 })
+const update = () => {
+  if(store.notaries?.length) spinning.value = false;
+}
 
 const onSubmit = async () => {
   loading.value = true;
