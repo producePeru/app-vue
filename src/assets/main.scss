@@ -182,6 +182,10 @@ $color-background: #F7F7FA;
 :where(.css-1qb1s0s).ant-btn-primary {
   box-shadow: none !important;
 }
+:where(.css-1qb1s0s).ant-radio-wrapper .ant-radio-checked .ant-radio-inner {
+  border-color: var(--primary);
+  background-color: var(--primary);
+}
 .ant-drawer-content-wrapper {
   // min-width: 100%;
   width: 100% !important;
