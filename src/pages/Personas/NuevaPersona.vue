@@ -1,5 +1,9 @@
 <template>
   <div class="agreement-wrapper">
+    <h3>Formulario de registro</h3>
+    <br>
+
+    <a-spin :spinning="spinning">
     <a-form layout="vertical" :model="formState" name="basic" autocomplete="off" @finish="onSubmit"
       @finishFailed="onSubmitFail">
       <div class="grid-item">
@@ -29,7 +33,8 @@
 
           <a-form-item v-if="el.type === 'iText'" :name="el.name" :label="el.label"
             :rules="[{ required: el.required, message: el.message, type: el.email, max: el.max }]">
-            <a-input v-model:value="formState[el.name]" :disabled="el.disabled" :maxlength="el.max" />
+            <a-input v-if="el.name == 'phone'" v-model:value="formState[el.name]" :disabled="el.disabled" :maxlength="el.max" @input="validateNumberPhone" />
+            <a-input v-else v-model:value="formState[el.name]" :disabled="el.disabled" :maxlength="el.max" />
           </a-form-item>
 
           <a-form-item v-if="el.type === 'iDate'" :name="el.name" :label="el.label"
@@ -39,12 +44,13 @@
           </a-form-item>
         </template>
       </div>
-      
+      <div>{{ update() }}</div>
       <!-- <pre>{{ formState }}</pre> -->
       <a-form-item>
         <a-button class="btn-produce" type="primary" html-type="submit" :loading="loading">REGISTRAR</a-button>
       </a-form-item>
     </a-form>
+    </a-spin>
   </div>
 </template>
 
@@ -74,12 +80,14 @@ store.fetchTypeDocuments();
 store.fetchCities();
 store.fetchGenders();
 
+const router = useRouter();
 const storageData = JSON.parse(localStorage.getItem('profile'))
 const fields = ref(fieldsJs)
 const searchLoading = ref(false);
 const birthdateDate = ref(null);
 const dateFormat = 'YYYY-MM-DD';
 const loading = ref(false);
+const spinning = ref(true);
 
 const formState = reactive({
   typedocument_id: null,
@@ -95,12 +103,14 @@ const formState = reactive({
   birthday: null,
   gender_id: null,
   lession: null,
-  people_id: storageData.id,
+  people_id: storageData.user_id,
   from_id: 1
 });
 
+const update = () => {
+  if(store.typeDocuments) spinning.value = false;
+}
 const handleDisabled = () => {
-  console.log("34343434");
   fields.value.lastname.disabled = false;
   fields.value.middlename.disabled = false;
   fields.value.name.disabled = false;
@@ -151,6 +161,9 @@ const handleSearchApi = async (val) => {
 }
 const validateNumber = () => {
   formState.documentnumber = formState.documentnumber.replace(/\D/g, '');
+};
+const validateNumberPhone = () => {
+  formState.phone = formState.phone.replace(/\D/g, '');
 };
 const handleDepartaments = (id) => {
   formState.province_id = null
@@ -204,8 +217,15 @@ const onSubmit = async () => {
 
   try {
     const data = await makeRequest({ url: 'person/create', method: 'POST', data: formState });
-    clearFields()
-    message.success(data.message)
+    const query = {
+      type: formState.typedocument_id,
+      number: formState.documentnumber
+    }
+    router.push({ name: 'asesorias-formalizaciones', query });
+
+    message.success(data.message);
+    clearFields();
+
   } catch (error) {
     message.error('No se pudo registrar este usuario');
   } finally {

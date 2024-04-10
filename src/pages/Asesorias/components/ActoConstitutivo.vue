@@ -45,7 +45,7 @@ const formState = reactive({
   name: null,
   numbernotary: null,
   notary_id: null,
-  user_id: storageData.id,
+  user_id: storageData.user_id,
   userupdated_id: storageData.id
 })
 

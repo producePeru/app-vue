@@ -23,9 +23,9 @@
               <template v-if="column.dataIndex === 'modality'">
                 {{ record.modality?.name }}
               </template>
-              <template v-if="column.dataIndex === 'asesor_create'">
-                {{ record.user?.profile.name }} {{ record.user?.profile.lastname }} {{ record.user?.profile.middlename }} 
-              </template>
+              <!-- <template v-if="column.dataIndex === 'asesor_create'">
+                {{ record.user.profile?.name }} {{ record.user.profile?.lastname }} {{ record.user.profile?.middlename }} 
+              </template> -->
              
             </template>
           </a-table>
@@ -60,11 +60,11 @@
                   </a-space>
                 </div>
               </template>
-              <template v-if="column.dataIndex === 'asesor_create'">
+              <!-- <template v-if="column.dataIndex === 'asesor_create'">
                 {{ record.user?.profile.name }} {{ record.user?.profile.lastname }} {{ record.user?.profile.middlename }} 
-              </template>
+              </template> -->
               <template v-if="column.dataIndex === 'asesor_update'">
-                {{ record.user?.profile.name }} {{ record.userupdater?.profile.lastname }} {{ record.user?.profile.middlename }} 
+                {{ record.user.profile?.name }} {{ record.userupdater?.profile.lastname }} {{ record.user?.profile.middlename }} 
               </template>
             </template>
           </a-table>
@@ -93,9 +93,9 @@
               <template v-if="column.dataIndex === 'modality'">
                 {{ record.modality?.name }}
               </template>
-              <template v-if="column.dataIndex === 'asesor_create'">
+              <!-- <template v-if="column.dataIndex === 'asesor_create'">
                 {{ record.user?.profile.name }} {{ record.user?.profile.lastname }} {{ record.user?.profile.middlename }} 
-              </template>
+              </template> -->
             </template>
           </a-table>
         </template>
@@ -119,8 +119,8 @@ const columns = [
   { title: 'Fecha última actualización', dataIndex: 'date_last', width: 160 },
   { title: 'Proceso', dataIndex: 'progress' },
   { title: 'Sector económico', dataIndex: 'sector' },
-  { title: 'Registrado por', dataIndex: 'asesor_create' },
-  { title: 'Último asesor atendido', dataIndex: 'asesor_update' },
+  // { title: 'Registrado por', dataIndex: 'asesor_create' },
+  // { title: 'Último asesor atendido', dataIndex: 'asesor_update' },
 ];
 
 // ruc10
@@ -130,7 +130,7 @@ const columns2 = [
   { title: 'Detalle del trámite', dataIndex: 'component' },
   { title: 'Sector económico', dataIndex: 'sector' },
   { title: 'Modalidad', dataIndex: 'modality', align: 'center' },
-  { title: 'Registrado por', dataIndex: 'asesor_create' }
+  // { title: 'Registrado por', dataIndex: 'asesor_create' }
 ];
 
 const asesorias = [
@@ -139,7 +139,7 @@ const asesorias = [
   { title: 'Componente', dataIndex: 'component' },
   { title: 'Tema', dataIndex: 'tema_compoment' },
   { title: 'Modalidad', dataIndex: 'modality', align: 'center' },
-  { title: 'Registrado por', dataIndex: 'asesor_create' }
+  // { title: 'Registrado por', dataIndex: 'asesor_create' }
 ];
 </script>
 
