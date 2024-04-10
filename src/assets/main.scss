@@ -179,6 +179,9 @@ $color-background: #F7F7FA;
 :where(.css-1qb1s0s).ant-menu-dark:not(.ant-menu-horizontal) .ant-menu-item:not(.ant-menu-item-selected):active {
   background-color: #d9363e !important;
 }
+:where(.css-1qb1s0s).ant-btn-primary {
+  box-shadow: none !important;
+}
 .ant-drawer-content-wrapper {
   // min-width: 100%;
   width: 100% !important;

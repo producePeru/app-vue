@@ -12,9 +12,28 @@
           <a-form-item class="item-max" v-if="el.type === 'iSelect'" :name="el.name" :label="el.label" :rules="[{ required: el.required, message: el.message }]">
             <a-select v-if="el.name == 'gender_id'" v-model:value="formState[el.name]" :options="store.genders" />
             <a-select v-if="el.name == 'cde_id'" v-model:value="formState[el.name]" :options="store.cdes" />
-            <a-select v-if="el.name == 'office_id'" v-model:value="formState[el.name]" :options="store.Offices" />
+            <!-- <a-select v-if="el.name == 'office_id'" v-model:value="formState[el.name]" :options="store.Offices" /> -->
             <a-select v-if="el.name == 'role_id'" v-model:value="formState[el.name]" :options="store.roles" @change="handleSelectSupervisor" />
             <a-select v-if="el.name == 'supervisor_id'" v-model:value="formState[el.name]" :options="store.supervisores" />
+          
+            <a-select v-if="el.name == 'office_id'" v-model:value="formState[el.name]" show-search :options="store.Offices"
+              :filter-option="filterOption">
+              <template #dropdownRender="{ menuNode: menu }">
+                <v-nodes :vnodes="menu" />
+                <a-divider style="margin: 4px 0" />
+                <a-space style="padding: 4px 8px">
+                  <a-input ref="inputRef" v-model:value="nameNewItem" placeholder="Nueva actividad" />
+                  <a-button type="text" @click="handleAddItem" :loading="loadingNewIten">
+                    <template #icon>
+                      <PlusOutlined />
+                    </template>
+                    Agregar
+                  </a-button>
+                </a-space>
+              </template>
+            </a-select>
+          
+          
           </a-form-item>
 
           <a-form-item v-if="el.type === 'iSearch'" class="item-max" :name="el.name" :label="el.label"
@@ -35,6 +54,9 @@
             <a-date-picker :locale="locale" v-model:value="birthdateDate" style="width: 100%;" :format="dateFormat" />
           </a-form-item>
         </template>
+
+
+
       </div>
 
       <a-form-item>
@@ -45,18 +67,29 @@
 </template>
 
 <script setup>
-import locale from 'ant-design-vue/es/date-picker/locale/es_ES';
-import dayjs from 'dayjs';
-import 'dayjs/locale/es';
-dayjs.locale('es');
-
+import { PlusOutlined } from '@ant-design/icons-vue';
 import { makeRequest } from '@/utils/api.js'
-import { h, reactive, ref } from 'vue';
+import { h, reactive, ref, defineComponent } from 'vue';
 import { message } from 'ant-design-vue';
 import fields from '@/forms/nuevoUsuario.js'
 import { useRoute } from 'vue-router';
 import { useCounterStore } from '@/stores/selectes.js';
 import { Modal } from 'ant-design-vue';
+import locale from 'ant-design-vue/es/date-picker/locale/es_ES';
+import dayjs from 'dayjs';
+import 'dayjs/locale/es';
+dayjs.locale('es');
+const VNodes = defineComponent({
+  props: {
+    vnodes: {
+      type: Object,
+      required: true,
+    },
+  },
+  render() {
+    return this.vnodes;
+  },
+});
 
 const storageData = JSON.parse(localStorage.getItem('profile'));
 const store = useCounterStore();
@@ -79,6 +112,8 @@ const loading = ref(!true);
 const dateFormat = 'YYYY-MM-DD';
 const searchLoading = ref(false);
 const upDisabled = ref(false);
+const loadingNewIten = ref(false);
+const nameNewItem = ref(null);
 
 const formState = reactive({
   name: null,
@@ -114,6 +149,29 @@ const clearFields = () => {
 const validateOnlyNumber = (val) => {
   formState[val] = formState[val].replace(/\D/g, '');
 };
+
+const handleAddItem = async() => {
+  try {
+    loadingNewIten.value = true;
+    const payload = {
+      name: nameNewItem.value
+    }
+    const data = await makeRequest({ url: 'create/office', method: 'POST', data: payload});
+    if(data.status == 200) {
+      nameNewItem.value = null;
+      store.fetchOffices();
+    }
+  } catch(e) {
+    console.log(e);
+  } finally {
+    loadingNewIten.value = false;
+  }
+}
+const filterOption = (input, option) => {
+  const normalizedInput = input.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "");
+  const normalizedLabel = option.label.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "");
+  return normalizedLabel.includes(normalizedInput);
+};
 const handleSelectSupervisor = (val) => {
   const supervisor_id = {
     type: 'iSelect',
@@ -131,7 +189,6 @@ const handleSelectSupervisor = (val) => {
     const { supervisor_id: removed, ...newValue } = fieldx.value;
     fieldx.value = newValue;
   }
-
 }
 const onSubmit = async () => {
   loading.value = true
