@@ -56,7 +56,7 @@
         </template>
 
 
-      <pre>{{ formState }}</pre>
+      <!-- <pre>{{ formState }}</pre> -->
       </div>
 
       <a-form-item>
