@@ -65,7 +65,7 @@ store.fetchGenders();
 
 const formState = reactive({
   observations: null,
-  user_id: storageData.id,
+  user_id: storageData.user_id,
   people_id: props.info.id,
   component_id: null,
   theme_id: null,

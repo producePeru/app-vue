@@ -105,7 +105,7 @@ const formState = reactive({
   city_id: null,
   province_id: null,
   district_id: null,
-  user_id: storageData.id
+  user_id: storageData.user_id
 });
 
 const handleAddItem = async() => {

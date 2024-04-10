@@ -1,5 +1,5 @@
 <template>
-  <h3>{{ route.query.dni ? 'ACTUALIZAR' : 'REGISTRO DE' }} USUARIO</h3>
+  <h3>REGISTRO DE USUARIO</h3>
 
   <a-divider />
 
@@ -25,7 +25,9 @@
 
           <a-form-item v-if="el.type === 'iText'" :name="el.name" :label="el.label"
             :rules="[{ required: el.required, message: el.message, type: el.email }]">
-            <a-input v-model:value="formState[el.name]" :maxlength="el.max" :disabled="el.disabled" />
+            <a-input v-if="el.name == 'documentnumber'" v-model:value="formState[el.name]" :maxlength="el.max" @input="validateOnlyNumber('documentnumber')" />
+            <a-input v-else-if="el.name == 'phone'" v-model:value="formState[el.name]" :maxlength="el.max" @input="validateOnlyNumber('phone')" />
+            <a-input v-else v-model:value="formState[el.name]" :maxlength="el.max" :disabled="el.disabled" />
           </a-form-item>
 
           <a-form-item v-if="el.type === 'iDate'" :name="el.name" :label="el.label"
@@ -56,7 +58,7 @@ import { useRoute } from 'vue-router';
 import { useCounterStore } from '@/stores/selectes.js';
 import { Modal } from 'ant-design-vue';
 
-const storageData = JSON.parse(localStorage.getItem('profile'))
+const storageData = JSON.parse(localStorage.getItem('profile'));
 const store = useCounterStore();
 
 store.$patch({ genders: store.genders });
@@ -89,7 +91,7 @@ const formState = reactive({
   gender_id : null,
   cde_id : null,
   office_id : null,
-  user_id : storageData.id,     //creador
+  user_id : storageData.user_id,     //creador
   email: null,
   password: null,
 });
@@ -109,7 +111,9 @@ const clearFields = () => {
   formState.role_id = null
   
 }
-
+const validateOnlyNumber = (val) => {
+  formState[val] = formState[val].replace(/\D/g, '');
+};
 const handleSelectSupervisor = (val) => {
   const supervisor_id = {
     type: 'iSelect',

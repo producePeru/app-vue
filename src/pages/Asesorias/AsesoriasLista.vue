@@ -34,11 +34,11 @@
           {{ computeIndex(index) }}
         </template>
         <template v-if="column.dataIndex == 'ase_fecha'">
-          {{ record.created_at }}
+          {{ formatDate(record.created_at) }}
         </template>
-        <template v-if="column.dataIndex == 'reg_nombres'">
+        <!-- <template v-if="column.dataIndex == 'reg_nombres'">
           {{ record.user.profile.name }} {{ record.user.profile.lastname }} {{ record.user.profile.middlename }}
-        </template>
+        </template> -->
         <template v-if="column.dataIndex == 'sol_apellidos'">
           {{ record.people.lastname }} {{ record.people.middlename }}
         </template>
@@ -62,10 +62,10 @@
         </template>
 
         <template v-if="column.dataIndex == 'componente'">
-          {{ record.component.name }}
+          {{ record.component?.name }}
         </template>
         <template v-if="column.dataIndex == 'tema_componente'">
-          {{ record.theme.name }}
+          {{ record.theme?.name }}
         </template>
 
         <template v-if="column.dataIndex == 'detalle_tramite'">
@@ -106,7 +106,7 @@
       
     </a-table>
   </div>
-
+  <!-- <pre>{{ token }}</pre> -->
   <div class="paginator">
     <a-pagination size="small" :total="total" :pageSize="pageSize"  @change="handlePaginator" :showSizeChanger="false" :defaultCurrent="2" />
   </div>
@@ -114,12 +114,17 @@
 </template>
 
 <script setup>
+import dayjs from 'dayjs';
+import 'dayjs/locale/es';
+dayjs.locale('es');
+
 import axios from 'axios';
 import { makeRequest } from '@/utils/api.js'
 import { ref, onMounted, onBeforeUnmount, computed } from 'vue';
 import { message } from 'ant-design-vue';
 import Cookies from 'js-cookie';
 
+const storageData = JSON.parse(localStorage.getItem('profile'));
 const prod = import.meta.env.VITE_APP_API_URL_PRODUCTION
 const dev = import.meta.env.VITE_APP_API_URL_LOCAL
 const apiUrl = window.location.hostname == '127.0.0.1' ? dev : prod;
@@ -134,6 +139,7 @@ const pageSize = 20;
 const searchUser = ref('');
 const valueX = ref(1200)
 const valueY = ref(window.innerHeight - 100);
+
 const actualizarAltura = () => {
   valueY.value = window.innerHeight - 315;
 };
@@ -146,12 +152,12 @@ onBeforeUnmount(() => {
   const columnsAsesoria = ref([
     { title: '#',                         dataIndex: 'idx', fixed: 'left', align: 'center', width: 50},
     { title: 'Fecha',                     dataIndex: 'ase_fecha', fixed: 'left', align: 'center', width: 100},
-    { title: 'Asesor',                    dataIndex: 'reg_nombres', width: 200 },
+    // { title: 'Asesor',                    dataIndex: 'reg_nombres', width: 200 },
     { title: 'Solicitante Apellidos',     dataIndex: 'sol_apellidos', width: 180 },
     { title: 'Solicitante Nombres',       dataIndex: 'sol_nombres', width: 180 },
     { title: 'Solicitante Email',         dataIndex: 'sol_email', width: 200 },
     { title: 'Solicitante Celular',       dataIndex: 'sol_phone', width: 160 },
-    { title: 'Supervisor',                dataIndex: 'misupervisor', width: 200},
+    // { title: 'Supervisor',                dataIndex: 'misupervisor', width: 200},
     { title: 'Región',                    dataIndex: 'mype_region', width: 140},
     { title: 'Provincia',                 dataIndex: 'mype_provincia', width: 160},
     { title: 'Distrito',                  dataIndex: 'mype_distrito', width: 160},
@@ -210,68 +216,71 @@ const handlePaginator = (current) =>{
   fetchData()
 }
 
-
+const formatDate = (dateString) => {
+  return dayjs(dateString).format('DD-MM-YYYY');
+}
 const handleSearch = async() => {
-  loading.value = true;
-  let url = null
+  // loading.value = true;
+  // let url = null
   
-  if(active.value == 'ruc20') {
-    params.value.page = 0
-    active.value = 'ruc20'
-    columns.value = columnsRuc20.value
-    url = `/formalizations-20?search=${searchUser.value}`
-    if(searchUser.value == '') url = '/formalizations-20';
-  }
+  // if(active.value == 'ruc20') {
+  //   params.value.page = 0
+  //   active.value = 'ruc20'
+  //   columns.value = columnsRuc20.value
+  //   url = `/formalizations-20?search=${searchUser.value}`
+  //   if(searchUser.value == '') url = '/formalizations-20';
+  // }
 
-  if(active.value == 'ruc10') {
-    params.value.page = 0
-    active.value = 'ruc10'
-    columns.value = columnsRuc10.value
-    url = `/formalizations-10?search=${searchUser.value}`
-    if(searchUser.value == '') url = '/formalizations-10';
-  }
+  // if(active.value == 'ruc10') {
+  //   params.value.page = 0
+  //   active.value = 'ruc10'
+  //   columns.value = columnsRuc10.value
+  //   url = `/formalizations-10?search=${searchUser.value}`
+  //   if(searchUser.value == '') url = '/formalizations-10';
+  // }
 
-  if(active.value == 'asesorias') {
-    params.value.page = 0
-    active.value = 'asesorias'
-    columns.value = columnsAsesoria.value
-    url = `/asesorias?search=${searchUser.value}`
-    if(searchUser.value == '') url = '/asesorias';
-  }
+  // if(active.value == 'asesorias') {
+  //   params.value.page = 0
+  //   active.value = 'asesorias'
+  //   columns.value = columnsAsesoria.value
+  //   url = `/asesorias?search=${searchUser.value}`
+  //   if(searchUser.value == '') url = '/asesorias';
+  // }
 
-  let parx = params.value.page == 0 ? '' : params.value
-  const data = await makeRequest({ url: url, method: 'GET', params:parx });
-  dataSource.value = data.data
-  total.value = data.total;
-  loading.value = false;
+  // let parx = params.value.page == 0 ? '' : params.value
+  // const data = await makeRequest({ url: url, method: 'GET', params:parx });
+  // dataSource.value = data.data
+  // total.value = data.total;
+  // console.log("uuuu", data);
+  // loading.value = false;
 }
 
 
 
 const handleDownloadAsesorias = async() => {
-  loadingexc.value = true
+  // loadingexc.value = true
 
   const payload = {};
 
-  let urlx = '', nameExcel = '';
+  // let urlx = '', nameExcel = '';
 
-  if(active.value == 'asesorias') {
-    urlx = 'download-asesorias';
-    nameExcel = 'asesorias.xlsx'
-  }
+  // if(active.value == 'asesorias') {
+  //   urlx = 'download-asesorias';
+  //   nameExcel = 'asesorias.xlsx'
+  // }
 
-  if(active.value == 'ruc10') {
-    urlx = 'download-formalizations-10';
-    nameExcel = 'formalizacionesRUC10.xlsx'
-  }
+  // if(active.value == 'ruc10') {
+  //   urlx = 'download-formalizations-10';
+  //   nameExcel = 'formalizacionesRUC10.xlsx'
+  // }
 
-  if(active.value == 'ruc20') {
-    urlx = 'download-formalizations-20';
-    nameExcel = 'formalizacionesRUC20.xlsx'
-  }
+  // if(active.value == 'ruc20') {
+  //   urlx = 'download-formalizations-20';
+  //   nameExcel = 'formalizacionesRUC20.xlsx'
+  // }
 
   try {
-    const { data } = await axios.post(`${apiUrl}/${urlx}`, payload, {
+    const { data } = await axios.get(`${apiUrl}download/asesories`, {
       headers: {
         'Content-Type': 'multipart/form-data',
         'Authorization': `Bearer ${token}`
@@ -283,7 +292,7 @@ const handleDownloadAsesorias = async() => {
     const url = window.URL.createObjectURL(blob);
     const link = document.createElement('a');
     link.href = url;
-    link.download = nameExcel; 
+    link.download = 'asesorias.xlsx'; 
     document.body.appendChild(link);
     link.click();
     document.body.removeChild(link);
@@ -300,9 +309,7 @@ const fetchData = async(val) => {
     loading.value = true;
     
     
-    let url = `historial/advisories/2`;
-    
-    
+    let url = `historial/advisories/${storageData.user_id}/${storageData.documentnumber}`;
     
     columns.value = columnsAsesoria.value
 
@@ -310,21 +317,21 @@ const fetchData = async(val) => {
       params.value.page = 0
       active.value = val
       columns.value = columnsAsesoria.value
-      url = `historial/advisories/2`
+      url = `historial/advisories/${storageData.user_id}/${storageData.documentnumber}`;
     }   
 
     if(val == 'ruc10') {
       params.value.page = 0
       active.value = val
       columns.value = columnsRuc10.value
-      url = `historial/formalizations-10/2`
+      url = `historial/formalizations-10/${storageData.user_id}/${storageData.documentnumber}`
     }  
 
     if(val == 'ruc20') {
       params.value.page = 0
       active.value = val
       columns.value = columnsRuc20.value
-      url = `historial/formalizations-20/2`
+      url = `historial/formalizations-20/${storageData.user_id}/${storageData.documentnumber}`
     }  
 
     let parx = params.value.page == 0 ? '' : params.value
@@ -332,6 +339,7 @@ const fetchData = async(val) => {
     const data = await makeRequest({ url: url, method: 'GET', params:parx });
     dataSource.value = data.data
     total.value = data.total;
+    // console.log("iiiii", data);
   } catch (error) {
     console.error('Error de red:', error);
   } finally {
