@@ -56,7 +56,7 @@
         </template>
 
 
-
+      <pre>{{ formState }}</pre>
       </div>
 
       <a-form-item>
@@ -182,7 +182,7 @@ const handleSelectSupervisor = (val) => {
     disabled: true
   };
 
-  if (val === 1) {
+  if (val === 2) {
     store.fetchSupervisores();
     fieldx.value = { ...fieldx.value, supervisor_id };
   } else {
