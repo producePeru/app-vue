@@ -13,8 +13,18 @@
             <a-select v-if="el.name == 'gender_id'" v-model:value="formState[el.name]" :options="store.genders" />
             <a-select v-if="el.name == 'cde_id'" v-model:value="formState[el.name]" :options="store.cdes" />
             <!-- <a-select v-if="el.name == 'office_id'" v-model:value="formState[el.name]" :options="store.Offices" /> -->
-            <a-select v-if="el.name == 'role_id'" v-model:value="formState[el.name]" :options="store.roles" @change="handleSelectSupervisor" />
+            
+            
+            <template v-if="storageRole[0].id == 3">
+              <a-select v-if="el.name == 'role_id'" v-model:value="formState[el.name]" :options="rolesKarina" @change="handleSelectSupervisor" />
+            </template>
+            <template v-else>
+              <a-select v-if="el.name == 'role_id'" v-model:value="formState[el.name]" :options="store.roles" @change="handleSelectSupervisor" />
+            </template>
+            
+
             <a-select v-if="el.name == 'supervisor_id'" v-model:value="formState[el.name]" :options="store.supervisores" />
+
           
             <a-select v-if="el.name == 'office_id'" v-model:value="formState[el.name]" show-search :options="store.Offices"
               :filter-option="filterOption">
@@ -41,8 +51,7 @@
             @search="handleSearchApi" @input="validateNumber" :disabled="upDisabled" />
           </a-form-item>
 
-          <a-form-item v-if="el.type === 'iText'" :name="el.name" :label="el.label"
-            :rules="[{ required: el.required, message: el.message, type: el.email }]">
+          <a-form-item v-if="el.type === 'iText'" :name="el.name" :label="el.label" :rules="[{ required: el.required, message: el.message, type: el.email }]">
             <a-input v-if="el.name == 'documentnumber'" v-model:value="formState[el.name]" :maxlength="el.max" @input="validateOnlyNumber('documentnumber')" />
             <a-input v-else-if="el.name == 'phone'" v-model:value="formState[el.name]" :maxlength="el.max" @input="validateOnlyNumber('phone')" />
             <a-input v-else v-model:value="formState[el.name]" :maxlength="el.max" :disabled="el.disabled" />
@@ -53,9 +62,6 @@
             <a-date-picker :locale="locale" v-model:value="birthdateDate" style="width: 100%;" :format="dateFormat" />
           </a-form-item>
         </template>
-
-
-      <!-- <pre>{{ formState }}</pre> -->
       </div>
 
       <a-form-item>
@@ -91,6 +97,8 @@ const VNodes = defineComponent({
 });
 
 const storageData = JSON.parse(localStorage.getItem('profile'));
+const storageRole = JSON.parse(localStorage.getItem('role'));
+
 const store = useCounterStore();
 
 store.$patch({ genders: store.genders });
@@ -113,6 +121,11 @@ const searchLoading = ref(false);
 const upDisabled = ref(false);
 const loadingNewIten = ref(false);
 const nameNewItem = ref(null);
+
+const rolesKarina = [
+  {label: 'Drive Administrador', value: 3},
+  {label: 'Drive Usuario', value: 4}
+]
 
 const formState = reactive({
   name: null,
@@ -145,6 +158,11 @@ const clearFields = () => {
   formState.role_id = null
   
 }
+const modeTrim = (event) => {
+    event.target.value = event.target.value.trim();
+}
+
+
 const validateOnlyNumber = (val) => {
   formState[val] = formState[val].replace(/\D/g, '');
 };
