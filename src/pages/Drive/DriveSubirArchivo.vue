@@ -21,7 +21,7 @@
       </div>
 
       <a-form-item v-if="fileList.length >= 1">
-        <a-button type="primary" html-type="submit" :loading="loading">SUBIR {{ fileList.length == 1 ? 'ARCHIVO' : 'ARCHIVOS' }}</a-button>
+        <a-button class="btn-produce" type="primary" html-type="submit" :loading="loading">SUBIR {{ fileList.length == 1 ? 'ARCHIVO' : 'ARCHIVOS' }}</a-button>
       </a-form-item>
 
     </a-form>
@@ -38,12 +38,12 @@ import { UploadOutlined } from '@ant-design/icons-vue';
 import { reactive, ref } from 'vue';
 import { message } from 'ant-design-vue';
 
-const storageData = JSON.parse(localStorage.getItem('user'))
+const storageData = JSON.parse(localStorage.getItem('profile'))
 const token = Cookies.get('token');
 
 const prod = import.meta.env.VITE_APP_API_URL_PRODUCTION
 const dev = import.meta.env.VITE_APP_API_URL_LOCAL
-const apiUrl = window.location.hostname == '127.0.0.1' ? dev : prod;
+const apiUrl = window.location.hostname == 'localhost' || window.location.hostname == '127.0.0.1' ? dev : prod;
 
 const loading = ref(false);
 const fileList = ref([]);
@@ -82,12 +82,13 @@ const onSubmit = async () => {
   loading.value = true
 
   const payload = {
-    created_by: storageData.id,
+    user_id: storageData.user_id,
+    profile_id: storageData.id,
     files: fileList.value
   };
 
   try {
-    const {data} = await axios.post(`${apiUrl}/drive/up-files`, payload, {
+    const {data} = await axios.post(`${apiUrl}drive/up-files`, payload, {
       headers: {
         'Content-Type': 'multipart/form-data',
         'Authorization': `Bearer ${token}`

@@ -1,5 +1,5 @@
 import { defineStore } from 'pinia';
-import { makeRequest } from '@/utils/api.js';
+import { requestNoToken } from '@/utils/noToken.js'
 
 export const useCounterStore = defineStore('counter', {
   state: () => {
@@ -31,7 +31,7 @@ export const useCounterStore = defineStore('counter', {
     },
     async fetchCities() {
       try {
-        const { data } = await makeRequest({ url: 'select/cities', method: 'GET' });
+        const { data } = await requestNoToken({ url: 'select/cities', method: 'GET' });
         this.cities = data;
       } catch (error) {
         console.error('Error de red:', error);
@@ -40,7 +40,7 @@ export const useCounterStore = defineStore('counter', {
 
     async fetchProvinces(id) {
       try {
-        const { data } = await makeRequest({ url: `select/provinces/${id}`, method: 'GET' });
+        const { data } = await requestNoToken({ url: `select/provinces/${id}`, method: 'GET' });
         this.provinces = data;
       } catch (error) {
         console.error('Error de red:', error);
@@ -49,7 +49,7 @@ export const useCounterStore = defineStore('counter', {
 
     async fetchDistricts(id) {
       try {
-        const { data } = await makeRequest({ url: `select/districts/${id}`, method: 'GET' });
+        const { data } = await requestNoToken({ url: `select/districts/${id}`, method: 'GET' });
         this.districts = data;
       } catch (error) {
         console.error('Error de red:', error);
@@ -58,7 +58,7 @@ export const useCounterStore = defineStore('counter', {
 
     async fetchOffices() {
       try {
-        const { data } = await makeRequest({ url: `select/offices`, method: 'GET' });
+        const { data } = await requestNoToken({ url: `select/offices`, method: 'GET' });
         this.Offices = data;
       } catch (error) {
         console.error('Error de red:', error);
@@ -67,7 +67,7 @@ export const useCounterStore = defineStore('counter', {
 
     async fetchCdes() {
       try {
-        const { data } = await makeRequest({ url: `select/cdes`, method: 'GET' });
+        const { data } = await requestNoToken({ url: `select/cdes`, method: 'GET' });
         this.cdes = data;
       } catch (error) {
         console.error('Error de red:', error);
@@ -76,7 +76,7 @@ export const useCounterStore = defineStore('counter', {
 
     async fetchGenders() {
       try {
-        const { data } = await makeRequest({ url: `select/genders`, method: 'GET' });
+        const { data } = await requestNoToken({ url: `select/genders`, method: 'GET' });
         this.genders = data;
       } catch (error) {
         console.error('Error de red:', error);
@@ -85,7 +85,7 @@ export const useCounterStore = defineStore('counter', {
 
     async fetchModalities() {
       try {
-        const { data } = await makeRequest({ url: `select/modalities`, method: 'GET' });
+        const { data } = await requestNoToken({ url: `select/modalities`, method: 'GET' });
         this.modalities = data;
       } catch (error) {
         console.error('Error de red:', error);
@@ -94,7 +94,7 @@ export const useCounterStore = defineStore('counter', {
 
     async fetchTypeDocuments() {
       try {
-        const { data } = await makeRequest({ url: `select/type-documents`, method: 'GET' });
+        const { data } = await requestNoToken({ url: `select/type-documents`, method: 'GET' });
         this.typeDocuments = data;
       } catch (error) {
         console.error('Error de red:', error);
@@ -103,7 +103,7 @@ export const useCounterStore = defineStore('counter', {
 
     async fetchComponents() {
       try {
-        const { data } = await makeRequest({ url: `select/components`, method: 'GET' });
+        const { data } = await requestNoToken({ url: `select/components`, method: 'GET' });
         this.components = data;
       } catch (error) {
         console.error('Error de red:', error);
@@ -112,7 +112,7 @@ export const useCounterStore = defineStore('counter', {
 
     async fetchComponentThemes(id) {
       try {
-        const { data } = await makeRequest({ url: `select/component-theme/${id}`, method: 'GET' });
+        const { data } = await requestNoToken({ url: `select/component-theme/${id}`, method: 'GET' });
         this.componentThemes = data;
       } catch (error) {
         console.error('Error de red:', error);
@@ -121,7 +121,7 @@ export const useCounterStore = defineStore('counter', {
 
     async fetchRoles() {
       try {
-        const { data } = await makeRequest({ url: `select/roles`, method: 'GET' });
+        const { data } = await requestNoToken({ url: `select/roles`, method: 'GET' });
         this.roles = data;
       } catch (error) {
         console.error('Error de red:', error);
@@ -130,7 +130,7 @@ export const useCounterStore = defineStore('counter', {
 
     async fetchDetailProcedures() {
       try {
-        const { data } = await makeRequest({ url: `select/detail-procedures`, method: 'GET' });
+        const { data } = await requestNoToken({ url: `select/detail-procedures`, method: 'GET' });
         this.detailProcedures = data;
       } catch (error) {
         console.error('Error de red:', error);
@@ -139,7 +139,7 @@ export const useCounterStore = defineStore('counter', {
 
     async fetchEconomicSectors() {
       try {
-        const { data } = await makeRequest({ url: `select/economic-sectors`, method: 'GET' });
+        const { data } = await requestNoToken({ url: `select/economic-sectors`, method: 'GET' });
         this.economicSectors = data;
       } catch (error) {
         console.error('Error de red:', error);
@@ -148,7 +148,7 @@ export const useCounterStore = defineStore('counter', {
 
     async fetchComercialActivities() {
       try {
-        const { data } = await makeRequest({ url: `select/comercial-activities`, method: 'GET' });
+        const { data } = await requestNoToken({ url: `select/comercial-activities`, method: 'GET' });
         this.comercialActivities = data;
       } catch (error) {
         console.error('Error de red:', error);
@@ -157,7 +157,7 @@ export const useCounterStore = defineStore('counter', {
 
     async fetchRegimes() {
       try {
-        const { data } = await makeRequest({ url: `select/regimes`, method: 'GET' });
+        const { data } = await requestNoToken({ url: `select/regimes`, method: 'GET' });
         this.regimes = data;
       } catch (error) {
         console.error('Error de red:', error);
@@ -166,7 +166,7 @@ export const useCounterStore = defineStore('counter', {
 
     async fetchNotaries() {
       try {
-        const { data } = await makeRequest({ url: `select/notaries`, method: 'GET' });
+        const { data } = await requestNoToken({ url: `select/notaries`, method: 'GET' });
         this.notaries = data;
       } catch (error) {
         console.error('Error de red:', error);
@@ -174,7 +174,7 @@ export const useCounterStore = defineStore('counter', {
     },
     async fetchSupervisores() {
       try {
-        const { data } = await makeRequest({ url: `select/supervisores`, method: 'GET' });
+        const { data } = await requestNoToken({ url: `select/supervisores`, method: 'GET' });
         this.supervisores = data;
       } catch (error) {
         console.error('Error de red:', error);

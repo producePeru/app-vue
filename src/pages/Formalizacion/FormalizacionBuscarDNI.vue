@@ -48,26 +48,13 @@ const formState = reactive({
 const validateNumber = (val) => {
   formState[val] = formState[val].replace(/\D/g, '');
 };
+
 const onSubmit = async () => {
   loading.value = true;
   try {
-
-    const notice = await requestNoToken({ url: `/public/formalization-digital-request/${formState.dni}`, method: 'GET' });
-
-    if(notice.status == 200) {
-      dataUser.value = notice.data
-      return
-    }
-
-    const {data} = await requestNoToken({ url: `/public/person/dni/${formState.dni}`, method: 'GET' });
+    const data = await requestNoToken({ url: `public/dni/${formState.dni}`, method: 'GET' });
+    console.log("dddddd", data);
     emit('dniDataPerson', data)
-
-    // const values = {
-    //   step: 1,
-    //   data
-    // }
-    // localStorage.setItem('formalization', JSON.stringify(values));
-
   } 
   catch(e) {
     console.log('You have an error', e);

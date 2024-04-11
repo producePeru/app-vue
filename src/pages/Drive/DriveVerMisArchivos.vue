@@ -5,7 +5,7 @@
     <div class="w-search" v-show="!loading">
       <!-- <router-link to="/admin/drive/subir-archivo"><a-button >SUBIR ARCHIVO</a-button></router-link> -->
 
-      <a-input-search v-model:value="searchFile" placeholder="Buscar por nombre del archivo" style="width: 250px"
+      <!-- <a-input-search v-model:value="searchFile" placeholder="Buscar por nombre del archivo" style="width: 250px"
         :loading="loadingSearch" @search="handleSearchFilesName" />
 
       <a-select 
@@ -15,7 +15,7 @@
       style="width: 220px"
       :options="options" 
       :filter-option="filterOption" 
-      @change="handleChange" />
+      @change="handleChange" /> -->
 
     </div>
 
@@ -27,7 +27,11 @@
           <div>{{ formatDate(record.created_at) }}</div>
         </template>
 
-        <template v-if="column.dataIndex == 'actions'">
+        <template v-if="column.dataIndex == 'user'">
+          <div>{{ record.profile.name }} {{ record.profile.lastname }} {{ record.profile.middlename }}</div>
+        </template>
+
+        <template v-if="column.dataIndex == 'download'">
           <a-button size="small" @click="handleDownloadFile(record.path)" type="primary" ghost
             :loading="loadingDrive[record.path]">
             <template #icon>
@@ -35,6 +39,27 @@
             </template>
             Descargar
           </a-button>
+        </template>
+
+        <template v-if="column.dataIndex == 'actions'">
+          <a-dropdown :trigger="['click']">
+            <a class="ant-dropdown-link" @click.prevent>
+              <a-button shape="circle" :icon="h(MoreOutlined)" size="small" />
+            </a>
+            <template #overlay>
+              <a-menu>
+                <!-- <a-menu-item>
+                  <a @click="handleEditSolicitante(record)">Editar</a>
+                </a-menu-item> -->
+                <a-menu-item>
+                  <a-popconfirm title="¿Seguro de eliminar?" @confirm="handleDelete(record)">
+                    <template #icon><question-circle-outlined style="color: red" /></template>
+                    <a>Eliminar</a>
+                  </a-popconfirm>
+                </a-menu-item>
+              </a-menu>
+            </template>
+          </a-dropdown>
         </template>
 
 
@@ -45,7 +70,7 @@
   
   <div class="paginator-drive">
     <span><a-tag color="blue"><b>{{ dataSource.length }}</b></a-tag> Archivos Subidos</span>
-    <a-pagination size="small" :pageSize="50" :total="total" @change="handlePaginator" :showSizeChanger="false" />
+    <a-pagination size="small" :pageSize="20" :total="total" @change="handlePaginator" :showSizeChanger="false" />
   </div>
 </template>
 
@@ -53,16 +78,17 @@
 import axios from 'axios';
 
 import { makeRequest } from '@/utils/api.js'
-import { ref, onMounted, onBeforeUnmount } from 'vue';
+import { h, ref, onMounted, onBeforeUnmount } from 'vue';
 import Cookies from 'js-cookie';
-import { DownloadOutlined } from '@ant-design/icons-vue';
+import { DownloadOutlined, QuestionCircleOutlined } from '@ant-design/icons-vue';
 import moment from 'moment';
+import { MoreOutlined } from '@ant-design/icons-vue';
+import { message } from 'ant-design-vue';
 
-const storageData = JSON.parse(localStorage.getItem('user'))
-
+const storageData = JSON.parse(localStorage.getItem('profile'))
 const prod = import.meta.env.VITE_APP_API_URL_PRODUCTION
 const dev = import.meta.env.VITE_APP_API_URL_LOCAL
-const apiUrl = window.location.hostname == '127.0.0.1' ? dev : prod;
+const apiUrl = window.location.hostname == 'localhost' || window.location.hostname == '127.0.0.1' ? dev : prod;
 const token = Cookies.get('token');
 
 const loadingDrive = ref({});
@@ -74,6 +100,25 @@ const options = ref([]);
 const searchFile = ref('');
 const loadingSearch = ref(false);
 
+const columns = [
+  { title: 'AUTOR',               dataIndex: 'user', fixed: 'left', width: 180 },
+  { title: 'NOMBRE DEL ARCHIVO',  dataIndex: 'name', width: 140 },
+  { title: 'FECHA',               dataIndex: 'date', width: 120, align: 'center'},
+  { title: 'DESCARGAR',           dataIndex: 'download', width: 120, align: 'center'},
+  { title: '',           dataIndex: 'actions', width: 50, align: 'center',fixed: 'right'}
+];
+
+const handleDelete= async(val) => {
+  try {
+    const data = await makeRequest({ url: `drive/delete-file/${val.id}`, method: 'DELETE' });
+    if(data) {
+      fetchData();
+      message.success(data.message);
+    }  
+  } catch (error) {
+    console.error('Error de red:', error);
+  }
+}
 const handleChange = async (value) => {
   try {
 
@@ -92,23 +137,23 @@ const handleChange = async (value) => {
     loading.value = false;
   }
 };
-const handleSearchFilesName = async (searchValue) => {
-  try {
-    loadingSearch.value = true;
+const handleSearchFilesName = async () => {
+  // try {
+  //   loadingSearch.value = true;
 
-    if (!searchValue) {
-      inputSearch.value = 0
-      return fetchData();
-    }
+  //   if (!searchValue) {
+  //     inputSearch.value = 0
+  //     return fetchData();
+  //   }
 
-    const url = `/drive/search-file/${searchValue}/${storageData.id}`
-    const { data } = await makeRequest({ url, method: 'GET' });
-    dataSource.value = data.data
-  } catch (error) {
-    console.error('Error de red:', error);
-  } finally {
-    loadingSearch.value = false;
-  }
+  //   const url = `/drive/search-file/${storageData.user_id}/${storageData.documentnumber}`
+  //   const { data } = await makeRequest({ url, method: 'GET' });
+  //   dataSource.value = data.data
+  // } catch (error) {
+  //   console.error('Error de red:', error);
+  // } finally {
+  //   loadingSearch.value = false;
+  // }
 };
 
 const handleDownloadFile = async (path) => {
@@ -116,7 +161,7 @@ const handleDownloadFile = async (path) => {
   loadingDrive.value = { ...loadingDrive.value, [path]: true };
 
   try {
-    const response = await axios.get(`${apiUrl}/drive/download/${path}`, {
+    const response = await axios.get(`${apiUrl}drive/download/${path}`, {
       responseType: 'blob',
       headers: {
         'Accept': 'application/json',
@@ -160,12 +205,7 @@ const params = ref({
   page: 1
 })
 
-const columns = [
-  { title: 'Autor', dataIndex: 'user', fixed: 'left', width: 180 },
-  { title: 'Nombre archivo', dataIndex: 'filename', width: 140 },
-  { title: 'Fecha de carga', dataIndex: 'date', width: 120, align: 'center' },
-  { title: '', dataIndex: 'actions', width: 120, align: 'center' }
-];
+
 
 const handlePaginator = (current) => {
   params.value.page = current;
@@ -174,30 +214,11 @@ const handlePaginator = (current) => {
 
 
 const fetchData = async () => {
-  let url = null
-
-
-  if (storageData.role == '100' || storageData.role == '10') {
-    url = '/drive/files/admin'
-
-  } else {
-    url = `/drive/files/${storageData.id}`
-  }
-
   try {
     loading.value = true;
-    const { data } = await makeRequest({ url, method: 'GET', params: params.value });
-    dataSource.value = data
-
-    const uniqueUsersMap = new Map(data.map(user => [user.idUser, user.user]));
-    const users = Array.from(uniqueUsersMap.entries()).map(([value, label]) => ({
-      value,
-      label,
-    }));
-
-    const all = { value: 0, label: 'Todos' };
-    const optionx = { value: [all, ...users] };
-    options.value = optionx.value
+    const {data}  = await makeRequest({ url: `drive/list-files/${storageData.user_id}/${storageData.documentnumber}`, method: 'GET' });
+    dataSource.value = data.data
+    total.value = data.total
 
   } catch (error) {
     console.error('Error de red:', error);
@@ -230,5 +251,8 @@ onMounted(() => {
   justify-content: space-between;
   align-items: center;
   margin: 1.5rem 0 .8rem 0;
+}
+.ant-popover-inner {
+  width: 200px;
 }
 </style>

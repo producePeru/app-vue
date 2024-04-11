@@ -19,7 +19,7 @@
     </a-menu-item> -->
 
     <!-- Drive  --> 
-    <!-- <a-sub-menu key="drive" @click="handleCollapse('drive')" v-if="views.includes('drive')">
+    <a-sub-menu key="drive" @click="handleCollapse('drive')" v-if="views.includes('drive')">
       <template #title>
         <span>
           <CloudOutlined />
@@ -28,7 +28,7 @@
       </template>
       <a-menu-item key="drive-mis-archivos" v-if="views.includes('drive-mis-archivos')"> <router-link to="/admin/drive/mis-archivos">Mis Archivos</router-link> </a-menu-item> 
       <a-menu-item key="drive-subir-archivo" v-if="views.includes('drive-subir-archivo')"> <router-link to="/admin/drive/subir-archivo">Subir Archivo</router-link> </a-menu-item> 
-    </a-sub-menu> -->
+    </a-sub-menu>
 
     <!-- Asesorias  --> 
     <a-sub-menu key="asesorias" v-if="views.includes('asesorias')" @click="handleCollapse('asesorias')">
