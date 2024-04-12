@@ -94,7 +94,7 @@ const fields = {
     type: 'iSelect',
     label: 'Género',
     name: 'gender_id',
-    required: false,
+    required: true,
     message: 'Seleccionar tipo de documento',
   },
   sick: {

@@ -14,7 +14,7 @@
         <a-input v-model:value="formState.documentnumber" @input="validateNumber('dni')" :maxlength="8" disabled />
       </a-form-item>
 
-     
+
       <a-form-item label="Apellido Paterno" name="lastname"
         :rules="[{ required: true, message: 'Por favor ingresa tu apellido paterno' }]">
         <a-input v-model:value="formState.lastname" disabled />
@@ -24,10 +24,9 @@
         :rules="[{ required: true, message: 'Por favor ingresa tu apellido materno' }]">
         <a-input v-model:value="formState.middlename" disabled />
       </a-form-item>
-      
 
-      <a-form-item label="Nombres" name="name"
-        :rules="[{ required: true, message: 'Por favor ingresa tu nombre' }]">
+
+      <a-form-item label="Nombres" name="name" :rules="[{ required: true, message: 'Por favor ingresa tu nombre' }]">
         <a-input v-model:value="formState.name" disabled />
       </a-form-item>
 
@@ -55,13 +54,14 @@
 
       <a-form-item label="Provincia" name="province_id"
         :rules="[{ required: true, message: 'Por favor selecciona tu provincia' }]">
-        <a-select v-model:value="formState.province_id" show-search :options="store.provinces" :filter-option="filterOption"
-          @change="getDistricts" />
+        <a-select v-model:value="formState.province_id" show-search :options="store.provinces"
+          :filter-option="filterOption" @change="getDistricts" />
       </a-form-item>
 
       <a-form-item label="Distrito" name="district_id"
         :rules="[{ required: true, message: 'Por favor selecciona tu distrito' }]">
-        <a-select v-model:value="formState.district_id" show-search :options="store.districts" :filter-option="filterOption" />
+        <a-select v-model:value="formState.district_id" show-search :options="store.districts"
+          :filter-option="filterOption" />
       </a-form-item>
 
       <a-form-item label="Dirección" name="address"
@@ -84,7 +84,6 @@
         <a-button :loading="loading" class="form-button btn-produce" type="primary" html-type="submit">CONTINUAR</a-button>
       </a-form-item>
     </a-form>
-
   </div>
 
 </template>
@@ -97,7 +96,6 @@ import { useCounterStore } from '@/stores/selectes.js';
 
 const props = defineProps(['dniData']);
 
-const storageData = JSON.parse(localStorage.getItem('user'));
 const emit = defineEmits(['dataPerson']);
 const store = useCounterStore();
 const showerror = ref(false);
@@ -123,7 +121,7 @@ const formState = reactive({
 });
 
 const update = (val) => {
-  if(val) {
+  if (val) {
     formState.documentnumber = props.dniData.data.numeroDocumento
     formState.lastname = props.dniData.data.apellidoPaterno
     formState.middlename = props.dniData.data.apellidoMaterno
@@ -135,6 +133,7 @@ const update = (val) => {
 const handleCheckTerminos = () => {
   if (showerror.value) showerror.value = false
 }
+
 const getToken = () => {
   return new Promise((resolve, reject) => {
     window.grecaptcha.ready(() => {
@@ -150,37 +149,51 @@ const getToken = () => {
 }
 
 const onSubmit = async () => {
-  if (!accept.value) {
-    showerror.value = true;
-    return message.error('Completa los valores del formulario');
-  }
-
-  loading.value = true
-
   try {
-    const token = await getToken();
-    const captcha = await requestNoToken({ url: '/public/formalization-user', method: 'POST', data: { recaptcha_token: token, data: formState } });
 
-    if (captcha) {
-  
-      const values = {
-        'dni_person': formState.number_document,
-        'id_gps': null,
-        'count': 1
-      }
-
-      await requestNoToken({ url: '/public/formalization-digital', method: 'POST', data: values });
-      emit('dataPerson', formState)
-   
-    } else {
-      message.warning('No verificado')
-    }
-
+    await requestNoToken({ url: 'public/formalization-digital', method: 'POST', data: formState });
+    emit('dataPerson', formState.documentnumber)
   } catch (error) {
-    message.error('Error al registrar');
+    message.error('No se pudo registrar este usuario');
   } finally {
-    loading.value = false
+    loading.value = false;
   }
+
+
+
+
+
+  // if (!accept.value) {
+  //   showerror.value = true;
+  //   return message.error('Completa los valores del formulario');
+  // }
+
+  // loading.value = true
+
+  // try {
+  //   const token = await getToken();
+  //   const captcha = await requestNoToken({ url: '/public/formalization-user', method: 'POST', data: { recaptcha_token: token, data: formState } });
+
+  //   if (captcha) {
+
+  //     const values = {
+  //       'dni_person': formState.number_document,
+  //       'id_gps': null,
+  //       'count': 1
+  //     }
+
+  //     await requestNoToken({ url: '/public/formalization-digital', method: 'POST', data: values });
+  //     emit('dataPerson', formState)
+
+  //   } else {
+  //     message.warning('No verificado')
+  //   }
+
+  // } catch (error) {
+  //   message.error('Error al registrar');
+  // } finally {
+  //   loading.value = false
+  // }
 };
 const onFinishFailed = () => {
   message.error('Completa los valores del formulario');
@@ -324,6 +337,7 @@ onMounted(() => {
 .ant-input-disabled {
   color: #000000e0 !important;
 }
+
 .ant-input,
 .ant-select-selector {
   height: 38px !important;

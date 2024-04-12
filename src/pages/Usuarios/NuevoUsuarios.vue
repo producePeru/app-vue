@@ -22,10 +22,8 @@
               <a-select v-if="el.name == 'role_id'" v-model:value="formState[el.name]" :options="store.roles" @change="handleSelectSupervisor" />
             </template>
             
-
             <a-select v-if="el.name == 'supervisor_id'" v-model:value="formState[el.name]" :options="store.supervisores" />
 
-          
             <a-select v-if="el.name == 'office_id'" v-model:value="formState[el.name]" show-search :options="store.Offices"
               :filter-option="filterOption">
               <template #dropdownRender="{ menuNode: menu }">

@@ -38,10 +38,10 @@
           <span>Formalizaciones</span>
         </span>
       </template>
-      <!-- <a-menu-item key="solicitudes" v-if="views.includes('asesorias')"> <router-link to="/admin/asesorias/solicitudes">Solicitudes</router-link> </a-menu-item>  -->
       <a-menu-item key="asesorias-formalizaciones" v-if="views.includes('asesorias-formalizaciones')"> <router-link to="/admin/asesorias/asesorias-formalizaciones">Registro</router-link> </a-menu-item> 
       <a-menu-item key="asesorias" v-if="views.includes('asesorias')"> <router-link to="/admin/asesorias/asesorias">Reportes</router-link> </a-menu-item> 
       <a-menu-item key="solicitantes" v-if="views.includes('solicitantes')"> <router-link to="/admin/asesorias/solicitantes">Solicitantes</router-link> </a-menu-item> 
+      <a-menu-item key="solicitudes" v-if="views.includes('asesorias')"> <router-link to="/admin/asesorias/solicitudes">Solicitudes F.D.</router-link> </a-menu-item> 
       <a-menu-item key="notarias" v-if="views.includes('notarias')"> <router-link to="/admin/asesorias/notarias">Notarias</router-link> </a-menu-item> 
       <a-menu-item key="asesores" v-if="views.includes('asesores')"> <router-link to="/admin/asesorias/asesores">Asesores</router-link> </a-menu-item> 
       <!-- <a-menu-item key="supervisores" v-if="views.includes('supervisores')"> <router-link to="/admin/asesorias/supervisores">Supervisores</router-link> </a-menu-item> -->

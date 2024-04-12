@@ -31,6 +31,7 @@
 
 footer {
   padding: 3rem;
+  background-color: #f8f8f8;
   p, b {
     font-size: 13px;
     color: #4A5568;

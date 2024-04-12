@@ -42,7 +42,6 @@
     </div>
   </section>
 
-
   <FooterFormalization />
   
 </template>

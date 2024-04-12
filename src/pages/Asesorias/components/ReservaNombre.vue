@@ -65,6 +65,7 @@ import { fields } from '@/forms/asesorias.js'
 import { makeRequest } from '@/utils/api.js';
 import { message } from 'ant-design-vue';
 import { PlusOutlined } from '@ant-design/icons-vue';
+import { useRoute } from 'vue-router';
 
 const VNodes = defineComponent({
   props: {
@@ -78,6 +79,7 @@ const VNodes = defineComponent({
   },
 });
 
+const route = useRoute();
 const storageData = JSON.parse(localStorage.getItem('profile'));
 const props = defineProps(['info']);
 const emit = defineEmits(['closeDraw']);
@@ -153,6 +155,16 @@ const onSubmit = async () => {
   try {
     const response = await makeRequest({ url: 'formalization/ruc20-step1', method: 'POST', data: formState});
     if (response.status === 200) {
+
+      // Formalizacion Digital Atendido...
+      if(route.query.formalizaciondigital) {
+        let payload2 = {
+          id: +route.query.formalizaciondigital,
+          documentnumber: route.query.number
+        }
+        await makeRequest({ url: 'formalization/digital/update-attended', method: 'PUT', data: payload2});
+      }
+
       message.success(response.message);
    
       formState.codesunarp = null;
@@ -175,7 +187,7 @@ const onSubmit = async () => {
   }
 }
 const onSubmitFail = () => {
-  message.warning('Debes de completar todos los espacios requeridos')
+  message.warning('Debes de completar todos los espacios requeridos');
 };
 </script>
 

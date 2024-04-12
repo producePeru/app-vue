@@ -6,14 +6,14 @@
       <a-select
       v-model:value="cedeSelected"
       placeholder="Filtrar por CDES"
-      :options="cedes"
+      :options="store.cdes"
       @change="handleFilter" />
 
-      <a-input-search
+      <!-- <a-input-search
       v-model:value="searchUser"
       placeholder=""
       enter-button="Buscar"
-      @search="handleSearch" />
+      @search="handleSearch" /> -->
     </div>
     
     <a-table 
@@ -30,23 +30,42 @@
           {{ computeIndex(index) }}
         </template>
         <template v-if="column.dataIndex == 'lastName'">
-          {{ record.last_name }} {{ record.middle_name }}
+          {{ record.people.lastname }} {{ record.people.middle }}
+        </template>
+        <template v-if="column.dataIndex == 'name'">
+          {{ record.people.name }}
+        </template>
+        <template v-if="column.dataIndex == 'number_document'">
+          {{ record.people.documentnumber }}
+        </template>
+        <template v-if="column.dataIndex == 'department'">
+          {{ record.people.city.name }}
+        </template>
+        <template v-if="column.dataIndex == 'province'">
+          {{ record.people.province.name }}
+        </template>
+        <template v-if="column.dataIndex == 'district'">
+          {{ record.people.district.name }}
+        </template>
+        <template v-if="column.dataIndex == 'phone'">
+          {{ record.people.phone }}
+        </template>
+        <template v-if="column.dataIndex == 'email'">
+          {{ record.people.email }}
         </template>
         <template v-if="column.dataIndex == 'statu'">
-          <a-checkbox v-model:checked="record.status" disabled />
+          <a-checkbox :checked="record.attended == 0 ? false : true" disabled />
         </template>
         <template v-if="column.dataIndex == 'reserva'">
           <div @click="handleDataSelected(record)">
             <a-select
-            v-model:value="record.booking"
+            :disabled="record.attended == 0 ? true : false"
+            v-model:value="record.status"
             placeholder="Escoger el proceso"
             style="width: 90%"
             :options="bookings"
             @change="handleReservationName" />
           </div>
-        </template>
-        <template v-if="column.dataIndex == 'countx'">
-          <a-tag color="cyan">{{ record.count }}</a-tag>
         </template>
 
         <template v-if="column.dataIndex == 'actions'">
@@ -60,7 +79,7 @@
                   <a @click="handleFormalization20(record)">Formalizar</a>
                 </a-menu-item>
                 <a-menu-item>
-                  <a @click="handleEditUser(record)">Editar datos</a>
+                  <a @click="handleEditSolicitante(record)">Editar datos</a>
                 </a-menu-item>
                 <a-menu-item>
                   <a-popconfirm title="¿Eliminar?" @confirm="handleDeleteUser(record)">
@@ -81,14 +100,12 @@
     <a-pagination size="small" :total="total" :pageSize="pageSize"  @change="handlePaginator" :showSizeChanger="false" />
   </div>
 
-  <a-drawer width="510" title="Formalización con RUC 20" v-model:open="open1" placement="right">
+  <!-- <a-drawer width="510" title="Formalización con RUC 20" v-model:open="open1" placement="right">
     <a-steps :current="current" size="small" class="steps">
       <a-step v-for="item in steps" :key="item.title" :title="item.title" />
     </a-steps>
     <div class="steps-content">
       <ReservaNombre v-if="current == 0" :info="information" @closeDraw="handleFinalReserva" />
-      <!-- <ActoConstitutivo v-if="current == 1" :info="information2" @closeDraw="open1 = false, dataPndingRequest = false, handleSearchApi()" />
-      <MypeFinal v-if="current == 2" :info="information2" @closeDraw="open1 = false, dataPndingRequest = false, handleSearchApi()" /> -->
     </div>
   </a-drawer>
 
@@ -104,7 +121,16 @@
           <div style="text-align: center;">NUEVO TRÁMITE</div>
         </div>
     </a-spin>
-  </a-modal>
+  </a-modal> -->
+<!-- <pre>{{ updateValues }}</pre> -->
+  <a-drawer
+    v-model:open="open"
+    class="draw-notary"
+    root-class-name="root-class-name"
+    title="Datos del solicitante"
+    placement="right">
+    <SolicitanteEditar @closeDraw="handleCloseDrawopen" :updateValues="updateValues" />
+  </a-drawer>
 
 </template>
 
@@ -116,7 +142,15 @@ import { message } from 'ant-design-vue';
 import { useRouter } from 'vue-router';
 import { QuestionCircleOutlined } from '@ant-design/icons-vue';
 import ReservaNombre from './components/ReservaNombre.vue';
+import SolicitanteEditar from './components/DrawerSolicitante.componente.vue';
+import { useCounterStore } from '@/stores/selectes.js';
 
+const store = useCounterStore();
+store.$patch({ cdes: store.cdes });
+store.fetchCdes()
+
+const open = ref(false);
+const updateValues = ref(null);
 const spinning = ref(false);
 const openModal = ref(false);
 const open1 = ref(false);
@@ -133,11 +167,12 @@ const total = ref(0)
 const router = useRouter();
 const params = ref({ page: 1 });
 const searchUser = ref('')
-const url = ref('/formalization-digital')
+const url = ref('formalization/digital-list')
 const cedes = ref([]);
 const cedeSelected = ref(null)
 const valueX = ref(1200)
 const valueY = ref(window.innerHeight - 100);
+
 const actualizarAltura = () => {
   valueY.value = window.innerHeight - 300;
 };
@@ -152,9 +187,8 @@ const steps = [
 ];
 const columns = [
   { title: '#',                   dataIndex: 'idx', fixed: 'left', align: 'center', width: 50},
-  { title: 'Apellidos',           dataIndex: 'lastName', fixed: 'left', width: 140 },
-  { title: 'Nombres',             dataIndex: 'name', fixed: 'left', width: 120 },
-  // { title: 'Tipo documento',      dataIndex: 'document_type', align: 'center', width: 100},
+  { title: 'Apellidos',           dataIndex: 'lastName', fixed: 'left', width: 150 },
+  { title: 'Nombres',             dataIndex: 'name', fixed: 'left', width: 150 },
   { title: 'DNI',                 dataIndex: 'number_document', align: 'center', width: 90},
   { title: 'Departamento',        dataIndex: 'department', width: 140},
   { title: 'Provincia',           dataIndex: 'province', width: 140},
@@ -164,10 +198,17 @@ const columns = [
   { title: 'Correo',              dataIndex: 'email', width: 200},
   { title: 'Atendido',            dataIndex: 'statu', align: 'center', width: 100},
   { title: 'Reserva de nombre',   dataIndex: 'reserva', align: 'center', width: 160},
-  //{ title: 'Count',               dataIndex: 'countx', align: 'center', width: 60},
-  { title: '',                    dataIndex: 'actions', align: 'center', width: 50}
+  { title: '',                    dataIndex: 'actions', align: 'center', width: 50, fixed: 'right'}
 ];
 
+const handleEditSolicitante = (data) => {
+  updateValues.value = data.people
+  open.value = true;
+}
+const handleCloseDrawopen = () => {
+  fetchData();
+  open.value = false;
+}
 const bookings = ref([
   { value: 1, label: 'Aprobado'},
   { value: 2, label: 'Desaprobado'},
@@ -189,28 +230,12 @@ const handleEditUser = (data) => {
   router.push({ name: 'actualizar-persona', query });
 }
 const handleFormalization20 = async(val) => {
-  try {
-    
-    information.value = null
-    openModal.value = false
-    open1.value = false
-
-    const { data } = await makeRequest({ url: `/my-formalizations20/${val.number_document}`, method: 'GET' });
-
-    information.value = {
-      id: val.id_person,
-      dni: val.number_document
-    }
-
-    if(data.length >= 1) {
-      openModal.value = true
-    } else {
-      open1.value = true
-    }
-    
-  } catch (error) {
-    console.log(error);
-  } 
+  const query = {
+    type: val.people.typedocument_id,
+    number: val.people.documentnumber,
+    formalizaciondigital: val.id
+  }
+  router.push({ name: 'asesorias-formalizaciones', query });
 }
 const handleGoRoute = () => {
   const query = {
@@ -256,11 +281,11 @@ const handleFinalReserva = async() => {
 };
 const handleDeleteUser= async(val) => {
   try {
-    const payload = { is_delete: 1 }
-    const data = await makeRequest({ url: `/formalization-digital-status/${val.number_document}`, method: 'PATCH', data: payload });
+    
+    const data = await makeRequest({ url: `formalization/delete/${val.id}`, method: 'DELETE' });
     if(data.status == 200) {
       fetchData();
-      message.success("Se ha quitado de la lista");
+      message.success(data.message);
     }  
   } catch (error) {
     console.error('Error de red:', error);
@@ -272,11 +297,10 @@ const fetchData = async() => {
     loading.value = true;
     let parms = params.value.page == 1 ? '' : params.value
     
-    const data = await makeRequest({ url: url.value, method: 'GET', params:parms });
-    const filteredArray = data.data.filter((value) => value !== null);
-    
-    dataSource.value = filteredArray
-    total.value = filteredArray.length;
+    const {data} = await makeRequest({ url: url.value, method: 'GET', params:parms });
+    dataSource.value = data.data;
+    total.value = data.total;
+
   } catch (error) {
     console.error('Error de red:', error);
   } finally {
@@ -284,21 +308,6 @@ const fetchData = async() => {
   }
 }
 
-const fetchDataCdes = async() => {
-  try {
-    const {data} = await makeRequest({ url: '/actives-cdes-digitals', method: 'GET' });
-    const newItem = {
-      value: 1000,
-      label: 'Ver Todos'
-    }
-
-    cedes.value = data;
-    cedes.value.push(newItem);
-  
-  } catch (error) {
-    console.error('Error de red:', error);
-  }
-}
 
 const computeIndex = computed(() => (index) => {
   // let numb = params.value.page == 0 ? 1 : params.value.page
@@ -307,7 +316,6 @@ const computeIndex = computed(() => (index) => {
 
 onMounted(() => {
   fetchData();
-  fetchDataCdes();
   window.addEventListener('resize', actualizarAltura);
   actualizarAltura();
 });
@@ -381,4 +389,3 @@ onMounted(() => {
   }
 }
 </style>
-
