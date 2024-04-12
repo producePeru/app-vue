@@ -3,7 +3,7 @@
     <div class="container">
       <div class="footer-wrapper ff">
         <div class="footer-tuempresa-info">
-          <img src="../../assets/formalizate/logo-tuempresa.png" alt="footer logo tu empresa">
+          <img src="../../assets/img/logos/logo-tu-empresa.png" alt="footer logo tu empresa">
           <p class="ff">Programa Nacional "Tu Empresa" Brindamos a los emprendedores acompañamiento en formalización y constitución de empresas.</p>
         </div>
 
@@ -31,7 +31,7 @@
 
 footer {
   padding: 3rem;
-  background-color: #f8f8f8;
+  background-color: #e9e9e9;
   p, b {
     font-size: 13px;
     color: #4A5568;
