@@ -22,7 +22,7 @@
             <a-col :xs="12" :sm="12" :md="12" :lg="6" :xl="6" v-for="(item, idx) in 4" :key="idx">
               <a-card hoverable>
                 <template #cover>
-                  <img alt="example" src="	https://i.postimg.cc/fbnB2yfj/na1.png" />
+                  <img alt="example" src="https://i.postimg.cc/fbnB2yfj/na1.png" />
                 </template>
                 <a-card-meta title="Europe Street beat">
                   <template #description>
@@ -41,7 +41,7 @@
             <a-col :xs="12" :sm="12" :md="12" :lg="6" :xl="6" v-for="(item, idx) in 4" :key="idx">
               <a-card hoverable>
                 <template #cover>
-                  <img alt="example" src="	https://i.postimg.cc/fbnB2yfj/na1.png" />
+                  <img alt="example" src="https://i.postimg.cc/fbnB2yfj/na1.png" />
                 </template>
                 <a-card-meta title="Europe Street beat">
                   <template #description>
@@ -60,7 +60,7 @@
             <a-col :xs="12" :sm="12" :md="12" :lg="6" :xl="6" v-for="(item, idx) in 4" :key="idx">
               <a-card hoverable>
                 <template #cover>
-                  <img alt="example" src="	https://i.postimg.cc/fbnB2yfj/na1.png" />
+                  <img alt="example" src="https://i.postimg.cc/fbnB2yfj/na1.png" />
                 </template>
                 <a-card-meta title="Europe Street beat">
                   <template #description>
