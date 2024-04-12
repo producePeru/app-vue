@@ -91,10 +91,10 @@ const navbarShadow = ref('');
 
 const sales = ref([
   {
-    id: 1,
-    title: 'Title 1',
-    description: 'Lorem ipsum dolor sit amet consectetur adipisicing elit. Iusto optio eum architecto aliquid aut! Laborum magni adipisci error, modi alias obcaecati itaque esse illum dolore, ducimus eum porro atque nam.',
-    img: '	https://i.postimg.cc/fbnB2yfj/na1.png'
+    // id: 1,
+    // title: 'Title 1',
+    // description: 'Lorem ipsum dolor sit amet consectetur adipisicing elit. Iusto optio eum architecto aliquid aut! Laborum magni adipisci error, modi alias obcaecati itaque esse illum dolore, ducimus eum porro atque nam.',
+    // img: '	https://i.postimg.cc/fbnB2yfj/na1.png'
   }
 ])
 
