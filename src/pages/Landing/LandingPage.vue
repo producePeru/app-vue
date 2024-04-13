@@ -1,53 +1,52 @@
 <template>
   <div class="wow">
-    <nav>
+    <div class="nav">
       <div class="container">
         <div class="nav-logos">
-          <img src="../../assets/img/logos/logo-bicentenario.png" alt="cyberwowpnte">
-          <img src="../../assets/img/logos/logo-ministerio.png" alt="cyberwowpnte">
-          <img src="../../assets/img/logos/logo-punche-peru.png" alt="cyberwowpnte">
-          <img src="../../assets/img/logos/logo-tu-empresa.png" alt="cyberwowpnte">
+          <img class="logos" src="../../assets/img/logos/logo-bicentenario.png" alt="cyberwowpnte">
+          <img class="logos" src="../../assets/img/logos/logo-ministerio.png" alt="cyberwowpnte">
+          <img class="logos" src="../../assets/img/logos/logo-punche-peru.png" alt="cyberwowpnte">
+          <img class="logos" src="../../assets/img/logos/logo-tu-empresa.png" alt="cyberwowpnte">
         </div>
       </div>
-    </nav>
+    </div>
 
-    <main>
+
+    <div class="main">
       <div class="container">
-        <div class="banner">
-          <div>
-            <a-carousel autoplay effect="fade">
-              <div class="wow-banner">
-                <img class="text" src="../../assets/img/wow/banner.png" alt="">
-                <img class="girl" src="../../assets/img/wow/banner-girl.png" alt="">
-              </div>
-              <div class="wow-banner">
-                <img class="text" src="../../assets/img/wow/banner-2.png" alt="">
-                <img class="girl2" src="../../assets/img/wow/banner-girl-2.png" alt="">
-              </div>
-            </a-carousel>
+        <a-carousel autoplay effect="fade">
+          <div class="banner">
+            <img class="text-info-1" src="../../assets/img/wow/banner.png" alt="">
+            <img class="img-girl-1" src="../../assets/img/wow/banner-girl.png" alt="">
+          </div>
+          <div class="banner">
+            <img class="text-info-2" src="../../assets/img/wow/banner-2.png" alt="">
+            <img class="img-girl-2" src="../../assets/img/wow/banner-girl-2.png" alt="">
+          </div>
+        </a-carousel>
+      </div>
+    </div>
+
+
+    <section>
+      <div class="container" v-if="active == 'category'">
+        <div class="wrapper">
+          <h2>Categorías</h2>
+          <div class="categories-flex">
+            <a-row :gutter="[16, 16]">
+              <a-col :xs="12" :sm="12" :md="12" :lg="6" :xl="6" v-for="(category, idx) in categorias" :key="idx">
+                <div class="description" :class="category.class">
+                  <img :src="category.imagen" alt="">
+                  <h3>{{ category.nombrecategoria }}</h3>
+                </div>
+              </a-col>
+            </a-row>
           </div>
         </div>
       </div>
-    </main>
+    </section>
 
-    
-    
-    
-    <section>
-      <div class="container" v-if="active == 'category'">
-        <div class="categories">
-          <h2>Categorías</h2>
-          <a-row :gutter="[16, 16]">
-            <a-col :xs="12" :sm="12" :md="12" :lg="6" :xl="6" v-for="(category, idx) in categorias" :key="idx">
-              <div class="card" @click="handleFindBrands(category)">
-                <img style="width: 100%;" src="../../assets/img/wow/servicios.png" alt="">
-              </div>
-            </a-col>
-          </a-row>
-        </div>
-      </div>
-
-
+    <!-- 
       <div class="container" v-if="active == 'brand'">
         <div class="brands">
 
@@ -63,18 +62,18 @@
                   <template #cover>
                     <img alt="example" :src="brand.imagen" />
                   </template>
-                  <a-card-meta title="Nombre" description="description">
-                  </a-card-meta>
-                </a-card>
-              </div>
-            </a-col>
-          </a-row>
-        </div>
-      </div>
+<a-card-meta title="Nombre" description="description">
+</a-card-meta>
+</a-card>
+</div>
+</a-col>
+</a-row>
+</div>
+</div> -->
 
 
 
-      <div class="container" v-if="active == 'store'">
+    <!-- <div class="container" v-if="active == 'store'">
         <div class="stores">
           <a-breadcrumb class="wow-links">
             <a-breadcrumb-item><a @click="brands = null">Inicio</a></a-breadcrumb-item>
@@ -101,7 +100,7 @@
           </div>
 
         </div>
-      </div>
+      </div> -->
 
 
 
@@ -112,7 +111,7 @@
 
 
 
-    </section>
+
 
 
     <FooterFormalization />
@@ -143,7 +142,7 @@ const handleFindBrands = (category) => {
 
 const handleclick = (val) => {
   active.value = 'store';
-  if(val.linkpagina == 'none') {
+  if (val.linkpagina == 'none') {
     const filteredBrands = marcas.filter(marca => marca.marca_id === val.categoria_id);
     stores.value = filteredBrands;
   } else {
@@ -153,73 +152,17 @@ const handleclick = (val) => {
 
 </script>
 
-<style scoped>
+<style lang="scss">
 .wow {
-  nav {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 60px;
-    transition: background-color 0.3s ease;
-    z-index: 99;
+  .nav {
     background-color: #fff;
     box-shadow: 0px 1px 10px #999;
-  }
-
-  main {
-    padding-top: 60px;
-    background-size: 100% 500px;
-    background-image: url('../../assets/img/wow/wow.png');
-    background-repeat: no-repeat;
-    background-attachment: fixed;
-    -o-background-size: cover;
-    -moz-background-size: cover;
-    -webkit-background-size: cover;
-
-    .banner {
-
-
-      .text {
-        width: 400px;
-      }
-
-      .girl {
-        width: 32%;
-        position: absolute;
-        right: 3rem;
-        bottom: 0;
-      }
-
-      .girl2 {
-        width: 630px;
-        position: absolute;
-        right: 6rem;
-        bottom: 0;
-      }
-
-      .wow-banner {
-        position: relative;
-        width: 100%;
-        display: flex !important;
-        height: 400px;
-        align-items: center;
-      }
-    }
+    height: 60px;
   }
 
   .container {
     height: 100%;
     padding: .6rem;
-
-    @media screen and (min-width: 580px) {
-      padding: 0 !important;
-    }
-  }
-
-  .categories,
-  .brands {
-    margin: 3rem 0;
   }
 
   .nav-logos {
@@ -228,84 +171,148 @@ const handleclick = (val) => {
     height: 100%;
     justify-content: space-between;
 
-    img {
+    .logos {
+      width: 97px;
       height: 40px;
     }
   }
 
-  .sales {
-    padding: 3rem 0;
+  .main {
+    background-size: cover;
+    background-image: url('../../assets/img/wow/wow.png');
+    background-repeat: no-repeat;
+    padding: 2rem 1rem;
+
+    .banner {
+      padding-bottom: 3rem;
+
+      .text-info-1,
+      .text-info-2 {
+        width: 90%;
+        margin: auto;
+      }
+
+      .img-girl-1,
+      .img-girl-2 {
+        display: none;
+      }
+    }
+  }
+
+  .wrapper {
+    margin: 3rem 0;
 
     h2 {
-      margin-bottom: 1rem;
+      margin-bottom: 1.5rem;
+      color: #fc2b73;
+      font-weight: 800;
     }
 
-    b {
-      color: #ff4d38;
-      font-size: 13px;
-    }
-  }
-
-  .categories {
-    .card {
-      img {
-        width: 100%;
-        /* height: 200px; */
-        border-radius: 6px;
-        cursor: pointer;
-      }
-
-      &:hover {
-        border-radius: 6px;
-        transition: box-shadow 0.2s, border-color 0.2s;
-        /* box-shadow: 0 1px 2px -2px rgba(0, 0, 0, 0.16), 0 3px 6px 0 rgba(0, 0, 0, 0.12), 0 5px 12px 4px rgba(0, 0, 0, 0.09); */
-      }
-    }
-  }
-
-  .wow-links {
-    background-color: transparent !important;
-    position: relative !important;
-    box-shadow: none !important;
-    z-index: 10;
-  }
-
-  @media screen and (max-width:992px) {
-    .sales {
-      b {
-        color: #ff4d38;
-        font-size: 12px;
-      }
+    .categories-flex {
+      
     }
 
-    .wow-banner {
+    .category-option {
+      background-size: 100% 98%;
+      height: 190px;
+      border-radius: 10px;
+      position: relative;
+      display: flex;
+      align-items: center;
       justify-content: center;
     }
 
-    .girl,
-    .girl2 {
-      display: none;
+    .description {
+      color: #fff;
+      position: relative;
+      z-index: 5;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-direction: column;
+      height: 200px;
+      gap: 1rem;
+      border-radius: 10px;
+      cursor: pointer;
+      &:hover {
+        border-radius: 6px;
+        transition: box-shadow 0.2s, border-color 0.2s;
+        box-shadow: 0 1px 2px -2px rgba(0, 0, 0, 0.16), 0 3px 6px 0 rgba(0, 0, 0, 0.12), 0 5px 12px 4px rgba(0, 0, 0, 0.09);
+      }
+      h3 {
+        font-size: 22px;
+        font-family: cursive;
+      }
+    }
+
+  }
+
+  @media screen and (min-width: 992px) {
+    .container {
+      padding: 0;
+    }
+
+    .nav-logos {
+      .logos {
+        width: initial;
+      }
+    }
+
+    .main {
+      padding: 0;
+
+      .banner {
+        height: 400px;
+        display: flex !important;
+        align-items: center;
+        justify-content: space-around;
+        height: 403px;
+        padding: 1rem 0 0 0;
+
+        .text-info-1,
+        .text-info-2 {
+          width: 400px;
+          margin: initial;
+        }
+
+        .img-girl-1 {
+          display: block;
+          width: 350px;
+          position: relative;
+          top: 1.2rem;
+        }
+
+        .img-girl-2 {
+          display: block;
+          width: 190px;
+        }
+      }
     }
   }
 }
-</style>
 
-<style lang="scss">
-.brands {
-  .ant-card-body {
-    padding: .8rem;
-  }
 
-  .ant-card-meta-title {
-    margin: 0 !important;
-  }
+.comida {
+  background: linear-gradient(45deg, rgba(#09AFE8, 1) 0%, rgba(#29F499, 1) 100%)
+}
 
-  .ant-card-cover {
-    height: 170px;
+.mascota {
+  background: linear-gradient(45deg, rgba(#06db18, 1) 0%, rgba(#06db18, 1) 100%);
+}
 
-    img {
-      height: inherit;
-    }
-  }
+.moda {
+  background: linear-gradient(45deg, rgba(#FF998B, 1) 0%, rgba(#FF6D88, 1) 100%);
+}
+
+.hogar {
+  background: linear-gradient(45deg, #FFD700 0%, #f9da2f 50%, #ffdb12 100%);
+}
+
+.servicio {
+  background: linear-gradient(45deg, #8249c4 0%, #8249c4 50%, #8249c4 100%);
+}
+
+.infantil {
+  background: linear-gradient(45deg, #3fa2ff 0%, #3fa2ff 50%, #3fa2ff 100%);
 }
 </style>
