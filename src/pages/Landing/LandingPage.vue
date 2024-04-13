@@ -32,51 +32,53 @@
       <div class="container" v-if="active == 'category'">
         <div class="wrapper">
           <h2>Categorías</h2>
-          <div class="categories-flex">
+  
             <a-row :gutter="[16, 16]">
               <a-col :xs="12" :sm="12" :md="12" :lg="6" :xl="6" v-for="(category, idx) in categorias" :key="idx">
-                <div class="description" :class="category.class">
-                  
-                  <img v-if="category.class == 'comida'" src="../../assets/img/icons/alimentos.png" :alt="category.class">
-                  <img v-if="category.class == 'mascota'" src="../../assets/img/icons/mascota.png" :alt="category.class">
-                  <img v-if="category.class == 'moda'" src="../../assets/img/icons/maquilladora.png" :alt="category.class">
+                <div class="description" :class="category.class" @click="handleFindBrands(category)">
+                  <img v-if="category.class == 'comida'" src="../../assets/img/icons/alimentos.png"
+                    :alt="category.class">
+                  <img v-if="category.class == 'mascota'" src="../../assets/img/icons/mascota.png"
+                    :alt="category.class">
+                  <img v-if="category.class == 'moda'" src="../../assets/img/icons/maquilladora.png"
+                    :alt="category.class">
                   <img v-if="category.class == 'hogar'" src="../../assets/img/icons/hogar.png" :alt="category.class">
-                  <img v-if="category.class == 'servicio'" src="../../assets/img/icons/servicio.png" :alt="category.class">
+                  <img v-if="category.class == 'servicio'" src="../../assets/img/icons/servicio.png"
+                    :alt="category.class">
                   <img v-if="category.class == 'infantil'" src="../../assets/img/icons/bebe.png" :alt="category.class">
-
                   <h3>{{ category.nombrecategoria }}</h3>
                 </div>
               </a-col>
             </a-row>
-          </div>
+        
         </div>
       </div>
     </section>
 
-    <!-- 
-      <div class="container" v-if="active == 'brand'">
-        <div class="brands">
 
-          <a-breadcrumb class="wow-links">
-            <a-breadcrumb-item><a @click="brands = null">Inicio</a></a-breadcrumb-item>
-            <a-breadcrumb-item>Categorías</a-breadcrumb-item>
-          </a-breadcrumb>
+    <section class="container" v-if="active == 'brand'">
+      <div class="wrapper">
+        <div class="breadcrumb">
+          <h3 @click="active = 'category'">atrás</h3>
+          <h2>MARCAS</h2>
+        </div>
+       
 
-          <a-row :gutter="[16, 16]">
-            <a-col :xs="12" :sm="12" :md="12" :lg="6" :xl="6" v-for="(brand, idx) in brands" :key="idx">
-              <div class="card" @click="handleclick(brand)">
-                <a-card hoverable>
-                  <template #cover>
-                    <img alt="example" :src="brand.imagen" />
-                  </template>
-<a-card-meta title="Nombre" description="description">
-</a-card-meta>
-</a-card>
-</div>
-</a-col>
-</a-row>
-</div>
-</div> -->
+        <a-row :gutter="[16, 16]">
+          <a-col :xs="12" :sm="12" :md="12" :lg="6" :xl="6" v-for="(brand, idx) in brands" :key="idx">
+            <div class="card" @click="handleclick(brand)">
+              <a-card hoverable class="brand-card">
+                <template #cover>
+                  <img class="brand-img" :alt="brand.descripcion" :src="brand.imagen" />
+                </template>
+                <a-card-meta title="Nombre" :description="brand.descripcion">
+                </a-card-meta>
+              </a-card>
+            </div>
+          </a-col>
+        </a-row>
+      </div>
+    </section>
 
 
 
@@ -120,7 +122,6 @@
 
 
 
-
     <FooterFormalization />
 
   </div>
@@ -136,6 +137,7 @@ const stores = ref(false);
 const active = ref('category');
 
 const handleFindBrands = (category) => {
+  console.log("uuuu", category);
   active.value = 'brand';
   const filteredBrands = marcas.filter(marca => marca.categoria_id === category.id);
   if (filteredBrands.length > 0) {
@@ -145,22 +147,20 @@ const handleFindBrands = (category) => {
   }
 }
 
-
-
 const handleclick = (val) => {
-  active.value = 'store';
   if (val.linkpagina == 'none') {
     const filteredBrands = marcas.filter(marca => marca.marca_id === val.categoria_id);
     stores.value = filteredBrands;
+    active.value = 'store';
   } else {
-    window.open(val.link, '_blank');
+    window.open(val.linkpagina, '_blank');
   }
 }
 
 </script>
 
 <style lang="scss">
-@import url('https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=News+Cycle:wght@400;700&display=swap');
 .wow {
   .nav {
     background-color: #fff;
@@ -213,13 +213,9 @@ const handleclick = (val) => {
     h2 {
       margin-bottom: 1.5rem;
       color: #fc2b73;
-      font-weight: 800;
+      font-family: "News Cycle", sans-serif;
+      font-weight: 600;
     }
-
-    .categories-flex {
-      
-    }
-
     .category-option {
       background-size: 100% 98%;
       height: 190px;
@@ -242,20 +238,53 @@ const handleclick = (val) => {
       gap: 1rem;
       border-radius: 10px;
       cursor: pointer;
+
       &:hover {
         border-radius: 6px;
         transition: box-shadow 0.2s, border-color 0.2s;
         box-shadow: 0 1px 2px -2px rgba(0, 0, 0, 0.16), 0 3px 6px 0 rgba(0, 0, 0, 0.12), 0 5px 12px 4px rgba(0, 0, 0, 0.09);
       }
+
       h3 {
         font-size: 20px;
-        font-family: cursive;
-        font-family: "Roboto", sans-serif;
+        font-family: "News Cycle", sans-serif;
+        font-weight: 400;
         font-size: 16px;
         margin: 0;
       }
     }
 
+    .brand-img {
+      width: 90%;
+      height: 110px;
+      object-fit: scale-down;
+      margin: auto;
+      padding-top: 1rem;
+    }
+    .brand-card {
+      .ant-card-meta-description {
+        line-height: 1.3;
+      }
+    }
+    .breadcrumb {
+      display: flex;
+      align-items: baseline;
+      margin-bottom: 1rem;
+      h2, h3 {
+        margin: 0;
+        font-family: "News Cycle", sans-serif;
+        font-weight: 600;
+      }
+      h3 {
+        color: #c9c9c9;
+        margin-right: 10px;
+        cursor: pointer;
+        font-weight: 400;
+        &:hover {
+          color: #fc2b73;
+        }
+      }
+    }
   }
 
   @media screen and (min-width: 992px) {
@@ -299,9 +328,11 @@ const handleclick = (val) => {
         }
       }
     }
+
     .wrapper {
       .description {
         height: 200px;
+
         h3 {
           font-size: 22px;
         }
