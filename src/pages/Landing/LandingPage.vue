@@ -40,7 +40,7 @@
           <a-row :gutter="[16, 16]">
             <a-col :xs="12" :sm="12" :md="12" :lg="6" :xl="6" v-for="(category, idx) in categorias" :key="idx">
               <div class="card" @click="handleFindBrands(category)">
-                <img style="width: 100%;" :src="category.imagen" alt="">
+                <img style="width: 100%;" src="../../assets/img/wow/servicios.png" alt="">
               </div>
             </a-col>
           </a-row>
@@ -123,7 +123,7 @@
 <script setup>
 import { ref, onMounted, onUnmounted } from 'vue';
 import FooterFormalization from '../Formalizacion/FormalizacionFooter.vue';
-import { marcas, tiendas } from '@/json/wow.js'
+import { categorias, marcas, tiendas } from '@/json/wow.js'
 
 const brands = ref(false);
 const stores = ref(false);
@@ -139,38 +139,6 @@ const handleFindBrands = (category) => {
   }
 }
 
-const categorias = [
-  {
-    id: 1,
-    nombrecategoria: 'Alimentos y Bebidas',
-    imagen: '../src/assets/img/wow/servicios.png'
-  },
-  {
-    id: 2,
-    nombrecategoria: 'Mascotas',
-    imagen: '../src/assets/img/wow/servicios.png'
-  },
-  {
-    id: 3,
-    nombrecategoria: 'Moda y Belleza',
-    imagen: '../src/assets/img/wow/servicios.png'
-  },
-  {
-    id: 4,
-    nombrecategoria: 'Deco y Hogar',
-    imagen: '../src/assets/img/wow/servicios.png'
-  },
- {
-    id: 5,
-    nombrecategoria: 'Servicios y otros',
-    imagen: '../src/assets/img/wow/servicios.png'
-  },
- {
-    id: 6,
-    nombrecategoria: 'Infantil',
-    imagen: '../src/assets/img/wow/servicios.png'
-  },
-];
 
 
 const handleclick = (val) => {

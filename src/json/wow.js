@@ -2,7 +2,7 @@ const categorias = [
   {
     id: 1,
     nombrecategoria: 'Alimentos y Bebidas',
-    imagen: '../src/assets/img/wow/servicios.png'
+    imagen: './servicios.png'
   },
   {
     id: 2,
