@@ -123,7 +123,7 @@
 <script setup>
 import { ref, onMounted, onUnmounted } from 'vue';
 import FooterFormalization from '../Formalizacion/FormalizacionFooter.vue';
-import { categorias, marcas, tiendas } from '@/json/wow.js'
+import { marcas, tiendas } from '@/json/wow.js'
 
 const brands = ref(false);
 const stores = ref(false);
@@ -138,6 +138,39 @@ const handleFindBrands = (category) => {
     console.log('No se encontraron marcas para la categoría especificada.');
   }
 }
+
+const categorias = [
+  {
+    id: 1,
+    nombrecategoria: 'Alimentos y Bebidas',
+    imagen: '../src/assets/img/wow/servicios.png'
+  },
+  {
+    id: 2,
+    nombrecategoria: 'Mascotas',
+    imagen: '../src/assets/img/wow/servicios.png'
+  },
+  {
+    id: 3,
+    nombrecategoria: 'Moda y Belleza',
+    imagen: '../src/assets/img/wow/servicios.png'
+  },
+  {
+    id: 4,
+    nombrecategoria: 'Deco y Hogar',
+    imagen: '../src/assets/img/wow/servicios.png'
+  },
+ {
+    id: 5,
+    nombrecategoria: 'Servicios y otros',
+    imagen: '../src/assets/img/wow/servicios.png'
+  },
+ {
+    id: 6,
+    nombrecategoria: 'Infantil',
+    imagen: '../src/assets/img/wow/servicios.png'
+  },
+];
 
 
 const handleclick = (val) => {
