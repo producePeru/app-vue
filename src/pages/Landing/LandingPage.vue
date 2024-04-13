@@ -238,7 +238,7 @@ const handleclick = (val) => {
       align-items: center;
       justify-content: center;
       flex-direction: column;
-      height: 200px;
+      height: 160px;
       gap: 1rem;
       border-radius: 10px;
       cursor: pointer;
@@ -251,6 +251,8 @@ const handleclick = (val) => {
         font-size: 20px;
         font-family: cursive;
         font-family: "Roboto", sans-serif;
+        font-size: 16px;
+        margin: 0;
       }
     }
 
@@ -294,6 +296,14 @@ const handleclick = (val) => {
         .img-girl-2 {
           display: block;
           width: 190px;
+        }
+      }
+    }
+    .wrapper {
+      .description {
+        height: 200px;
+        h3 {
+          font-size: 22px;
         }
       }
     }
