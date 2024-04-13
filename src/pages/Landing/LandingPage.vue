@@ -59,24 +59,25 @@
     <section class="container" v-if="active == 'brand'">
       <div class="wrapper">
         <div class="breadcrumb">
-          <h3 @click="active = 'category'">atrás</h3>
+          <h3 @click="active = 'category', spinning = true">atrás</h3>
           <h2>MARCAS</h2>
         </div>
        
-
-        <a-row :gutter="[16, 16]">
-          <a-col :xs="12" :sm="12" :md="12" :lg="6" :xl="6" v-for="(brand, idx) in brands" :key="idx">
-            <div class="card" @click="handleclick(brand)">
-              <a-card hoverable class="brand-card">
-                <template #cover>
-                  <img class="brand-img" :alt="brand.descripcion" :src="brand.imagen" />
-                </template>
-                <a-card-meta title="Nombre" :description="brand.descripcion">
-                </a-card-meta>
-              </a-card>
-            </div>
-          </a-col>
-        </a-row>
+        <a-spin :spinning="spinning">
+          <a-row :gutter="[16, 16]">
+            <a-col :xs="12" :sm="12" :md="12" :lg="6" :xl="6" v-for="(brand, idx) in brands" :key="idx">
+              <div class="card" @click="handleclick(brand)">
+                <a-card hoverable class="brand-card">
+                  <template #cover>
+                    <img class="brand-img" :alt="brand.descripcion" :src="brand.imagen" />
+                  </template>
+                  <a-card-meta title="Nombre" :description="brand.descripcion">
+                  </a-card-meta>
+                </a-card>
+              </div>
+            </a-col>
+          </a-row>
+        </a-spin>
       </div>
     </section>
 
@@ -111,17 +112,6 @@
         </div>
       </div> -->
 
-
-
-
-
-
-
-
-
-
-
-
     <FooterFormalization />
 
   </div>
@@ -132,12 +122,18 @@ import { ref, onMounted, onUnmounted } from 'vue';
 import FooterFormalization from '../Formalizacion/FormalizacionFooter.vue';
 import { categorias, marcas, tiendas } from '@/json/wow.js'
 
+const spinning = ref(true);
 const brands = ref(false);
 const stores = ref(false);
 const active = ref('category');
 
+const timeOut = () => {
+  setTimeout(() => {
+    spinning.value = false
+  },1000);
+}
 const handleFindBrands = (category) => {
-  console.log("uuuu", category);
+  timeOut()
   active.value = 'brand';
   const filteredBrands = marcas.filter(marca => marca.categoria_id === category.id);
   if (filteredBrands.length > 0) {
@@ -208,7 +204,7 @@ const handleclick = (val) => {
   }
 
   .wrapper {
-    margin: 3rem 0;
+    margin: 1rem 0 3rem 0;
 
     h2 {
       margin-bottom: 1.5rem;
@@ -249,7 +245,7 @@ const handleclick = (val) => {
         font-size: 20px;
         font-family: "News Cycle", sans-serif;
         font-weight: 400;
-        font-size: 16px;
+        font-size: 18px;
         margin: 0;
       }
     }
