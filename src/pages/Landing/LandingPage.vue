@@ -36,7 +36,9 @@
             <a-row :gutter="[16, 16]">
               <a-col :xs="12" :sm="12" :md="12" :lg="6" :xl="6" v-for="(category, idx) in categorias" :key="idx">
                 <div class="description" :class="category.class">
-                  <img :src="category.imagen" alt="">
+                  
+                  <img :src="category.imagen" :alt="category.class">
+
                   <h3>{{ category.nombrecategoria }}</h3>
                 </div>
               </a-col>

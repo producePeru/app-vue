@@ -2,37 +2,37 @@ const categorias = [
   {
     id: 1,
     nombrecategoria: 'Alimentos y Bebidas',
-    imagen: 'src/assets/img/icons/alimentos.png',
+    imagen: '../../assets/img/icons/alimentos.png',
     class: 'comida'
   },
   {
     id: 2,
     nombrecategoria: 'Mascotas',
-    imagen: 'src/assets/img/icons/mascota.png',
+    imagen: '../../assets/img/icons/mascota.png',
     class: 'mascota'
   },
   {
     id: 3,
     nombrecategoria: 'Moda y Belleza',
-    imagen: 'src/assets/img/icons/maquilladora.png',
+    imagen: '../../assets/img/icons/maquilladora.png',
     class: 'moda'
   },
   {
     id: 4,
     nombrecategoria: 'Deco y Hogar',
-    imagen: 'src/assets/img/icons/hogar.png',
+    imagen: '../../assets/img/icons/hogar.png',
     class: 'hogar'
   },
  {
     id: 5,
     nombrecategoria: 'Servicios y otros',
-    imagen: 'src/assets/img/icons/servicio.png',
+    imagen: '../../assets/img/icons/servicio.png',
     class: 'servicio'
   },
  {
     id: 6,
     nombrecategoria: 'Infantil',
-    imagen: 'src/assets/img/icons/bebe.png',
+    imagen: '../../assets/img/icons/bebe.png',
     class: 'infantil'
   },
 ];
