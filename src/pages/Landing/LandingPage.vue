@@ -180,7 +180,7 @@ const handleclick = (val) => {
 
 
       .text {
-        width: 450px;
+        width: 400px;
       }
 
       .girl {

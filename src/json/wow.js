@@ -2,32 +2,32 @@ const categorias = [
   {
     id: 1,
     nombrecategoria: 'Alimentos y Bebidas',
-    imagen: 'src/assets/img/wow/servicios.png'
+    imagen: '../src/assets/img/wow/servicios.png'
   },
   {
     id: 2,
     nombrecategoria: 'Mascotas',
-    imagen: 'src/assets/img/wow/servicios.png'
+    imagen: '../src/assets/img/wow/servicios.png'
   },
   {
     id: 3,
     nombrecategoria: 'Moda y Belleza',
-    imagen: 'src/assets/img/wow/servicios.png'
+    imagen: '../src/assets/img/wow/servicios.png'
   },
   {
     id: 4,
     nombrecategoria: 'Deco y Hogar',
-    imagen: 'src/assets/img/wow/servicios.png'
+    imagen: '../src/assets/img/wow/servicios.png'
   },
  {
     id: 5,
     nombrecategoria: 'Servicios y otros',
-    imagen: 'src/assets/img/wow/servicios.png'
+    imagen: '../src/assets/img/wow/servicios.png'
   },
  {
     id: 6,
     nombrecategoria: 'Infantil',
-    imagen: 'src/assets/img/wow/servicios.png'
+    imagen: '../src/assets/img/wow/servicios.png'
   },
 ];
 
