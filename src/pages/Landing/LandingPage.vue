@@ -37,8 +37,12 @@
               <a-col :xs="12" :sm="12" :md="12" :lg="6" :xl="6" v-for="(category, idx) in categorias" :key="idx">
                 <div class="description" :class="category.class">
                   
-                  <!-- <img :src="category.imagen" :alt="category.class"> -->
-                  <img src="../../assets/img/icons/alimentos.png" alt="">
+                  <img v-if="category.class == 'comida'" src="../../assets/img/icons/alimentos.png" :alt="category.class">
+                  <img v-if="category.class == 'mascota'" src="../../assets/img/icons/mascota.png" :alt="category.class">
+                  <img v-if="category.class == 'moda'" src="../../assets/img/icons/maquilladora.png" :alt="category.class">
+                  <img v-if="category.class == 'hogar'" src="../../assets/img/icons/hogar.png" :alt="category.class">
+                  <img v-if="category.class == 'servicio'" src="../../assets/img/icons/servicio.png" :alt="category.class">
+                  <img v-if="category.class == 'infantil'" src="../../assets/img/icons/bebe.png" :alt="category.class">
 
                   <h3>{{ category.nombrecategoria }}</h3>
                 </div>
