@@ -1,6 +1,5 @@
 <template>
   <div class="background-map">
-    <!-- <pre>{{ props.stepData2 }}</pre> -->
     <h2 class="title2 ff">Paso 2: Selección de puntos de atención</h2>
     <div class="info-gps">
       <span>Este ícono
@@ -64,14 +63,10 @@ const showModal = (data) => {
 };
 
 const onSubmit = async () => {
-  const payload = {
-    'dni_person': props.stepData2.number_document,
-    'id_gps': markerInfo.value.id,
-  }
   loading.value = true
   try {
     
-    const data = await requestNoToken({ url: '/public/formalization-digital', method: 'POST', data: payload });
+    const data = await requestNoToken({ url: `public/formalization/select-cde/${props.stepData2}/${markerInfo.value.id}`, method: 'GET' });
     if(data.status == 200) msgOk.value = true
     
   } catch (error) {
@@ -99,7 +94,7 @@ const scrollTop = () => {
 };
 const locationsCdes = async () => {
   try {
-    const { data } = await requestNoToken({ url: `/public/location-cdes`, method: 'GET' });
+    const { data } = await requestNoToken({ url: `public/location-cdes`, method: 'GET' });
     const formattedData = data.map(item => ({
       position: {
         lat: parseFloat(item.position.lat),
@@ -366,7 +361,7 @@ header {
   }
 
   .form-wrapper {
-    padding: 3rem 1.5rem;
+    padding: 3rem 1.5rem !important;
 
     h2 {
       margin-bottom: 1.5rem;

@@ -53,6 +53,9 @@
         <template v-if="column.dataIndex == 'email'">
           {{ record.people.email }}
         </template>
+        <template v-if="column.dataIndex == 'cde'">
+          {{ record.cde?.name }}
+        </template>
         <template v-if="column.dataIndex == 'statu'">
           <a-checkbox :checked="record.attended == 0 ? false : true" disabled />
         </template>
@@ -99,7 +102,7 @@
   <div class="paginator">
     <a-pagination size="small" :total="total" :pageSize="pageSize"  @change="handlePaginator" :showSizeChanger="false" />
   </div>
-
+  <!-- <pre>{{ dataRecordSelected }}</pre> -->
   <!-- <a-drawer width="510" title="Formalización con RUC 20" v-model:open="open1" placement="right">
     <a-steps :current="current" size="small" class="steps">
       <a-step v-for="item in steps" :key="item.title" :title="item.title" />
@@ -193,7 +196,7 @@ const columns = [
   { title: 'Departamento',        dataIndex: 'department', width: 140},
   { title: 'Provincia',           dataIndex: 'province', width: 140},
   { title: 'Distrito',            dataIndex: 'district', width: 140},
-  { title: 'CDE Atención',        dataIndex: 'gps_name', width: 140},
+  { title: 'CDE Atención',        dataIndex: 'cde', width: 140},
   { title: 'Celular',             dataIndex: 'phone', width: 100},
   { title: 'Correo',              dataIndex: 'email', width: 200},
   { title: 'Atendido',            dataIndex: 'statu', align: 'center', width: 100},
@@ -263,8 +266,9 @@ const handleSearch = () => {
   fetchData()
 }
 const handleReservationName = async(val) => {
+  // console.log("aaaa", val);
   const payload = { booking: val }
-  await makeRequest({ url: `/formalization-digital-status/${dataRecordSelected.value.number_document}`, method: 'PATCH', data: payload });
+  await makeRequest({ url: `/formalization-digital-status/${dataRecordSelected.value.documentnumber}`, method: 'PATCH', data: payload });
 }
 const handleDataSelected = (record) => {
   dataRecordSelected.value = record

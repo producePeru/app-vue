@@ -5,7 +5,7 @@
       <h3 :class="{'hdactive' : active == 'ruc10'}" @click="fetchData('ruc10')">FORMALIZACIONES RUC 10</h3>
       <h3 :class="{'hdactive' : active == 'ruc20'}" @click="fetchData('ruc20')">FORMALIZACIONES RUC 20</h3>
     </div>
-<!-- <pre>:::{{ params.page }}</pre> -->
+
     <div class="filters-dig">
       <a-button @click="handleDownloadAsesorias" :loading="loadingexc">
         <img width="20" style="margin-right: 6px;" src="@/assets/img/icoexcel.png" /> DESCARGAR
@@ -126,10 +126,12 @@ import { message } from 'ant-design-vue';
 import Cookies from 'js-cookie';
 
 const storageData = JSON.parse(localStorage.getItem('profile'));
+const token = Cookies.get('token');
+
 const prod = import.meta.env.VITE_APP_API_URL_PRODUCTION
 const dev = import.meta.env.VITE_APP_API_URL_LOCAL
-const apiUrl = window.location.hostname == '127.0.0.1' ? dev : prod;
-const token = Cookies.get('token');
+const apiUrl = window.location.hostname == 'localhost' || window.location.hostname == '127.0.0.1' ? dev : prod;
+
 const dataSource = ref([])
 const loading = ref(false);
 const loadingexc = ref(false);
@@ -259,29 +261,27 @@ const handleSearch = async() => {
 
 
 const handleDownloadAsesorias = async() => {
-  // loadingexc.value = true
+  loadingexc.value = true
 
-  const payload = {};
+  let urlx = '', nameExcel = '';
 
-  // let urlx = '', nameExcel = '';
+  if(active.value == 'asesorias') {
+    urlx = 'download/asesories';
+    nameExcel = 'asesorias.xlsx'
+  }
 
-  // if(active.value == 'asesorias') {
-  //   urlx = 'download-asesorias';
-  //   nameExcel = 'asesorias.xlsx'
-  // }
+  if(active.value == 'ruc10') {
+    urlx = 'download/formalizations-ruc10';
+    nameExcel = 'formalizacionesRUC10.xlsx'
+  }
 
-  // if(active.value == 'ruc10') {
-  //   urlx = 'download-formalizations-10';
-  //   nameExcel = 'formalizacionesRUC10.xlsx'
-  // }
-
-  // if(active.value == 'ruc20') {
-  //   urlx = 'download-formalizations-20';
-  //   nameExcel = 'formalizacionesRUC20.xlsx'
-  // }
+  if(active.value == 'ruc20') {
+    urlx = 'download/formalizations-ruc20';
+    nameExcel = 'formalizacionesRUC20.xlsx'
+  }
 
   try {
-    const { data } = await axios.get(`${apiUrl}download/asesories`, {
+    const { data } = await axios.get(`${apiUrl}${urlx}`, {
       headers: {
         'Content-Type': 'multipart/form-data',
         'Authorization': `Bearer ${token}`
@@ -293,7 +293,7 @@ const handleDownloadAsesorias = async() => {
     const url = window.URL.createObjectURL(blob);
     const link = document.createElement('a');
     link.href = url;
-    link.download = 'asesorias.xlsx'; 
+    link.download = nameExcel; 
     document.body.appendChild(link);
     link.click();
     document.body.removeChild(link);

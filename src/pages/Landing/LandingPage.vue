@@ -71,7 +71,7 @@
                   <template #cover>
                     <img class="brand-img" :alt="brand.descripcion" :src="brand.imagen" />
                   </template>
-                  <a-card-meta title="Nombre" :description="brand.descripcion">
+                  <a-card-meta :title="brand.nombre" :description="uppercase(brand.descripcion)">
                   </a-card-meta>
                 </a-card>
               </div>
@@ -142,7 +142,9 @@ const handleFindBrands = (category) => {
     console.log('No se encontraron marcas para la categoría especificada.');
   }
 }
-
+const uppercase = (str) => {
+  return str.charAt(0).toUpperCase() + str.slice(1).toLowerCase();
+}
 const handleclick = (val) => {
   if (val.linkpagina == 'none') {
     const filteredBrands = marcas.filter(marca => marca.marca_id === val.categoria_id);

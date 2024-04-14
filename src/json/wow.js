@@ -42,6 +42,7 @@ const categorias = [
 const marcas = [
   {
     id: 1,
+    nombre: 'Gusto Raymi',
     imagen: 'https://lh3.google.com/u/0/d/1OjziPdQh4G0UObQCZ7nfImR8Gb2EAecS=w1920-h945-iv1',
     linkpagina: 'https://comsesur.com/productos-2/',
     descripcion: 'Raíces conscientes, productos sostenibles y exquisitos chocolates, café y  más',
@@ -49,6 +50,7 @@ const marcas = [
   },
   {
     id: 2,
+    nombre: 'Exótica Superfoods',
     imagen: 'https://lh3.google.com/u/0/d/16T9nRxmpgjZFtjdbQAmEZ13EFhoNRVJA=w1919-h944-iv1',
     linkpagina: 'https://exoticasuperfoods.com/exotica-superfoods/shop/ ',
     descripcion: 'Natural y orgánico, superalimentos andinos y amazónicos',
@@ -56,6 +58,7 @@ const marcas = [
   },
   {
     id: 3,
+    nombre: 'Can & Cat',
     imagen: 'https://lh3.google.com/u/0/d/1744ocDnnoJV-5389rgpj8bNOOAP1TfHu=w1919-h944-iv5',
     linkpagina: 'www.canicat.pe',
     descripcion: 'Estilo y bienestar para tu mascota',
@@ -63,6 +66,7 @@ const marcas = [
   },
   {
     id: 4,
+    nombre: 'Vestidos Nancy Alvarado',
     imagen: 'https://lh3.google.com/u/0/d/13dmAabvFRocZ1-vwRC2hQrMwnWia2izl=w1919-h944-iv1',
     linkpagina: 'https://www.vestidosnancyalvarado.com/',
     descripcion: 'Moda femenina: elegancia y estilo',
@@ -70,12 +74,15 @@ const marcas = [
   },
   {
     id: 5,
+    nombre: 'Warayo',
     imagen: '',
+    linkpagina: 'www.terraamazonica.online',
     descripcion: '',
     categoria_id: '',
   },
   {
     id: 6,
+    nombre: 'Kera Super Foods',
     imagen: 'https://lh3.google.com/u/0/d/1fdSVtcrr5U1fapgaITSriupwy5zfKHbM=w1919-h944-iv1',
     linkpagina: 'https://kerasuperfood.com/tienda/',
     descripcion: 'Vida mejor, superalimentos nativos',
@@ -83,6 +90,7 @@ const marcas = [
   },
   {
     id: 7,
+    nombre: 'Misha Rastrera',
     imagen: '	https://lh3.google.com/u/0/d/1MvsA4nDhWdfQC1_5UCvArILVJHp04OcO=w1919-h944-iv1',
     linkpagina: 'https://www.misharastrera.com/',
     descripcion: 'Delicias Sostenibles: Andino - Amazónicas',
@@ -90,6 +98,7 @@ const marcas = [
   },
   {
     id: 8,
+    nombre: 'Yurol',
     imagen: 'https://lh3.google.com/u/0/d/1W84p7zaZNInoHVW6c6agIipHzYE81ler=w1919-h944-iv1',
     linkpagina: 'https://yurolnaturalmarket.com/shop/',
     descripcion: 'Alimentación consciente con miel natural',
@@ -97,6 +106,7 @@ const marcas = [
   },
   {
     id: 9,
+    nombre: 'Lencería Perricholi ',
     imagen: 'https://lh3.google.com/u/0/d/12i1Dqo6Q7e-LjNNY6OnFZTV66Ekyppm_=w1919-h944-iv1',
     linkpagina: 'www.lenceriaperricholi.com',
     descripcion: 'Empoderamiento femenino, lencería exclusiva',
@@ -104,6 +114,7 @@ const marcas = [
   },
   {
     id: 10,
+    nombre: 'Perezoso',
     imagen: 'https://lh3.google.com/u/0/d/1Q4pfJbFmzhXDvm82pcmh3MKvFYOh6KwG=w1919-h944-iv2',
     linkpagina: 'www.perezoso.pe',
     descripcion: 'Comodidad garantizada: colchones Perezoso',
@@ -111,6 +122,7 @@ const marcas = [
   },
   {
     id: 11,
+    nombre: 'Grillcorp',
     imagen: 'https://lh3.google.com/u/0/d/1A7FQTp3QdBQCzT6Z8DiUwFIztAs0ZrKS=w1920-h945-iv1',
     linkpagina: 'https://www.grillcorp.com.pe/',
     descripcion: 'Calidad en cocción: parrillas, cilindros y más',
@@ -118,6 +130,7 @@ const marcas = [
   },
   {
     id: 12,
+    nombre: 'Inga Pijamas',
     imagen: 'https://lh3.google.com/u/0/d/1nLe2o8Be2bcHwPuwg7oPpmOUSfq98rZD=w1919-h944-iv1',
     linkpagina: 'www.ingapijamas.com.pe',
     descripcion: 'Comodidad y calidad en pijamas',
@@ -125,6 +138,7 @@ const marcas = [
   },
   {
     id: 13,
+    nombre: 'Tablitas',
     imagen: 'https://lh3.google.com/u/0/d/1zzgZIWvF2qn9h61h0nr5oJe497CaWCm4=w1919-h944-iv2',
     linkpagina: 'https://muebles-tablitas.com/',
     descripcion: 'Muebles y más: transforma tu espacio',
@@ -132,6 +146,7 @@ const marcas = [
   },
   {
     id: 14,
+    nombre: 'Arlin Textil',
     imagen: 'https://lh3.google.com/u/0/d/1ENGheAwYpbo9musNcf5Mxjnw5AuXE2Pb=w1919-h944-iv1',
     linkpagina: 'https://arlintextil.com/',
     descripcion: 'Descansa con comodidad: Ropa de Cama y textiles afines',
@@ -139,13 +154,15 @@ const marcas = [
   },
   {
     id: 15,
+    nombre: 'Finka Kivinaki',
     imagen: '',
-    linkpagina: '',
+    linkpagina: 'www.finkakivinaki.com',
     descripcion: '',
     categoria_id: '',
   },
   {
     id: 16,
+    nombre: 'Linea Decor Mueble',
     imagen: 'https://lh3.google.com/u/0/d/1gtkx0TxHSp3MeYMK_fHfBD9OnjLQn17O=w1920-h945-iv1',
     linkpagina: 'www.lineadecormueble.com',
     descripcion: 'Diseño y calidad en muebles',
@@ -153,6 +170,7 @@ const marcas = [
   },
   {
     id: 17,
+    nombre: 'Only Cotton',
     imagen: 'https://lh3.google.com/u/0/d/1SaJnFSyOXzRtlc_nie0yeggvA6IkoIwJ=w1920-h945-iv1',
     linkpagina: 'https://onlycotton.samishop.com/',
     descripcion: 'Viste con amor y calidad: prendas 100% algodón premium',
@@ -160,6 +178,7 @@ const marcas = [
   },
   {
     id: 18,
+    nombre: 'Murats',
     imagen: 'https://lh3.googleusercontent.com/u/0/d/1SOs554IOLQZkXeFhydrDGPLAmwySvkqo=w1920-h969-iv1',
     linkpagina: 'shopstar.pe/murats-bag',
     descripcion: 'Accesorios de cuero para mujeres',
@@ -167,6 +186,7 @@ const marcas = [
   },
   {
     id: 19,
+    nombre: 'Per Ingredients By Vita &Co',
     imagen: 'https://lh3.googleusercontent.com/u/0/d/1NndLOv6CJwFDhZ1O2oIHcQXnzsk4m6-n=w1920-h969-iv1',
     linkpagina: 'http://vitaycoperu.com',
     descripcion: 'snacks y alimentos saludables',
@@ -174,6 +194,7 @@ const marcas = [
   },
   {
     id: 20,
+    nombre: 'Wait Shop',
     imagen: 'https://lh3.googleusercontent.com/u/0/d/1Yl-feo3mTPxpJ8sI6V3cK3P_Wi3iQ9GT=w1920-h969-iv1',
     linkpagina: 'waitshop.pe',
     descripcion: 'moda para damas',
@@ -181,6 +202,7 @@ const marcas = [
   },
   {
     id: 21,
+    nombre: 'Isague',
     imagen: 'https://lh3.googleusercontent.com/u/0/d/1C1sXT8NB3IeiSxsSBfFS7JfkiQSTQHeX=w1920-h969-iv1',
     linkpagina: 'https://isague.com',
     descripcion: 'moda para hombres',
@@ -188,6 +210,7 @@ const marcas = [
   },
   {
     id: 22,
+    nombre: 'Alimentos Molicusco',
     imagen: 'https://lh3.googleusercontent.com/u/0/d/1Fj_ZWG07xpOzCOfabKc3jdJNvQJ6m386=w1920-h969-iv1',
     linkpagina: 'www.molicusco.com',
     descripcion: 'superalimentos de la región Cusco',
@@ -195,6 +218,7 @@ const marcas = [
   },
   {
     id: 23,
+    nombre: 'Magnolia Essential Care',
     imagen: 'https://lh3.googleusercontent.com/u/0/d/1H4VZnsLOkc-avAB-kpukysMTqEAl2rdZ=w1920-h1080-iv1',
     linkpagina: 'magnoliaec.tiendada.com',
     descripcion: 'productos artesanales para el aseo y cuidado personal',
@@ -202,6 +226,7 @@ const marcas = [
   },
   {
     id: 24,
+    nombre: 'Annie Love',
     imagen: 'https://lh3.googleusercontent.com/u/0/d/1ymMSBeE901mdeWc7USuj4YyiWka6MOyF=w1920-h1080-iv1',
     linkpagina: 'www.annielovedesign.com',
     descripcion: 'joyería de alta calidad',
@@ -209,6 +234,7 @@ const marcas = [
   },
   {
     id: 25,
+    nombre: 'Magdalena Shoes',
     imagen: 'https://lh3.googleusercontent.com/u/0/d/1A1F0CfnhPsT-jCxrO13JW_eBIZTotWk5=w1920-h969-iv1',
     linkpagina: 'https://www.magdalenashoes.com.pe/',
     descripcion: 'calzado para damas',
@@ -216,6 +242,7 @@ const marcas = [
   },
   {
     id: 26,
+    nombre: 'Noe Bernacelli',
     imagen: 'https://lh3.googleusercontent.com/u/0/d/12MIFHq9uuZ1nD1k0odzanee2GRgYpuxg=w1920-h969-iv1',
     linkpagina: 'https://noebernacelli.com/',
     descripcion: 'ropa de alta costura para damas',
@@ -223,6 +250,7 @@ const marcas = [
   },
   {
     id: 27,
+    nombre: 'Sotelo',
     imagen: 'https://lh3.googleusercontent.com/u/0/d/1PDi96pEZthM9JeqyvmiGjS3eM72yxGQb=w1920-h969-iv1',
     linkpagina: 'www.bodegasotelo.com',
     descripcion: 'pisco de Ica con multiples premios',
@@ -230,6 +258,7 @@ const marcas = [
   },
   {
     id: 28,
+    nombre: 'Val&Pri Peru',
     imagen: 'https://lh3.googleusercontent.com/u/0/d/1CX0Z-gs910jAdt8KEUmeLZEJw-tevg_w=w1920-h969-iv1',
     linkpagina: 'https://valandpri.pe',
     descripcion: 'deliciosos alimentos sin gluten',
@@ -237,6 +266,7 @@ const marcas = [
   },
   {
     id: 29,
+    nombre: 'Shu',
     imagen: 'https://lh3.googleusercontent.com/u/0/d/18G0RmvYb6TAT5g6SeEr6fCkl0Yk056s-=w1920-h969-iv1',
     linkpagina: 'https://shuropamasculina.my.canva.site/catalogo',
     descripcion: 'moda masculina de alta calidad',
@@ -244,6 +274,7 @@ const marcas = [
   },
   {
     id: 30,
+    nombre: 'Apisa Kids',
     imagen: 'https://lh3.googleusercontent.com/u/0/d/1a6iq1IA8paJPh3CnHzvMJqmtY0nG6Mp1=w1920-h969-iv1',
     linkpagina: 'www.facebook.com/apisakidsface',
     descripcion: 'moda infantil',
@@ -251,6 +282,7 @@ const marcas = [
   },
   {
     id: 31,
+    nombre: 'Chocolate Sojhadi',
     imagen: 'https://lh3.googleusercontent.com/u/0/d/1P2w8fxMkQ-wuXNTKttlNjzeJ0vqom0_G=w1920-h969-iv1',
     linkpagina: 'www.facebook.com/chocolatesojhadi',
     descripcion: 'cacao de la región San Martín',
@@ -258,6 +290,7 @@ const marcas = [
   },
   {
     id: 32,
+    nombre: 'Hidrobee',
     imagen: 'https://lh3.googleusercontent.com/u/0/d/16IQZ2u8N9FdR-wBT4NFQ7vExOqVffBw_=w1920-h969-iv1',
     linkpagina: 'https://www.facebook.com/HIDROBEEPERU',
     descripcion: 'deliciosos licores a base de miel',
@@ -265,6 +298,7 @@ const marcas = [
   },
   {
     id: 33,
+    nombre: "D'marko Jewelry",
     imagen: 'https://lh3.googleusercontent.com/u/0/d/1G17UWuW2J8HV7B_79z8oKpC3RcHpFBdM=w1920-h969-iv1',
     linkpagina: 'https://dmarkojewelry.com/',
     descripcion: 'joyeria de oro',
@@ -273,6 +307,7 @@ const marcas = [
   {
 
     id: 34,
+    nombre: 'Yanni',
     imagen: 'https://lh3.googleusercontent.com/u/0/d/1iEDR_AotQClN1o7T3tfQ7YNXH0ArN_Rr=w1920-h969-iv1',
     linkpagina: 'www.yannishoes.com',
     descripcion: 'calzado para dama',
@@ -280,6 +315,7 @@ const marcas = [
   },
   {
     id: 35,
+    nombre: 'Indra',
     imagen: 'https://lh3.google.com/u/0/d/1-uFR7ey1CoXAyZUJYPBoQti_HzQB9vuP=w1920-h931-iv1',
     linkpagina: 'www.indra.com.pe',
     descripcion: 'ROPA DEPORTIVA DE MUJER',
@@ -287,6 +323,7 @@ const marcas = [
   },
   {
     id: 36,
+    nombre: '',
     imagen: 'https://lh3.google.com/u/0/d/1bqLFFZgBPB_QeT4UtqqRExPb12N8lChw=w1920-h931-iv1',
     linkpagina: 'https://web.facebook.com/Texar.Moda',
     descripcion: 'ROPA PARA DAMA',
@@ -294,6 +331,7 @@ const marcas = [
   },
   {
     id: 37,
+    nombre: 'Dimar´S',
     imagen: 'https://lh3.google.com/u/0/d/1oOWRSaFwxKxyucZKmrjNxXBD3Y1t5FHA=w1920-h931-iv1',
     linkpagina: 'https://www.facebook.com/DIMARS.SHOES',
     descripcion: 'CALZADO DE CUERO PARA HOMBRE',
@@ -301,6 +339,7 @@ const marcas = [
   },
   {
     id: 38,
+    nombre: "D'madrid Collection Ll",
     imagen: 'https://lh3.google.com/u/0/d/1scJGQjTCAVgmfSlWtyv4sfYqFIVQ8sIK=w2000-h1290-iv1',
     linkpagina: 'https://www.facebook.com/DMadridCollection?mibextid=ZbWKwL',
     descripcion: 'VESTIDOS PARA DAMAS',
@@ -308,6 +347,7 @@ const marcas = [
   },
   {
     id: 39,
+    nombre: 'Emolinka',
     imagen: 'https://lh3.google.com/u/0/d/13iW8NMifF1wNfccrc5jfxLonH_ZPwTbX=w1920-h931-iv1',
     linkpagina: 'https://www.facebook.com/emolinkape/',
     descripcion: 'EMOLIENTE INSTANTÁNEO',
@@ -315,6 +355,7 @@ const marcas = [
   },
   {
     id: 40,
+    nombre: 'Florandi',
     imagen: 'https://lh3.google.com/u/0/d/1hPzvwY8hxISDS0iM84FtT2kFugPgWxhr=w2000-h1290-iv1',
     linkpagina: 'https://www.facebook.com/florandi.artetextil/photos',
     descripcion: 'GORROS Y BOLSOS BORDADOS',
@@ -322,6 +363,7 @@ const marcas = [
   },
   {
     id: 41,
+    nombre: 'Rousha',
     imagen: 'https://lh3.google.com/u/0/d/1IycW2o7aPx2CktmeTK_41qqmOjSuKHu8=w1920-h931-iv1',
     linkpagina: 'https://www.facebook.com/Rousha.pe/?locale=es_LA',
     descripcion: 'ROPA PARA DAMAS',
@@ -329,6 +371,7 @@ const marcas = [
   },
   {
     id: 42,
+    nombre: 'Sumaqllaperu',
     imagen: 'https://lh3.google.com/u/0/d/1JUYUndvjw66UyRMv9q1jQi54cG_GyLXO=w1920-h931-iv1',
     linkpagina: 'https://www.facebook.com/sumaqllaperu',
     descripcion: 'BISUTERIA BORDADA',
@@ -336,6 +379,7 @@ const marcas = [
   },
   {
     id: 43,
+    nombre: 'Shocomell By Pepito Z',
     imagen: 'https://lh3.google.com/u/0/d/1615QLYFXmhBpRsiqqJOn-CvUm--rH8Cl=w1920-h931-iv1',
     linkpagina: 'https://www.facebook.com/PepitoZKids/?locale=es_LA',
     descripcion: 'ROPA PARA NIÑOS',
@@ -343,6 +387,7 @@ const marcas = [
   },
   {
     id: 44,
+    nombre: 'Quinto Closet',
     imagen: 'https://lh3.google.com/u/0/d/1w8fq13O-8xYoDzCq46ipNk02HDbUUnHf=w1920-h931-iv1',
     linkpagina: 'www.quinto-closet.com',
     descripcion: 'ROPA PARA DAMAS',
@@ -350,6 +395,7 @@ const marcas = [
   },
   {
     id: 45,
+    nombre: 'Ensueños',
     imagen: 'https://lh3.google.com/u/0/d/1w3OQf7jkHdJkXphZgquzOUdFJ-Y8Kd6k=w1920-h931-iv1',
     linkpagina: 'https://xn--ensueos-8za.pe/',
     descripcion: 'PIJAMAS',
@@ -357,6 +403,7 @@ const marcas = [
   },
   {
     id: 46,
+    nombre: 'Naturally Divine Amazónia SAC',
     imagen: 'https://lh3.google.com/u/0/d/1PylTHKbw1KevzI8pkwRUuW_v3i1o-RKY=w2000-h1290-iv1',
     linkpagina: 'https://naturallydivineperu.com/',
     descripcion: 'ACEITES NATURALES',
@@ -364,6 +411,7 @@ const marcas = [
   },
   {
     id: 47,
+    nombre: 'Nyrla Lévano',
     imagen: 'https://lh3.google.com/u/0/d/1rAO-7f20em2VIG4AL5udb-sLF7HMVexs=w1920-h931-iv1',
     linkpagina: 'https://nyrlalevano.com/',
     descripcion: 'PISCOS Y VINOS',
@@ -371,6 +419,7 @@ const marcas = [
   },
   {
     id: 48,
+    nombre: 'Batan',
     imagen: 'https://lh3.google.com/u/0/d/1bP1PsclaIJkpxhEH8dyF5HOIENSYutU2=w1920-h931-iv1',
     linkpagina: 'https://sazonadoresbatan.com/',
     descripcion: 'SAZONADORES NATURALES',
@@ -378,6 +427,7 @@ const marcas = [
   },
   {
     id: 49,
+    nombre: 'Illaq Peru',
     imagen: 'https://lh3.google.com/u/0/d/16grrm5uiYhoEAHwq__m61vPXRhLNctAH=w2000-h1290-iv1',
     linkpagina: 'https://www.facebook.com/Illaqjoyeria/',
     descripcion: 'JOYERIA FINA',
@@ -385,6 +435,7 @@ const marcas = [
   },
   {
     id: 50,
+    nombre: 'Muebles Crisostomo',
     imagen: 'https://lh3.google.com/u/0/d/1UMioH5oYZSUyMkzg_qMGllVAfqZy3LNX=w1920-h931-iv1',
     linkpagina: 'https://www.mueblescrisostomo.com/',
     descripcion: 'MUEBLES Y ESCRITORIOS',
