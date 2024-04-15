@@ -3,19 +3,17 @@
     <div class="nav">
       <div class="container">
         <div class="nav-logos">
-          <a href="https://bicentenario.gob.pe/bicentenario-2024-escribamos-juntos-una-nueva-historia/" target="_blank">
-            <img class="logos" src="../../assets/img/logos/logo-bicentenario.png" alt="cyberwowpnte">
-          </a>
           <a href="https://www.gob.pe/produce" target="_blank">
             <img class="logos" src="../../assets/img/logos/logo-ministerio.png" alt="cyberwowpnte">
           </a>
-
+          <a href="https://www.gob.pe/tuempresa" target="_blank">
+            <img class="logos" src="../../assets/img/logos/logo-tu-empresa.png" alt="cyberwowpnte">
+          </a>
           <a href="https://www.gob.pe/institucion/midagri/campa%C3%B1as/33376-con-punche-peru" target="_blank">
             <img class="logos" src="../../assets/img/logos/logo-punche-peru.png" alt="cyberwowpnte">
           </a>
-
-          <a href="https://www.gob.pe/tuempresa" target="_blank">
-            <img class="logos" src="../../assets/img/logos/logo-tu-empresa.png" alt="cyberwowpnte">
+          <a href="https://bicentenario.gob.pe/bicentenario-2024-escribamos-juntos-una-nueva-historia/" target="_blank">
+            <img class="logos" src="../../assets/img/logos/logo-bicentenario.png" alt="cyberwowpnte">
           </a>
         </div>
       </div>
@@ -38,29 +36,27 @@
     </div>
 
 
-    <section>
-      <div class="container" v-if="active == 'category'">
+    <section v-if="active == 'category'">
+      <div class="container">
         <div class="wrapper">
           <h2>Categorías</h2>
-  
-            <a-row :gutter="[16, 16]">
-              <a-col :xs="12" :sm="12" :md="12" :lg="6" :xl="6" v-for="(category, idx) in categorias" :key="idx">
-                <div class="description" :class="category.class" @click="handleFindBrands(category)">
-                  <img v-if="category.class == 'comida'" src="../../assets/img/icons/alimentos.png"
-                    :alt="category.class">
-                  <img v-if="category.class == 'mascota'" src="../../assets/img/icons/mascota.png"
-                    :alt="category.class">
-                  <img v-if="category.class == 'moda'" src="../../assets/img/icons/maquilladora.png"
-                    :alt="category.class">
-                  <img v-if="category.class == 'hogar'" src="../../assets/img/icons/hogar.png" :alt="category.class">
-                  <img v-if="category.class == 'servicio'" src="../../assets/img/icons/servicio.png"
-                    :alt="category.class">
-                  <img v-if="category.class == 'infantil'" src="../../assets/img/icons/bebe.png" :alt="category.class">
-                  <h3>{{ category.nombrecategoria }}</h3>
-                </div>
-              </a-col>
-            </a-row>
-        
+
+          <a-row :gutter="[16, 16]">
+            <a-col :xs="12" :sm="12" :md="12" :lg="6" :xl="6" v-for="(category, idx) in categorias" :key="idx">
+              <div class="description" :class="category.class" @click="handleFindBrands(category)">
+                <img v-if="category.class == 'comida'" src="../../assets/img/icons/alimentos.png" :alt="category.class">
+                <img v-if="category.class == 'mascota'" src="../../assets/img/icons/mascota.png" :alt="category.class">
+                <img v-if="category.class == 'moda'" src="../../assets/img/icons/maquilladora.png"
+                  :alt="category.class">
+                <img v-if="category.class == 'hogar'" src="../../assets/img/icons/hogar.png" :alt="category.class">
+                <img v-if="category.class == 'servicio'" src="../../assets/img/icons/servicio.png"
+                  :alt="category.class">
+                <img v-if="category.class == 'infantil'" src="../../assets/img/icons/bebe.png" :alt="category.class">
+                <h3>{{ category.nombrecategoria }}</h3>
+              </div>
+            </a-col>
+          </a-row>
+
         </div>
       </div>
     </section>
@@ -70,10 +66,11 @@
       <div class="wrapper">
         <div class="breadcrumb">
           <h3 @click="active = 'category', spinning = true">
-            <HomeOutlined /> atrás</h3>
-            <h2>{{ nameCategory.nombrecategoria }}</h2>
+            <HomeOutlined /> atrás
+          </h3>
+          <h2>{{ nameCategory.nombrecategoria }}</h2>
         </div>
-       
+
         <a-spin :spinning="spinning">
           <a-row :gutter="[16, 16]">
             <a-col :xs="12" :sm="12" :md="12" :lg="6" :xl="6" v-for="(brand, idx) in brands" :key="idx">
@@ -94,34 +91,34 @@
 
 
 
-    <!-- <div class="container" v-if="active == 'store'">
-        <div class="stores">
-          <a-breadcrumb class="wow-links">
-            <a-breadcrumb-item><a @click="brands = null">Inicio</a></a-breadcrumb-item>
-            <a-breadcrumb-item>Categorías</a-breadcrumb-item>
-          </a-breadcrumb>
-
-          <div class="sales" v-for="(store, i) in tiendas" :key="i">
-            <h2>{{ store.titulo }}</h2>
-            <a-row :gutter="[16, 16]">
-              <a-col :xs="12" :sm="12" :md="12" :lg="6" :xl="6" v-for="(brands, idx) in store.productos" :key="idx">
-                <a-card hoverable @click="handleclick(brands)">
-                  <template #cover>
-                    <img alt="example" :src="brands.foto" style="height: 270px;" />
-                  </template>
-                  <a-card-meta :title="brands.modelo">
-                    <template #description>
-                      <div>{{ brands.descripcion }}</div>
-                      <div><span>A partir de</span> <b>{{ brands.precio }}</b></div>
-                    </template>
-                  </a-card-meta>
-                </a-card>
-              </a-col>
-            </a-row>
-          </div>
-
+    <section class="container" v-if="active == 'store'">
+      <div class="wrapper">
+        <div class="breadcrumb">
+          <h3 @click="active = 'category', spinning = true">
+            <HomeOutlined /> atrás
+          </h3>
+          <h2>{{ products[0].titulo }}</h2>
         </div>
-      </div> -->
+<!-- <pre>{{ products[0] }}</pre> -->
+        <a-spin :spinning="spinning">
+          <a-row :gutter="[16, 16]">
+            <a-col :xs="12" :sm="12" :md="12" :lg="6" :xl="6" v-for="(prod, idx) in products[0].productos" :key="idx">
+              <a-card hoverable @click="handleWhatsappclick(prod)">
+                <template #cover>
+                  <img :alt="products[0].titulo" :src="prod.foto" style="height: 270px;" />
+                </template>
+                <a-card-meta title="prod">
+                  <template #description>
+                    <div>{{ prod.descripcion }}</div>
+                    <div><span>A partir de</span> <b style="font-size: 13px;">{{ prod?.precioactual }}</b></div>
+                  </template>
+                </a-card-meta>
+              </a-card>
+            </a-col>
+          </a-row>
+        </a-spin>
+      </div>
+    </section>
 
     <FooterFormalization />
 
@@ -131,19 +128,20 @@
 <script setup>
 import { ref } from 'vue';
 import FooterFormalization from '../Formalizacion/FormalizacionFooter.vue';
-import { categorias, marcas, tiendas } from '@/json/wow.js';
+import { categorias, marcas, productos } from '@/json/wow.js';
 import { HomeOutlined } from '@ant-design/icons-vue'
 
 const spinning = ref(true);
 const brands = ref(false);
 const stores = ref(false);
+const products = ref(false);
 const active = ref('category');
 const nameCategory = ref('');
 
 const timeOut = () => {
   setTimeout(() => {
     spinning.value = false
-  },1000);
+  }, 1000);
 }
 const handleFindBrands = (category) => {
   timeOut()
@@ -161,18 +159,21 @@ const uppercase = (str) => {
 }
 const handleclick = (val) => {
   if (val.linkpagina == 'none') {
-    const filteredBrands = marcas.filter(marca => marca.marca_id === val.categoria_id);
-    stores.value = filteredBrands;
+    const filteredProducts = productos.filter(prod => prod.marca_id === val.id);
+    products.value = filteredProducts;
     active.value = 'store';
   } else {
     window.open(val.linkpagina, '_blank');
   }
 }
-
+const handleWhatsappclick = (val) => {
+  console.log(val);
+}
 </script>
 
 <style lang="scss">
 @import url('https://fonts.googleapis.com/css2?family=News+Cycle:wght@400;700&display=swap');
+
 .wow {
   .nav {
     background-color: #fff;
@@ -231,6 +232,7 @@ const handleclick = (val) => {
       font-family: "News Cycle", sans-serif;
       font-weight: 600;
     }
+
     .category-option {
       background-size: 100% 98%;
       height: 190px;
@@ -276,28 +278,35 @@ const handleclick = (val) => {
       margin: auto;
       padding-top: 1rem;
     }
+
     .brand-card {
       .ant-card-meta-description {
         line-height: 1.3;
       }
+
       .ant-card-body {
         // padding: 12px 20px;
       }
     }
+
     .breadcrumb {
       display: flex;
       align-items: baseline;
       margin-bottom: 2rem;
-      h2, h3 {
+
+      h2,
+      h3 {
         margin: 0;
         font-family: "News Cycle", sans-serif;
         font-weight: 600;
       }
+
       h3 {
         color: #c9c9c9;
         margin-right: 12px;
         cursor: pointer;
         font-weight: 400;
+
         &:hover {
           color: #fc2b73;
         }

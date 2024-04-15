@@ -4,15 +4,15 @@
       <div class="footer-wrapper ff">
         <div class="footer-tuempresa-info">
           <img src="../../assets/img/logos/logo-tu-empresa.png" alt="footer logo tu empresa">
-          <p class="ff">Programa Nacional "Tu Empresa" Brindamos a los emprendedores acompañamiento en formalización y constitución de empresas.</p>
+          <p class="ff">Programa Nacional Tu Empresa del Ministerio de la Producción. <br> Brindamos a los emprendedores <br>acompañamiento en formalización <br>y constitución de empresas.</p>
         </div>
 
         <div></div>
        
         <div>
           <b>Contáctanos</b>
-          <p>Lima - Guardia Civil : Av. Guardia Civil N° 834 - Primer Piso, San Isidro - Lima - Lima - San Isidro - Perú</p>
-          <p>016162291</p>
+          <p><EnvironmentOutlined /> Lima - Guardia Civil : Av. Guardia Civil N° 834 - Primer Piso, San Isidro - Lima - Lima - San Isidro - Perú</p>
+          <p><PhoneOutlined /> 016162291</p>
         </div>
 
         <!-- <div class="footer-redes">
@@ -25,6 +25,10 @@
     </div>
   </footer>
 </template>
+
+<script setup>
+import { EnvironmentOutlined, PhoneOutlined } from '@ant-design/icons-vue';
+</script>
 
 <style lang="scss" scoped>
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap');
@@ -39,7 +43,7 @@ footer {
   }
   .footer-wrapper {
     display: grid;
-    grid-template-columns: 1fr 1fr 1fr;
+    grid-template-columns: 1.5fr 1fr 1fr;
   }
   .footer-tuempresa-info {
     img {

@@ -174,7 +174,7 @@ const marcas = [
     imagen: 'https://lh3.google.com/u/0/d/1SaJnFSyOXzRtlc_nie0yeggvA6IkoIwJ=w1920-h945-iv1',
     linkpagina: 'https://onlycotton.samishop.com/',
     descripcion: 'Viste con amor y calidad: prendas 100% algodón premium',
-    categoria_id: 4,
+    categoria_id: 3,
   },
   {
     id: 18,
@@ -382,6 +382,8 @@ const marcas = [
     nombre: 'Shocomell By Pepito Z',
     imagen: 'https://lh3.google.com/u/0/d/1615QLYFXmhBpRsiqqJOn-CvUm--rH8Cl=w1920-h931-iv1',
     linkpagina: 'https://www.facebook.com/PepitoZKids/?locale=es_LA',
+    // linkpagina: 'none',
+
     descripcion: 'ROPA PARA NIÑOS',
     categoria_id: 3,
   },
@@ -439,21 +441,57 @@ const marcas = [
     imagen: 'https://lh3.google.com/u/0/d/1UMioH5oYZSUyMkzg_qMGllVAfqZy3LNX=w1920-h931-iv1',
     linkpagina: 'https://www.mueblescrisostomo.com/',
     descripcion: 'MUEBLES Y ESCRITORIOS',
-    categoria_id: 5,
+    categoria_id: 4,
   }
 ]
 
 
-const tiendas = [
+const productos = [
   {
-    marca_id: 1,
-    titulo: 'Ropa de ',
+    marca_id: 43,
+    titulo: 'ARLIN TEXTIL',
     productos: [
+      {
+        modelo: 'ARLIN TEXTIL',
+        foto: 'https://hugobosspeprod.vtexassets.com/arquivos/ids/157709/50497391-475_3.jpg?v=638433580577570000',
+        descripcion: 'Cojín Dia de la Madre Modelo 2',
+        precioanterior: 's/ 119.00',
+        precioactual: 'S/ 59.50',
+        link: ''
+      },
       {
         modelo: 'TOPITOP MUJER',
         foto: 'https://lospimas.com/cdn/shop/products/DSC_0631.recorte.jpg?v=1673484143',
         descripcion: 'Jean Mujer Micaela Celest',
-        precio: 's/ 200',
+        precio: ' S/ 69.93',
+        link: ''
+      },
+      {
+        modelo: 'TOPITOP MUJER',
+        foto: 'https://lospimas.com/cdn/shop/products/DSC_0631.recorte.jpg?v=1673484143',
+        descripcion: 'Jean Mujer Micaela Celest',
+        precio: ' S/ 69.93',
+        link: ''
+      },
+      {
+        modelo: 'TOPITOP MUJER',
+        foto: 'https://lospimas.com/cdn/shop/products/DSC_0631.recorte.jpg?v=1673484143',
+        descripcion: 'Jean Mujer Micaela Celest',
+        precio: ' S/ 69.93',
+        link: ''
+      }
+    ]
+  },
+  {
+    marca_id: 44,
+    titulo: 'MARTIN XD XD',
+    productos: [
+      {
+        modelo: 'ARLIN TEXTIL',
+        foto: 'https://lospimas.com/cdn/shop/products/DSC_0631.recorte.jpg?v=1673484143',
+        descripcion: 'Cojín Dia de la Madre Modelo 2',
+        precioanterior: 's/ 119.00',
+        precioactual: 'S/ 59.50',
         link: ''
       },
       {
@@ -484,5 +522,5 @@ const tiendas = [
 
 
 export {
-  categorias, marcas, tiendas
+  categorias, marcas, productos
 }
