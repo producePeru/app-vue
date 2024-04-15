@@ -3,10 +3,20 @@
     <div class="nav">
       <div class="container">
         <div class="nav-logos">
-          <img class="logos" src="../../assets/img/logos/logo-bicentenario.png" alt="cyberwowpnte">
-          <img class="logos" src="../../assets/img/logos/logo-ministerio.png" alt="cyberwowpnte">
-          <img class="logos" src="../../assets/img/logos/logo-punche-peru.png" alt="cyberwowpnte">
-          <img class="logos" src="../../assets/img/logos/logo-tu-empresa.png" alt="cyberwowpnte">
+          <a href="https://bicentenario.gob.pe/bicentenario-2024-escribamos-juntos-una-nueva-historia/" target="_blank">
+            <img class="logos" src="../../assets/img/logos/logo-bicentenario.png" alt="cyberwowpnte">
+          </a>
+          <a href="https://www.gob.pe/produce" target="_blank">
+            <img class="logos" src="../../assets/img/logos/logo-ministerio.png" alt="cyberwowpnte">
+          </a>
+
+          <a href="https://www.gob.pe/institucion/midagri/campa%C3%B1as/33376-con-punche-peru" target="_blank">
+            <img class="logos" src="../../assets/img/logos/logo-punche-peru.png" alt="cyberwowpnte">
+          </a>
+
+          <a href="https://www.gob.pe/tuempresa" target="_blank">
+            <img class="logos" src="../../assets/img/logos/logo-tu-empresa.png" alt="cyberwowpnte">
+          </a>
         </div>
       </div>
     </div>
