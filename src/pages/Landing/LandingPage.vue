@@ -126,7 +126,7 @@
 </template>
 
 <script setup>
-import { ref } from 'vue';
+import { ref, onMounted  } from 'vue';
 import FooterFormalization from '../Formalizacion/FormalizacionFooter.vue';
 import { categorias, marcas, productos } from '@/json/wow.js';
 import { HomeOutlined } from '@ant-design/icons-vue'
@@ -169,6 +169,23 @@ const handleclick = (val) => {
 const handleWhatsappclick = (val) => {
   console.log(val);
 }
+
+onMounted(() => {
+if (!window.dataLayer) {
+    window.dataLayer = [];
+  }
+
+  // Google tag (gtag.js)
+  const script = document.createElement('script');
+  script.src = 'https://www.googletagmanager.com/gtag/js?id=G-0372SLNNE4';
+  script.async = true;
+  document.head.appendChild(script);
+
+  function gtag(){window.dataLayer.push(arguments);}
+  gtag('js', new Date());
+  
+  gtag('config', 'G-0372SLNNE4');
+});
 </script>
 
 <style lang="scss">
