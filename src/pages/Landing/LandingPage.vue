@@ -118,7 +118,7 @@
                   <template #description>
                     <div>{{ prod.descripcion }}</div>
                     <div class="ofertas" style="font-size: 13px;">
-                      <span>Precio <s>{{ prod.precioactual }}</s></span>
+                      <span>Precio <s>{{ prod.precioanterior }}</s></span>
                       <span>Oferta <b>{{ prod.precioactual }}</b></span>
 
                     </div>

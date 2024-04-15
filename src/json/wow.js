@@ -76,8 +76,8 @@ const marcas = [
     id: 5,
     nombre: 'Warayo',
     imagen: 'https://drive.google.com/file/d/1_PNkv4jMyXHK9oIhWdi69eiRJJHhwjPh/view?usp=sharing',
-    linkpagina: 'www.terraamazonica.online',
-    descripcion: 'Falta',
+    linkpagina: 'https://www.terraamazonica.online/',
+    descripcion: 'ALIMENTOS DE LA AMAZONIA CERCA DE TI',
     categoria_id: 1,
   },
   {
