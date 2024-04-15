@@ -78,13 +78,8 @@
                 <a-card hoverable class="brand-card">
                   <template #cover>
                     
-                    
                     <!-- <img class="brand-img" :alt="brand.descripcion" :src="brand.imagen" /> -->
                     <WowLogos :brand="brand" />
-
-        
-
-
                   
                   </template>
                   <a-card-meta :title="brand.nombre" :description="uppercase(brand.descripcion)">
@@ -107,7 +102,7 @@
           </h3>
           <h2>{{ products[0].titulo }}</h2>
         </div>
-<!-- <pre>{{ products[0] }}</pre> -->
+        <!-- <pre>{{ products[0] }}</pre> -->
         <a-spin :spinning="spinning">
           <a-row :gutter="[16, 16]">
             <a-col :xs="12" :sm="12" :md="12" :lg="6" :xl="6" v-for="(prod, idx) in products[0].productos" :key="idx">
