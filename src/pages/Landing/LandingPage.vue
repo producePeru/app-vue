@@ -77,7 +77,15 @@
               <div class="card" @click="handleclick(brand)">
                 <a-card hoverable class="brand-card">
                   <template #cover>
-                    <img class="brand-img" :alt="brand.descripcion" :src="brand.imagen" />
+                    
+                    
+                    <!-- <img class="brand-img" :alt="brand.descripcion" :src="brand.imagen" /> -->
+                    <WowLogos :brand="brand" />
+
+        
+
+
+                  
                   </template>
                   <a-card-meta :title="brand.nombre" :description="uppercase(brand.descripcion)">
                   </a-card-meta>
@@ -129,7 +137,8 @@
 import { ref, onMounted  } from 'vue';
 import FooterFormalization from '../Formalizacion/FormalizacionFooter.vue';
 import { categorias, marcas, productos } from '@/json/wow.js';
-import { HomeOutlined } from '@ant-design/icons-vue'
+import { HomeOutlined } from '@ant-design/icons-vue';
+import WowLogos from './WowLogos.vue'
 
 const spinning = ref(true);
 const brands = ref(false);
@@ -185,6 +194,12 @@ if (!window.dataLayer) {
   gtag('js', new Date());
   
   gtag('config', 'G-0372SLNNE4');
+
+  // Google Tag Manager (noscript)
+  const noscript = document.createElement('noscript');
+  noscript.innerHTML = `<iframe src="https://www.googletagmanager.com/ns.html?id=GTM-53GBV6W3"
+  height="0" width="0" style="display:none;visibility:hidden"></iframe>`;
+  document.body.appendChild(noscript);
 });
 </script>
 

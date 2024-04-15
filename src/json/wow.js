@@ -78,7 +78,7 @@ const marcas = [
     imagen: 'https://drive.google.com/file/d/1_PNkv4jMyXHK9oIhWdi69eiRJJHhwjPh/view?usp=sharing',
     linkpagina: 'www.terraamazonica.online',
     descripcion: 'Falta',
-    categoria_id: '1',
+    categoria_id: 1,
   },
   {
     id: 6,
@@ -107,7 +107,7 @@ const marcas = [
   {
     id: 9,
     nombre: 'Lencería Perricholi ',
-    imagen: 'https://lh3.google.com/u/0/d/12i1Dqo6Q7e-LjNNY6OnFZTV66Ekyppm_=w1919-h944-iv1',
+    imagen: 'https://ecommerce-sami3.s3.amazonaws.com/sami3-prod/lenceriaperricholi.samishop.pe/images/logos/LOGO-HOME.png?v=5BN07dAE58U96',
     linkpagina: 'https://www.lenceriaperricholi.com/',
     descripcion: 'Empoderamiento femenino, lencería exclusiva',
     categoria_id: 3,
@@ -138,7 +138,7 @@ const marcas = [
   },
   {
     id: 13,
-    nombre: 'Tablitas',
+    nombre: 'Tablitas', //**** */
     imagen: 'https://lh3.google.com/u/0/d/1zzgZIWvF2qn9h61h0nr5oJe497CaWCm4=w1919-h944-iv2',
     linkpagina: 'https://muebles-tablitas.com/',
     descripcion: 'Muebles y más: transforma tu espacio',
@@ -147,7 +147,7 @@ const marcas = [
   {
     id: 14,
     nombre: 'Arlin Textil',
-    imagen: 'https://lh3.google.com/u/0/d/1ENGheAwYpbo9musNcf5Mxjnw5AuXE2Pb=w1919-h944-iv1',
+    imagen: 'https://arlintextil.com/wp-content/uploads/2022/12/LOGO-ARLIN-SIN-FONDO-e1672377316764.png',
     linkpagina: 'https://arlintextil.com/',
     descripcion: 'Descansa con comodidad: Ropa de Cama y textiles afines',
     categoria_id: 4,
@@ -156,9 +156,9 @@ const marcas = [
     id: 15,
     nombre: 'Finka Kivinaki',
     imagen: '',
-    linkpagina: 'www.finkakivinaki.com',
-    descripcion: '',
-    categoria_id: '',
+    linkpagina: 'https://www.finkakivinaki.com/',
+    descripcion: 'Comprar en nuestra tienda es 100% segura y todos los cafés están frescos',
+    categoria_id: '1',
   },
   {
     id: 16,
@@ -187,7 +187,7 @@ const marcas = [
   {
     id: 19,
     nombre: 'Per Ingredients By Vita &Co',
-    imagen: 'https://lh3.googleusercontent.com/u/0/d/1NndLOv6CJwFDhZ1O2oIHcQXnzsk4m6-n=w1920-h969-iv1',
+    imagen: 'https://vitaycoperu.com/wp-content/uploads/2021/08/Diseno-sin-titulo-8.png',
     linkpagina: 'http://vitaycoperu.com',
     descripcion: 'snacks y alimentos saludables',
     categoria_id: 1,
@@ -219,7 +219,7 @@ const marcas = [
   {
     id: 23,
     nombre: 'Magnolia Essential Care',
-    imagen: 'https://lh3.googleusercontent.com/u/0/d/1H4VZnsLOkc-avAB-kpukysMTqEAl2rdZ=w1920-h1080-iv1',
+    imagen: 'https://media.licdn.com/dms/image/D4E16AQFWJ_zx8Af5YA/profile-displaybackgroundimage-shrink_200_800/0/1666070493533?e=2147483647&v=beta&t=rtc-QKDxVDHLcZVuyA3z978A1JTynD6f5-egdDATFd4',
     linkpagina: 'https://magnoliaec.tiendada.com/',
     descripcion: 'productos artesanales para el aseo y cuidado personal',
     categoria_id: 3,
@@ -227,7 +227,7 @@ const marcas = [
   {
     id: 24,
     nombre: 'Annie Love',
-    imagen: 'https://lh3.googleusercontent.com/u/0/d/1ymMSBeE901mdeWc7USuj4YyiWka6MOyF=w1920-h1080-iv1',
+    imagen: 'https://annielovedesign.com/cdn/shop/files/Captura_de_Pantalla_2023-01-09_a_la_s_21.29.38.png?v=1673317810&width=240',
     linkpagina: 'https://annielovedesign.com/',
     descripcion: 'joyería de alta calidad',
     categoria_id: 3,
@@ -235,7 +235,7 @@ const marcas = [
   {
     id: 25,
     nombre: 'Magdalena Shoes',
-    imagen: 'https://lh3.googleusercontent.com/u/0/d/1A1F0CfnhPsT-jCxrO13JW_eBIZTotWk5=w1920-h969-iv1',
+    imagen: 'https://www.magdalenashoes.com.pe/cdn/shop/files/Sin_titulo_6_x_2_cm_1_230x.png?v=1702598101',
     linkpagina: 'https://www.magdalenashoes.com.pe/',
     descripcion: 'calzado para damas',
     categoria_id: 3,
@@ -251,7 +251,7 @@ const marcas = [
   {
     id: 27,
     nombre: 'Sotelo',
-    imagen: 'https://lh3.googleusercontent.com/u/0/d/1PDi96pEZthM9JeqyvmiGjS3eM72yxGQb=w1920-h969-iv1',
+    imagen: 'https://static.wixstatic.com/media/d39168_52612a98c34549339fcc03a5e50ef5b5~mv2.jpg/v1/fill/w_2500,h_1382,al_c/d39168_52612a98c34549339fcc03a5e50ef5b5~mv2.jpg',
     linkpagina: 'https://www.bodegasotelo.com/',
     descripcion: 'pisco de Ica con multiples premios',
     categoria_id: 1,
@@ -299,7 +299,7 @@ const marcas = [
   {
     id: 33,
     nombre: "D'marko Jewelry",
-    imagen: 'https://lh3.googleusercontent.com/u/0/d/1G17UWuW2J8HV7B_79z8oKpC3RcHpFBdM=w1920-h969-iv1',
+    imagen: 'https://dmarkojewelry.com/wp-content/uploads/2021/03/logo1.png',
     linkpagina: 'https://dmarkojewelry.com/',
     descripcion: 'joyeria de oro',
     categoria_id: 3,
@@ -323,10 +323,10 @@ const marcas = [
   },
   {
     id: 36,
-    nombre: "AR Queen's",
-    imagen: 'https://lh3.google.com/u/0/d/1bqLFFZgBPB_QeT4UtqqRExPb12N8lChw=w1920-h931-iv1',
-    linkpagina: 'https://web.facebook.com/Texar.Moda',
-    descripcion: 'Polos de dama con diseños bordados',
+    nombre: "Aron puro cuero",
+    imagen: 'https://aroncuero.com/cdn/shop/files/logo-web.png?v=1711392668&width=300',
+    linkpagina: 'https://aroncuero.com/',
+    descripcion: 'CARTERAS PARA DAMAS',
     categoria_id: 3,
   },
   {
@@ -378,11 +378,11 @@ const marcas = [
     categoria_id: 3,
   },
   {
-    id: 43,
+    id: 43, //**** */
     nombre: 'Shocomell By Pepito Z',
     imagen: 'https://lh3.google.com/u/0/d/1615QLYFXmhBpRsiqqJOn-CvUm--rH8Cl=w1920-h931-iv1',
-    linkpagina: 'https://www.facebook.com/PepitoZKids/?locale=es_LA',
-    // linkpagina: 'none',
+    // linkpagina: 'https://www.facebook.com/PepitoZKids/?locale=es_LA',
+    linkpagina: 'none',
 
     descripcion: 'ROPA PARA NIÑOS',
     categoria_id: 3,
@@ -398,7 +398,7 @@ const marcas = [
   {
     id: 45,
     nombre: 'Ensueños',
-    imagen: 'https://lh3.google.com/u/0/d/1w3OQf7jkHdJkXphZgquzOUdFJ-Y8Kd6k=w1920-h931-iv1',
+    imagen: 'https://xn--ensueos-8za.pe/wp-content/uploads/2021/09/isologo-1-2-1024x422.png',
     linkpagina: 'https://xn--ensueos-8za.pe/',
     descripcion: 'PIJAMAS',
     categoria_id: 3,
@@ -406,7 +406,7 @@ const marcas = [
   {
     id: 46,
     nombre: 'Naturally Divine Amazónia SAC',
-    imagen: 'https://lh3.google.com/u/0/d/1PylTHKbw1KevzI8pkwRUuW_v3i1o-RKY=w2000-h1290-iv1',
+    imagen: 'https://naturallydivineperu.com/wp-content/uploads/2020/11/logo-horizontal-mobile-copia.png',
     linkpagina: 'https://naturallydivineperu.com/',
     descripcion: 'ACEITES NATURALES',
     categoria_id: 1,
@@ -428,7 +428,7 @@ const marcas = [
     categoria_id: 1,
   },
   {
-    id: 49,
+    id: 49, //***** */
     nombre: 'Illaq Peru',
     imagen: 'https://lh3.google.com/u/0/d/16grrm5uiYhoEAHwq__m61vPXRhLNctAH=w2000-h1290-iv1',
     linkpagina: 'https://www.facebook.com/Illaqjoyeria/',
@@ -524,3 +524,27 @@ const productos = [
 export {
   categorias, marcas, productos
 }
+
+
+// CREATE TABLE cyberwow (
+//   id INT AUTO_INCREMENT PRIMARY KEY,
+//   name VARCHAR(255),
+//   description TEXT NULL,
+//   image VARCHAR(255) NULL,
+//   created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+//   updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+//   deleted_at TIMESTAMP NULL
+// );
+// CREATE TABLE cyberwow_products (
+//   id INT AUTO_INCREMENT PRIMARY KEY,
+//   model VARCHAR(255) NULL,
+//   photo VARCHAR(255) NULL,
+//   price1 DECIMAL(10, 2),
+//   priceo2 DECIMAL(10, 2),
+//   link VARCHAR(255),
+//   id_cyberwow INT,
+//   created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+//   updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+//   deleted_at TIMESTAMP NULL,
+//   FOREIGN KEY (id_cyberwow) REFERENCES cyberwow(id)
+// );

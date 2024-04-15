@@ -324,7 +324,11 @@ const router = createRouter({
           name: 'cambiar-clave',
           component: () => import('../pages/Usuarios/CambiarClave.vue')
         },  
-       
+        {
+          path: 'cyberwow',
+          name: 'cyberwow',
+          component: () => import('../pages/Wow/CyberWow.vue')
+        }, 
 
       ]
     }
