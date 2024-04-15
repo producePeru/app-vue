@@ -23,12 +23,12 @@ const categorias = [
     imagen: '../../assets/img/icons/hogar.png',
     class: 'hogar'
   },
-  {
-    id: 5,
-    nombrecategoria: 'Servicios y otros',
-    imagen: '../../assets/img/icons/servicio.png',
-    class: 'servicio'
-  },
+  // {
+  //   id: 5,
+  //   nombrecategoria: 'Servicios y otros',
+  //   imagen: '../../assets/img/icons/servicio.png',
+  //   class: 'servicio'
+  // },
   {
     id: 6,
     nombrecategoria: 'Infantil',

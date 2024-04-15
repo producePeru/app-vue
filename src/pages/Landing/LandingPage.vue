@@ -408,14 +408,18 @@ if (!window.dataLayer) {
 .ofertas {
   display: flex;
   justify-content: space-between;
-  align-items: center;
-  // flex-direction: column;
+  // align-items: center;
+  flex-direction: column;
   s {
     color: #fc2b73;
   }
   b {
     font-size: 14px;
     color: #0533ff;
+  }
+  @media screen and (min-width: 700px) {
+    align-items: center;
+    flex-direction: row;
   }
 }
 
