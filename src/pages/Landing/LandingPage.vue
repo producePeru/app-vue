@@ -59,8 +59,9 @@
     <section class="container" v-if="active == 'brand'">
       <div class="wrapper">
         <div class="breadcrumb">
-          <h3 @click="active = 'category', spinning = true">atrás</h3>
-          <h2>MARCAS</h2>
+          <h3 @click="active = 'category', spinning = true">
+            <HomeOutlined /> atrás</h3>
+            <h2>{{ nameCategory.nombrecategoria }}</h2>
         </div>
        
         <a-spin :spinning="spinning">
@@ -118,14 +119,16 @@
 </template>
 
 <script setup>
-import { ref, onMounted, onUnmounted } from 'vue';
+import { ref } from 'vue';
 import FooterFormalization from '../Formalizacion/FormalizacionFooter.vue';
-import { categorias, marcas, tiendas } from '@/json/wow.js'
+import { categorias, marcas, tiendas } from '@/json/wow.js';
+import { HomeOutlined } from '@ant-design/icons-vue'
 
 const spinning = ref(true);
 const brands = ref(false);
 const stores = ref(false);
 const active = ref('category');
+const nameCategory = ref('');
 
 const timeOut = () => {
   setTimeout(() => {
@@ -138,6 +141,7 @@ const handleFindBrands = (category) => {
   const filteredBrands = marcas.filter(marca => marca.categoria_id === category.id);
   if (filteredBrands.length > 0) {
     brands.value = filteredBrands;
+    nameCategory.value = category
   } else {
     console.log('No se encontraron marcas para la categoría especificada.');
   }
@@ -164,6 +168,9 @@ const handleclick = (val) => {
     background-color: #fff;
     box-shadow: 0px 1px 10px #999;
     height: 60px;
+    position: sticky;
+    top: 0;
+    z-index: 99;
   }
 
   .container {
@@ -206,7 +213,7 @@ const handleclick = (val) => {
   }
 
   .wrapper {
-    margin: 1rem 0 3rem 0;
+    margin: 2rem 0 3rem 0;
 
     h2 {
       margin-bottom: 1.5rem;
@@ -263,11 +270,14 @@ const handleclick = (val) => {
       .ant-card-meta-description {
         line-height: 1.3;
       }
+      .ant-card-body {
+        // padding: 12px 20px;
+      }
     }
     .breadcrumb {
       display: flex;
       align-items: baseline;
-      margin-bottom: 1rem;
+      margin-bottom: 2rem;
       h2, h3 {
         margin: 0;
         font-family: "News Cycle", sans-serif;
@@ -275,7 +285,7 @@ const handleclick = (val) => {
       }
       h3 {
         color: #c9c9c9;
-        margin-right: 10px;
+        margin-right: 12px;
         cursor: pointer;
         font-weight: 400;
         &:hover {
