@@ -98,7 +98,7 @@
       <div class="wrapper">
         <div class="breadcrumb">
           <h3 @click="active = 'category', spinning = true">
-            <HomeOutlined /> atrás
+            <HomeOutlined /> categorías
           </h3>
           <h2>{{ products[0].titulo }}</h2>
         </div>
@@ -108,12 +108,20 @@
             <a-col :xs="12" :sm="12" :md="12" :lg="6" :xl="6" v-for="(prod, idx) in products[0].productos" :key="idx">
               <a-card hoverable @click="handleWhatsappclick(prod)">
                 <template #cover>
-                  <img :alt="products[0].titulo" :src="prod.foto" style="height: 270px;" />
+                  
+                  <div style="padding: 2px; text-align: center;">
+                    <img :alt="products[0].titulo" :src="prod.foto" style="height: 250px; width: 95%;" />
+                  </div>
+                
                 </template>
-                <a-card-meta title="prod">
+                <a-card-meta :title="prod.modelo">
                   <template #description>
                     <div>{{ prod.descripcion }}</div>
-                    <div><span>A partir de</span> <b style="font-size: 13px;">{{ prod?.precioactual }}</b></div>
+                    <div class="ofertas" style="font-size: 13px;">
+                      <span>Precio <s>{{ prod.precioactual }}</s></span>
+                      <span>Oferta <b>{{ prod.precioactual }}</b></span>
+
+                    </div>
                   </template>
                 </a-card-meta>
               </a-card>
@@ -171,7 +179,9 @@ const handleclick = (val) => {
   }
 }
 const handleWhatsappclick = (val) => {
-  console.log(val);
+  if(val.link) {
+    window.open(val.link, '_blank');
+  }
 }
 
 onMounted(() => {
@@ -395,6 +405,19 @@ if (!window.dataLayer) {
   }
 }
 
+.ofertas {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  // flex-direction: column;
+  s {
+    color: #fc2b73;
+  }
+  b {
+    font-size: 14px;
+    color: #0533ff;
+  }
+}
 
 .comida {
   background: linear-gradient(45deg, rgba(#09AFE8, 1) 0%, rgba(#29F499, 1) 100%)

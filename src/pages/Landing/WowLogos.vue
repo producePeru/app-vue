@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div style="text-align: center;">
   
     <img v-if="props.brand.id == 1" class="brand-img" :alt="brand.descripcion" src="./wow/1.png" />
     <img v-if="props.brand.id == 2" class="brand-img" :alt="brand.descripcion" src="./wow/2.png" />
