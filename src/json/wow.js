@@ -157,8 +157,8 @@ const marcas = [
     nombre: 'Finka Kivinaki',
     imagen: '',
     linkpagina: 'https://www.finkakivinaki.com/',
-    descripcion: 'Comprar en nuestra tienda es 100% segura y todos los cafés están frescos',
-    categoria_id: '1',
+    descripcion: 'Haga su pedido y disfrute del mejor café',
+    categoria_id: 1,
   },
   {
     id: 16,
@@ -506,7 +506,7 @@ const productos = [
       },
       {
         modelo: '',
-        foto: 'https://lh3.googleusercontent.com/fife/ALs6j_GA3y-RaknSs5YvE5Q9j8mHfoQpJvkjKxue9-Lg2keJt2fyM6--AVOhfmH7eY1_GMs0VrvDnfuepDZxyUd5eHQzIR1N6e_ZM3B4YDWre2eNAZfTW28jYXq7OLWAdopa-uLb00jY5cJAcRbxt7ykwB547jB-E6itbZDQZvsBiN6CNWcQcsLnbiVE0GQkljtPCsQp4hLastO1Oj5tgEIpb-L08_8UrkPh-RJHG1FbCgFRWbyHNStAnjzEgfLFsj3dlAjje89bqN6ux4KTc4vMQpGl4JCOG4txc3xO25G3Y4hFxP0STAfs52g_uVM3ETGDNT61WcP1QSxU3W1UVuUwAH5sPYbnJTvpicDpgGggGP8uMZ7FKMNh5NdVVqZ6plx8Es5tn5yrlyvf-ET2Sh0TuO5QcDDhnQxtr6L9QWsjF8brudl_6EiZUMKn2TgSyS9A2RfNzdkQjJbNHPFFaIuGI1EYpdm5mVNCBbnqnOZgRQxQ4xgyENYweljAuR83Cud1MI00GTKk6IshAX-dCax2h0wjjiHtvswgwxffOj_vaQ6ymE10bexhALpylEtKA6H5SjjJKapXpwAfw5eVXVrfoE55t6Qs-5cws1J3Klz0pL4aH50JokjDs_97ldpbqEc61fmhHlZNqOOTT0quZPBi3jkL0OtPDbwu-Sl9gdiVzgeRnbvxvdniJbWUCYB-rgp-WrnEBzbpylBj9joPR_6UGEw5uwpQdDDcMtglLFfhLfjX5qsXsVbFNzRM68AlVCzSOi-HNfsXvidKt0R5qcsQsa5Eu0NAx8QzmLNhXnfUFfpbM5kbpx71ixe-8LedRv_2bszx6l2IAob24hkonDjRmeT2CqArSl1DM3-FJaWPydJ-GEExc_WxGzYGJ_LKyKj9H_eQ-nm1rYXHJQnrCRT7jiO-gfqrJFj5Chm5fUdK5mu1BCFXabSCLN7cGwkIeU2N-gpiP5_tF08eZFdcYhEIBmQyuW6-CGasyR0DCl3il9PXf6o9iMWT5bEHrGXL06wWGD5EpEMAv8MeUO_QUb85cU4ARAIlEG0IwpMaRFJI-sI563lW-o4kKZf8Gvzqn_0IK8ditwir-QfkuG0bQCvnvuhAIgMWQQeB45o00_35X1IYW8LBEBN84aGokLw_537atgfq4VPxV-Dz3sCm7YYQCbpMgIC9eL7GethX03oV5PMG88jq7wcyzpLKNc_0jXd4kOKw0cZHqYDRQHhCP2va9fEJEVNEppM-Hf5aV-CFKoDmdRNAVykmNBZxhMBwJleubNuqPvA8q1wqh-VUL-jPK1AQ33mqtgxR-1di-hwQsTXSAvmmoonSo4KyuOnB8kCBIDEpjtGWHPAZUr_mC8FFRDxdkZebeNWUSY1cG9WjdzvEwRqwmPz26KHkuaGUiMGYhDqJdByAZGwYwIAEZK7ZilDrrHH4cLyyo8Apz8FgI9IrZNXCK9FdqJLrpXHjkS3SrWJuduGAfiBLwsIfBUunqezEugwTRHkdC8mpUpTTpYgyPCRMHZ93IC2OCsvX-g9L1Nttkjt13SNhDx_Qrw8ZF2MSK8ZbKNkMdWlDmXcAUlNH1PTq6_P6gs8iNNDPlSs8A-jGngYrbvrGnMU=w1920-h969',
+        foto: 'https://lh3.googleusercontent.com/u/0/drive-viewer/AKGpihbfqYumvQHowAaNDOyO79DA3DoZBA6aIS4OD04FczeWkrjsaCzetJYfsTpZ9057bDkRpC09n3pvIH6gbaaokwivUvlVUh-Evt8=w1920-h912',
         descripcion: 'Descuento 25%, Joyero',
         precioanterior: 's/ 260.00',
         precioactual: 'S/ 195.00',

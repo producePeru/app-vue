@@ -5,7 +5,7 @@
 
     <div class="wrapper-login">
       <div class="title">
-        <img class="logo" src="https://www.tuempresa.gob.pe/wp-content/uploads/2021/10/Produce-TuEmpresa.png" alt="">
+        <!-- <img class="logo" src="https://www.tuempresa.gob.pe/wp-content/uploads/2021/10/Produce-TuEmpresa.png" alt=""> -->
         <h1>Iniciar Sesión</h1>
         <span>Ingrese su usuario y contraseña para ingresar a la plataforma.</span>
       </div>

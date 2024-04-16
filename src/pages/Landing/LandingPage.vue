@@ -421,7 +421,7 @@ if (!window.dataLayer) {
     font-size: 14px;
     color: #0533ff;
   }
-  @media screen and (min-width: 700px) {
+  @media screen and (min-width: 800px) {
     align-items: center;
     flex-direction: row;
   }
