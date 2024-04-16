@@ -137,7 +137,9 @@
       </div>
     </section>
 
-    <FooterFormalization />
+    <br>
+    <br>
+    <!-- <FooterFormalization /> -->
 
   </div>
 </template>
