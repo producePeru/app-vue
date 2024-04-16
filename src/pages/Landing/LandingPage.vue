@@ -1,8 +1,14 @@
 <template>
   <div class="wow">
     <div class="nav">
-      <div class="container">
-        <div class="nav-logos">
+      <div class="container" style="display: flex;">
+        <!-- <div style="display: flex; align-items: center;">
+          <img width="130" src="./wow/banner.png" alt="">
+        </div> -->
+        <div>
+
+        </div>
+        <!-- <div class="nav-logos">
           <a href="https://www.gob.pe/produce" target="_blank">
             <img class="logos" src="../../assets/img/logos/logo-ministerio.png" alt="cyberwowpnte">
           </a>
@@ -15,7 +21,7 @@
           <a href="https://bicentenario.gob.pe/bicentenario-2024-escribamos-juntos-una-nueva-historia/" target="_blank">
             <img class="logos" src="../../assets/img/logos/logo-bicentenario.png" alt="cyberwowpnte">
           </a>
-        </div>
+        </div> -->
       </div>
     </div>
 
@@ -213,7 +219,7 @@ if (!window.dataLayer) {
 
 .wow {
   .nav {
-    background-color: #fff;
+    background-color: #FD2B73;
     box-shadow: 0px 1px 10px #999;
     height: 60px;
     position: sticky;
@@ -231,6 +237,7 @@ if (!window.dataLayer) {
     align-items: center;
     height: 100%;
     justify-content: space-between;
+    
 
     .logos {
       width: 97px;
