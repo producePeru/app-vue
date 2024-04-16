@@ -1,29 +1,6 @@
 <template>
   <div class="wow">
-    <div class="nav">
-      <div class="container" style="display: flex;">
-        <!-- <div style="display: flex; align-items: center;">
-          <img width="130" src="./wow/banner.png" alt="">
-        </div> -->
-        <div>
-
-        </div>
-        <!-- <div class="nav-logos">
-          <a href="https://www.gob.pe/produce" target="_blank">
-            <img class="logos" src="../../assets/img/logos/logo-ministerio.png" alt="cyberwowpnte">
-          </a>
-          <a href="https://www.gob.pe/tuempresa" target="_blank">
-            <img class="logos" src="../../assets/img/logos/logo-tu-empresa.png" alt="cyberwowpnte">
-          </a>
-          <a href="https://www.gob.pe/institucion/midagri/campa%C3%B1as/33376-con-punche-peru" target="_blank">
-            <img class="logos" src="../../assets/img/logos/logo-punche-peru.png" alt="cyberwowpnte">
-          </a>
-          <a href="https://bicentenario.gob.pe/bicentenario-2024-escribamos-juntos-una-nueva-historia/" target="_blank">
-            <img class="logos" src="../../assets/img/logos/logo-bicentenario.png" alt="cyberwowpnte">
-          </a>
-        </div> -->
-      </div>
-    </div>
+  
 
 
     <div class="main">
@@ -151,6 +128,7 @@ import { categorias, marcas, productos } from '@/json/wow.js';
 import { HomeOutlined } from '@ant-design/icons-vue';
 import WowLogos from './WowLogos.vue'
 
+const deadline = Date.now() + 1000 * 60 * 60 * 24 * 2 + 1000 * 30;
 const spinning = ref(true);
 const brands = ref(false);
 const stores = ref(false);
@@ -414,6 +392,23 @@ if (!window.dataLayer) {
   }
 }
 
+.wow-clock {
+  display: flex;
+  align-items: center;
+  color: #fff;
+  h2 {
+    margin: 0 1rem 0 0;
+    text-transform: uppercase;
+    white-space: nowrap;
+    height: 37.7;
+    font-size: 25px;
+    text-align: center;
+    // font-family: 'Bourgeois';
+  }
+  .ant-statistic-content-value {
+    color: #fff;
+  }
+}
 .ofertas {
   display: flex;
   justify-content: space-between;
