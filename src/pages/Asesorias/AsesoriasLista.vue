@@ -21,6 +21,7 @@
     </div>
 
     <a-table 
+    @change="handleChange"
     bordered
     :scroll="{ x: valueX, y: valueY }" 
     class="ant-table-striped"
@@ -155,7 +156,23 @@ onBeforeUnmount(() => {
   const columnsAsesoria = ref([
     { title: '#',                         dataIndex: 'idx', fixed: 'left', align: 'center', width: 50},
     { title: 'Fecha',                     dataIndex: 'ase_fecha', fixed: 'left', align: 'center', width: 100},
-    // { title: 'Asesor',                    dataIndex: 'reg_nombres', width: 200 },
+    
+    
+    { title: 'Asesor',                    dataIndex: 'reg_nombres', width: 200, 
+      filters: [
+          {
+            text: 'Joe',
+            value: 1,
+          },
+          {
+            text: 'Jim',
+            value: 2,
+          },
+      ] 
+    },
+    
+    
+    
     { title: 'Solicitante Apellidos',     dataIndex: 'sol_apellidos', width: 180 },
     { title: 'Solicitante Nombres',       dataIndex: 'sol_nombres', width: 180 },
     { title: 'Solicitante Email',         dataIndex: 'sol_email', width: 200 },
@@ -221,6 +238,11 @@ const handlePaginator = (current) =>{
 
 const formatDate = (dateString) => {
   return dayjs(dateString).format('DD-MM-YYYY');
+}
+const handleChange = (pagination, filters, sorter) => {
+  if(filters) {
+    
+  }
 }
 const handleSearch = async() => {
   // loading.value = true;
