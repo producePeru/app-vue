@@ -384,7 +384,7 @@ const marcas = [
     // linkpagina: 'https://www.facebook.com/PepitoZKids/?locale=es_LA',
     linkpagina: 'none',
     descripcion: 'ROPA PARA NIÑOS',
-    categoria_id: 3,
+    categoria_id: 6,
   },
   {
     id: 44,
