@@ -1,7 +1,7 @@
 <template>
   <div class="container-login">
 
-    <img class="hero" src="https://soporte-pnte.com/tuempresa/assets/images/fondo.jpeg" alt="">
+    <img class="hero" src="../assets/img/login/login.jpg" alt="login">
 
     <div class="wrapper-login">
       <div class="title">
