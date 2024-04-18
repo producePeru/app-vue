@@ -1,11 +1,10 @@
 <template>
-  <div class="container-login">
+  <div class="container-login" v-if="islogin">
 
     <img class="hero" src="../assets/img/login/login.jpg" alt="login">
 
     <div class="wrapper-login">
       <div class="title">
-        <!-- <img class="logo" src="https://www.tuempresa.gob.pe/wp-content/uploads/2021/10/Produce-TuEmpresa.png" alt=""> -->
         <h1>Iniciar Sesión</h1>
         <span>Ingrese su usuario y contraseña para ingresar a la plataforma.</span>
       </div>
@@ -49,6 +48,7 @@ import { requestNoToken } from '@/utils/noToken.js'
 
 const loading = ref(false)
 const router = useRouter();
+const islogin = ref(false);
 
 const formState = reactive({
   email: '',
