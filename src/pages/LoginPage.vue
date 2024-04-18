@@ -1,5 +1,5 @@
 <template>
-  <div class="container-login" v-if="islogin">
+  <div class="container-login" >
 
     <img class="hero" src="../assets/img/login/login.jpg" alt="login">
 

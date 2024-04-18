@@ -34,7 +34,7 @@
       <a-form-item>
         <a-button type="primary" class="btn-produce" html-type="submit" :loading="loading">GUARDAR</a-button>
       </a-form-item>
-      <!-- <pre>{{ props.info }}</pre> -->
+      <!-- <pre>{{ props.info.id }}</pre> -->
     </a-form>
     </a-spin>
   </div>
@@ -71,7 +71,7 @@ const spinning = ref(true);
 const formState = reactive({
   observations: null,
   user_id: storageData.user_id,
-  people_id: props.info.id,
+  people_id: null,
   component_id: null,
   theme_id: null,
   modality_id: null,
@@ -103,6 +103,7 @@ const filterOption = (input, option) => {
 };
 const onSubmit = async () => {
   loading.value = true;
+  formState.people_id = props.info.id
   try {
     const response = await makeRequest({ url: 'advisory/create', method: 'POST', data: formState});
     

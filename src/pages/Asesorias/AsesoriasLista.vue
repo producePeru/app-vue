@@ -24,7 +24,7 @@
     @change="handleChange"
     bordered
     :scroll="{ x: valueX, y: valueY }" 
-    class="ant-table-striped"
+    class="table-historial"
     :columns="columns" 
     :data-source="dataSource" 
     :pagination="false"
@@ -38,15 +38,21 @@
         <template v-if="column.dataIndex == 'ase_fecha'">
           {{ formatDate(record.created_at) }}
         </template>
-        <!-- <template v-if="column.dataIndex == 'reg_nombres'">
-          {{ record.user.profile.name }} {{ record.user.profile.lastname }} {{ record.user.profile.middlename }}
-        </template> -->
+        
         <template v-if="column.dataIndex == 'sol_apellidos'">
           {{ record.people.lastname }} {{ record.people.middlename }}
         </template>
         <template v-if="column.dataIndex == 'sol_nombres'">
           {{ record.people.name }}
         </template>
+
+        <template v-if="column.dataIndex == 'sol_tipo_doc'">
+          {{ record.people.typedocument.name }}
+        </template>
+        <template v-if="column.dataIndex == 'sol_num_doc'">
+          {{ record.people.documentnumber }}
+        </template>
+
         <template v-if="column.dataIndex == 'sol_email'">
           {{ record.people.email }}
         </template>
@@ -54,6 +60,10 @@
           {{ record.people.phone }}
         </template>
         
+        <template v-if="column.dataIndex == 'asesor'">
+          {{ record.supervisado.supervisado_user.profile.name }} {{ record.supervisado.supervisado_user.profile.lastname }} {{ record.supervisado.supervisado_user.profile.middlename }}
+        </template>
+
         <template v-if="column.dataIndex == 'misupervisor'">
           {{ record.supervisor.supervisor_user.profile.name }} {{ record.supervisor.supervisor_user.profile.lastname }} {{ record.supervisor.supervisor_user.profile.middlename }}
         </template>
@@ -160,32 +170,19 @@ onBeforeUnmount(() => {
   
   const columnsAsesoria = ref([
     { title: '#',                         dataIndex: 'idx', fixed: 'left', align: 'center', width: 50},
-    { title: 'Fecha',                     dataIndex: 'ase_fecha', fixed: 'left', align: 'center', width: 100},
-    
-    
-    { title: 'Asesor',                    dataIndex: 'reg_nombres', width: 200, 
-      filters: [
-          {
-            text: 'Joe',
-            value: 1,
-          },
-          {
-            text: 'Jim',
-            value: 2,
-          },
-      ] 
-    },
-    
-    
-    
+    { title: 'Fecha',                     dataIndex: 'ase_fecha', fixed: 'left', align: 'center', width: 130},
     { title: 'Solicitante Apellidos',     dataIndex: 'sol_apellidos', width: 180 },
     { title: 'Solicitante Nombres',       dataIndex: 'sol_nombres', width: 180 },
-    { title: 'Solicitante Email',         dataIndex: 'sol_email', width: 200 },
-    { title: 'Solicitante Celular',       dataIndex: 'sol_phone', width: 160 },
+    { title: 'S. Tipo Documento',         dataIndex: 'sol_tipo_doc', width: 160 },
+    { title: 'S. Núm. Documento',         dataIndex: 'sol_num_doc', width: 150 },
+    { title: 'S. Email',                  dataIndex: 'sol_email', width: 200 },
+    { title: 'S. Celular',                dataIndex: 'sol_phone', width: 110, align: 'center' },
+    { title: 'Asesor',                    dataIndex: 'asesor', width: 200},
     { title: 'Supervisor',                dataIndex: 'misupervisor', width: 200},
     { title: 'Región',                    dataIndex: 'mype_region', width: 140},
     { title: 'Provincia',                 dataIndex: 'mype_provincia', width: 160},
     { title: 'Distrito',                  dataIndex: 'mype_distrito', width: 160},
+
     { title: 'Componente',                dataIndex: 'componente', width: 180},
     { title: 'Tema',                      dataIndex: 'tema_componente', width: 180},
     { title: 'Modalidad',                 dataIndex: 'modality', width: 120, align: 'center'},
@@ -193,40 +190,42 @@ onBeforeUnmount(() => {
 
   const columnsRuc10 = ref([
     { title: '#',                         dataIndex: 'idx', fixed: 'left', align: 'center', width: 50},
-    { title: 'Fecha',                     dataIndex: 'ase_fecha', fixed: 'left', align: 'center', width: 100},
-    // { title: 'Asesor',                    dataIndex: 'reg_nombres', width: 200 },
+    { title: 'Fecha',                     dataIndex: 'ase_fecha', fixed: 'left', align: 'center', width: 130},
     { title: 'Solicitante Apellidos',     dataIndex: 'sol_apellidos', width: 180 },
     { title: 'Solicitante Nombres',       dataIndex: 'sol_nombres', width: 180 },
-    // { title: 'Solicitante género',        dataIndex: 'sol_genero', width: 140, align: 'center' },
-    // { title: 'Solicitante discapacidad',  dataIndex: 'sol_discapacidad', width: 176, align: 'center' },
-    { title: 'Solicitante Celular',       dataIndex: 'sol_phone', width: 160 },
-    { title: 'Solicitante Email',         dataIndex: 'sol_email', width: 200 },
-    // { title: 'Supervisor',                dataIndex: 'misupervisor', width: 180},
-    { title: 'Región',                    dataIndex: 'mype_region', width: 130},
-    { title: 'Provincia',                 dataIndex: 'mype_provincia', width: 180},
-    { title: 'Distrito',                  dataIndex: 'mype_distrito', width: 180},
+    { title: 'S. Tipo Documento',         dataIndex: 'sol_tipo_doc', width: 160 },
+    { title: 'S. Núm. Documento',         dataIndex: 'sol_num_doc', width: 150 },
+    { title: 'S. Email',                  dataIndex: 'sol_email', width: 200 },
+    { title: 'S. Celular',                dataIndex: 'sol_phone', width: 110, align: 'center' },
+    { title: 'Asesor',                    dataIndex: 'asesor', width: 200},
+    { title: 'Supervisor',                dataIndex: 'misupervisor', width: 200},
+    { title: 'Región',                    dataIndex: 'mype_region', width: 140},
+    { title: 'Provincia',                 dataIndex: 'mype_provincia', width: 160},
+    { title: 'Distrito',                  dataIndex: 'mype_distrito', width: 160},
+    
     { title: 'Detalle del trámite',       dataIndex: 'detalle_tramite', width: 180},
     { title: 'Sector económico',          dataIndex: 'sector_economico', width: 180},
     { title: 'Actividad comercial',       dataIndex: 'atividad_comercial', width: 180},
+    
     { title: 'Modalidad',                 dataIndex: 'modality', width: 120, align: 'center'},
   ]);
 
   const columnsRuc20 = ref([
     { title: '#',                         dataIndex: 'idx', fixed: 'left', align: 'center', width: 50},
-    { title: 'Fecha',                     dataIndex: 'ase_fecha', fixed: 'left', align: 'center', width: 100},
-    // { title: 'Asesor',                    dataIndex: 'reg_nombres', width: 180 },
+    { title: 'Fecha',                     dataIndex: 'ase_fecha', fixed: 'left', align: 'center', width: 130},
     { title: 'Solicitante Apellidos',     dataIndex: 'sol_apellidos', width: 180 },
     { title: 'Solicitante Nombres',       dataIndex: 'sol_nombres', width: 180 },
-    { title: 'Código SUNARP',        dataIndex: 'codesunarp', width: 140, align: 'center' },
-    // { title: 'Solicitante discapacidad',  dataIndex: 'sol_discapacidad', width: 176, align: 'center' },
-    { title: 'Solicitante Celular',       dataIndex: 'sol_phone', width: 160 },
-    // { title: 'Supervisor',                dataIndex: 'misupervisor', width: 180},
-    // { title: 'Tipo de formalización',     dataIndex: 'tipo_formalizacion', width: 130},
-    { title: 'Sector económico',          dataIndex: 'sector_economico', width: 130},
-    { title: 'Actividad comercial',       dataIndex: 'atividad_comercial', width: 160},
-    { title: 'Región',                    dataIndex: 'mype_region', width: 130},
-    { title: 'Provincia',                 dataIndex: 'mype_provincia', width: 180},
-    { title: 'Distrito',                  dataIndex: 'mype_distrito', width: 180},
+    { title: 'S. Tipo Documento',         dataIndex: 'sol_tipo_doc', width: 160 },
+    { title: 'S. Núm. Documento',         dataIndex: 'sol_num_doc', width: 150 },
+    { title: 'S. Email',                  dataIndex: 'sol_email', width: 200 },
+    { title: 'S. Celular',                dataIndex: 'sol_phone', width: 110, align: 'center' },
+    { title: 'Asesor',                    dataIndex: 'asesor', width: 200},
+    { title: 'Supervisor',                dataIndex: 'misupervisor', width: 200},
+    { title: 'Región',                    dataIndex: 'mype_region', width: 140},
+    { title: 'Provincia',                 dataIndex: 'mype_provincia', width: 160},
+    { title: 'Distrito',                  dataIndex: 'mype_distrito', width: 160},
+
+
     { title: 'Dirección',                 dataIndex: 'mype_direccion', width: 230},
     { title: 'Nombre empresa',            dataIndex: 'mype_nombre', width: 180},
     { title: 'Régimen',                   dataIndex: 'tipo_regimen', width: 80,  align: 'center'},
@@ -242,7 +241,7 @@ const handlePaginator = (current) =>{
 }
 
 const formatDate = (dateString) => {
-  return dayjs(dateString).format('DD-MM-YYYY');
+  return dayjs(dateString).format('DD-MM-YYYY HH:mm');
 }
 const handleChange = (pagination, filters, sorter) => {
   if(filters) {
@@ -352,7 +351,7 @@ const fetchData = async(val) => {
       params.value.page = 0
       active.value = val
       columns.value = columnsRuc10.value
-      url = `historial/formalizations-10/${storageData.user_id}/${storageData.documentnumber}`
+      url = `historial/formalizations-10`
     }  
 
     if(val == 'ruc20') {
@@ -437,6 +436,16 @@ onMounted(() => {
 </style>
 
 <style>
+.table-historial {
+  .ant-table-row {
+    .ant-table-cell:nth-child(9) {
+      background-color: #feffe3 !important;
+    }
+    .ant-table-cell:nth-child(10) {
+      background-color: #e6fff4 !important;
+    }
+  }
+}
 .asesorias-search {
   button {
     background-color: #cf1322;

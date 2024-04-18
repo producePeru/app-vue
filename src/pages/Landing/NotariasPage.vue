@@ -31,18 +31,18 @@
           </div>
         </template>
         <template v-if="column.dataIndex == 'pricedescriptionx'">
-          <div >
+          <div>
             <div v-html="record.conditions" class="style-conditions"></div>
           </div>
         </template>
         <template v-if="column.dataIndex == 'socio'">
-          <div v-html="record.sociointerveniente" class="style-contact" ></div>
+          <div v-html="record.sociointerveniente" class="style-contact"></div>
         </template>
         <template v-if="column.dataIndex == 'bio'">
-          <div v-html="record.biometrico" class="style-contact" ></div>
+          <div v-html="record.biometrico" class="style-contact"></div>
         </template>
         <template v-if="column.dataIndex == 'contact'">
-          <div v-html="record.infocontacto" class="style-contact" ></div>
+          <div v-html="record.infocontacto" class="style-contact"></div>
         </template>
 
       </template>
@@ -105,20 +105,24 @@ onMounted(() => {
 <style lang="scss" scoped>
 .custom-content {
   height: 100%;
-  overflow: auto; 
+  overflow: auto;
   outline: 1px solid red;
 }
+
 .all-notaries {
   padding: 2rem;
+
   h1,
   h2 {
     font-weight: 600;
     margin: 0 auto 1rem 0;
     text-align: center;
   }
+
   h1 {
     color: #0070c0;
   }
+
   h2 {
     color: #ff0000;
     font-size: 22px;
@@ -129,10 +133,14 @@ onMounted(() => {
 
 <style lang="scss">
 .all-notaries {
-  table th, table td {
-  border: 1px solid #c3c3c3;
-}
+
+  table th,
+  table td {
+    border: 1px solid #c3c3c3;
+  }
+
   .ant-table-thead {
+
     .ant-table-cell:nth-child(1),
     .ant-table-cell:nth-child(2),
     .ant-table-cell:nth-child(3),
@@ -149,50 +157,66 @@ onMounted(() => {
       font-size: 15px;
     }
   }
-  .ant-table-row  {
+
+  .ant-table-row {
+
     .ant-table-cell:nth-child(2),
     .ant-table-cell:nth-child(3),
     .ant-table-cell:nth-child(4) {
       background-color: #e7e6e6 !important;
     }
   }
-  .ant-table-row  {
-    .ant-table-cell:nth-child(6)   {
+
+  .ant-table-row {
+    .ant-table-cell:nth-child(6) {
       background-color: #cfe2f3 !important;
     }
   }
-  .ant-table-row  {
-    .ant-table-cell:nth-child(7)   {
+
+  .ant-table-row {
+    .ant-table-cell:nth-child(7) {
       // position: relative;
     }
-    .ant-table-cell:nth-child(8)   {
+
+    .ant-table-cell:nth-child(8) {
       // position: relative;
     }
   }
 }
 
 .style-price {
-  h1 strong, h2 strong {
+
+  h1 strong,
+  h2 strong {
     font-size: 18px;
     font-weight: 700;
   }
+
   strong {
     font-weight: 500;
     font-size: 13px;
   }
 }
+
 .style-conditions {
-  h1 strong, h2 strong {
+
+  h1 strong,
+  h2 strong {
     font-size: 14px;
   }
 }
-.style-price, .style-conditions {
-  h1 strong, h2 strong {
+
+.style-price,
+.style-conditions {
+
+  h1 strong,
+  h2 strong {
     // outline: 1px solid red;
     width: 100%;
     display: block;
     height: 20px;
   }
+
   strong {
     // outline: 1px solid green;
     width: 100%;
@@ -205,6 +229,7 @@ onMounted(() => {
   p {
     margin: 4px;
   }
+
   p strong {
     font-weight: 500;
     font-size: 14px;
