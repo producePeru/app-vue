@@ -349,7 +349,7 @@ const marcas = [
     id: 39,
     nombre: 'Emolinka',
     imagen: 'https://lh3.google.com/u/0/d/13iW8NMifF1wNfccrc5jfxLonH_ZPwTbX=w1920-h931-iv1',
-    linkpagina: 'https://www.facebook.com/emolinkape/',
+    linkpagina: 'https://drive.google.com/file/d/1qL4wYc79G8GQjGlAMsrsV0jwd9LuH5TJ/view',
     descripcion: 'EMOLIENTE INSTANTÁNEO',
     categoria_id: 1,
   },

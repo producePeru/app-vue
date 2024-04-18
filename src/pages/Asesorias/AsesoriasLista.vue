@@ -53,6 +53,11 @@
         <template v-if="column.dataIndex == 'sol_phone'">
           {{ record.people.phone }}
         </template>
+        
+        <template v-if="column.dataIndex == 'misupervisor'">
+          {{ record.supervisor.supervisor_user.profile.name }} {{ record.supervisor.supervisor_user.profile.lastname }} {{ record.supervisor.supervisor_user.profile.middlename }}
+        </template>
+
         <template v-if="column.dataIndex == 'mype_region'">
           {{ record.city.name }}
         </template>
@@ -177,7 +182,7 @@ onBeforeUnmount(() => {
     { title: 'Solicitante Nombres',       dataIndex: 'sol_nombres', width: 180 },
     { title: 'Solicitante Email',         dataIndex: 'sol_email', width: 200 },
     { title: 'Solicitante Celular',       dataIndex: 'sol_phone', width: 160 },
-    // { title: 'Supervisor',                dataIndex: 'misupervisor', width: 200},
+    { title: 'Supervisor',                dataIndex: 'misupervisor', width: 200},
     { title: 'Región',                    dataIndex: 'mype_region', width: 140},
     { title: 'Provincia',                 dataIndex: 'mype_provincia', width: 160},
     { title: 'Distrito',                  dataIndex: 'mype_distrito', width: 160},
@@ -332,7 +337,7 @@ const fetchData = async(val) => {
     loading.value = true;
     
     
-    let url = `historial/advisories/${storageData.user_id}/${storageData.documentnumber}`;
+    let url = `historial/advisories`;
     
     columns.value = columnsAsesoria.value
 
@@ -340,7 +345,7 @@ const fetchData = async(val) => {
       params.value.page = 0
       active.value = val
       columns.value = columnsAsesoria.value
-      url = `historial/advisories/${storageData.user_id}/${storageData.documentnumber}`;
+      url = `historial/advisories`;
     }   
 
     if(val == 'ruc10') {
