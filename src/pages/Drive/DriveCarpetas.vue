@@ -77,7 +77,6 @@ const handleDeleteItem = (val) => {
   handleShowFiles(val);
 };
 const handleShowFiles = async(val) => {
-  console.log("qqqqqqqqq", val);
   try {
     loading.value = true;
     const { data } = await makeRequest({ url: `drive/data-files/${val.id}`, method: 'GET' });
