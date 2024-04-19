@@ -21,7 +21,8 @@ export const useCounterStore = defineStore('counter', {
       comercialActivities: null,
       regimes: null,
       notaries: null,
-      supervisores: null
+      supervisores: null,
+      folders: null,
     }
   },
 
@@ -176,6 +177,15 @@ export const useCounterStore = defineStore('counter', {
       try {
         const { data } = await requestNoToken({ url: `select/supervisores`, method: 'GET' });
         this.supervisores = data;
+      } catch (error) {
+        console.error('Error de red:', error);
+      }
+    },
+
+    async fetchFolders() {
+      try {
+        const { data } = await requestNoToken({ url: `select/folders`, method: 'GET' });
+        this.folders = data;
       } catch (error) {
         console.error('Error de red:', error);
       }

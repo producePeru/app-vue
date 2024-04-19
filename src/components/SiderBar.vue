@@ -26,6 +26,7 @@
           <span>Drive</span>
         </span>
       </template>
+      <a-menu-item key="drive-mis-carpetas" v-if="views.includes('drive-mis-carpetas')"> <router-link to="/admin/drive/mis-carpetas">Mis Carpetas</router-link> </a-menu-item> 
       <a-menu-item key="drive-mis-archivos" v-if="views.includes('drive-mis-archivos')"> <router-link to="/admin/drive/mis-archivos">Mis Archivos</router-link> </a-menu-item> 
       <a-menu-item key="drive-subir-archivo" v-if="views.includes('drive-subir-archivo')"> <router-link to="/admin/drive/subir-archivo">Subir Archivo</router-link> </a-menu-item> 
     </a-sub-menu>

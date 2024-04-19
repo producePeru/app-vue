@@ -62,8 +62,6 @@ const router = createRouter({
     },
 
  
-
-
     {
       path: '/unauthorized',
       name: 'unauthorized',
@@ -107,6 +105,12 @@ const router = createRouter({
           path: 'drive',
           name: 'drive',
           children: [
+            {
+              path: 'mis-carpetas',
+              name: 'drive-mis-carpetas',
+              component: () => import('../pages/Drive/DriveCarpetas.vue'),
+              meta: { requiresAuth: true },
+            },
             {
               path: 'subir-archivo',
               name: 'drive-subir-archivo',

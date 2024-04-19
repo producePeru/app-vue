@@ -1,24 +1,7 @@
 <template>
   <div>
-    <h3>ARCHIVOS</h3>
-
-    <div class="w-search" v-show="!loading">
-      <!-- <router-link to="/admin/drive/subir-archivo"><a-button >SUBIR ARCHIVO</a-button></router-link> -->
-
-      <!-- <a-input-search v-model:value="searchFile" placeholder="Buscar por nombre del archivo" style="width: 250px"
-        :loading="loadingSearch" @search="handleSearchFilesName" />
-
-      <a-select 
-      v-model:value="inputSearch" 
-      show-search 
-      placeholder="Buscar" 
-      style="width: 220px"
-      :options="options" 
-      :filter-option="filterOption" 
-      @change="handleChange" /> -->
-
-    </div>
-
+    <h3>ARCHIVOS <span style="color: #959595; font-weight: 300;">/ {{ props.idFile.nameFolder }}</span></h3>
+    <br>
     <a-table bordered class="ant-table-striped" sticky :scroll="{ y: valueY }" :columns="columns"
       :data-source="dataSource" :pagination="false" :loading="loading" size="small">
       <template v-slot:bodyCell="{ column, record }">
@@ -48,9 +31,7 @@
             </a>
             <template #overlay>
               <a-menu>
-                <!-- <a-menu-item>
-                  <a @click="handleEditSolicitante(record)">Editar</a>
-                </a-menu-item> -->
+
                 <a-menu-item>
                   <a-popconfirm title="¿Seguro de eliminar?" @confirm="handleDelete(record)">
                     <template #icon><question-circle-outlined style="color: red" /></template>
@@ -61,13 +42,13 @@
             </template>
           </a-dropdown>
         </template>
-
+        
 
       </template>
     </a-table>
   </div>
-
-  
+  <!-- <pre>::::{{ props.idFile }}</pre> -->
+  <div>{{ update() }}</div>
   <div class="paginator-drive">
     <span><a-tag color="blue"><b>{{ dataSource.length }}</b></a-tag> Archivos Subidos</span>
     <a-pagination size="small" :pageSize="20" :total="total" @change="handlePaginator" :showSizeChanger="false" />
@@ -86,81 +67,58 @@ import { MoreOutlined } from '@ant-design/icons-vue';
 import { message } from 'ant-design-vue';
 import { Modal } from 'ant-design-vue';
 
-const storageData = JSON.parse(localStorage.getItem('profile'))
+const props = defineProps(['idFile']);
+const emit = defineEmits(['handleDeleteItem']);
 const prod = import.meta.env.VITE_APP_API_URL_PRODUCTION
 const dev = import.meta.env.VITE_APP_API_URL_LOCAL
 const apiUrl = window.location.hostname == 'localhost' || window.location.hostname == '127.0.0.1' ? dev : prod;
+
 const token = Cookies.get('token');
 
 const loadingDrive = ref({});
 const dataSource = ref([]);
 const loading = ref(false);
 const total = ref(0);
-const inputSearch = ref(0);
-const options = ref([]);
-const searchFile = ref('');
-const loadingSearch = ref(false);
 
 const columns = [
-  { title: 'AUTOR',               dataIndex: 'user', fixed: 'left', width: 180 },
-  { title: 'NOMBRE DEL ARCHIVO',  dataIndex: 'name', width: 140 },
-  { title: 'FECHA',               dataIndex: 'date', width: 120, align: 'center'},
-  { title: 'DESCARGAR',           dataIndex: 'download', width: 120, align: 'center'},
-  { title: '',           dataIndex: 'actions', width: 50, align: 'center',fixed: 'right'}
+  { title: 'AUTOR', dataIndex: 'user', fixed: 'left', width: 180 },
+  { title: 'NOMBRE DEL ARCHIVO', dataIndex: 'name', width: 140 },
+  { title: 'FECHA', dataIndex: 'date', width: 120, align: 'center' },
+  { title: 'DESCARGAR', dataIndex: 'download', width: 120, align: 'center' },
+  { title: '', dataIndex: 'actions', width: 50, align: 'center', fixed: 'right' }
 ];
 
-const handleDelete= async(val) => {
+const update = () => {
+  if(props.idFile) {
+    dataSource.value = props.idFile.dataSource
+    total.value = props.idFile.total
+  }
+}
+const handleDelete = async (val) => {
   try {
     const data = await makeRequest({ url: `drive/delete-file/${val.id}`, method: 'DELETE' });
-    if(data.status == 500) {
-      Modal.warning({
-        title: 'Aviso',
-        content: data.message,
-      });
-    } else {
-      fetchData();
-      message.success(data.message);
+    // if (data.status == 500) {
+    //   Modal.warning({
+    //     title: 'Aviso',
+    //     content: data.message,
+    //   });
+    // } else {
+    //   fetchData();
+    message.success(data.message);
+    const values = {
+      id: props.idFile.id,
+      name: props.idFile.nameFolder
     }
+
+    emit('handleDeleteItem', values);
+    // }
+
+
   } catch (error) {
     console.error('Error de red:', error);
   }
 }
-const handleChange = async (value) => {
-  try {
 
-    if (value === 0) return fetchData();
-
-    loading.value = true;
-    const url = `/drive/author/${value}`
-
-    const data = await makeRequest({ url, method: 'GET', params: params.value });
-
-    dataSource.value = data
-
-  } catch (error) {
-    console.error('Error de red:', error);
-  } finally {
-    loading.value = false;
-  }
-};
-const handleSearchFilesName = async () => {
-  // try {
-  //   loadingSearch.value = true;
-
-  //   if (!searchValue) {
-  //     inputSearch.value = 0
-  //     return fetchData();
-  //   }
-
-  //   const url = `/drive/search-file/${storageData.user_id}/${storageData.documentnumber}`
-  //   const { data } = await makeRequest({ url, method: 'GET' });
-  //   dataSource.value = data.data
-  // } catch (error) {
-  //   console.error('Error de red:', error);
-  // } finally {
-  //   loadingSearch.value = false;
-  // }
-};
 
 const handleDownloadFile = async (path) => {
 
@@ -190,12 +148,6 @@ const handleDownloadFile = async (path) => {
   }
 };
 
-const filterOption = (input, option) => {
-  const normalizedInput = input.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "");
-  const normalizedLabel = option.label.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "");
-  return normalizedLabel.includes(normalizedInput);
-};
-
 const formatDate = (date) => {
   return moment(date).format('DD/MM/YYYY HH:mm A');
 }
@@ -211,18 +163,15 @@ const params = ref({
   page: 1
 })
 
-
-
 const handlePaginator = (current) => {
   params.value.page = current;
   fetchData()
 }
 
-
 const fetchData = async () => {
   try {
     loading.value = true;
-    const {data} = await makeRequest({ url: `drive/list-files`, method: 'GET' });
+    const { data } = await makeRequest({ url: `drive/data-files/${props.idFile}`, method: 'GET' });
     dataSource.value = data.data
     total.value = data.total
   } catch (error) {
@@ -233,7 +182,7 @@ const fetchData = async () => {
 }
 
 onMounted(() => {
-  fetchData();
+  // fetchData();
   window.addEventListener('resize', actualizarAltura);
   actualizarAltura();
 });
@@ -257,6 +206,7 @@ onMounted(() => {
   align-items: center;
   margin: 1.5rem 0 .8rem 0;
 }
+
 .smalldrop {
   width: 200px;
 }
