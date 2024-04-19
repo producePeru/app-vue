@@ -1,6 +1,6 @@
 <template>
   <div>
-    <h3>ARCHIVOS</h3>
+    <h3>MIS ARCHIVOS</h3>
 
     <div class="w-search" v-show="!loading">
       <!-- <router-link to="/admin/drive/subir-archivo"><a-button >SUBIR ARCHIVO</a-button></router-link> -->
@@ -255,9 +255,6 @@ onMounted(() => {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin: 1.5rem 0 .8rem 0;
-}
-.smalldrop {
-  width: 200px;
+  margin: .6rem 0;
 }
 </style>

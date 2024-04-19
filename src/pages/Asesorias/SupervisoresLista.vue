@@ -299,8 +299,8 @@ onMounted(() => {
 }
 </style>
 
-<style>
+<!-- <style>
 .ant-popover-inner {
   width: 200px;
 }
-</style>
+</style> -->

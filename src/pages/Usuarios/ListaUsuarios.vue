@@ -152,9 +152,9 @@ const columns = [
   { title: 'DNI',                 dataIndex: 'documentnumber', fixed: 'left', width: 100 },
   { title: 'Nombres',             dataIndex: 'name', width: 120 },
   { title: 'Apellidos',           dataIndex: 'lastname', width: 120 },
-  { title: 'Celular',             dataIndex: 'email', width: 180},
-  { title: 'Correo',              dataIndex: 'phone', width: 180, align: 'center'},
-  { title: 'Oficina',             dataIndex: 'office', width: 140},
+  { title: 'Correo',              dataIndex: 'email', width: 200},
+  { title: 'Celular',             dataIndex: 'phone', width: 100, align: 'center'},
+  { title: 'Oficina',             dataIndex: 'office', width: 120, align: 'center'},
   { title: 'CDE',                 dataIndex: 'cde', width: 140},
   { title: '',                    dataIndex: 'actions', align: 'center', width: 50, fixed: 'right'}
 ];
@@ -325,11 +325,5 @@ onMounted(() => {
     color: #1677ff;
     cursor: pointer;
   }
-}
-</style>
-
-<style>
-.ant-popover-inner {
-  width: 200px;
 }
 </style>

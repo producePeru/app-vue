@@ -16,10 +16,10 @@
       </a>
       <template #overlay>
         <a-menu @click="handleMenuClick" style="width: 140px">
-          <!-- <a-menu-item key="1">
+          <a-menu-item key="1">
             <UserOutlined />
             Ver Perfil
-          </a-menu-item> -->
+          </a-menu-item>
           <a-menu-item key="2">
             <PoweroffOutlined />
             Cerrar Sesión

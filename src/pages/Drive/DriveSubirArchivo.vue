@@ -19,14 +19,11 @@
           
           <template v-if="fileList.length >= 1">
             <a-form-item class="item-max" v-if="el.type === 'iSelect'" :name="el.name" :label="el.label" :rules="[{ required: el.required, message: el.message }]">
-              <a-select v-model:value="formState[el.name]" :options="store.folders" style="width: 250px;" />
+              <a-select v-model:value="formState[el.name]" :options="store.folders" style="width: 280px;" />
             </a-form-item>
           </template>
         </template>
       </div>
-
-      
-      
   
       <a-form-item v-if="fileList.length >= 1">
         <a-button class="btn-produce" type="primary" html-type="submit" :loading="loading">SUBIR {{ fileList.length == 1 ? 'ARCHIVO' : 'ARCHIVOS' }}</a-button>

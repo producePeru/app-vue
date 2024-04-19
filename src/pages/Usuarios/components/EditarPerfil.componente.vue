@@ -132,7 +132,6 @@ const onSubmitFail = () => {
   message.error('Debes de completar todos los espacios requeridos')
 };
 
-
 </script>
 
 <style lang="scss" scoped>

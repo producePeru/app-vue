@@ -7,7 +7,30 @@
         <template v-for="(el, idx) in acto" :key="idx">
 
           <a-form-item class="item-max" v-if="el.type === 'iSelect'" :name="el.name" :label="el.label" :rules="[{ required: el.required, message: el.message }]">
-            <a-select v-if="el.name == 'notary_id'" v-model:value="formState[el.name]" :options="store.notaries" />
+            
+            <a-select v-if="el.name == 'notary_id'" v-model:value="formState[el.name]" :options="notaries" option-label-prop="name">
+              <template #option="{ value: val, name, city, province, district, address }">
+                <div class="select-notaries">
+                  <span class="name">{{ name }}</span>
+                  <span class="city">{{ city }} - {{ province }} - {{ district }}</span>
+                  <span class="address">{{ address }}</span>
+                </div>
+                
+              </template>
+            </a-select>
+            
+
+
+
+            <a-select 
+            v-if="el.name == 'city'"
+            placeholder="Buscar por Provincia"
+            style="width: 300px;"
+            v-model:value="city" 
+            show-search 
+            :options="store.cities" 
+            :filter-option="filterOption" @change="handleDepartaments" />
+          
           </a-form-item>
 
           <a-form-item v-if="el.type === 'iText'" :name="el.name" :label="el.label"
@@ -18,6 +41,7 @@
         </template>
       </div>
       <!-- <pre>{{ formState }}</pre> -->
+
       <div>{{ update() }}</div>
 
       <a-form-item>
@@ -34,6 +58,7 @@ import { acto } from '@/forms/asesorias.js';
 import { useCounterStore } from '@/stores/selectes.js';
 import { makeRequest } from '@/utils/api.js';
 import { message } from 'ant-design-vue';
+import { requestNoToken } from '@/utils/noToken.js';
 
 const storageData = JSON.parse(localStorage.getItem('profile'));
 const store = useCounterStore();
@@ -41,10 +66,20 @@ const props = defineProps(['info', 'itemSelectedF20']);
 const emit = defineEmits(['closeDraw']);
 
 store.$patch({ notaries: store.notaries });
+store.$patch({ cities: store.cities });
 store.fetchNotaries();
+store.fetchCities();
 
 const spinning = ref(true);
 const loading = ref(false);
+const city = ref(null);
+const notaries = ref(null);
+
+const filterOption = (input, option) => {
+  const normalizedInput = input.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "");
+  const normalizedLabel = option.label.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "");
+  return normalizedLabel.includes(normalizedInput);
+};
 const formState = reactive({
   task: 2,
   name: null,
@@ -55,6 +90,31 @@ const formState = reactive({
 })
 const update = () => {
   if(store.notaries?.length) spinning.value = false;
+}
+const handleDepartaments = async() => {
+  try {
+    loading.value = true;
+    const {data} = await requestNoToken({ url: `public/notaries/${city.value}`, method: 'GET' });
+    
+    notaries.value = null;
+    formState.notary_id = null;
+
+    const notarias = data.map(item => ({
+      value: item.id,
+      name: item.name,
+      city: item.city.name,
+      province: item.province.name,
+      district: item.district.name,
+      address: item.address
+    }));
+
+    notaries.value = notarias;
+
+  } catch (error) {
+    console.error('Error de red:', error);
+  } finally {
+    loading.value = false;
+  }
 }
 
 const onSubmit = async () => {
@@ -86,10 +146,25 @@ const onSubmitFail = () => {
 
 <style scoped lang="scss">
 .wrapper-booking {
-  max-width: 250px;
+  max-width: 300px;
   margin-top: 2rem;
   h3 {
     margin-bottom: 2rem;
+  }
+}
+.select-notaries {
+  display: flex;
+  flex-direction: column;
+  .name {
+    margin-bottom: .1rem;
+    font-weight: 500;
+  }
+  .city {
+    color: #0958d9;
+  }
+  .city, .address {
+    font-size: 11px;
+    line-height: 1.2;
   }
 }
 </style>

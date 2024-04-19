@@ -86,15 +86,23 @@ const acto = {
     type: 'iText',
     label: 'Número de solicitud de envio a Notaría',
     name: 'numbernotary',
-    required: false,
+    required: true,
     message: 'Seleccionar departamento',
+    disabled: false
+  },
+  city: {
+    type: 'iSelect',
+    label: 'Seleciona Provincia',
+    name: 'city',
+    required: false,
+    message: 'Seleccionar modalidad',
     disabled: false
   },
   notary_id: {
     type: 'iSelect',
     label: 'Notaría',
     name: 'notary_id',
-    required: false,
+    required: true,
     message: 'Seleccionar notaría',
     disabled: false
   },

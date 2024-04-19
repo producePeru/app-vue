@@ -1,11 +1,23 @@
 <template>
 
   <div class="all-notaries">
-    <h1>CATÁLOGO DE NOTARIAS LIMA </h1>
-    <h2>SI EL CAPITAL > 1 UIT (S/.5150) ADICIONAL PAGARÁ GASTOS REGISTRALES EN CUALQUIER NOTARIA</h2>
+    <h1 class="title">CATÁLOGO DE NOTARIAS </h1>
+    
 
-    <a-table bordered :scroll="{ x: valueX, y: valueY }" class="ant-table-striped" :columns="columns"
-      :data-source="dataSource" :pagination="false" :loading="loading" size="small">
+    <div class="notaries-header">
+      <h2 class="title-2">SI EL CAPITAL > 1 UIT (S/.5150) ADICIONAL PAGARÁ GASTOS REGISTRALES EN CUALQUIER NOTARIA</h2>
+      <a-select 
+      size="large"
+      placeholder="Buscar por Provincia"
+      style="width: 240px;"
+      v-model:value="city" 
+      show-search 
+      :options="store.cities" 
+      :filter-option="filterOption" @change="handleDepartaments" />
+    </div>
+
+    <a-table bordered :scroll="{ x: valueX, y: valueY }" :columns="columns" :data-source="dataSource"
+      :pagination="false" :loading="loading" size="small">
       <template v-slot:bodyCell="{ column, record, index }">
         <template v-if="column.dataIndex == 'idx'">
           {{ index + 1 }}
@@ -52,36 +64,57 @@
 </template>
 
 <script setup>
-import { ref, onMounted, h, onBeforeUnmount } from 'vue';
+import { ref, onMounted, onBeforeUnmount } from 'vue';
 import { requestNoToken } from '@/utils/noToken.js'
+import { useCounterStore } from '@/stores/selectes.js';
 
 const valueY = ref(window.innerHeight - 100);
 const columns = [
-  { title: '#', fixed: 'left', dataIndex: 'idx', align: 'center', width: 70 },
-  { title: 'REGIÓN', dataIndex: 'departamento', fixed: 'left', align: 'center', width: 120 },
-  { title: 'PROVINCIA', fixed: 'left', dataIndex: 'province', align: 'center', width: 140 },
-  { title: 'DISTRITO', fixed: 'left', dataIndex: 'distrite', width: 140 },
-  { title: 'DIRECCION', fixed: 'left', dataIndex: 'address', align: 'center', width: 140 },
+  { title: '#', dataIndex: 'idx', fixed: 'left', align: 'center', width: 70 },
   { title: 'NOTARIA', fixed: 'left', dataIndex: 'namenotary', align: 'center', width: 180 },
-  { title: 'GASTOS NOTARIALES', dataIndex: 'pricex', align: 'center', width: 280 },
+  { title: 'REGIÓN', dataIndex: 'departamento', align: 'center', width: 120 },
+  { title: 'PROVINCIA', dataIndex: 'province', align: 'center', width: 120 },
+  { title: 'DISTRITO', dataIndex: 'distrite', width: 120 },
+  { title: 'DIRECCION', dataIndex: 'address', align: 'center', width: 160 },
+  { title: 'GASTOS NOTARIALES', dataIndex: 'pricex', align: 'center', width: 320 },
   { title: 'CONDICIONES', dataIndex: 'pricedescriptionx', align: 'center', width: 260 },
   { title: 'SOCIO O INTERVINIENTE ADICIONAL', dataIndex: 'socio', align: 'center', width: 200 },
-  { title: 'BIOMETRICO', dataIndex: 'bio', align: 'center', width: 180 },
+  { title: 'BIOMETRICO', dataIndex: 'bio', align: 'center', width: 220 },
   { title: 'DATOS DE CONTACTO', dataIndex: 'contact', align: 'center', width: 260 },
 ];
 
+const store = useCounterStore();
 const valueX = ref(1200)
 const dataSource = ref([])
 const loading = ref(false)
+const city = ref(null);
+
+store.$patch({ cities: store.cities });
+store.fetchCities();
 
 const actualizarAltura = () => {
   valueY.value = window.innerHeight - 250;
 };
-
+const filterOption = (input, option) => {
+  const normalizedInput = input.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "");
+  const normalizedLabel = option.label.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "");
+  return normalizedLabel.includes(normalizedInput);
+};
+const handleDepartaments = async() => {
+  try {
+    loading.value = true;
+    const data = await requestNoToken({ url: `public/notaries/${city.value}`, method: 'GET' });
+    dataSource.value = data.data
+  } catch (error) {
+    console.error('Error de red:', error);
+  } finally {
+    loading.value = false;
+  }
+}
 const fetchData = async () => {
   try {
     loading.value = true;
-    const data = await requestNoToken({ url: 'notary/list', method: 'GET' });
+    const data = await requestNoToken({ url: 'public/notaries', method: 'GET' });
 
     console.log("fdafafaf", data);
     dataSource.value = data.data
@@ -102,37 +135,40 @@ onMounted(() => {
 });
 </script>
 
-<style lang="scss" scoped>
-.custom-content {
-  height: 100%;
-  overflow: auto;
-  outline: 1px solid red;
-}
-
-.all-notaries {
-  padding: 2rem;
-
-  h1,
-  h2 {
-    font-weight: 600;
-    margin: 0 auto 1rem 0;
-    text-align: center;
-  }
-
-  h1 {
-    color: #0070c0;
-  }
-
-  h2 {
-    color: #ff0000;
-    font-size: 22px;
-    margin-bottom: 2rem;
-  }
-}
-</style>
-
 <style lang="scss">
 .all-notaries {
+  padding: 2rem;
+  .title {
+    font-size: 26px;
+    color: #0c57c0;
+    font-weight: 600;
+    text-align: center;
+    text-shadow: 1px 1px 2px #717171;
+  }
+
+  .notaries-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 1rem;
+    padding: 0 1rem;
+    .title-2 {
+      font-size: 16px;
+      margin: 0;
+      color: #e60000;
+      // text-align: center;
+      font-weight: 600;
+    }
+    @media screen and (max-width:900px) {
+      flex-direction: column;
+      .title-2 {
+        font-size: 14px;
+        text-align: center;
+        margin-bottom: 1rem;
+      }
+    }
+  }
+  
 
   table th,
   table td {
@@ -140,7 +176,6 @@ onMounted(() => {
   }
 
   .ant-table-thead {
-
     .ant-table-cell:nth-child(1),
     .ant-table-cell:nth-child(2),
     .ant-table-cell:nth-child(3),
@@ -152,24 +187,28 @@ onMounted(() => {
     .ant-table-cell:nth-child(9),
     .ant-table-cell:nth-child(10),
     .ant-table-cell:nth-child(11) {
-      background-color: #8eaadb !important;
+      background-color: #0c57c0 !important;
       font-weight: 700;
       font-size: 15px;
+      color: #fff;
     }
   }
 
   .ant-table-row {
-
-    .ant-table-cell:nth-child(2),
     .ant-table-cell:nth-child(3),
-    .ant-table-cell:nth-child(4) {
-      background-color: #e7e6e6 !important;
+    .ant-table-cell:nth-child(4),
+    .ant-table-cell:nth-child(5) {
+      background-color: #fffbe2 !important;
     }
   }
-
   .ant-table-row {
     .ant-table-cell:nth-child(6) {
-      background-color: #cfe2f3 !important;
+      background-color: #f9eef8 !important;
+    }
+  }
+  .ant-table-row {
+    .ant-table-cell:nth-child(2) {
+      background-color: #d5ffe7 !important;
     }
   }
 

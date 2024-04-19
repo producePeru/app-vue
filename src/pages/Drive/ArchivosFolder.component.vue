@@ -206,8 +206,4 @@ onMounted(() => {
   align-items: center;
   margin: 1.5rem 0 .8rem 0;
 }
-
-.smalldrop {
-  width: 200px;
-}
 </style>

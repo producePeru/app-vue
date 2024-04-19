@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="all-notaries">
     <h3>NOTARÍAS</h3>
     <div class="filters-notary">
       <div>
@@ -10,13 +10,8 @@
       </div>
 
       <div>
-        <a-select 
-        placeholder="Buscar por Provincia"
-        style="width: 200px;"
-        v-model:value="city" 
-        show-search 
-        :options="store.cities" 
-        :filter-option="filterOption" @change="handleDepartaments" />
+        <a-select placeholder="Buscar por Provincia" style="width: 200px;" v-model:value="city" show-search
+          :options="store.cities" :filter-option="filterOption" @change="handleDepartaments" />
       </div>
 
     </div>
@@ -48,18 +43,18 @@
           </div>
         </template>
         <template v-if="column.dataIndex == 'pricedescriptionx'">
-          <div >
+          <div>
             <div v-html="record.conditions" class="style-conditions"></div>
           </div>
         </template>
         <template v-if="column.dataIndex == 'socio'">
-          <div v-html="record.sociointerveniente" class="style-contact" ></div>
+          <div v-html="record.sociointerveniente" class="style-contact"></div>
         </template>
         <template v-if="column.dataIndex == 'bio'">
-          <div v-html="record.biometrico" class="style-contact" ></div>
+          <div v-html="record.biometrico" class="style-contact"></div>
         </template>
         <template v-if="column.dataIndex == 'contact'">
-          <div v-html="record.infocontacto" class="style-contact" ></div>
+          <div v-html="record.infocontacto" class="style-contact"></div>
         </template>
 
         <template v-if="column.dataIndex == 'actions'">
@@ -85,13 +80,8 @@
 
       </template>
     </a-table>
-    <a-drawer
-      v-model:open="open"
-      class="draw-notary"
-      root-class-name="root-class-name"
-      title="Datos de la notaría"
-      placement="right"
-      @after-open-change="afterOpenChange">
+    <a-drawer v-model:open="open" class="draw-notary" root-class-name="root-class-name" title="Datos de la notaría"
+      placement="right" @after-open-change="afterOpenChange">
       <formAddNotary @closeDraw="handleCloseDrawopen" :updateNotary="updateNotary" />
     </a-drawer>
   </div>
@@ -115,18 +105,17 @@ store.fetchCities();
 
 const valueY = ref(window.innerHeight - 100);
 const columns = [
-  { title: '#', fixed: 'left', dataIndex: 'idx', align: 'center', width: 70 },
-  { title: 'REGIÓN', dataIndex: 'departamento', fixed: 'left', align: 'center', width: 120 },
-  { title: 'PROVINCIA', fixed: 'left', dataIndex: 'province', align: 'center', width: 140 },
-  { title: 'DISTRITO', fixed: 'left', dataIndex: 'distrite', width: 140 },
-  { title: 'DIRECCION', fixed: 'left', dataIndex: 'address', align: 'center', width: 140 },
+  { title: '#', dataIndex: 'idx', fixed: 'left', align: 'center', width: 70 },
   { title: 'NOTARIA', fixed: 'left', dataIndex: 'namenotary', align: 'center', width: 180 },
-  { title: 'GASTOS NOTARIALES', dataIndex: 'pricex', align: 'center', width: 280 },
+  { title: 'REGIÓN', fixed: 'left', dataIndex: 'departamento', align: 'center', width: 120 },
+  { title: 'PROVINCIA', fixed: 'left', dataIndex: 'province', align: 'center', width: 120 },
+  { title: 'DISTRITO', fixed: 'left', dataIndex: 'distrite', width: 120 },
+  { title: 'DIRECCION', dataIndex: 'address', align: 'center', width: 160 },
+  { title: 'GASTOS NOTARIALES', dataIndex: 'pricex', align: 'center', width: 320 },
   { title: 'CONDICIONES', dataIndex: 'pricedescriptionx', align: 'center', width: 260 },
   { title: 'SOCIO O INTERVINIENTE ADICIONAL', dataIndex: 'socio', align: 'center', width: 200 },
-  { title: 'BIOMETRICO', dataIndex: 'bio', align: 'center', width: 180 },
+  { title: 'BIOMETRICO', dataIndex: 'bio', align: 'center', width: 220 },
   { title: 'DATOS DE CONTACTO', dataIndex: 'contact', align: 'center', width: 260 },
-  { title: '', dataIndex: 'actions', align: 'center', width: 50, fixed: 'right'}
 ];
 
 const valueX = ref(1200)
@@ -136,10 +125,10 @@ const open = ref(false);
 const updateNotary = ref(null);
 const city = ref(null);
 
-const handleDepartaments = async() => {
+const handleDepartaments = async () => {
   try {
     loading.value = true;
-    const data = await makeRequest({ url: `notary/list/${city.value}`, method: 'GET' });
+    const data = await makeRequest({ url: `public/notaries/${city.value}`, method: 'GET' });
     dataSource.value = data.data
   } catch (error) {
     console.error('Error de red:', error);
@@ -167,13 +156,13 @@ const handleCloseDrawopen = () => {
   open.value = false;
   city.value = null;
 }
-const handleDeleteNotary= async(val) => {
+const handleDeleteNotary = async (val) => {
   try {
     const data = await makeRequest({ url: `notary/delete/${val.id}`, method: 'DELETE' });
-    if(data) {
+    if (data) {
       fetchData();
       message.success(data.message);
-    }  
+    }
   } catch (error) {
     console.error('Error de red:', error);
   }
@@ -186,7 +175,7 @@ const handleEditNotary = (data) => {
 const fetchData = async () => {
   try {
     loading.value = true;
-    const data = await requestNoToken({ url: 'notary/list', method: 'GET' });
+    const data = await requestNoToken({ url: 'public/notaries', method: 'GET' });
     dataSource.value = data.data
   } catch (error) {
     console.error('Error de red:', error);
@@ -208,18 +197,22 @@ onMounted(() => {
 .ant-popover-inner {
   width: 200px;
 }
+
 .filters-notary {
   margin: .6rem 0 1rem 0;
   display: flex;
   justify-content: space-between;
+
   .ant-select {
     width: 100%;
   }
 }
+
 .ant-drawer-content-wrapper {
   min-width: 550px !important;
   width: 100%;
 }
+
 .quill-editor {
   .ql-editor {
     height: 100px;
@@ -228,34 +221,23 @@ onMounted(() => {
 
 .custom-content {
   height: 100%;
-  overflow: auto; 
+  overflow: auto;
   outline: 1px solid red;
 }
-.all-notaries {
-  padding: 2rem;
-  h1,
-  h2 {
-    font-weight: 600;
-    margin: 0 auto 1rem 0;
-    text-align: center;
-  }
-  h1 {
-    color: #0070c0;
-  }
-  h2 {
-    color: #ff0000;
-    font-size: 22px;
-    margin-bottom: 2rem;
-  }
-}
+
+
 </style>
 
 <style lang="scss">
 .all-notaries {
-  table th, table td {
-  border: 1px solid #c3c3c3;
-}
+
+  table th,
+  table td {
+    border: 1px solid #c3c3c3;
+  }
+
   .ant-table-thead {
+
     .ant-table-cell:nth-child(1),
     .ant-table-cell:nth-child(2),
     .ant-table-cell:nth-child(3),
@@ -267,55 +249,75 @@ onMounted(() => {
     .ant-table-cell:nth-child(9),
     .ant-table-cell:nth-child(10),
     .ant-table-cell:nth-child(11) {
-      background-color: #8eaadb !important;
+      background-color: #0c57c0 !important;
       font-weight: 700;
       font-size: 15px;
+      color: #fff;
     }
   }
-  .ant-table-row  {
-    .ant-table-cell:nth-child(2),
+
+  .ant-table-row {
     .ant-table-cell:nth-child(3),
-    .ant-table-cell:nth-child(4) {
-      background-color: #e7e6e6 !important;
+    .ant-table-cell:nth-child(4),
+    .ant-table-cell:nth-child(5) {
+      background-color: #fffbe2 !important;
     }
   }
-  .ant-table-row  {
-    .ant-table-cell:nth-child(6)   {
-      background-color: #cfe2f3 !important;
+
+  .ant-table-row {
+    .ant-table-cell:nth-child(6) {
+      background-color: #f9eef8 !important;
     }
   }
-  .ant-table-row  {
-    .ant-table-cell:nth-child(7)   {
+  .ant-table-row {
+    .ant-table-cell:nth-child(2) {
+      background-color: #d5ffe7 !important;
+    }
+  }
+  .ant-table-row {
+    .ant-table-cell:nth-child(7) {
       // position: relative;
     }
-    .ant-table-cell:nth-child(8)   {
+
+    .ant-table-cell:nth-child(8) {
       // position: relative;
     }
   }
 }
 
 .style-price {
-  h1 strong, h2 strong {
+
+  h1 strong,
+  h2 strong {
     font-size: 18px;
     font-weight: 700;
   }
+
   strong {
     font-weight: 500;
     font-size: 13px;
   }
 }
+
 .style-conditions {
-  h1 strong, h2 strong {
+
+  h1 strong,
+  h2 strong {
     font-size: 14px;
   }
 }
-.style-price, .style-conditions {
-  h1 strong, h2 strong {
+
+.style-price,
+.style-conditions {
+
+  h1 strong,
+  h2 strong {
     // outline: 1px solid red;
     width: 100%;
     display: block;
     height: 20px;
   }
+
   strong {
     // outline: 1px solid green;
     width: 100%;
@@ -328,6 +330,7 @@ onMounted(() => {
   p {
     margin: 4px;
   }
+
   p strong {
     font-weight: 500;
     font-size: 14px;
