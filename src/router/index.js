@@ -18,11 +18,11 @@ const router = createRouter({
       name: 'formalizacion',
       component: () => import('../pages/FormalizacionDigital.vue')
     },
-    {
-      path: '/cyberwowpnte',
-      name: 'landing',
-      component: () => import('../pages/Landing/LandingPage.vue')
-    },
+    // {
+    //   path: '/cyberwowpnte',
+    //   name: 'landing',
+    //   component: () => import('../pages/Landing/LandingPage.vue')
+    // },
     {
       path: '/notarias',
       name: 'lasnotarias',
