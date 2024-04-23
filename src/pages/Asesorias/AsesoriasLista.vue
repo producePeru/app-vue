@@ -7,9 +7,13 @@
     </div>
 
     <div class="filters-dig">
-      <a-button @click="handleDownloadAsesorias" :loading="loadingexc">
-        <img width="20" style="margin-right: 6px;" src="@/assets/img/icoexcel.png" /> DESCARGAR
-      </a-button>
+      
+      <div v-if="storageRole[0].id == 1">
+        <a-button @click="handleDownloadAsesorias" :loading="loadingexc">
+          <img width="20" style="margin-right: 6px;" src="@/assets/img/icoexcel.png" /> DESCARGAR
+        </a-button>
+      </div>
+      
 
       <!-- <a-input-search
       class="asesorias-search"
@@ -144,7 +148,7 @@ import { ref, onMounted, onBeforeUnmount, computed } from 'vue';
 import { message } from 'ant-design-vue';
 import Cookies from 'js-cookie';
 
-const storageData = JSON.parse(localStorage.getItem('profile'));
+const storageRole = JSON.parse(localStorage.getItem('role'));
 const token = Cookies.get('token');
 
 const prod = import.meta.env.VITE_APP_API_URL_PRODUCTION

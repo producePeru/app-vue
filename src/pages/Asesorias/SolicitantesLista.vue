@@ -6,7 +6,7 @@
         <!-- <a-button style="margin-right: 1rem;" class="btn-produce" type="primary" @click="showDrawer">AGREGAR</a-button> -->
       </div>
 
-      <div>
+      <!-- <div>
         <a-select 
         placeholder="Buscar por Provincia"
         style="width: 200px;"
@@ -14,7 +14,7 @@
         show-search 
         :options="store.cities" 
         :filter-option="filterOption" @change="handleDepartaments" />
-      </div>
+      </div> -->
 
     </div>
 

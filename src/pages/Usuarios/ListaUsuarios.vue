@@ -46,11 +46,20 @@
         <template v-if="column.dataIndex == 'phone'">
           {{ record.profile?.phone }} 
         </template>
+        
         <template v-if="column.dataIndex == 'office'">
-          {{ record.profile?.office.name }} 
+          <a-tag color="blue" v-if="record.profile?.office.name == 'UGSE'">{{ record.profile?.office.name }} </a-tag>
+          <a-tag color="orange" v-if="record.profile?.office.name == 'UGO'">{{ record.profile?.office.name }} </a-tag>
+          <a-tag color="green" v-if="record.profile?.office.name == 'DE'">{{ record.profile?.office.name }} </a-tag>
+          <a-tag color="red" v-if="record.profile?.office.name == 'UGEER'">{{ record.profile?.office.name }} </a-tag>
+          <!-- <pre>{{ record.profile?.office.name }}</pre> -->
         </template>
+
         <template v-if="column.dataIndex == 'cde'">
           {{ record.profile?.cde.name }} 
+        </template>
+        <template v-if="column.dataIndex == 'role'">
+          {{ record.roles[0].name }}
         </template>
 
         <template v-if="column.dataIndex == 'actions'">
@@ -63,12 +72,12 @@
                 <a-menu-item>
                   <a @click="handleEditUser(record)">Editar</a>
                 </a-menu-item>
-                <a-menu-item>
+                <!-- <a-menu-item>
                   <a-popconfirm title="¿Seguro de eliminar?" @confirm="handleDeleteUser(record)">
                     <template #icon><question-circle-outlined style="color: red" /></template>
                     <a>Eliminar</a>
                   </a-popconfirm>
-                </a-menu-item>
+                </a-menu-item> -->
               </a-menu>
             </template>
           </a-dropdown>
@@ -157,6 +166,7 @@ const columns = [
   { title: 'Celular',             dataIndex: 'phone', width: 100, align: 'center'},
   { title: 'Oficina',             dataIndex: 'office', width: 120, align: 'center'},
   { title: 'CDE',                 dataIndex: 'cde', width: 140},
+  { title: 'ROL',                 dataIndex: 'role', width: 160},
   { title: '',                    dataIndex: 'actions', align: 'center', width: 50, fixed: 'right'}
 ];
 
