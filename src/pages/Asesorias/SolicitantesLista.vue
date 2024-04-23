@@ -47,6 +47,10 @@
           <a-tag :color="record.sick == 'no' ? 'blue' : 'pink'">{{ record.sick == 'no' ? 'NO' : 'SI' }}</a-tag>
         </template>
 
+        <template v-if="column.dataIndex == 'registerby'">
+          {{ record.user[0]?.profile.name }} {{ record.user[0]?.profile.lastname }} {{ record.user[0]?.profile.middlename }} 
+        </template>
+
         <template v-if="column.dataIndex == 'actions'">
           <a-dropdown :trigger="['click']">
             <a class="ant-dropdown-link" @click.prevent>
@@ -99,6 +103,7 @@ import { useRouter } from 'vue-router';
 import { makeRequest } from '@/utils/api.js';
 import { message } from 'ant-design-vue';
 import { useCounterStore } from '@/stores/selectes.js';
+import { Modal } from 'ant-design-vue';
 
 const storageData = JSON.parse(localStorage.getItem('profile'))
 const store = useCounterStore();
@@ -119,8 +124,8 @@ const columns = [
   { title: 'EMAIL', dataIndex: 'email', width: 240 },
   { title: 'GÉNERO', dataIndex: 'gender', align: 'center', width: 120 },
   { title: 'DISCAPACIDAD', dataIndex: 'sickx', align: 'center', width: 120 },
-  // { title: 'REGISTRADO POR', dataIndex: 'contact', align: 'center', width: 260 },
-  { title: '', dataIndex: 'actions', align: 'center', width: 50, fixed: 'right'}
+  { title: 'REGISTRADO POR', dataIndex: 'registerby', width: 260 },
+  { title: '', dataIndex: 'actions', width: 50, align: 'center', fixed: 'right'}
 ];
 
 const total = ref(0);
@@ -169,11 +174,16 @@ const handleCloseDrawopen = () => {
 }
 const handleDeleteNotary= async(val) => {
   try {
-    const data = await makeRequest({ url: `notary/delete/${val.id}`, method: 'DELETE' });
-    if(data) {
+    const data = await makeRequest({ url: `person/delete/${val.id}`, method: 'DELETE' });
+    if(data.status == 500) {
+      Modal.warning({
+        title: 'Aviso',
+        content: data.message,
+      });
+    } else {
       fetchData();
       message.success(data.message);
-    }  
+    } 
   } catch (error) {
     console.error('Error de red:', error);
   }
@@ -191,7 +201,7 @@ const fetchData = async () => {
     loading.value = true;
     let parx = params.value.page == 0 ? '' : params.value;
 
-    const data = await makeRequest({ url: `person/list/${storageData.user_id}/${storageData.documentnumber}`, method: 'GET', params:parx });
+    const data = await makeRequest({ url: `person/list`, method: 'GET', params:parx });
     dataSource.value = data.data
     total.value = data.total
   } catch (error) {

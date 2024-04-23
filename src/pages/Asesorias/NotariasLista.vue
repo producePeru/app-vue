@@ -1,5 +1,5 @@
 <template>
-  <div class="all-notaries">
+  <div class="all-notary">
     <h3>NOTARÍAS</h3>
     <div class="filters-notary">
       <div>
@@ -116,6 +116,8 @@ const columns = [
   { title: 'SOCIO O INTERVINIENTE ADICIONAL', dataIndex: 'socio', align: 'center', width: 200 },
   { title: 'BIOMETRICO', dataIndex: 'bio', align: 'center', width: 220 },
   { title: 'DATOS DE CONTACTO', dataIndex: 'contact', align: 'center', width: 260 },
+  { title: '', dataIndex: 'actions', align: 'center', fixed: 'right', width: 40 },
+
 ];
 
 const valueX = ref(1200)
@@ -229,7 +231,7 @@ onMounted(() => {
 </style>
 
 <style lang="scss">
-.all-notaries {
+.all-notary {
 
   table th,
   table td {

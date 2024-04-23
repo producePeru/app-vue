@@ -61,11 +61,11 @@
         </template>
         
         <template v-if="column.dataIndex == 'asesor'">
-          {{ record.supervisado.supervisado_user.profile.name }} {{ record.supervisado.supervisado_user.profile.lastname }} {{ record.supervisado.supervisado_user.profile.middlename }}
+          {{ record.supervisado?.supervisado_user.profile.name }} {{ record.supervisado?.supervisado_user.profile.lastname }} {{ record.supervisado?.supervisado_user.profile.middlename }}
         </template>
 
         <template v-if="column.dataIndex == 'misupervisor'">
-          {{ record.supervisor.supervisor_user.profile.name }} {{ record.supervisor.supervisor_user.profile.lastname }} {{ record.supervisor.supervisor_user.profile.middlename }}
+          {{ record.supervisor?.supervisor_user.profile.name }} {{ record.supervisor?.supervisor_user.profile.lastname }} {{ record.supervisor?.supervisor_user.profile.middlename }}
         </template>
 
         <template v-if="column.dataIndex == 'mype_region'">
@@ -117,6 +117,9 @@
         
         <template v-if="column.dataIndex === 'modality'">
           <a-tag :color="record.modality.name == 'Presencial' ? 'green' : 'orange'">{{ record.modality.name }}</a-tag>
+        </template>
+        <template v-if="column.dataIndex == 'ruc'">
+          {{ record.mype?.ruc ? `20${record.mype?.ruc}` : '' }}
         </template>
 
       </template>
@@ -232,7 +235,7 @@ onBeforeUnmount(() => {
     { title: 'Número de notaría',         dataIndex: 'numero_envio_notaria', width: 140},
     { title: 'Notaría',                   dataIndex: 'notaria', width: 150},
     { title: 'Modalidad',                 dataIndex: 'modality', width: 120, align: 'center'},
-    { title: 'RUC',                       dataIndex: 'ruc', width: 100,  align: 'center'},
+    { title: 'RUC',                       dataIndex: 'ruc', width: 120,  align: 'center'},
   ]);
 
 const handlePaginator = (current) =>{
@@ -358,7 +361,7 @@ const fetchData = async(val) => {
       params.value.page = 0
       active.value = val
       columns.value = columnsRuc20.value
-      url = `historial/formalizations-20/${storageData.user_id}/${storageData.documentnumber}`
+      url = `historial/formalizations-20`
     }  
 
     let parx = params.value.page == 0 ? '' : params.value

@@ -14,13 +14,17 @@
             <a-select v-if="el.name == 'cde_id'" v-model:value="formState[el.name]" :options="store.cdes" />
             <!-- <a-select v-if="el.name == 'office_id'" v-model:value="formState[el.name]" :options="store.Offices" /> -->
             
-            
+            <template v-if="storageRole[0].id == 1">
+              <a-select v-if="el.name == 'role_id'" v-model:value="formState[el.name]" :options="rolesMilian" @change="handleSelectSupervisor" />
+            </template>
+
             <template v-if="storageRole[0].id == 3">
               <a-select v-if="el.name == 'role_id'" v-model:value="formState[el.name]" :options="rolesKarina" @change="handleSelectSupervisor" />
             </template>
-            <template v-else>
+
+            <!-- <template v-else>
               <a-select v-if="el.name == 'role_id'" v-model:value="formState[el.name]" :options="store.roles" @change="handleSelectSupervisor" />
-            </template>
+            </template> -->
             
             <a-select v-if="el.name == 'supervisor_id'" v-model:value="formState[el.name]" :options="store.supervisores" />
 
@@ -120,6 +124,10 @@ const upDisabled = ref(false);
 const loadingNewIten = ref(false);
 const nameNewItem = ref(null);
 
+const rolesMilian = [
+  {label: 'Supervisor', value: 1},
+  {label: 'Asesor', value: 2}
+]
 const rolesKarina = [
   {label: 'Drive Administrador', value: 3},
   {label: 'Drive Usuario', value: 4}

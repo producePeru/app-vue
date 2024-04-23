@@ -1,8 +1,9 @@
 <template>
   <div>
     <h3>USUARIOS</h3>
+    <br>
 
-    <div class="filters-dig">
+    <!-- <div class="filters-dig">
       <a-select
       v-model:value="cedeSelected"
       placeholder="Filtrar por CDES"
@@ -14,7 +15,7 @@
       placeholder=""
       enter-button="Buscar"
       @search="handleSearch" />
-    </div>
+    </div> -->
     
     <a-table 
     bordered

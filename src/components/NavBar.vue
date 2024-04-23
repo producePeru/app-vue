@@ -84,7 +84,7 @@ const logout = async() => {
   align-items: center;
   justify-content: space-between;
   .name-user {
-    color: var(--text-color);
+    color: #4e4e4ee0;
     margin-right: .5rem;
   }
   .ico-menu {

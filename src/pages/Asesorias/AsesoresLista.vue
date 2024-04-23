@@ -5,7 +5,7 @@
       <div>
         <!-- <a-button style="margin-right: 1rem;" class="btn-produce" type="primary" @click="showDrawer">AGREGAR</a-button> -->
       </div>
-
+<!-- 
       <div>
         <a-select 
         placeholder="Buscar por Provincia"
@@ -14,7 +14,7 @@
         show-search 
         :options="store.cities" 
         :filter-option="filterOption" @change="handleDepartaments" />
-      </div>
+      </div> -->
 
     </div>
 
@@ -115,7 +115,7 @@ const columns = [
   // { title: 'GÉNERO', dataIndex: 'gender', align: 'center', width: 120 },
   // { title: 'DISCAPACIDAD', dataIndex: 'sickx', align: 'center', width: 120 },
   // { title: 'REGISTRADO POR', dataIndex: 'contact', align: 'center', width: 260 },
-  { title: '', dataIndex: 'actions', align: 'center', width: 50, fixed: 'right'}
+  // { title: '', dataIndex: 'actions', align: 'center', width: 50, fixed: 'right'}
 ];
 
 const total = ref(0);

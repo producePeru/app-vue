@@ -49,6 +49,29 @@ api.interceptors.response.use(
   }
 );
 
+// Agregar un interceptor para respuestas
+api.interceptors.response.use(
+  (response) => {
+    // Desactivar el estado de carga al recibir una respuesta
+    // Puedes realizar modificaciones en la respuesta aquí
+    // Por ejemplo, procesar los datos antes de que lleguen al componente
+    return response;
+  },
+  (error) => {
+    // Desactivar el estado de carga en caso de error
+    if (error.response && error.response.status === 401) {
+      // // Si la respuesta es Unauthorized (401), personalizar el mensaje de error
+      // const unauthorizedError = new Error('¡Nooo pikachu! No estás autorizado para acceder a este recurso.');
+      
+      // return Promise.reject(unauthorizedError);
+      Cookies.remove('token');
+      localStorage.clear();
+      window.location.href = '/';
+    }
+    return Promise.reject(error);
+  }
+);
+
 export async function makeRequest({ method, url, data, params }) {
   // eslint-disable-next-line no-useless-catch
   try {
