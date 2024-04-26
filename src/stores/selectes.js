@@ -23,6 +23,7 @@ export const useCounterStore = defineStore('counter', {
       notaries: null,
       supervisores: null,
       folders: null,
+      asesores: null,
     }
   },
 
@@ -186,6 +187,15 @@ export const useCounterStore = defineStore('counter', {
       try {
         const { data } = await requestNoToken({ url: `select/folders`, method: 'GET' });
         this.folders = data;
+      } catch (error) {
+        console.error('Error de red:', error);
+      }
+    },
+
+    async fetchAsesores() {
+      try {
+        const { data } = await requestNoToken({ url: `select/asesores`, method: 'GET' });
+        this.asesores = data;
       } catch (error) {
         console.error('Error de red:', error);
       }
