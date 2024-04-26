@@ -7,19 +7,21 @@
     </div>
 
     <div class="filters-dig">
-      <div v-if="storageRole[0].id == 1">
-        <a-button @click="handleDownloadAsesorias" :loading="loadingexc">
-          <img width="20" style="margin: -2px 4px 0 0;" src="@/assets/img/icoexcel.png" /> DESCARGAR
-        </a-button>
+      <div>
+        <div v-if="storageRole[0].id == 1">
+          <a-button @click="handleDownloadAsesorias" :loading="loadingexc">
+            <img width="20" style="margin: -2px 4px 0 0;" src="@/assets/img/icoexcel.png" /> DESCARGAR
+          </a-button>
+        </div>
       </div>
       
-      <div class="filters">
+      <div class="filters" >
         <div class="rango">
           <label>Por rango de fechas</label>
           <a-range-picker v-model:value="byDateRange" :presets="rangePresets" />
         </div>
 
-        <div class="asesor">
+        <div class="asesor" v-if="storageRole[0].id == 1">
           <label>Por asesores</label>
           <a-select v-model:value="byAsesores" mode="multiple" placeholder="Selecciona asesores" max-tag-count="responsive" :options="store.asesores" />
         </div>
