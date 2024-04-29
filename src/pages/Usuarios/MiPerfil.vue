@@ -4,7 +4,7 @@
     <div class="profile-header">
       <h3>MIS DATOS</h3>
       <router-link to="cambiar-clave">
-        <!-- <a-button>Cambiar contraseña</a-button> -->
+        <a-button>Cambiar contraseña</a-button>
       </router-link>
     </div>
 

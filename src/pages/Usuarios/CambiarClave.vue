@@ -18,17 +18,17 @@
       </a-form-item>  
 
       <a-form-item has-feedback label="Nueva contraseña" name="password">
-        <a-input v-model:value="formState.password" type="password" autocomplete="off" />
+        <a-input-password v-model:value="formState.password" type="password" autocomplete="off" />
       </a-form-item>
 
       <a-form-item has-feedback label="Repetir la nueva contraseña" name="password_confirmation">
-        <a-input v-model:value="formState.password_confirmation" type="password" autocomplete="off" />
+        <a-input-password v-model:value="formState.password_confirmation" type="password" autocomplete="off" />
       </a-form-item>
 
       <!-- <pre>{{ storageData }}</pre> -->
 
       <a-form-item>
-        <a-button :loading="loading" class="password-btn" type="primary" html-type="submit">CAMBIAR</a-button>
+        <a-button :loading="loading" class="password-btn btn-produce" type="primary" html-type="submit">CAMBIAR</a-button>
       </a-form-item>
 
     </a-form>
@@ -42,7 +42,7 @@ import { makeRequest } from '@/utils/api.js'
 import { message } from 'ant-design-vue';
 import { useRouter } from 'vue-router';
 
-const storageData = JSON.parse(localStorage.getItem('user'))
+const storageData = JSON.parse(localStorage.getItem('profile'))
 const router = useRouter();
 
 import { reactive, ref } from 'vue';
@@ -52,6 +52,7 @@ const formState = reactive({
   current_password: null,
   password: '',
   password_confirmation: null,
+  dni: storageData.documentnumber
 });
 
 const validatePass = async (_rule, value) => {
@@ -99,7 +100,7 @@ const rules = {
 const onSubmit = async() => {
   loading.value = true
   try {
-    const data = await makeRequest({ url: `/change-password-user/${storageData.id}/${storageData.document_number}`, method: 'POST', data: formState });
+    const data = await makeRequest({ url: `user/password-reset`, method: 'POST', data: formState });
     message.success(data.message);
     router.push({name: 'mi-perfil'});
   } catch (error) {
@@ -118,7 +119,7 @@ const handleFinishFailed = errors => {
 .password {
   max-width: 300px;
 }
-.password-btn {
+.password-btn btn-produce {
   margin-top: 1rem;
 }
 </style>

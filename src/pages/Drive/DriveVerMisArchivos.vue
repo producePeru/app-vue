@@ -49,7 +49,7 @@
             <template #overlay>
               <a-menu>
                 <!-- <a-menu-item>
-                  <a @click="handleEditSolicitante(record)">Editar</a>
+                  <a @click="handleEditSolicitante(record)">Visible para todos</a>
                 </a-menu-item> -->
                 <a-menu-item>
                   <a-popconfirm title="¿Seguro de eliminar?" @confirm="handleDelete(record)">
@@ -86,7 +86,7 @@ import { MoreOutlined } from '@ant-design/icons-vue';
 import { message } from 'ant-design-vue';
 import { Modal } from 'ant-design-vue';
 
-const storageData = JSON.parse(localStorage.getItem('profile'))
+const storageRole = JSON.parse(localStorage.getItem('role'))
 const prod = import.meta.env.VITE_APP_API_URL_PRODUCTION
 const dev = import.meta.env.VITE_APP_API_URL_LOCAL
 const apiUrl = window.location.hostname == 'localhost' || window.location.hostname == '127.0.0.1' ? dev : prod;
@@ -106,7 +106,7 @@ const columns = [
   { title: 'NOMBRE DEL ARCHIVO',  dataIndex: 'name', width: 140 },
   { title: 'FECHA',               dataIndex: 'date', width: 120, align: 'center'},
   { title: 'DESCARGAR',           dataIndex: 'download', width: 120, align: 'center'},
-  { title: '',           dataIndex: 'actions', width: 50, align: 'center',fixed: 'right'}
+  ...(storageRole[0].id === 3 || storageRole[0].id === 1 ? [{ title: '', dataIndex: 'actions', width: 50, align: 'center', fixed: 'right' }] : [])
 ];
 
 const handleDelete= async(val) => {
@@ -124,6 +124,9 @@ const handleDelete= async(val) => {
   } catch (error) {
     console.error('Error de red:', error);
   }
+}
+const handleEditSolicitante = (id) => {
+  console.log(id);
 }
 const handleChange = async (value) => {
   try {

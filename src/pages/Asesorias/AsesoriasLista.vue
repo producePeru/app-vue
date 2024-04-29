@@ -437,7 +437,7 @@ onMounted(() => {
       display: flex;
       flex-direction: column;
       width: 240px;
-      margin-right: 5px;
+      margin-right: 7px;
       label {
         font-size: 13px;
         margin-bottom: 4px;
@@ -447,7 +447,7 @@ onMounted(() => {
       display: flex;
       flex-direction: column;
       width: 200px;
-      margin-right: 5px;
+      margin-right: 7px;
       label {
         font-size: 13px;
         margin-bottom: 4px;
