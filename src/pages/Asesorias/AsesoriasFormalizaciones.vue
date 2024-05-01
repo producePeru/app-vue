@@ -495,7 +495,7 @@ onMounted(() => {
 
 <style>
 .ant-drawer-content-wrapper {
-  width: 100%;
-  min-width: 600px;
+  /* width: 100%;
+  min-width: 600px; */
 }
 </style>

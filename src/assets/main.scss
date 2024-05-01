@@ -187,10 +187,10 @@ $color-background: #F7F7FA;
   background-color: var(--primary);
 }
 .ant-drawer-content-wrapper {
-  // min-width: 100%;
+  // width: 100%;
   width: 100% !important;
-  @media screen and (min-width: 550px) {
-    width: 550px !important;
+  @media screen and (min-width: 600px) {
+    width: 600px !important;
   }
 }
 .quill-editor {

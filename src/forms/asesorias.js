@@ -8,7 +8,7 @@ const fields = {
     disabled: false
   },
   economicsector_id: {
-    type: 'iSelect',
+    type: 'iSelectWrite',
     label: 'Sector económico',
     name: 'economicsector_id',
     required: true,
@@ -147,7 +147,7 @@ const ructen = {
     disabled: false
   },
   economicsector_id: {
-    type: 'iSelect',
+    type: 'iSelectWrite',
     label: 'Sector económico',
     name: 'economicsector_id',
     required: true,
@@ -190,7 +190,7 @@ const ructen = {
 
 const asesoria = {
   component_id: {
-    type: 'iSelect',
+    type: 'iSelectWrite',
     label: 'Componente',
     name: 'component_id',
     required: true,

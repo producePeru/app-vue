@@ -8,20 +8,35 @@
 
           <a-form-item class="item-max" v-if="el.type === 'iSelect'" :name="el.name" :label="el.label" :rules="[{ required: el.required, message: el.message }]">
             <a-select v-if="el.name == 'regime_id'" v-model:value="formState[el.name]" :options="store.regimes" />
-            <a-select v-if="el.name == 'economicsector_id'" v-model:value="formState[el.name]" :options="store.economicSectors" />
+            <!-- <a-select v-if="el.name == 'economicsector_id'" v-model:value="formState[el.name]" :options="store.economicSectors" /> -->
             <a-select v-if="el.name == 'modality_id'" v-model:value="formState[el.name]" :options="store.modalities" />
           </a-form-item>
 
           <a-form-item class="item-max" v-if="el.type === 'iSelectWrite'" :name="el.name" :label="el.label"
             :rules="[{ required: el.required, message: el.message }]">
-            <a-select v-if="el.name == 'comercialactivity_id'" v-model:value="formState[el.name]" show-search :options="store.comercialActivities"
-              :filter-option="filterOption">
+            <a-select v-if="el.name == 'comercialactivity_id'" v-model:value="formState[el.name]" show-search :options="store.comercialActivities" :filter-option="filterOption">
               <template #dropdownRender="{ menuNode: menu }">
                 <v-nodes :vnodes="menu" />
                 <a-divider style="margin: 4px 0" />
                 <a-space style="padding: 4px 8px">
                   <a-input ref="inputRef" v-model:value="nameNewItem" placeholder="Nueva actividad" />
                   <a-button type="text" @click="handleAddItem" :loading="loadingcategory">
+                    <template #icon>
+                      <PlusOutlined />
+                    </template>
+                    Agregar
+                  </a-button>
+                </a-space>
+              </template>
+            </a-select>
+
+            <a-select v-if="el.name == 'economicsector_id'" v-model:value="formState[el.name]" show-search :options="store.economicSectors" :filter-option="filterOption">
+              <template #dropdownRender="{ menuNode: menu }">
+                <v-nodes :vnodes="menu" />
+                <a-divider style="margin: 4px 0" />
+                <a-space style="padding: 4px 8px">
+                  <a-input ref="inputRef" v-model:value="nameNewItem2" placeholder="Nuevo Sector" />
+                  <a-button type="text" @click="handleAddItenSector" :loading="loadingcategory">
                     <template #icon>
                       <PlusOutlined />
                     </template>
@@ -85,6 +100,7 @@ const props = defineProps(['info']);
 const emit = defineEmits(['closeDraw']);
 const loadingcategory = ref(false);
 const nameNewItem = ref(null);
+const nameNewItem2 = ref(null);
 const spinning = ref(true);
 const loading = ref(false);
 const store = useCounterStore();
@@ -134,6 +150,24 @@ const handleAddItem = async() => {
     loadingcategory.value = false;
   }
 }
+const handleAddItenSector = async() => {
+  try {
+    loadingcategory.value = true;
+    const payload = {
+      name: nameNewItem2.value
+    }
+    const data = await makeRequest({ url: 'create/economic-sector', method: 'POST', data: payload});
+    if(data.status == 200) {
+      nameNewItem2.value = null;
+      store.fetchEconomicSectors();
+    }
+  } catch(e) {
+    console.log(e);
+  } finally {
+    loadingcategory.value = false;
+  }
+}
+
 const handleDepartaments = (id) => {
   formState.province_id = null
   formState.district_id = null

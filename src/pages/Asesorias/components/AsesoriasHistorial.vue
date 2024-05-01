@@ -12,7 +12,7 @@
               </template>
 
               <template v-if="column.dataIndex === 'date_start'">
-                {{ record.created_at }}
+                {{ formatDate(record.created_at) }}
               </template>
               <template v-if="column.dataIndex === 'component'">
                 {{ record.component?.name }}
@@ -44,7 +44,7 @@
               </template>
               
               <template v-if="column.dataIndex === 'date_start'">
-                {{ record.created_at }}
+                {{ formatDate(record.created_at) }}
               </template>
               <template v-if="column.dataIndex === 'date_last'">
                 {{ record.updated_at }}
@@ -82,7 +82,7 @@
                 <span>{{ index + 1 }}</span>
               </template>
               <template v-if="column.dataIndex === 'date_start'">
-                {{ record.created_at }}
+                {{ formatDate(record.created_at) }}
               </template>
               <template v-if="column.dataIndex === 'component'">
                 {{ record.detailprocedure?.name }}
@@ -108,6 +108,7 @@
 
 <script setup>
 import { ref } from 'vue';
+import moment from 'moment';
 
 const props = defineProps(['info']);
 
@@ -141,6 +142,10 @@ const asesorias = [
   { title: 'Modalidad', dataIndex: 'modality', align: 'center' },
   // { title: 'Registrado por', dataIndex: 'asesor_create' }
 ];
+
+const formatDate = (date) => {
+  return moment(date).format('DD/MM/YYYY HH:mm A');
+}
 </script>
 
 <style lang="scss" scoped>

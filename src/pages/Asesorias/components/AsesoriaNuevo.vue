@@ -7,7 +7,7 @@
         <template v-for="(el, idx) in asesoria" :key="idx">
           <a-form-item class="item-max" v-if="el.type === 'iSelect'" :name="el.name" :label="el.label"
             :rules="[{ required: el.required, message: el.message }]">
-            <a-select v-if="el.name == 'component_id'" v-model:value="formState[el.name]" :options="store.components" @change="handleSelectComponent" />
+            <!-- <a-select v-if="el.name == 'component_id'" v-model:value="formState[el.name]" :options="store.components" @change="handleSelectComponent" /> -->
             <a-select v-if="el.name == 'modality_id'" v-model:value="formState[el.name]" :options="store.modalities" />
           </a-form-item>
 
@@ -18,14 +18,48 @@
 
           <a-form-item class="item-max" v-if="el.type === 'iSelectWrite'" :name="el.name" :label="el.label"
             :rules="[{ required: el.required, message: el.message }]">
-            <a-select v-if="el.name == 'theme_id'" v-model:value="formState[el.name]" show-search :options="store.componentThemes" 
-              :filter-option="filterOption" />
+            <!-- <a-select v-if="el.name == 'theme_id'" v-model:value="formState[el.name]" show-search :options="store.componentThemes" 
+              :filter-option="filterOption" /> -->
             <a-select v-if="el.name == 'city_id'" v-model:value="formState[el.name]" show-search :options="store.cities" 
               :filter-option="filterOption" @change="handleDepartaments" />
             <a-select v-if="el.name == 'province_id'" v-model:value="formState[el.name]" show-search :options="store.provinces"
               :filter-option="filterOption" @change="handleProvinces" />
             <a-select v-if="el.name == 'district_id'" v-model:value="formState[el.name]" show-search :options="store.districts"
               :filter-option="filterOption" />
+
+            <a-select v-if="el.name == 'component_id'" v-model:value="formState[el.name]" show-search :options="store.components" :filter-option="filterOption" @change="handleSelectComponent">
+              <template #dropdownRender="{ menuNode: menu }">
+                <v-nodes :vnodes="menu" />
+                <a-divider style="margin: 4px 0" />
+                <a-space style="padding: 4px 8px">
+                  <a-input ref="inputRef" v-model:value="nameNewItem" placeholder="Nueva componente" />
+                  <a-button type="text" @click="handleAddItem" :loading="loadingcategory">
+                    <template #icon>
+                      <PlusOutlined />
+                    </template>
+                    Agregar
+                  </a-button>
+                </a-space>
+              </template>
+            </a-select>
+
+            <a-select v-if="el.name == 'theme_id'" v-model:value="formState[el.name]" show-search :options="store.componentThemes" :filter-option="filterOption">
+              <template #dropdownRender="{ menuNode: menu }">
+                <v-nodes :vnodes="menu" />
+                <a-divider style="margin: 4px 0" />
+                <a-space style="padding: 4px 8px">
+                  <a-input ref="inputRef" v-model:value="nameNewItem2" placeholder="Nueva tema" />
+                  <a-button type="text" @click="handleAddThemeNew" :loading="loadingcategory">
+                    <template #icon>
+                      <PlusOutlined />
+                    </template>
+                    Agregar
+                  </a-button>
+                </a-space>
+              </template>
+            </a-select>
+
+
           </a-form-item>
         </template>
       </div>
@@ -41,17 +75,33 @@
 </template>
 
 <script setup>
-import { reactive, ref } from 'vue';
+import { reactive, ref, defineComponent } from 'vue';
 import { message } from 'ant-design-vue';
 import { asesoria } from '@/forms/asesorias.js'
 import { useCounterStore } from '@/stores/selectes.js';
 import { makeRequest } from '@/utils/api.js';
+import { PlusOutlined } from '@ant-design/icons-vue';
+
+const VNodes = defineComponent({
+  props: {
+    vnodes: {
+      type: Object,
+      required: true,
+    },
+  },
+  render() {
+    return this.vnodes;
+  },
+});
 
 const store = useCounterStore();
 const storageData = JSON.parse(localStorage.getItem('profile'));
 const loading = ref(false);
 const props = defineProps(['info']);
 const emit = defineEmits(['closeDraw']);
+const loadingcategory = ref(false);
+const nameNewItem = ref(null);
+const nameNewItem2 = ref(null);
 
 store.$patch({ components: store.components });
 store.$patch({ componentThemes: store.componentThemes });
@@ -80,6 +130,41 @@ const formState = reactive({
   district_id: null,
 });
 
+const handleAddItem = async() => {
+  try {
+    loadingcategory.value = true;
+    const payload = {
+      name: nameNewItem.value
+    }
+    const data = await makeRequest({ url: 'create/component', method: 'POST', data: payload});
+    if(data.status == 200) {
+      nameNewItem.value = null;
+      store.fetchComponents();
+    }
+  } catch(e) {
+    console.log(e);
+  } finally {
+    loadingcategory.value = false;
+  }
+}
+const handleAddThemeNew = async() => {
+  try {
+    loadingcategory.value = true;
+    const payload = {
+      component_id: formState.component_id,
+      name: nameNewItem2.value
+    }
+    const data = await makeRequest({ url: 'create/theme', method: 'POST', data: payload});
+    if(data.status == 200) {
+      nameNewItem2.value = null;
+      store.fetchComponentThemes(formState.component_id);
+    }
+  } catch(e) {
+    console.log(e);
+  } finally {
+    loadingcategory.value = false;
+  }
+}
 const update = () => {
   if(store.cities) spinning.value = false;
 }

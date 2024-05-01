@@ -224,8 +224,8 @@ onMounted(() => {
   }
 }
 .ant-drawer-content-wrapper {
-  min-width: 550px !important;
-  width: 100%;
+  // min-width: 550px !important;
+  // width: 100%;
 }
 .quill-editor {
   .ql-editor {
