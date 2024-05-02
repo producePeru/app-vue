@@ -2,16 +2,25 @@
   <div class="all-notary">
     <h3>NOTARÍAS</h3>
     <div class="filters-notary">
-      <div>
-        <a-button style="margin-right: 1rem;" class="btn-produce" type="primary" @click="showDrawer">AGREGAR</a-button>
+      
+      <div class="filters-center-produce">
+        <a-button v-if="storageRole[0].id != 2" style="margin-right: 1rem;" class="btn-produce" type="primary" @click="showDrawer">AGREGAR</a-button>
         <router-link to="/notarias" target="_blank">
           <LinkOutlined />
         </router-link>
       </div>
 
-      <div>
-        <a-select placeholder="Buscar por Provincia" style="width: 200px;" v-model:value="city" show-search
-          :options="store.cities" :filter-option="filterOption" @change="handleDepartaments" />
+      <div class="filters-produce" >
+        <div>
+          <label>Buscar por nombre de notaria</label>
+          <a-input v-model:value="filterName" />
+        </div>
+
+        <div>
+          <label>Por provincia</label>
+          <a-select placeholder="Buscar por Provincia" v-model:value="filterCity" show-search :options="store.cities" :filter-option="filterOption" />
+        </div>
+        <a-button type="primary" class="btn-produce" @click="fetchData">BUSCAR</a-button>
       </div>
 
     </div>
@@ -35,7 +44,7 @@
           {{ record.district?.name }}
         </template>
         <template v-if="column.dataIndex == 'namenotary'">
-          <h4 style="font-size: 18px; font-weight: 700;">{{ record.name }}</h4>
+          <h4 style="font-size: 14px; font-weight: 700;">{{ record.name }}</h4>
         </template>
         <template v-if="column.dataIndex == 'pricex'">
           <div ref="divRef" class="gastos">
@@ -99,6 +108,7 @@ import { makeRequest } from '@/utils/api.js';
 import { message } from 'ant-design-vue';
 import { useCounterStore } from '@/stores/selectes.js';
 
+const storageRole = JSON.parse(localStorage.getItem('role'))
 const store = useCounterStore();
 store.$patch({ cities: store.cities });
 store.fetchCities();
@@ -116,7 +126,7 @@ const columns = [
   { title: 'SOCIO O INTERVINIENTE ADICIONAL', dataIndex: 'socio', align: 'center', width: 200 },
   { title: 'BIOMETRICO', dataIndex: 'bio', align: 'center', width: 220 },
   { title: 'DATOS DE CONTACTO', dataIndex: 'contact', align: 'center', width: 260 },
-  { title: '', dataIndex: 'actions', align: 'center', fixed: 'right', width: 40 },
+  ...(storageRole[0].id === 3 || storageRole[0].id === 1 ? [{ title: '', dataIndex: 'actions', width: 50, align: 'center', fixed: 'right' }] : [])
 
 ];
 
@@ -126,8 +136,10 @@ const loading = ref(false)
 const open = ref(false);
 const updateNotary = ref(null);
 const city = ref(null);
+const filterName = ref(null);
+const filterCity = ref(null);
 
-const handleDepartaments = async () => {
+const handleSearchFilters = async () => {
   try {
     loading.value = true;
     const data = await makeRequest({ url: `public/notaries/${city.value}`, method: 'GET' });
@@ -144,7 +156,7 @@ const filterOption = (input, option) => {
   return normalizedLabel.includes(normalizedInput);
 };
 const actualizarAltura = () => {
-  valueY.value = window.innerHeight - 260;
+  valueY.value = window.innerHeight - 270;
 };
 const afterOpenChange = bool => {
   console.log('open', bool);
@@ -177,8 +189,20 @@ const handleEditNotary = (data) => {
 const fetchData = async () => {
   try {
     loading.value = true;
-    const data = await requestNoToken({ url: 'public/notaries', method: 'GET' });
+
+    const values = {
+      ...filterName.value && {name: filterName.value},
+      ...filterCity.value && {city_id: filterCity.value}
+    }
+
+    const data = await requestNoToken({ 
+      url: 'public/notaries-filters', 
+      method: 'GET',
+      params: values
+    });
+    
     dataSource.value = data.data
+
   } catch (error) {
     console.error('Error de red:', error);
   } finally {
@@ -251,9 +275,9 @@ onMounted(() => {
     .ant-table-cell:nth-child(9),
     .ant-table-cell:nth-child(10),
     .ant-table-cell:nth-child(11) {
-      background-color: #0c57c0 !important;
-      font-weight: 700;
-      font-size: 15px;
+      background-color: #64696e !important;
+      font-weight: 500;
+      font-size: 14px;
       color: #fff;
     }
   }

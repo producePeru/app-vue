@@ -198,3 +198,24 @@ $color-background: #F7F7FA;
     height: 100px;
   }
 }
+
+.filters-produce {
+  display: flex;
+  align-items: end;
+  gap: .5rem;
+  div {
+    width: 200px;
+  }
+  label {
+    font-size: 13px;
+    display: block;
+    margin-bottom: 5px;
+  }
+  @media screen and (max-width: 750px) {
+    flex-direction: column;
+  }
+}
+.filters-center-produce {
+  display: flex;
+  align-items: center;
+}

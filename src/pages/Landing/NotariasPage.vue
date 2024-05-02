@@ -3,17 +3,22 @@
   <div class="all-notaries">
     <h1 class="title">CATÁLOGO DE NOTARIAS </h1>
     
-
+    
     <div class="notaries-header">
       <h2 class="title-2">SI EL CAPITAL > 1 UIT (S/.5150) ADICIONAL PAGARÁ GASTOS REGISTRALES EN CUALQUIER NOTARIA</h2>
-      <a-select 
-      size="large"
-      placeholder="Buscar por Provincia"
-      style="width: 240px;"
-      v-model:value="city" 
-      show-search 
-      :options="store.cities" 
-      :filter-option="filterOption" @change="handleDepartaments" />
+      
+      <div class="filters-produce" >
+        <div>
+          <label>Buscar por nombre de notaria</label>
+          <a-input v-model:value="filterName" />
+        </div>
+
+        <div>
+          <label>Por provincia</label>
+          <a-select placeholder="Buscar por Provincia" v-model:value="filterCity" show-search :options="store.cities" :filter-option="filterOption" />
+        </div>
+        <a-button type="primary" class="btn-produce" @click="fetchData">BUSCAR</a-button>
+      </div>
     </div>
 
     <a-table bordered :scroll="{ x: valueX, y: valueY }" :columns="columns" :data-source="dataSource"
@@ -74,7 +79,7 @@ const columns = [
   { title: 'NOTARIA', fixed: 'left', dataIndex: 'namenotary', align: 'center', width: 180 },
   { title: 'REGIÓN', dataIndex: 'departamento', align: 'center', width: 120 },
   { title: 'PROVINCIA', dataIndex: 'province', align: 'center', width: 120 },
-  { title: 'DISTRITO', dataIndex: 'distrite', width: 120 },
+  { title: 'DISTRITO', dataIndex: 'distrite', width: 160 },
   { title: 'DIRECCION', dataIndex: 'address', align: 'center', width: 160 },
   { title: 'GASTOS NOTARIALES', dataIndex: 'pricex', align: 'center', width: 320 },
   { title: 'CONDICIONES', dataIndex: 'pricedescriptionx', align: 'center', width: 260 },
@@ -88,6 +93,8 @@ const valueX = ref(1200)
 const dataSource = ref([])
 const loading = ref(false)
 const city = ref(null);
+const filterName = ref(null);
+const filterCity = ref(null);
 
 store.$patch({ cities: store.cities });
 store.fetchCities();
@@ -114,7 +121,17 @@ const handleDepartaments = async() => {
 const fetchData = async () => {
   try {
     loading.value = true;
-    const data = await requestNoToken({ url: 'public/notaries', method: 'GET' });
+
+    const values = {
+      ...filterName.value && {name: filterName.value},
+      ...filterCity.value && {city_id: filterCity.value}
+    }
+
+    const data = await requestNoToken({ 
+      url: 'public/notaries-filters', 
+      method: 'GET',
+      params: values
+    });
 
     console.log("fdafafaf", data);
     dataSource.value = data.data
