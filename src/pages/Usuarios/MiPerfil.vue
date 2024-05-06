@@ -121,6 +121,7 @@ const onSubmit = async () => {
   loading.value = true;
   formState.birthday = birthdateDate.value ? dayjs(birthdateDate.value).format('YYYY-MM-DD') : null;
   let payload = formState
+  delete payload.email
   delete payload.documentnumber
   try {
     const data = await makeRequest({ url: `user/update/${storageData.id}`, method: 'PUT', data: payload });
