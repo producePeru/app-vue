@@ -1,10 +1,10 @@
 <template>
   <div>
 
-    <iframe
+    <!-- <iframe
       src="https://app.powerbi.com/view?r=eyJrIjoiNTBkNDY1OGUtMTdlZi00MjExLTg5YmEtODRiYThjOTAzZjc3IiwidCI6Ijc1MDRlMzE4LThlMWUtNGQ1NS1iZmZkLTg3NWI0ZGVlODI2MCIsImMiOjR9"
       frameborder="0" allowFullScreen="true">
-    </iframe>
+    </iframe> -->
 
   </div>
 </template>
