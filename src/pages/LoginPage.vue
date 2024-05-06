@@ -64,6 +64,7 @@ const onSubmit =async() => {
     localStorage.setItem('token', JSON.stringify(data.token));
     localStorage.setItem('profile', JSON.stringify(data.profile));
     localStorage.setItem('role', JSON.stringify(data.role));
+    localStorage.setItem('email', JSON.stringify(data.email));
 
     const encViews = CryptoJS.AES.encrypt(JSON.stringify(data.views), 'appvistas').toString();
     localStorage.setItem('views', encViews);

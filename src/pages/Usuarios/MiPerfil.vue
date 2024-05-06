@@ -39,7 +39,7 @@
               </a-form-item>
             </template>
           </div>
-          <!-- <pre>:::::{{ birthdateDate }}</pre> -->
+          <!-- <pre>:::::{{ storageEmail }}</pre> -->
           <a-form-item>
             <a-button class="btn-produce" type="primary" html-type="submit" :loading="loading">ACTUALIZAR</a-button>
           </a-form-item>
@@ -63,6 +63,7 @@ dayjs.locale('es');
 
 const store = useCounterStore();
 const storageData = JSON.parse(localStorage.getItem('profile'));
+const storageEmail = JSON.parse(localStorage.getItem('email'));
 const emit = defineEmits(['closeDraw']);
 const spinning = ref(false);
 
@@ -83,6 +84,7 @@ const fieldx = ref(fields)
 const birthdateDate = ref(null);
 const dateFormat = 'YYYY-MM-DD';
 const formState = reactive({
+  email: null,
   documentnumber: null,
   name: null,
   lastname: null,
@@ -141,6 +143,7 @@ const fetchData = async() => {
     const {data} = await makeRequest({ url: 'user/my-profile', method: 'GET' });
   
     if(data) {
+      formState.email = storageEmail
       formState.documentnumber = storageData.documentnumber
       formState.name = data.name;
       formState.lastname = data.lastname;
