@@ -115,7 +115,7 @@ store.fetchCities();
 
 const valueY = ref(window.innerHeight - 100);
 const columns = [
-  { title: '#', dataIndex: 'idx', fixed: 'left', align: 'center', width: 70 },
+  { title: '#', dataIndex: 'idx', fixed: 'left', align: 'center', width: 50 },
   { title: 'NOTARIA', fixed: 'left', dataIndex: 'namenotary', align: 'center', width: 180 },
   { title: 'REGIÓN', fixed: 'left', dataIndex: 'departamento', align: 'center', width: 120 },
   { title: 'PROVINCIA', fixed: 'left', dataIndex: 'province', align: 'center', width: 120 },
@@ -259,11 +259,10 @@ onMounted(() => {
 
   table th,
   table td {
-    border: 1px solid #c3c3c3;
+    border: 1px solid #444444;
   }
 
   .ant-table-thead {
-
     .ant-table-cell:nth-child(1),
     .ant-table-cell:nth-child(2),
     .ant-table-cell:nth-child(3),
@@ -275,10 +274,12 @@ onMounted(() => {
     .ant-table-cell:nth-child(9),
     .ant-table-cell:nth-child(10),
     .ant-table-cell:nth-child(11) {
-      background-color: #64696e !important;
-      font-weight: 500;
+      background-color: #8eaadb !important;
+      font-weight: 700;
       font-size: 14px;
-      color: #fff;
+      color: #000;
+      border-bottom: 1px solid #333 !important;
+      border-inline-end: 0 solid transparent !important;
     }
   }
 
@@ -286,27 +287,43 @@ onMounted(() => {
     .ant-table-cell:nth-child(3),
     .ant-table-cell:nth-child(4),
     .ant-table-cell:nth-child(5) {
-      background-color: #fffbe2 !important;
+      background-color: #e3e3e3 !important;
+    }
+  }
+  .ant-table-row {
+    .ant-table-cell:nth-child(6) {
+      background-color: #fffbd6 !important;
+    }
+    .ant-table-cell:nth-child(6), .ant-table-cell:nth-child(7) {
+      position: relative;
+      
+    }
+  }
+  .ant-table-row {
+    .ant-table-cell:nth-child(1), .ant-table-cell:nth-child(2) {
+      background-color: #cfe2f3 !important;
+    }
+    .ant-table-cell:nth-child(2){
+      font-size: 16px;
+      font-weight: 700;
+    }
+
+    .ant-table-cell:nth-child(3), 
+    .ant-table-cell:nth-child(4),
+    .ant-table-cell:nth-child(5) {
+      font-size: 14px;
+      font-weight: 700;
     }
   }
 
-  .ant-table-row {
-    .ant-table-cell:nth-child(6) {
-      background-color: #f9eef8 !important;
-    }
-  }
-  .ant-table-row {
-    .ant-table-cell:nth-child(2) {
-      background-color: #d5ffe7 !important;
-    }
-  }
   .ant-table-row {
     .ant-table-cell:nth-child(7) {
       // position: relative;
     }
 
-    .ant-table-cell:nth-child(8) {
-      // position: relative;
+    .ant-table-cell:nth-child(10), .ant-table-cell:nth-child(11) {
+      font-size: 13px;
+      line-height: 1.2;
     }
   }
 }

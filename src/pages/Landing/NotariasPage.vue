@@ -79,7 +79,7 @@ const columns = [
   { title: 'NOTARIA', fixed: 'left', dataIndex: 'namenotary', align: 'center', width: 180 },
   { title: 'REGIÓN', dataIndex: 'departamento', align: 'center', width: 120 },
   { title: 'PROVINCIA', dataIndex: 'province', align: 'center', width: 160 },
-  { title: 'DISTRITO', dataIndex: 'distrite', align: 'center', width: 160 },
+  { title: 'DISTRITO', dataIndex: 'distrite', align: 'center', width: 130 },
   { title: 'DIRECCION', dataIndex: 'address', align: 'center', width: 160 },
   { title: 'GASTOS NOTARIALES', dataIndex: 'pricex', align: 'center', width: 320 },
   { title: 'CONDICIONES', dataIndex: 'pricedescriptionx', align: 'center', width: 280 },
@@ -172,7 +172,7 @@ onMounted(() => {
     .title-2 {
       font-size: 16px;
       margin: 0;
-      color: #e60000;
+      color: #BA0F0F;
       // text-align: center;
       font-weight: 600;
     }
@@ -189,7 +189,7 @@ onMounted(() => {
 
   table th,
   table td {
-    border: 2px solid #333;
+    border: 1px solid #444444;
   }
 
   .ant-table-thead {
@@ -230,8 +230,8 @@ onMounted(() => {
     }
   }
   .ant-table-row {
-    .ant-table-cell:nth-child(2) {
-      background-color: #d5ffe7 !important;
+    .ant-table-cell:nth-child(1), .ant-table-cell:nth-child(2) {
+      background-color: #cfe2f3 !important;
     }
     .ant-table-cell:nth-child(2){
       font-size: 16px;
