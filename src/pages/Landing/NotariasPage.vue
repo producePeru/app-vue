@@ -100,7 +100,7 @@ store.$patch({ cities: store.cities });
 store.fetchCities();
 
 const actualizarAltura = () => {
-  valueY.value = window.innerHeight - 250;
+  valueY.value = window.innerHeight - 230;
 };
 const filterOption = (input, option) => {
   const normalizedInput = input.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "");
