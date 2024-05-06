@@ -217,7 +217,7 @@ onMounted(() => {
     .ant-table-cell:nth-child(3),
     .ant-table-cell:nth-child(4),
     .ant-table-cell:nth-child(5) {
-      background-color: #e3e3e3 !important;
+      background-color: #ededed !important;
     }
   }
   .ant-table-row {

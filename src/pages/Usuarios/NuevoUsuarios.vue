@@ -216,7 +216,7 @@ const handleSelectSupervisor = (val) => {
 const onSubmit = async () => {
   
   loading.value = true
-  formState.email = formState.name.replace(/\s/g, '').substring(0, 2).toLowerCase() + formState.lastname.replace(/\s/g, '').toLowerCase() + "@pnte.com";
+  formState.email = formState.name.replace(/\s/g, '').toLowerCase() + formState.lastname.replace(/\s/g, '').toLowerCase() + "@pnte.com";
   formState.password = formState.documentnumber
   formState.birthday = birthdateDate.value ? dayjs(birthdateDate.value).format('YYYY-MM-DD') : null;
 
