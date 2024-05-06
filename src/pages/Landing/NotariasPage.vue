@@ -48,7 +48,7 @@
           </div>
         </template>
         <template v-if="column.dataIndex == 'pricedescriptionx'">
-          <div class="gastos3">
+          <div style="position: relative;">
             <div v-html="record.conditions" class="style-conditions"></div>
           </div>
         </template>
@@ -273,7 +273,7 @@ onMounted(() => {
 }
 
 .style-conditions {
-
+  height: 100%;
   h1 strong,
   h2 strong {
     font-size: 14px;
