@@ -40,7 +40,7 @@
           {{ record.district?.name }}
         </template>
         <template v-if="column.dataIndex == 'namenotary'">
-          <h4 style="font-size: 16px; font-weight: 700;">{{ record.name }}</h4>
+          {{ record.name }}
         </template>
         <template v-if="column.dataIndex == 'pricex'">
           <div class="gastos">
@@ -48,7 +48,7 @@
           </div>
         </template>
         <template v-if="column.dataIndex == 'pricedescriptionx'">
-          <div>
+          <div class="gastos3">
             <div v-html="record.conditions" class="style-conditions"></div>
           </div>
         </template>
@@ -75,16 +75,16 @@ import { useCounterStore } from '@/stores/selectes.js';
 
 const valueY = ref(window.innerHeight - 100);
 const columns = [
-  { title: '#', dataIndex: 'idx', fixed: 'left', align: 'center', width: 70 },
+  { title: '#', dataIndex: 'idx', fixed: 'left', align: 'center', width: 50 },
   { title: 'NOTARIA', fixed: 'left', dataIndex: 'namenotary', align: 'center', width: 180 },
   { title: 'REGIÓN', dataIndex: 'departamento', align: 'center', width: 120 },
-  { title: 'PROVINCIA', dataIndex: 'province', align: 'center', width: 120 },
-  { title: 'DISTRITO', dataIndex: 'distrite', width: 160 },
+  { title: 'PROVINCIA', dataIndex: 'province', align: 'center', width: 160 },
+  { title: 'DISTRITO', dataIndex: 'distrite', align: 'center', width: 160 },
   { title: 'DIRECCION', dataIndex: 'address', align: 'center', width: 160 },
   { title: 'GASTOS NOTARIALES', dataIndex: 'pricex', align: 'center', width: 320 },
-  { title: 'CONDICIONES', dataIndex: 'pricedescriptionx', align: 'center', width: 260 },
+  { title: 'CONDICIONES', dataIndex: 'pricedescriptionx', align: 'center', width: 280 },
   { title: 'SOCIO O INTERVINIENTE ADICIONAL', dataIndex: 'socio', align: 'center', width: 200 },
-  { title: 'BIOMETRICO', dataIndex: 'bio', align: 'center', width: 220 },
+  { title: 'BIOMETRICO', dataIndex: 'bio', align: 'center', width: 250 },
   { title: 'DATOS DE CONTACTO', dataIndex: 'contact', align: 'center', width: 260 },
 ];
 
@@ -189,7 +189,7 @@ onMounted(() => {
 
   table th,
   table td {
-    border: 1px solid #c3c3c3;
+    border: 2px solid #333;
   }
 
   .ant-table-thead {
@@ -204,10 +204,12 @@ onMounted(() => {
     .ant-table-cell:nth-child(9),
     .ant-table-cell:nth-child(10),
     .ant-table-cell:nth-child(11) {
-      background-color: #0c57c0 !important;
+      background-color: #8eaadb !important;
       font-weight: 700;
-      font-size: 15px;
-      color: #fff;
+      font-size: 14px;
+      color: #000;
+      border-bottom: 1px solid #333 !important;
+      border-inline-end: 0 solid transparent !important;
     }
   }
 
@@ -215,17 +217,32 @@ onMounted(() => {
     .ant-table-cell:nth-child(3),
     .ant-table-cell:nth-child(4),
     .ant-table-cell:nth-child(5) {
-      background-color: #fffbe2 !important;
+      background-color: #e3e3e3 !important;
     }
   }
   .ant-table-row {
     .ant-table-cell:nth-child(6) {
-      background-color: #f9eef8 !important;
+      background-color: #fffbd6 !important;
+    }
+    .ant-table-cell:nth-child(6), .ant-table-cell:nth-child(7) {
+      position: relative;
+      
     }
   }
   .ant-table-row {
     .ant-table-cell:nth-child(2) {
       background-color: #d5ffe7 !important;
+    }
+    .ant-table-cell:nth-child(2){
+      font-size: 16px;
+      font-weight: 700;
+    }
+
+    .ant-table-cell:nth-child(3), 
+    .ant-table-cell:nth-child(4),
+    .ant-table-cell:nth-child(5) {
+      font-size: 14px;
+      font-weight: 700;
     }
   }
 
@@ -234,8 +251,9 @@ onMounted(() => {
       // position: relative;
     }
 
-    .ant-table-cell:nth-child(8) {
-      // position: relative;
+    .ant-table-cell:nth-child(10), .ant-table-cell:nth-child(11) {
+      font-size: 13px;
+      line-height: 1.2;
     }
   }
 }
@@ -262,6 +280,15 @@ onMounted(() => {
   }
 }
 
+.gastos {
+  position: absolute;
+  top: 0;
+  left: 0;
+  // border: 1px solid red;
+  height: 100%;
+  width: 100%;
+  padding: .5rem 0;
+}
 .style-price,
 .style-conditions {
 
@@ -278,6 +305,9 @@ onMounted(() => {
     width: 100%;
     display: block;
     // height: 20px;
+  }
+  p {
+    font-size: 13px;
   }
 }
 
