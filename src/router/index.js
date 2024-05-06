@@ -85,6 +85,11 @@ const router = createRouter({
           component: () => import('../pages/Inicio/InicioDashboard.vue'),
         },
         {
+          path: 'gamarra-produce',
+          name: 'gamarra-produce',
+          component: () => import('../pages/Landing/GamarraProduce/GamarraIndex.vue'),
+        },
+        {
           path: 'registrar-usuario',
           name: 'registrar-persona',
           component: () => import('../pages/Personas/NuevaPersona.vue')

@@ -26,8 +26,12 @@
         </template>
 
         <template v-if="column.dataIndex == 'tdocument'">
-          {{ record.typedocument.name }} 
+          <!-- {{ record.typedocument.name }}  -->
+
+          <a-tag :color="record.typedocument.name == 'DNI' ? 'green' : 'blue'">{{ record.typedocument.name == 'DNI' ? 'DNI' : 'CE' }}</a-tag>
         </template>
+
+
         <template v-if="column.dataIndex == 'apellidos'">
           {{ record.lastname }} {{ record.middlename }}
         </template>
