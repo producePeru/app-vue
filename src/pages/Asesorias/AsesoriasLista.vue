@@ -241,7 +241,7 @@ const columnsRuc10 = ref([
   { title: 'S. Núm. Documento', dataIndex: 'sol_num_doc', width: 150 },
   { title: 'S. Email', dataIndex: 'sol_email', width: 200 },
   { title: 'S. Celular', dataIndex: 'sol_phone', width: 110, align: 'center' },
-  { title: 'Asesorado por', dataIndex: 'asesor', width: 200,  filters: [] },
+  { title: 'Asesorado por', dataIndex: 'asesor', width: 200 },
   { title: 'Supervisor', dataIndex: 'misupervisor', width: 200 },
   { title: 'Región', dataIndex: 'mype_region', width: 140 },
   { title: 'Provincia', dataIndex: 'mype_provincia', width: 160 },
