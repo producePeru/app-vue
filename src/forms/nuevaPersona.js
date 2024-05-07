@@ -21,7 +21,7 @@ const fields = {
     label: 'Apellido Paterno',
     name: 'lastname',
     required: true,
-    message: 'Escribir apellido',
+    message: 'Escribir apellido paterno',
     disabled: true
   },
   middlename: {
@@ -29,7 +29,7 @@ const fields = {
     label: 'Apellido Materno',
     name: 'middlename',
     required: true,
-    message: 'Escribir apellido',
+    message: 'Escribir apellido materno',
     disabled: true
   },
   name: {
@@ -78,7 +78,7 @@ const fields = {
     label: 'Correo electrónico',
     name: 'email',
     required: true,
-    message: 'Número de contacto y 9 max',
+    message: 'Ingresar email',
     email: 'email',
     disabled: true
   },
@@ -95,7 +95,7 @@ const fields = {
     label: 'Género',
     name: 'gender_id',
     required: true,
-    message: 'Seleccionar tipo de documento',
+    message: 'Seleccionar un tipo de género',
     disabled: true
   },
   lession: {
@@ -103,7 +103,7 @@ const fields = {
     label: '¿Tiene discapacidad?',
     name: 'lession',
     required: true,
-    message: 'Seleccionar un tipo',
+    message: '¿Tiene discapacidad?',
     disabled: true
   },
 }

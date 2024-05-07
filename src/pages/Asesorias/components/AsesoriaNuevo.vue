@@ -23,9 +23,9 @@
             <a-select v-if="el.name == 'city_id'" v-model:value="formState[el.name]" show-search :options="store.cities" 
               :filter-option="filterOption" @change="handleDepartaments" />
             <a-select v-if="el.name == 'province_id'" v-model:value="formState[el.name]" show-search :options="store.provinces"
-              :filter-option="filterOption" @change="handleProvinces" />
+              :filter-option="filterOption" @change="handleProvinces" :disabled="!formState.city_id" />
             <a-select v-if="el.name == 'district_id'" v-model:value="formState[el.name]" show-search :options="store.districts"
-              :filter-option="filterOption" />
+              :filter-option="filterOption" :disabled="!formState.province_id" />
 
             <a-select v-if="el.name == 'component_id'" v-model:value="formState[el.name]" show-search :options="store.components" :filter-option="filterOption" @change="handleSelectComponent">
               <template #dropdownRender="{ menuNode: menu }">
@@ -43,7 +43,7 @@
               </template>
             </a-select>
 
-            <a-select v-if="el.name == 'theme_id'" v-model:value="formState[el.name]" show-search :options="store.componentThemes" :filter-option="filterOption">
+            <a-select v-if="el.name == 'theme_id'" v-model:value="formState[el.name]" show-search :options="store.componentThemes" :filter-option="filterOption" :disabled="!formState.component_id">
               <template #dropdownRender="{ menuNode: menu }">
                 <v-nodes :vnodes="menu" />
                 <a-divider style="margin: 4px 0" />
@@ -68,7 +68,7 @@
       <a-form-item>
         <a-button type="primary" class="btn-produce" html-type="submit" :loading="loading">GUARDAR</a-button>
       </a-form-item>
-      <!-- <pre>{{ props.info.id }}</pre> -->
+      <!-- <pre>{{ formState }}</pre> -->
     </a-form>
     </a-spin>
   </div>

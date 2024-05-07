@@ -20,7 +20,7 @@ const fields = {
     label: 'Nombres',
     name: 'name',
     required: true,
-    message: 'Escribe el apellido paterno'
+    message: 'Ingresar los nombres'
   },
   lastname: {
     type: 'iText',
@@ -41,7 +41,7 @@ const fields = {
     label: 'Número de DNI',
     name: 'documentnumber',
     required: true,
-    message: 'Escribe el apellido paterno',
+    message: 'Ingresa el número de DNI',
     max: 8
   },
   birthday: {
@@ -65,7 +65,7 @@ const fields = {
     label: 'Género',
     name: 'gender_id',
     required: true,
-    message: 'Seleccionar tipo de documento',
+    message: 'Seleccionar un tipo de género',
     disabled: true
   },
   cde_id: {
@@ -73,7 +73,7 @@ const fields = {
     label: 'CDE',
     name: 'cde_id',
     required: true,
-    message: 'Seleccionar tipo de documento',
+    message: 'Seleccionar la sede',
     disabled: true
   },
   office_id: {
@@ -81,7 +81,7 @@ const fields = {
     label: 'Oficina',
     name: 'office_id',
     required: true,
-    message: 'Seleccionar tipo de documento',
+    message: 'Seleccionar la oficina',
     disabled: true
   },
   role_id: {
@@ -89,7 +89,7 @@ const fields = {
     label: 'Rol',
     name: 'role_id',
     required: true,
-    message: 'Seleccionar tipo de documento',
+    message: 'Seleccionar un rol de usuario',
     disabled: true
   }
 }

@@ -7,7 +7,7 @@
 
           <a-form-item v-if="el.type === 'iText'" :name="el.name" :label="el.label"
             :rules="[{ required: el.required, message: el.message, type: el.email, max: el.max, min: el.min }]">
-            <a-input v-model:value="formState[el.name]" :disabled="el.disabled" :maxlength="9">
+            <a-input v-model:value="formState[el.name]" :disabled="el.disabled" :maxlength="9" @input="validateOnlyNumber('ruc')">
               <template #prefix>
                 <span v-show="isTwenty" class="emp-20">20</span>
               </template>
@@ -41,6 +41,9 @@ const formState = reactive({
   ruc: null
 });
 
+const validateOnlyNumber = (val) => {
+  formState[val] = formState[val].replace(/\D/g, '');
+};
 const onSubmit = async () => {
   loading.value = true;
   formState.mype_id = props.itemSelectedF20.mype.id;

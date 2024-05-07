@@ -133,7 +133,6 @@ const fetchData = async () => {
       params: values
     });
 
-    console.log("fdafafaf", data);
     dataSource.value = data.data
   } catch (error) {
     console.error('Error de red:', error);

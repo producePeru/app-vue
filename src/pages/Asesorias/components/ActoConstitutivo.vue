@@ -8,24 +8,20 @@
 
           <a-form-item class="item-max" v-if="el.type === 'iSelect'" :name="el.name" :label="el.label" :rules="[{ required: el.required, message: el.message }]">
             
-            <a-select v-if="el.name == 'notary_id'" v-model:value="formState[el.name]" :options="notaries" option-label-prop="name">
+            <a-select v-if="el.name == 'notary_id'" v-model:value="formState[el.name]" :options="notaries" option-label-prop="name" :disabled="!city">
               <template #option="{ value: val, name, city, province, district, address }">
                 <div class="select-notaries">
                   <span class="name">{{ name }}</span>
                   <span class="city">{{ city }} - {{ province }} - {{ district }}</span>
                   <span class="address">{{ address }}</span>
                 </div>
-                
               </template>
             </a-select>
             
-
-
-
             <a-select 
             v-if="el.name == 'city'"
             placeholder="Buscar por Provincia"
-            style="width: 300px;"
+            style="width: 350px;"
             v-model:value="city" 
             show-search 
             :options="store.cities" 
@@ -93,9 +89,14 @@ const update = () => {
 }
 const handleDepartaments = async() => {
   try {
-    loading.value = true;
-    const {data} = await requestNoToken({ url: `public/notaries/${city.value}`, method: 'GET' });
-    
+    const values = { city_id: city.value }
+
+    const {data} = await requestNoToken({ 
+      url: 'public/notaries-filters', 
+      method: 'GET',
+      params: values
+    });
+
     notaries.value = null;
     formState.notary_id = null;
 
@@ -112,8 +113,6 @@ const handleDepartaments = async() => {
 
   } catch (error) {
     console.error('Error de red:', error);
-  } finally {
-    loading.value = false;
   }
 }
 
@@ -146,7 +145,7 @@ const onSubmitFail = () => {
 
 <style scoped lang="scss">
 .wrapper-booking {
-  max-width: 300px;
+  max-width: 350px;
   margin-top: 2rem;
   h3 {
     margin-bottom: 2rem;
@@ -156,14 +155,17 @@ const onSubmitFail = () => {
   display: flex;
   flex-direction: column;
   .name {
-    margin-bottom: .1rem;
+    margin-bottom: .15rem;
     font-weight: 500;
+    font-size: 15px;
   }
   .city {
     color: #0958d9;
+    display: block;
+    margin-bottom: .2rem;
   }
   .city, .address {
-    font-size: 11px;
+    font-size: 12px;
     line-height: 1.2;
   }
 }
