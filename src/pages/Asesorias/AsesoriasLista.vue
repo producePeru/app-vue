@@ -8,10 +8,10 @@
 
     <div class="filters-dig">
       <div>
-        <div v-if="storageRole[0].id == 1">
-          <a-button @click="handleDownloadAsesorias" :loading="loadingexc">
+        <div>
+          <!-- <a-button @click="handleDownloadAsesorias" :loading="loadingexc">
             <img width="20" style="margin: -2px 4px 0 0;" src="@/assets/img/icoexcel.png" /> DESCARGAR
-          </a-button>
+          </a-button> -->
         </div>
       </div>
       
@@ -311,6 +311,7 @@ const handleNamePaginator = (val) => {
 
 
 const handleDownloadAsesorias = async () => {
+
   loadingexc.value = true
 
   let urlx = '', nameExcel = '';
@@ -331,11 +332,18 @@ const handleDownloadAsesorias = async () => {
   }
 
   try {
+    const values = {};
+    if (byDateRange.value) {
+      values.dateStart = dayjs(byDateRange.value[0]).format('YYYY-MM-DD');
+      values.dateEnd = dayjs(byDateRange.value[1]).format('YYYY-MM-DD');
+    }
+
     const { data } = await axios.get(`${apiUrl}${urlx}`, {
       headers: {
         'Content-Type': 'multipart/form-data',
         'Authorization': `Bearer ${token}`
       },
+      params: values,
       responseType: 'blob'
     });
 

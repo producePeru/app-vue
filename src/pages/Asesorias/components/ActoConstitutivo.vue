@@ -20,7 +20,7 @@
             
             <a-select 
             v-if="el.name == 'city'"
-            placeholder="Buscar por Provincia"
+            placeholder="Seleccionar una provincia para la notaría"
             style="width: 350px;"
             v-model:value="city" 
             show-search 
@@ -36,7 +36,6 @@
 
         </template>
       </div>
-      <!-- <pre>{{ formState }}</pre> -->
 
       <div>{{ update() }}</div>
 
@@ -120,7 +119,7 @@ const onSubmit = async () => {
   loading.value = true;
   formState.people_id = props.info.id;
   try {
-    const response = await makeRequest({ url: `formalization/ruc20-step2/${props.itemSelectedF20.codesunarp}`, method: 'POST', data: formState});
+    const response = await makeRequest({ url: `formalization/ruc20-step2/${props.itemSelectedF20.id}`, method: 'POST', data: formState});
     if (response.status === 200) {
       message.success(response.message);
    

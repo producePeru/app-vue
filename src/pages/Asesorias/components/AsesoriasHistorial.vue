@@ -56,7 +56,7 @@
                 <div class="steps">
                   <span style="text-align: right;">{{ record.task == 1 ? 'Reserva de nombre' : record.task == 2 ? 'Proceso de notaría' : 'Formalizado' }}</span>
                   <a-space direction="vertical" style="width: 100%">
-                    <a-progress :percent="record.task * 33.33 " :steps="3" title="hi" />
+                    <a-progress :percent="record.task * 33.33 " :steps="3" />
                   </a-space>
                 </div>
               </template>

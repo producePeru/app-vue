@@ -3,8 +3,8 @@ const fields = {
     type: 'iText',
     label: 'Código SID sunarp',
     name: 'codesunarp',
-    required: true,
-    message: 'Escribir apellido',
+    required: false,
+    message: 'Escribir el código SID sunarp',
     disabled: false
   },
   economicsector_id: {
@@ -12,7 +12,7 @@ const fields = {
     label: 'Sector económico',
     name: 'economicsector_id',
     required: true,
-    message: 'Seleccionar tipo de documento',
+    message: 'Seleccionar el sector económico',
     disabled: false
   },
   comercialactivity_id: {
@@ -20,7 +20,7 @@ const fields = {
     label: 'Actividad comercial',
     name: 'comercialactivity_id',
     required: true,
-    message: 'Seleccionar tipo de documento',
+    message: 'Seleccionar la actividad comercial',
     disabled: false
   },
   regime_id: {
@@ -28,7 +28,7 @@ const fields = {
     label: 'Tipo de régimen societario',
     name: 'regime_id',
     required: true,
-    message: 'Seleccionar tipo de documento',
+    message: 'Seleccionar el régimen societario',
     disabled: false
   },
   city_id: {
@@ -68,7 +68,7 @@ const fields = {
     label: 'Modalidad de atención',
     name: 'modality_id',
     required: true,
-    message: 'Seleccionar modalidad',
+    message: 'Seleccionar la modalidad',
     disabled: false
   }
 };
@@ -79,7 +79,7 @@ const acto = {
     label: 'Nombre empresa',
     name: 'name',
     required: true,
-    message: 'Escribir apellido',
+    message: 'Escribir nombre de la empresa',
     disabled: false
   },
   numbernotary: {
@@ -87,7 +87,7 @@ const acto = {
     label: 'Número de solicitud de envio a Notaría',
     name: 'numbernotary',
     required: true,
-    message: 'Seleccionar departamento',
+    message: 'Escribir número de solicitud de envio a Notaría',
     disabled: false
   },
   city: {
@@ -95,7 +95,7 @@ const acto = {
     label: 'Seleciona Provincia',
     name: 'city',
     required: false,
-    message: 'Seleccionar modalidad',
+    message: 'Buscar por provincia',
     disabled: false
   },
   notary_id: {
@@ -103,7 +103,7 @@ const acto = {
     label: 'Notaría',
     name: 'notary_id',
     required: true,
-    message: 'Seleccionar notaría',
+    message: 'Seleccionar una notaría',
     disabled: false
   },
   // modality: {

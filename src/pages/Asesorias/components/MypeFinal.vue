@@ -48,7 +48,7 @@ const onSubmit = async () => {
   loading.value = true;
   formState.mype_id = props.itemSelectedF20.mype.id;
   try {
-    const response = await makeRequest({ url: `formalization/ruc20-step3/${props.itemSelectedF20.codesunarp}`, method: 'POST', data: formState});
+    const response = await makeRequest({ url: `formalization/ruc20-step3/${props.itemSelectedF20.id}`, method: 'POST', data: formState});
     if (response.status === 200) {
       message.success(response.message);
    
