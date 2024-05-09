@@ -261,12 +261,10 @@ const onSubmitFail = () => {
   .ant-form-item:nth-child(8) {
     grid-column: 1/3;
     grid-row: 7;
-    // max-width: 297px;
   }
   .ant-form-item:nth-child(9) {
     grid-column: 3/4;
     grid-row: 7;
-    // max-width: 297px;
   }
 }
 </style>
