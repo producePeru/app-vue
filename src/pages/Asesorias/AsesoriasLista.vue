@@ -9,9 +9,9 @@
     <div class="filters-dig">
       <div>
         <div>
-          <!-- <a-button @click="handleDownloadAsesorias" :loading="loadingexc">
+          <a-button @click="handleDownloadAsesorias" :loading="loadingexc">
             <img width="20" style="margin: -2px 4px 0 0;" src="@/assets/img/icoexcel.png" /> DESCARGAR
-          </a-button> -->
+          </a-button>
         </div>
       </div>
       

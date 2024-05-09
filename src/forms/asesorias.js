@@ -135,7 +135,7 @@ const ructen = {
     label: 'Detalle del trámite',
     name: 'detailprocedure_id',
     required: true,
-    message: 'Escribir número de RUC',
+    message: 'Seleccionar detalle del trámite',
     disabled: false
   },
   modality_id: {
@@ -143,7 +143,7 @@ const ructen = {
     label: 'Modalidad de atención',
     name: 'modality_id',
     required: true,
-    message: 'Seleccionar modalidad',
+    message: 'Seleccionar modalidad de atención',
     disabled: false
   },
   economicsector_id: {

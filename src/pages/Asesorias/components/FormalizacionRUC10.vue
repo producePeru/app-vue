@@ -56,9 +56,9 @@
             <a-select v-if="el.name == 'city_id'" v-model:value="formState[el.name]" show-search :options="store.cities" 
               :filter-option="filterOption" @change="handleDepartaments" />
             <a-select v-if="el.name == 'province_id'" v-model:value="formState[el.name]" show-search :options="store.provinces"
-              :filter-option="filterOption" @change="handleProvinces" />
+              :filter-option="filterOption" @change="handleProvinces" :disabled="!formState.city_id" />
             <a-select v-if="el.name == 'district_id'" v-model:value="formState[el.name]" show-search :options="store.districts"
-              :filter-option="filterOption" />
+              :filter-option="filterOption" :disabled="!formState.province_id" />
           </a-form-item>
 
         </template>
