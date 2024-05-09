@@ -179,12 +179,19 @@ $color-background: #F7F7FA;
 :where(.css-1qb1s0s).ant-menu-dark:not(.ant-menu-horizontal) .ant-menu-item:not(.ant-menu-item-selected):active {
   background-color: #d9363e !important;
 }
+:where(.css-dev-only-do-not-override-1qb1s0s).ant-checkbox-checked .ant-checkbox-inner {
+  background-color: #d9363e !important;
+  border-color: #d9363e !important;
+}
 :where(.css-1qb1s0s).ant-btn-primary {
   box-shadow: none !important;
 }
 :where(.css-1qb1s0s).ant-radio-wrapper .ant-radio-checked .ant-radio-inner {
   border-color: var(--primary);
   background-color: var(--primary);
+}
+:where(.css-dev-only-do-not-override-1qb1s0s).ant-checkbox-indeterminate .ant-checkbox-inner:after {
+  background-color: #d9363e !important;
 }
 .ant-drawer-content-wrapper {
   // width: 100%;

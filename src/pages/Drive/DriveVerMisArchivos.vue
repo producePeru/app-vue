@@ -21,14 +21,17 @@
 
     <a-table bordered class="ant-table-striped" sticky :scroll="{ y: valueY }" :columns="columns"
       :data-source="dataSource" :pagination="false" :loading="loading" size="small">
-      <template v-slot:bodyCell="{ column, record }">
+      <template v-slot:bodyCell="{ column, record, index }">
+        <template v-if="column.dataIndex == 'idx'">
+          {{ computeIndex(index) }}
+        </template>
 
         <template v-if="column.dataIndex == 'date'">
           <div>{{ formatDate(record.created_at) }}</div>
         </template>
 
         <template v-if="column.dataIndex == 'user'">
-          <div>{{ record.profile.name }} {{ record.profile.lastname }} {{ record.profile.middlename }}</div>
+          <div class="uppercase">{{ record.profile.name }} {{ record.profile.lastname }} {{ record.profile.middlename }}</div>
         </template>
 
         <template v-if="column.dataIndex == 'download'">
@@ -48,9 +51,9 @@
             </a>
             <template #overlay>
               <a-menu>
-                <!-- <a-menu-item>
-                  <a @click="handleEditSolicitante(record)">Visible para todos</a>
-                </a-menu-item> -->
+                <a-menu-item>
+                  <a @click="handleOpenDraw(record)">Visible para</a>
+                </a-menu-item>
                 <a-menu-item>
                   <a-popconfirm title="¿Seguro de eliminar?" @confirm="handleDelete(record)">
                     <template #icon><question-circle-outlined style="color: red" /></template>
@@ -69,39 +72,50 @@
 
   
   <div class="paginator-drive">
-    <span><a-tag color="blue"><b>{{ dataSource.length }}</b></a-tag> Archivos Subidos</span>
+    <span><a-tag color="blue"><b>{{ total }}</b></a-tag> Archivos Subidos</span>
     <a-pagination size="small" :pageSize="20" :total="total" @change="handlePaginator" :showSizeChanger="false" />
   </div>
+
+  
+    <DriveUsers v-if="open" :plainOptions="plainOptions" :idFile="idFile" :selectedUsers="selectedUsers" @handleCloseDrawer="handleCloseDrawer" />
+  
 </template>
 
 <script setup>
 import axios from 'axios';
 
 import { makeRequest } from '@/utils/api.js'
-import { h, ref, onMounted, onBeforeUnmount } from 'vue';
+import { h, ref, onMounted, onBeforeUnmount, computed } from 'vue';
 import Cookies from 'js-cookie';
 import { DownloadOutlined, QuestionCircleOutlined } from '@ant-design/icons-vue';
 import moment from 'moment';
 import { MoreOutlined } from '@ant-design/icons-vue';
 import { message } from 'ant-design-vue';
 import { Modal } from 'ant-design-vue';
+import DriveUsers from './DrawDriveUsers.component.vue';
 
-const storageRole = JSON.parse(localStorage.getItem('role'))
+const storageRole = JSON.parse(localStorage.getItem('role'));
+const storageProfile = JSON.parse(localStorage.getItem('profile'));
+
 const prod = import.meta.env.VITE_APP_API_URL_PRODUCTION
 const dev = import.meta.env.VITE_APP_API_URL_LOCAL
 const apiUrl = window.location.hostname == 'localhost' || window.location.hostname == '127.0.0.1' ? dev : prod;
 const token = Cookies.get('token');
-
+const idFile = ref(null);
+const open = ref(false);
 const loadingDrive = ref({});
 const dataSource = ref([]);
 const loading = ref(false);
 const total = ref(0);
 const inputSearch = ref(0);
-const options = ref([]);
+const selectedUsers = ref(null);
 const searchFile = ref('');
 const loadingSearch = ref(false);
+const pageSize = 20;
+const plainOptions = ref([]);
 
 const columns = [
+  { title: '#',                   dataIndex: 'idx', fixed: 'left', align: 'center', width: 40},
   { title: 'AUTOR',               dataIndex: 'user', fixed: 'left', width: 180 },
   { title: 'NOMBRE DEL ARCHIVO',  dataIndex: 'name', width: 140 },
   { title: 'FECHA',               dataIndex: 'date', width: 120, align: 'center'},
@@ -109,6 +123,29 @@ const columns = [
   ...(storageRole[0].id === 3 || storageRole[0].id === 1 ? [{ title: '', dataIndex: 'actions', width: 50, align: 'center', fixed: 'right' }] : [])
 ];
 
+const computeIndex = computed(() => (index) => {
+  return  (params.value.page - 1) * pageSize + index + 1;
+});
+
+
+
+const handleOpenDraw = async(record) => {
+  idFile.value = record.id
+  try {
+      const selected = await makeRequest({ url: `drive/users-selected/${record.id}`, method: 'GET' });
+      if (selected.data[0]) selectedUsers.value = selected.data[0]?.user_ids
+    } catch (error) {
+      console.error('Error de red:', error);
+    }
+
+  open.value = true
+}
+
+
+
+const handleCloseDrawer = () => {
+  open.value = false;
+}
 const handleDelete= async(val) => {
   try {
     const data = await makeRequest({ url: `drive/delete-file/${val.id}`, method: 'DELETE' });
@@ -221,11 +258,19 @@ const handlePaginator = (current) => {
   fetchData()
 }
 
-
+const fetchUsersDrive = async () => {
+  try {
+    const data = await makeRequest({ url: 'drive/users', method: 'GET' });
+    plainOptions.value = data.filter(item => item.value !== storageProfile.user_id);
+  } catch (error) {
+    console.error('Error de red:', error);
+  }
+}
 const fetchData = async () => {
   try {
     loading.value = true;
-    const {data} = await makeRequest({ url: `drive/list-files`, method: 'GET' });
+    let parms = params.value.page == 1 ? '' : params.value
+    const {data} = await makeRequest({ url: `drive/list-files`, method: 'GET', params:parms });
     dataSource.value = data.data
     total.value = data.total
   } catch (error) {
@@ -239,6 +284,7 @@ onMounted(() => {
   fetchData();
   window.addEventListener('resize', actualizarAltura);
   actualizarAltura();
+  // fetchUsersDrive();
 });
 </script>
 

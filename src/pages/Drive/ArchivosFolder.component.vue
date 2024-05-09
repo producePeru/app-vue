@@ -11,7 +11,7 @@
         </template>
 
         <template v-if="column.dataIndex == 'user'">
-          <div>{{ record.profile.name }} {{ record.profile.lastname }} {{ record.profile.middlename }}</div>
+          <div class="uppercase">{{ record.profile.name }} {{ record.profile.lastname }} {{ record.profile.middlename }}</div>
         </template>
 
         <template v-if="column.dataIndex == 'download'">
@@ -31,7 +31,9 @@
             </a>
             <template #overlay>
               <a-menu>
-
+                <a-menu-item>
+                  <a @click="handleOpenDraw(record)">Visible para</a>
+                </a-menu-item>
                 <a-menu-item>
                   <a-popconfirm title="¿Seguro de eliminar?" @confirm="handleDelete(record)">
                     <template #icon><question-circle-outlined style="color: red" /></template>
@@ -49,10 +51,14 @@
   </div>
   <!-- <pre>::::{{ props.idFile }}</pre> -->
   <div>{{ update() }}</div>
+  
   <div class="paginator-drive">
     <span><a-tag color="blue"><b>{{ dataSource.length }}</b></a-tag> Archivos Subidos</span>
     <a-pagination size="small" :pageSize="20" :total="total" @change="handlePaginator" :showSizeChanger="false" />
   </div>
+
+  <DriveUsers v-if="open" :plainOptions="plainOptions" :idFile="idFilex" :selectedUsers="selectedUsers" @handleCloseDrawer="open = false" />
+
 </template>
 
 <script setup>
@@ -66,6 +72,7 @@ import moment from 'moment';
 import { MoreOutlined } from '@ant-design/icons-vue';
 import { message } from 'ant-design-vue';
 import { Modal } from 'ant-design-vue';
+import DriveUsers from './DrawDriveUsers.component.vue';
 
 const props = defineProps(['idFile']);
 const emit = defineEmits(['handleDeleteItem']);
@@ -75,6 +82,10 @@ const apiUrl = window.location.hostname == 'localhost' || window.location.hostna
 
 const token = Cookies.get('token');
 
+const open = ref(false);
+const plainOptions = ref([]);
+const idFilex = ref(null);
+const selectedUsers = ref(null);
 const loadingDrive = ref({});
 const dataSource = ref([]);
 const loading = ref(false);
@@ -88,6 +99,17 @@ const columns = [
   { title: '', dataIndex: 'actions', width: 50, align: 'center', fixed: 'right' }
 ];
 
+const handleOpenDraw = async(record) => {
+  idFilex.value = record.id
+  try {
+      const selected = await makeRequest({ url: `drive/users-selected/${record.id}`, method: 'GET' });
+      if (selected.data[0]) selectedUsers.value = selected.data[0]?.user_ids
+    } catch (error) {
+      console.error('Error de red:', error);
+    }
+
+  open.value = true
+}
 const update = () => {
   if(props.idFile) {
     dataSource.value = props.idFile.dataSource
