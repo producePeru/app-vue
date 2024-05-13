@@ -13,12 +13,12 @@
             :rules="[{ required: el.required, message: el.message }]">
             <a-select v-if="el.name == 'typedocument_id'" v-model:value="formState[el.name]"
               :options="store.typeDocuments" :disabled="el.disabled" @change="handleSelectTypeDocument" />
-            <a-select v-if="el.name == 'city_id'" v-model:value="formState[el.name]" :options="store.cities"
+            <a-select v-if="el.name == 'city_id'" v-model:value="formState[el.name]" :options="store.cities" show-search :filter-option="filterOption"
               @change="handleDepartaments" :disabled="el.disabled" />
-            <a-select v-if="el.name == 'province_id'" v-model:value="formState[el.name]" :options="store.provinces"
-              @change="handleProvinces" :disabled="el.disabled" />
-            <a-select v-if="el.name == 'district_id'" v-model:value="formState[el.name]" :options="store.districts"
-              :disabled="el.disabled" />
+            <a-select v-if="el.name == 'province_id'" v-model:value="formState[el.name]" :options="store.provinces" show-search :filter-option="filterOption"
+              @change="handleProvinces" :disabled="!formState.city_id" />
+            <a-select v-if="el.name == 'district_id'" v-model:value="formState[el.name]" :options="store.districts" show-search :filter-option="filterOption"
+              :disabled="!formState.province_id" />
             <a-select v-if="el.name == 'gender_id'" v-model:value="formState[el.name]" :options="store.genders"
               :disabled="el.disabled" />
             <a-select v-if="el.name == 'lession'" v-model:value="formState[el.name]" :options="disabilities"
@@ -96,6 +96,7 @@ const formState = reactive({
   middlename: null,
   name: null,
   city_id: null,
+  address: null,
   province_id: null,
   district_id: null,
   phone: null,
@@ -107,6 +108,11 @@ const formState = reactive({
   from_id: 1
 });
 
+const filterOption = (input, option) => {
+  const normalizedInput = input.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "");
+  const normalizedLabel = option.label.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "");
+  return normalizedLabel.includes(normalizedInput);
+};
 const update = () => {
   if(store.typeDocuments) spinning.value = false;
 }
@@ -117,6 +123,7 @@ const handleDisabled = () => {
   fields.value.city_id.disabled = false;
   fields.value.province_id.disabled = false;
   fields.value.district_id.disabled = false;
+  fields.value.address.disabled = false;
   fields.value.phone.disabled = false;
   fields.value.email.disabled = false;
   fields.value.birthday.disabled = false;
@@ -181,6 +188,7 @@ const clearFields = () => {
   formState.city_id = null;
   formState.province_id = null;
   formState.district_id = null;
+  formState.address = null;
   formState.phone = null;
   formState.email = null;
   formState.birthday = null;
@@ -201,8 +209,9 @@ const disablesInputs = () => {
   fields.value.middlename.disabled = true;
   fields.value.name.disabled = true;
   fields.value.city_id.disabled = true;
+  fields.value.city_id.disabled = true;
   fields.value.province_id.disabled = true;
-  fields.value.district_id.disabled = true;
+  fields.value.address.disabled = true;
   fields.value.phone.disabled = true;
   fields.value.email.disabled = true;
   fields.value.birthday.disabled = true;

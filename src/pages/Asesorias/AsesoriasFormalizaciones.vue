@@ -76,9 +76,9 @@
         </div>
       </template> -->
 
-    <a-card class="card-as" v-if="infoUser.length != 0">
+    <a-card class="card-as" v-if="historialData">
       <h4 >HISTORIAL</h4>
-      <HISTORIAL :info="infoUser" />
+      <HISTORIAL :totaladvisories="totaladvisories" :totalformalization10="totalformalization10" :totalformalization20="totalformalization20" />
     </a-card>
   </div>
 
@@ -212,6 +212,10 @@ const current = ref(0);
 const loading1 = ref(false);
 const historial = ref([]);
 const itemSelectedF20 = ref(null);
+const totaladvisories = ref([]);
+const totalformalization10 = ref([]);
+const totalformalization20 = ref([]);
+const historialData = ref(false);
 
 const handleCloseDrawopen = () => {
   handleSearchApi(dniNumber.value);
@@ -344,6 +348,7 @@ const handleSearchApi = async (val) => {
   const data = await makeRequest({ url: `person/found/${type_document.value}/${dniNumber.value}`, method: 'GET' });
   if(data.status == 200) {
     infoUser.value = data.data
+    handleShowHistorial(data.data.id)
     return searchLoading.value = false;
   }
   
@@ -357,6 +362,19 @@ const handleSearchApi = async (val) => {
   }
 }
 
+const handleShowHistorial = async (id) => {
+  try {
+    const {data} = await makeRequest({ url: `historial/registers/${id}`, method: 'GET' });
+    
+    totaladvisories.value = data.advisories;
+    totalformalization10.value = data.formalization10;
+    totalformalization20.value = data.formalization20;
+    historialData.value = true;
+    
+  } catch (error) {
+    console.error('Error de red:', error);
+  }
+}
 
 onMounted(() => {
   if (route.query.type) {

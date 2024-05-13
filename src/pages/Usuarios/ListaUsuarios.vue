@@ -257,8 +257,6 @@ const fetchData = async() => {
   }
 }
 
-
-
 const computeIndex = computed(() => (index) => {
   return  (params.value.page - 1) * pageSize + index + 1;
 });

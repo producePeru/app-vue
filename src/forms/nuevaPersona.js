@@ -64,6 +64,14 @@ const fields = {
     message: 'Seleccionar distrito',
     disabled: true
   },
+  address: {
+    type: 'iText',
+    label: 'Dirección',
+    name: 'address',
+    required: false,
+    message: 'Escribir dirección',
+    disabled: false
+  },
   phone: {
     type: 'iText',
     label: 'Número Telefónico del contacto',

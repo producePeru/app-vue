@@ -9,7 +9,7 @@ import 'ant-design-vue/dist/reset.css';
 import './utils/api.js'
 import './utils/noToken.js'
 import './utils/auth'
-import VueApexCharts from "vue3-apexcharts";
+// import VueApexCharts from "vue3-apexcharts";
 
 import { createPinia } from 'pinia'
 import piniaPluginPersistedstate from 'pinia-plugin-persistedstate'
@@ -27,7 +27,7 @@ const app = createApp(App)
 app.use(pinia); 
 app.use(router)
 app.use(moment)
-app.use(VueApexCharts);
+// app.use(VueApexCharts);
 app.use(Antd);
 
 const myStore = useSideBar(); 
