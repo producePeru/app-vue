@@ -50,7 +50,8 @@ const fields = {
     label: 'Fecha de nacimiento',
     name: 'birthday',
     required: false,
-    message: 'año-mes-día'
+    message: 'año-mes-día',
+    placeholder: 'año-mes-día'
   },
   phone: {
     type: 'iText',
@@ -93,6 +94,38 @@ const fields = {
   //   message: 'Seleccionar tipo de documento',
   //   disabled: true
   // }
+  // city_id: {
+  //   type: 'iSelect',
+  //   label: 'Departamento',
+  //   name: 'city_id',
+  //   required: true,
+  //   message: 'Seleccionar departamento',
+  //   disabled: true
+  // },
+  // province_id: {
+  //   type: 'iSelect',
+  //   label: 'Provincia',
+  //   name: 'province_id',
+  //   required: true,
+  //   message: 'Seleccionar provincia',
+  //   disabled: true
+  // },
+  // district_id: {
+  //   type: 'iSelect',
+  //   label: 'Distrito',
+  //   name: 'district_id',
+  //   required: true,
+  //   message: 'Seleccionar distrito',
+  //   disabled: true
+  // },
+  // address: {
+  //   type: 'iText',
+  //   label: 'Dirección',
+  //   name: 'address',
+  //   required: false,
+  //   message: 'Escribir dirección',
+  //   disabled: false
+  // },
 }
 
 export default fields;

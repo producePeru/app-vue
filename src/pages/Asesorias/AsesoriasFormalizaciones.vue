@@ -1,6 +1,6 @@
 <template>
   <div class="asesorias">
-    <h3>REGISTRO DE FORMALIZACIONES Y ASESRÍAS</h3>
+    <h3>REGISTRO DE FORMALIZACIONES Y ASESORÍAS</h3>
     <br>
     <a-card class="card-as">
       <RedoOutlined v-if="route.query.dni" class="ico-reload" @click="handleResetPage" />
@@ -87,7 +87,7 @@
 
 
     <a-drawer width="510" title="Formalización con RUC 20" v-model:open="open1" placement="right">
-      <a-steps :current="current" size="small" class="steps">
+      <a-steps v-model:current="current" size="small" class="steps">
         <a-step v-for="item in steps" :key="item.title" :title="item.title" />
       </a-steps>
       
@@ -320,6 +320,7 @@ const handleUpdateValues = async () => {
   const data = await makeRequest({ url: `person/found/${type_document.value}/${dniNumber.value}`, method: 'GET' });
   if(data.status == 200) {
     infoUser.value = data.data;
+    handleShowHistorial(infoUser.value.id)
     return searchLoading.value = false;
   }
 }

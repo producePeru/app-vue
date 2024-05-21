@@ -8,7 +8,7 @@
 
           <a-form-item class="item-max" v-if="el.type === 'iSelect'" :name="el.name" :label="el.label" :rules="[{ required: el.required, message: el.message }]">
             
-            <a-select v-if="el.name == 'notary_id'" v-model:value="formState[el.name]" :options="notaries" option-label-prop="name" :disabled="!city">
+            <a-select v-if="el.name == 'notary_id'" v-model:value="formState[el.name]" :options="notaries" option-label-prop="name" :disabled="!city" show-search :filter-option="filterNotaries" >
               <template #option="{ value: val, name, city, province, district, address }">
                 <div class="select-notaries">
                   <span class="name">{{ name }}</span>
@@ -75,6 +75,12 @@ const filterOption = (input, option) => {
   const normalizedLabel = option.label.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "");
   return normalizedLabel.includes(normalizedInput);
 };
+const filterNotaries = (input, option) => {
+  const normalizedInput = input.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "");
+  const normalizedLabel = option.name.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "");
+  return normalizedLabel.includes(normalizedInput);
+  console.log("normalized input", input, option);
+};
 const formState = reactive({
   task: 2,
   name: null,
@@ -119,7 +125,13 @@ const onSubmit = async () => {
   loading.value = true;
   formState.people_id = props.info.id;
   try {
-    const response = await makeRequest({ url: `formalization/ruc20-step2/${props.itemSelectedF20.id}`, method: 'POST', data: formState});
+
+    let url = null;
+
+    props.itemSelectedF20 ? url = `formalization/ruc20-step2/${props.itemSelectedF20.id}` : url = `formalization/ruc20-step2/000`
+
+    const response = await makeRequest({ url, method: 'POST', data: formState});
+    
     if (response.status === 200) {
       message.success(response.message);
    

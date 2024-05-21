@@ -76,7 +76,7 @@ const fields = {
     type: 'iText',
     label: 'Número Telefónico del contacto',
     name: 'phone',
-    required: true,
+    required: false,
     message: 'Número de celular',
     max: 9,
     disabled: true
@@ -85,7 +85,7 @@ const fields = {
     type: 'iText',
     label: 'Correo electrónico',
     name: 'email',
-    required: true,
+    required: false,
     message: 'Ingresar email',
     email: 'email',
     disabled: true

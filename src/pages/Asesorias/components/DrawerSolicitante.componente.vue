@@ -22,7 +22,7 @@
 
         <a-form-item v-if="el.type === 'iDate'" :name="el.name" :label="el.label"
           :rules="[{ required: el.required, message: el.message }]">
-          <a-date-picker :locale="locale" v-model:value="birthdateDate" style="width: 100%;" :format="dateFormat" />
+          <a-date-picker :locale="locale" v-model:value="birthdateDate" style="width: 100%;" :format="dateFormat" placeholder="día / mes / año" />
         </a-form-item>
       </template>
     </div>
@@ -64,7 +64,7 @@ const spinning = ref(true);
 const loading = ref(false);
 const fieldx = ref(fields)
 const birthdateDate = ref(null);
-const dateFormat = 'YYYY-MM-DD';
+const dateFormat = 'DD/MM/YYYY';
 const formState = reactive({
   typedocument_id: null,
   documentnumber: null,
@@ -105,7 +105,7 @@ const update = (val) => {
     formState.gender_id = val.gender_id;
     formState.birthday = val.birthday;
     formState.sick = val.sick;
-    if(val.birthday) birthdateDate.value = dayjs(val.birthday, dateFormat);
+    if(val.birthday) birthdateDate.value = dayjs(val.birthday, 'YYYY-MM-DD');
   }
 }
 

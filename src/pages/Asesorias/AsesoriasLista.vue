@@ -80,13 +80,13 @@
         </template>
 
         <template v-if="column.dataIndex == 'mype_region'">
-          {{ record.city.name }}
+          {{ record.city?.name }}
         </template>
         <template v-if="column.dataIndex == 'mype_provincia'">
-          {{ record.province.name }}
+          {{ record.province?.name }}
         </template>
         <template v-if="column.dataIndex == 'mype_distrito'">
-          {{ record.district.name }}
+          {{ record.district?.name }}
         </template>
 
         <template v-if="column.dataIndex == 'componente'">
@@ -127,8 +127,9 @@
         </template>
         
         <template v-if="column.dataIndex === 'modality'">
-          <a-tag :color="record.modality.name == 'Presencial' ? 'green' : 'orange'">{{ record.modality.name }}</a-tag>
+          <a-tag :color="record.modality?.name == 'Presencial' ? 'green' : 'orange'">{{ record.modality?.name }}</a-tag>
         </template>
+        
         <template v-if="column.dataIndex == 'ruc'">
           {{ record.mype?.ruc ? `20${record.mype?.ruc}` : '' }}
         </template>

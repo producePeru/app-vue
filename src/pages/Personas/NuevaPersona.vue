@@ -39,7 +39,7 @@
 
           <a-form-item v-if="el.type === 'iDate'" :name="el.name" :label="el.label"
             :rules="[{ required: el.required, message: el.message }]">
-            <a-date-picker :locale="locale" v-model:value="birthdateDate" style="width: 100%;" :format="dateFormat"
+            <a-date-picker :locale="locale" v-model:value="birthdateDate" style="width: 100%;" :format="dateFormat" placeholder="día / mes / año"
               :disabled="el.disabled" />
           </a-form-item>
         </template>
@@ -85,7 +85,7 @@ const storageData = JSON.parse(localStorage.getItem('profile'))
 const fields = ref(fieldsJs)
 const searchLoading = ref(false);
 const birthdateDate = ref(null);
-const dateFormat = 'YYYY-MM-DD';
+const dateFormat = 'DD/MM/YYYY';
 const loading = ref(false);
 const spinning = ref(true);
 

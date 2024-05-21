@@ -46,7 +46,7 @@ const fields = {
   },
   birthday: {
     type: 'iDate',
-    label: 'Fecha de nacimiento',
+    label: 'Fecha de nacimiento - día/mes/año',
     name: 'birthday',
     required: false,
     message: 'año-mes-día'

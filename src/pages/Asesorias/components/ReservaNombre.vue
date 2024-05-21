@@ -7,7 +7,7 @@
         <template v-for="(el, idx) in fields" :key="idx">
 
           <a-form-item class="item-max" v-if="el.type === 'iSelect'" :name="el.name" :label="el.label" :rules="[{ required: el.required, message: el.message }]">
-            <a-select v-if="el.name == 'regime_id'" v-model:value="formState[el.name]" :options="store.regimes" />
+            <a-select v-if="el.name == 'regime_id'" v-model:value="formState[el.name]" :options="store.regimes" show-search :filter-option="filterOption"  />
             <!-- <a-select v-if="el.name == 'economicsector_id'" v-model:value="formState[el.name]" :options="store.economicSectors" /> -->
             <a-select v-if="el.name == 'modality_id'" v-model:value="formState[el.name]" :options="store.modalities" />
           </a-form-item>

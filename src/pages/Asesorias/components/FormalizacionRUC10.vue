@@ -14,7 +14,7 @@
 
           <a-form-item v-if="el.type === 'iText'" :name="el.name" :label="el.label"
             :rules="[{ required: el.required, message: el.message, type: el.email, max: el.max }]">
-            <a-input v-model:value="formState[el.name]" :disabled="el.disabled" />
+            <a-input v-model:value="formState[el.name]" :disabled="el.disabled" :maxlength="el.max" @input="validateOnlyNumber(el.name)" />
           </a-form-item>
 
           <a-form-item class="item-max" v-if="el.type === 'iSelectWrite'" :name="el.name" :label="el.label"
@@ -128,6 +128,11 @@ const formState = reactive({
   user_id: storageData.user_id
 });
 
+const validateOnlyNumber = (val) => {
+  if(val == 'ruc') {
+    formState[val] = formState[val].replace(/\D/g, '');
+  }
+};
 const handleAddItem = async() => {
   try {
     loadingcategory.value = true;
@@ -190,6 +195,8 @@ const onSubmit = async () => {
       formState.city_id = null;
       formState.province_id = null;
       formState.district_id = null;
+      formState.address = null;
+      formState.ruc = null;
 
       emit('closeDraw', true)
 
@@ -230,6 +237,9 @@ const onSubmitFail = () => {
   }
   .ant-form-item:nth-child(5) {
     grid-column: 1/2;
+  }
+  .ant-form-item:nth-child(9) {
+    grid-column: 2/4;
   }
 }
 </style>

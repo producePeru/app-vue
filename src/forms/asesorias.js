@@ -164,7 +164,7 @@ const ructen = {
   },
   city_id: {
     type: 'iSelectWrite',
-    label: 'Departamento',
+    label: 'Región del negocio',
     name: 'city_id',
     required: true,
     message: 'Seleccionar departamento',
@@ -172,7 +172,7 @@ const ructen = {
   },
   province_id: {
     type: 'iSelectWrite',
-    label: 'Provincia',
+    label: 'Provincia del Negocio',
     name: 'province_id',
     required: true,
     message: 'Seleccionar provincia',
@@ -180,10 +180,27 @@ const ructen = {
   },
   district_id: {
     type: 'iSelectWrite',
-    label: 'Distrito',
+    label: 'Distrito del Negocio',
     name: 'district_id',
     required: true,
     message: 'Seleccionar distrito',
+    disabled: false
+  },
+  ruc: {
+    type: 'iText',
+    label: 'Número de RUC',
+    name: 'ruc',
+    required: false,
+    message: 'Escribir RUC',
+    disabled: false,
+    max: 11
+  },
+  address: {
+    type: 'iText',
+    label: 'Direccion del Negocio',
+    name: 'address',
+    required: false,
+    message: 'Escribir la direccion del Negocio',
     disabled: false
   },
 };
@@ -215,7 +232,7 @@ const asesoria = {
   },
   city_id: {
     type: 'iSelectWrite',
-    label: 'Departamento',
+    label: 'Región del negocio',
     name: 'city_id',
     required: true,
     message: 'Seleccionar departamento',
@@ -223,7 +240,7 @@ const asesoria = {
   },
   province_id: {
     type: 'iSelectWrite',
-    label: 'Provincia',
+    label: 'Provincia del Negocio',
     name: 'province_id',
     required: true,
     message: 'Seleccionar provincia',
@@ -231,7 +248,7 @@ const asesoria = {
   },
   district_id: {
     type: 'iSelectWrite',
-    label: 'Distrito',
+    label: 'Distrito del Negocio',
     name: 'district_id',
     required: true,
     message: 'Seleccionar distrito',
@@ -239,7 +256,7 @@ const asesoria = {
   },
   observations: {
     type: 'iTextarea',
-    label: 'Observaciones',
+    label: 'Nro de Reserva / Observaciones',
     name: 'observations',
     required: false,
     message: 'Seleccionar tipo de documento',

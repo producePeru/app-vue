@@ -22,10 +22,12 @@
                 <a-select v-if="el.name == 'gender_id'" v-model:value="formState[el.name]" :options="store.genders" />
                 <a-select v-if="el.name == 'cde_id'" v-model:value="formState[el.name]" :options="store.cdes" />
                 <a-select v-if="el.name == 'office_id'" v-model:value="formState[el.name]" :options="store.Offices" />
-                <a-select v-if="el.name == 'role_id'" v-model:value="formState[el.name]" :options="store.roles"
-                  @change="handleSelectSupervisor" />
-                <a-select v-if="el.name == 'supervisor_id'" v-model:value="formState[el.name]"
-                  :options="store.supervisores" />
+                <a-select v-if="el.name == 'role_id'" v-model:value="formState[el.name]" :options="store.roles" @change="handleSelectSupervisor" />
+                <a-select v-if="el.name == 'supervisor_id'" v-model:value="formState[el.name]" :options="store.supervisores" />
+
+                <a-select v-if="el.name == 'city_id'" v-model:value="formState[el.name]" :options="store.cities" show-search :filter-option="filterOption" @change="handleDepartaments" />
+                <a-select v-if="el.name == 'province_id'" v-model:value="formState[el.name]" :options="store.provinces" show-search :filter-option="filterOption"  @change="handleProvinces" :disabled="!formState.city_id" />
+                <a-select v-if="el.name == 'district_id'" v-model:value="formState[el.name]" :options="store.districts" show-search :filter-option="filterOption" :disabled="!formState.province_id" />
               </a-form-item>
 
               <a-form-item v-if="el.type === 'iText'" :name="el.name" :label="el.label"
@@ -35,11 +37,11 @@
 
               <a-form-item v-if="el.type === 'iDate'" :name="el.name" :label="el.label"
                 :rules="[{ required: el.required, message: el.message }]">
-                <a-date-picker :locale="locale" v-model:value="birthdateDate" style="width: 100%;" :format="dateFormat" />
+                <a-date-picker :locale="locale" v-model:value="birthdateDate" style="width: 100%;" :format="dateFormat" placeholder="DÍA/MES/AÑO" />
               </a-form-item>
             </template>
           </div>
-          <!-- <pre>:::::{{ storageEmail }}</pre> -->
+          <!-- <pre>:::::{{ birthdateDate }}</pre> -->
           <a-form-item>
             <a-button class="btn-produce" type="primary" html-type="submit" :loading="loading">ACTUALIZAR</a-button>
           </a-form-item>
@@ -71,7 +73,9 @@ store.$patch({ genders: store.genders });
 store.$patch({ cdes: store.cdes });
 store.$patch({ Offices: store.Offices });
 store.$patch({ roles: store.roles });
+store.$patch({ cities: store.cities });
 store.$patch({ supervisores: store.supervisores });
+store.fetchCities();
 
 store.fetchGenders()
 store.fetchCdes()
@@ -82,7 +86,7 @@ const props = defineProps(['updateUser']);
 const loading = ref(false);
 const fieldx = ref(fields)
 const birthdateDate = ref(null);
-const dateFormat = 'YYYY-MM-DD';
+const dateFormat = 'DD/MM/YYYY';
 const formState = reactive({
   email: null,
   documentnumber: null,
@@ -115,6 +119,20 @@ const handleSelectSupervisor = (val) => {
     const { supervisor_id: removed, ...newValue } = fieldx.value;
     fieldx.value = newValue;
   }
+}
+const filterOption = (input, option) => {
+  const normalizedInput = input.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "");
+  const normalizedLabel = option.label.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "");
+  return normalizedLabel.includes(normalizedInput);
+};
+const handleDepartaments = (id) => {
+  formState.province_id = null
+  formState.district_id = null
+  store.fetchProvinces(id)
+}
+const handleProvinces = (id) => {
+  formState.district_id = null
+  store.fetchDistricts(id)
 }
 
 const onSubmit = async () => {
@@ -155,7 +173,7 @@ const fetchData = async() => {
       formState.gender_id = data.gender_id;
       formState.cde_id = data.cde_id;
       formState.office_id = data.office_id;
-      if(data.birthday) birthdateDate.value = dayjs(data.birthday, dateFormat);
+      if(data.birthday) birthdateDate.value = dayjs(data.birthday, 'YYYY-MM-DD');
     }
 
   } catch (error) {
