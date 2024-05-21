@@ -19,7 +19,7 @@
 
       <a-form-item>
         <a-button class="btn-produce" type="primary" html-type="submit" :loading="loading">GUARDAR</a-button>
-        <pre>{{ props.itemSelectedF20 }}</pre>
+        <!-- <pre>{{ props.itemSelectedF20 }}</pre> -->
       </a-form-item>
     </a-form>
   </div>
