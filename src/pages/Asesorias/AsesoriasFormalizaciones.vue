@@ -1,8 +1,8 @@
 <template>
   <div class="asesorias">
-    <h3>REGISTRO DE FORMALIZACIONES Y ASESORÍAS</h3>
+    <h3 class="title-produce">REGISTRO DE FORMALIZACIONES Y ASESORÍAS</h3>
     <br>
-    <a-card class="card-as">
+    <a-card class="card-as card-gray">
       <RedoOutlined v-if="route.query.dni" class="ico-reload" @click="handleResetPage" />
       <div class="wrapper-s">
         <div>
@@ -30,7 +30,7 @@
     <div class="column-2">
       <a-card class="card-as" v-if="infoUser.length != 0">
         <div class="info-update">
-          <h4>RESULTADO DE LA BÚSQUEDA</h4>
+          <h4 class="title-produce">RESULTADO DE LA BÚSQUEDA</h4>
           <EditOutlined class="ico-edit" @click="handleEditUserData" />
         </div>
         <div class="info-personal">
@@ -60,7 +60,7 @@
       </a-card>
       
       <a-card class="card-as" v-if="infoUser.length != 0">
-        <h4>¿DESEA REGISTRAR UN NUEVO SERVICIO?</h4>
+        <h4 class="title-produce">¿DESEA REGISTRAR UN NUEVO SERVICIO?</h4>
         <div class="card-as-btn">
           <a-select style="min-width: 200px;" v-model:value="value1" :options="options1" />
           <a-button class="btn-produce" type="primary" @click="handleSelectAction">REGISTRAR</a-button>
@@ -77,7 +77,7 @@
       </template> -->
 
     <a-card class="card-as" v-if="historialData">
-      <h4 >HISTORIAL</h4>
+      <h4 class="title-produce">HISTORIAL</h4>
       <HISTORIAL :totaladvisories="totaladvisories" :totalformalization10="totalformalization10" :totalformalization20="totalformalization20" />
     </a-card>
   </div>
@@ -416,7 +416,7 @@ onMounted(() => {
     align-items: center;
     justify-content: space-between;
     .ico-edit {
-      color: #1677ff;
+      color: var(--secondary);
       cursor: pointer;
     }
   }
@@ -512,9 +512,11 @@ onMounted(() => {
 }
 </style>
 
-<style>
-.ant-drawer-content-wrapper {
-  /* width: 100%;
-  min-width: 600px; */
+<style lang="scss">
+.asesorias {
+  .card-gray {
+    background-color: #f5f5f5;
+    border-radius: 8px;
+  }
 }
 </style>

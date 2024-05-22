@@ -1,11 +1,6 @@
 :root {
-  --component-background: #ffffff;
-  --background-color-light: #ffffff;
-  --popover-bg: #ffffff;
-  
-  --primary: #cf1322;
-  --primary-hover: #f5222d;
-  --color-3: #ffa39e;
+  --primary: #00a6db;
+  --secondary: #dc1c19;
 }
 
 h1 {
@@ -50,27 +45,27 @@ h1 {
   margin: 1rem 0 1.5rem;
 }
 
-.ant-menu-item-selected {
-  background-color: var(--primary) !important;
-  &:active {
-    background-color: var(--primary-hover) !important;
-  }
-}
-:where(.css-185kyl0).ant-menu-dark:not(.ant-menu-horizontal) .ant-menu-item:not(.ant-menu-item-selected):active {
-  background-color: var(--primary-hover) !important;
-}
+// .ant-menu-item-selected {
+//   background-color: var(--primary) !important;
+//   &:active {
+//     background-color: var(--primary-hover) !important;
+//   }
+// }
+// :where(.css-185kyl0).ant-menu-dark:not(.ant-menu-horizontal) .ant-menu-item:not(.ant-menu-item-selected):active {
+//   background-color: var(--primary-hover) !important;
+// }
 .ant-table-cell {
   line-height: 1.2;
 }
 
-:where(.css-dev-only-do-not-override-185kyl0)
-.ant-menu-dark:not(.ant-menu-horizontal) 
-.ant-menu-item:not(.ant-menu-item-selected):active,
-:where(.css-dev-only-do-not-override-185kyl0)
-.ant-menu-dark:not(.ant-menu-horizontal) 
-.ant-menu-submenu-title:active {
-  background-color: var(--primary-hover) !important;
-}
+// :where(.css-dev-only-do-not-override-185kyl0)
+// .ant-menu-dark:not(.ant-menu-horizontal) 
+// .ant-menu-item:not(.ant-menu-item-selected):active,
+// :where(.css-dev-only-do-not-override-185kyl0)
+// .ant-menu-dark:not(.ant-menu-horizontal) 
+// .ant-menu-submenu-title:active {
+//   background-color: var(--primary-hover) !important;
+// }
 .uppercase {
   text-transform: uppercase;
 }
@@ -84,7 +79,7 @@ $color-text: #4A5568;
 $color-background: #F7F7FA;
 
 .c-primary {
-  color: #d9363e;
+  color: #cd1616;
 }
 .details-modal {
   display: grid;
@@ -134,12 +129,17 @@ $color-background: #F7F7FA;
   font-optical-sizing: auto;
 }
 
+// styles
 .btn-produce {
-  background-color: #BA0F0F;
-  &:hover, &:active {
-    background-color: #cd1616 !important;
-  }
+  background-color: var(--primary);
 }
+.title-produce {
+  color: var(--secondary);
+}
+:where(.css-dev-only-do-not-override-ju8ixa).ant-tabs .ant-tabs-tab.ant-tabs-tab-active .ant-tabs-tab-btn {
+  font-weight: 500;
+}
+
 
 .radio-produce{
   .ant-radio-inner {
@@ -148,51 +148,51 @@ $color-background: #F7F7FA;
   }
 } 
 .search-produce {
-  .ant-btn-primary {
-    background-color: var(--primary);
-    &:hover, &:active {
-      background-color: #cd1616 !important;
-    }
-  }
+  // .ant-btn-primary {
+  //   background-color: var(--primary);
+  //   &:hover, &:active {
+  //     background-color: #cd1616 !important;
+  //   }
+  // }
 }
-:where(.css-dev-only-do-not-override-1qb1s0s).ant-radio-wrapper .ant-radio-checked .ant-radio-inner {
-  background-color: var(--primary);
-  border-color: var(--primary);
-}
-:where(.css-dev-only-do-not-override-1qb1s0s).ant-steps .ant-steps-item-process .ant-steps-item-icon {
-  background-color: var(--primary) !important;
-  border-color: var(--primary) !important;
-}
-:where(.css-dev-only-do-not-override-1qb1s0s).ant-btn-primary {
-  box-shadow: none !important;
-}
-:where(.css-dev-only-do-not-override-1qb1s0s).ant-tabs .ant-tabs-tab.ant-tabs-tab-active .ant-tabs-tab-btn {
-  color: var(--primary);
-  font-weight: 600;
-}
-:where(.css-dev-only-do-not-override-1qb1s0s).ant-progress .ant-progress-steps-item-active {
-  background-color: #52c41a;
-}
-:where(.css-dev-only-do-not-override-1qb1s0s).ant-menu-dark:not(.ant-menu-horizontal) .ant-menu-item:not(.ant-menu-item-selected):active {
-  background-color: #f44336 !important;
-}
-:where(.css-1qb1s0s).ant-menu-dark:not(.ant-menu-horizontal) .ant-menu-item:not(.ant-menu-item-selected):active {
-  background-color: #d9363e !important;
-}
-:where(.css-dev-only-do-not-override-1qb1s0s).ant-checkbox-checked .ant-checkbox-inner {
-  background-color: #d9363e !important;
-  border-color: #d9363e !important;
-}
-:where(.css-1qb1s0s).ant-btn-primary {
-  box-shadow: none !important;
-}
-:where(.css-1qb1s0s).ant-radio-wrapper .ant-radio-checked .ant-radio-inner {
-  border-color: var(--primary);
-  background-color: var(--primary);
-}
-:where(.css-dev-only-do-not-override-1qb1s0s).ant-checkbox-indeterminate .ant-checkbox-inner:after {
-  background-color: #d9363e !important;
-}
+// :where(.css-dev-only-do-not-override-1qb1s0s).ant-radio-wrapper .ant-radio-checked .ant-radio-inner {
+//   background-color: var(--primary);
+//   border-color: var(--primary);
+// }
+// :where(.css-dev-only-do-not-override-1qb1s0s).ant-steps .ant-steps-item-process .ant-steps-item-icon {
+//   background-color: var(--primary) !important;
+//   border-color: var(--primary) !important;
+// }
+// :where(.css-dev-only-do-not-override-1qb1s0s).ant-btn-primary {
+//   box-shadow: none !important;
+// }
+// :where(.css-dev-only-do-not-override-1qb1s0s).ant-tabs .ant-tabs-tab.ant-tabs-tab-active .ant-tabs-tab-btn {
+//   color: var(--primary);
+//   font-weight: 600;
+// }
+// :where(.css-dev-only-do-not-override-1qb1s0s).ant-progress .ant-progress-steps-item-active {
+//   background-color: #52c41a;
+// }
+// :where(.css-dev-only-do-not-override-1qb1s0s).ant-menu-dark:not(.ant-menu-horizontal) .ant-menu-item:not(.ant-menu-item-selected):active {
+//   background-color: #f44336 !important;
+// }
+// :where(.css-1qb1s0s).ant-menu-dark:not(.ant-menu-horizontal) .ant-menu-item:not(.ant-menu-item-selected):active {
+//   background-color: #d9363e !important;
+// }
+// :where(.css-dev-only-do-not-override-1qb1s0s).ant-checkbox-checked .ant-checkbox-inner {
+//   background-color: #d9363e !important;
+//   border-color: #d9363e !important;
+// }
+// :where(.css-1qb1s0s).ant-btn-primary {
+//   box-shadow: none !important;
+// }
+// :where(.css-1qb1s0s).ant-radio-wrapper .ant-radio-checked .ant-radio-inner {
+//   border-color: var(--primary);
+//   background-color: var(--primary);
+// }
+// :where(.css-dev-only-do-not-override-1qb1s0s).ant-checkbox-indeterminate .ant-checkbox-inner:after {
+//   background-color: #d9363e !important;
+// }
 .ant-drawer-content-wrapper {
   // width: 100%;
   width: 100% !important;

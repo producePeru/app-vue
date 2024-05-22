@@ -513,9 +513,9 @@ onMounted(() => {
 }
 
 .hdactive {
-  background-color: #cf1322;
+  background-color: #00a6db;
   color: #fff;
-  border-color: #cf1322 !important;
+  border-color: #00a6db !important;
 }
 </style>
 
