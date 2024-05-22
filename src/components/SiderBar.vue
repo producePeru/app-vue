@@ -3,7 +3,7 @@
     token: {
       colorPrimary: '#00a6db',
       colorBorderSecondary: '#ddd',
-      colorFillQuaternary: '#e9e9e9',
+      // colorFillQuaternary: '#e9e9e9',
     },
   }">
 
