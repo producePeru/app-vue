@@ -76,10 +76,10 @@
         </div>
       </template> -->
 
-    <a-card class="card-as" v-if="historialData">
+    <div class="card-as" v-if="historialData" style="padding: 1rem;">
       <h4 class="title-produce">HISTORIAL</h4>
       <HISTORIAL :totaladvisories="totaladvisories" :totalformalization10="totalformalization10" :totalformalization20="totalformalization20" />
-    </a-card>
+    </div>
   </div>
 
 
@@ -515,7 +515,7 @@ onMounted(() => {
 <style lang="scss">
 .asesorias {
   .card-gray {
-    background-color: #f5f5f5;
+    background-color: #f7f7f7;
     border-radius: 8px;
   }
 }

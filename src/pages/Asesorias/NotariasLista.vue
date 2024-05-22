@@ -4,7 +4,7 @@
     <div class="filters-notary">
       
       <div class="filters-center-produce">
-        <a-button v-if="storageRole[0].id != 2" style="margin-right: 1rem;" class="btn-produce" type="primary" @click="showDrawer">AGREGAR</a-button>
+        <a-button style="margin-right: 1rem;" type="primary" @click="showDrawer">AGREGAR</a-button>
         <router-link to="/notarias" target="_blank">
           <LinkOutlined />
         </router-link>
@@ -20,7 +20,7 @@
           <label>Buscar Notarías por REGIÓN</label>
           <a-select placeholder="Buscar por Provincia" v-model:value="filterCity" show-search :options="store.cities" :filter-option="filterOption" />
         </div>
-        <a-button type="primary" class="btn-produce" @click="fetchData">BUSCAR</a-button>
+        <a-button @click="fetchData">BUSCAR</a-button>
       </div>
 
     </div>
@@ -44,7 +44,7 @@
           {{ record.district?.name }}
         </template>
         <template v-if="column.dataIndex == 'namenotary'">
-          <h4 style="font-size: 14px; font-weight: 700;">{{ record.name }}</h4>
+          {{ record.name }}
         </template>
         <template v-if="column.dataIndex == 'pricex'">
           <div ref="divRef" class="gastos">
@@ -89,6 +89,10 @@
 
       </template>
     </a-table>
+
+
+
+    
     <a-drawer v-model:open="open" class="draw-notary" root-class-name="root-class-name" title="Datos de la notaría"
       placement="right" @after-open-change="afterOpenChange">
       <formAddNotary @closeDraw="handleCloseDrawopen" :updateNotary="updateNotary" />
@@ -116,15 +120,15 @@ store.fetchCities();
 const valueY = ref(window.innerHeight - 100);
 const columns = [
   { title: '#', dataIndex: 'idx', fixed: 'left', align: 'center', width: 50 },
-  { title: 'NOTARIA', fixed: 'left', dataIndex: 'namenotary', align: 'center', width: 180 },
-  { title: 'REGIÓN', fixed: 'left', dataIndex: 'departamento', align: 'center', width: 120 },
-  { title: 'PROVINCIA', fixed: 'left', dataIndex: 'province', align: 'center', width: 120 },
-  { title: 'DISTRITO', fixed: 'left', dataIndex: 'distrite', width: 120 },
+  { title: 'NOTARIA', fixed: 'left', dataIndex: 'namenotary', align: 'center', width: 120 },
+  { title: 'REGIÓN', fixed: 'left', dataIndex: 'departamento', align: 'center', width: 100 },
+  { title: 'PROVINCIA', fixed: 'left', dataIndex: 'province', align: 'center', width: 100 },
+  { title: 'DISTRITO', fixed: 'left', dataIndex: 'distrite', width: 130, align: 'center' },
   { title: 'DIRECCION', dataIndex: 'address', align: 'center', width: 160 },
-  { title: 'GASTOS NOTARIALES', dataIndex: 'pricex', align: 'center', width: 320 },
+  { title: 'GASTOS NOTARIALES', dataIndex: 'pricex', align: 'center', width: 300 },
   { title: 'CONDICIONES', dataIndex: 'pricedescriptionx', align: 'center', width: 260 },
-  { title: 'SOCIO O INTERVINIENTE ADICIONAL', dataIndex: 'socio', align: 'center', width: 200 },
-  { title: 'BIOMETRICO', dataIndex: 'bio', align: 'center', width: 220 },
+  { title: 'SOCIO O INTERVINIENTE', dataIndex: 'socio', align: 'center', width: 200 },
+  { title: 'BIOMETRICO', dataIndex: 'bio', align: 'center', width: 150 },
   { title: 'DATOS DE CONTACTO', dataIndex: 'contact', align: 'center', width: 260 },
   ...(storageRole[0].id === 3 || storageRole[0].id === 1 ? [{ title: '', dataIndex: 'actions', width: 50, align: 'center', fixed: 'right' }] : [])
 
@@ -274,20 +278,25 @@ onMounted(() => {
     .ant-table-cell:nth-child(9),
     .ant-table-cell:nth-child(10),
     .ant-table-cell:nth-child(11) {
-      background-color: #8eaadb !important;
-      font-weight: 700;
-      font-size: 14px;
+      background-color: #cfcfcf !important;
+      font-size: 13px;
       color: #000;
-      border-bottom: 1px solid #333 !important;
+      border-bottom: 0px solid #333 !important;
       border-inline-end: 0 solid transparent !important;
     }
   }
 
   .ant-table-row {
+    .ant-table-cell:nth-child(2) {
+      font-size: 13px;
+      font-weight: 700;
+    }
     .ant-table-cell:nth-child(3),
     .ant-table-cell:nth-child(4),
     .ant-table-cell:nth-child(5) {
-      background-color: #e3e3e3 !important;
+      background-color: #efefef !important;
+      font-size: 13px;
+      font-weight: 700;
     }
   }
   .ant-table-row {
@@ -303,23 +312,12 @@ onMounted(() => {
     .ant-table-cell:nth-child(1), .ant-table-cell:nth-child(2) {
       background-color: #cfe2f3 !important;
     }
-    .ant-table-cell:nth-child(2){
-      font-size: 16px;
-      font-weight: 700;
-    }
+   
 
-    .ant-table-cell:nth-child(3), 
-    .ant-table-cell:nth-child(4),
-    .ant-table-cell:nth-child(5) {
-      font-size: 14px;
-      font-weight: 700;
-    }
+    
   }
 
   .ant-table-row {
-    .ant-table-cell:nth-child(7) {
-      // position: relative;
-    }
 
     .ant-table-cell:nth-child(10), .ant-table-cell:nth-child(11) {
       font-size: 13px;
@@ -332,13 +330,13 @@ onMounted(() => {
 
   h1 strong,
   h2 strong {
-    font-size: 18px;
+    font-size: 16px;
     font-weight: 700;
   }
 
   strong {
     font-weight: 500;
-    font-size: 13px;
+    font-size: 12px;
   }
 }
 
@@ -346,7 +344,7 @@ onMounted(() => {
 
   h1 strong,
   h2 strong {
-    font-size: 14px;
+    font-size: 13px;
   }
 }
 
@@ -376,7 +374,7 @@ onMounted(() => {
 
   p strong {
     font-weight: 500;
-    font-size: 14px;
+    font-size: 13px;
     display: block;
   }
 }

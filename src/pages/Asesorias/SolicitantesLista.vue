@@ -19,7 +19,7 @@
     </div>
 
     <a-table bordered :scroll="{ x: valueX, y: valueY }" class="ant-table-striped" :columns="columns"
-      :data-source="dataSource" :pagination="false" :loading="loading" size="small">
+      :data-source="dataSource" :pagination="false" :loading="loading" size="small" :row-class-name="(_record, index) => (index % 2 === 1 ? 'table-striped' : null)">
       <template v-slot:bodyCell="{ column, record, index }">
         <template v-if="column.dataIndex == 'idx'">
           {{ computeIndex(index) }}
@@ -272,5 +272,14 @@ onMounted(() => {
     font-size: 22px;
     margin-bottom: 2rem;
   }
+}
+</style>
+
+<style scoped>
+[data-doc-theme='light'] .ant-table-striped :deep(.table-striped) td {
+  background-color: #fafafa;
+}
+[data-doc-theme='dark'] .ant-table-striped :deep(.table-striped) td {
+  background-color: rgb(29, 29, 29);
 }
 </style>

@@ -9,7 +9,7 @@
     <div class="filters-dig">
       <div>
         <div>
-          <a-button @click="handleDownloadAsesorias" :loading="loadingexc">
+          <a-button @click="handleDownloadAsesorias" :loading="loadingexc" type="primary">
             <img width="20" style="margin: -2px 4px 0 0;" src="@/assets/img/icoexcel.png" /> DESCARGAR
           </a-button>
         </div>
@@ -26,7 +26,7 @@
           <a-select v-model:value="byAsesores" mode="multiple" placeholder="Selecciona asesores" max-tag-count="responsive" :options="store.asesores" />
         </div>
 
-        <a-button type="primary" class="btn-produce" @click="handleSearchFilter">BUSCAR</a-button>
+        <a-button @click="handleSearchFilter">BUSCAR</a-button>
       </div>
     </div>
 
@@ -563,7 +563,7 @@ onMounted(() => {
   // gap: 0 1rem;
   h3 {
     cursor: pointer;
-    border: 1px solid #f0f0f0;
+    border: 1px solid #ddd;
     padding: .5rem 1rem;
     font-size: 13px;
     margin: 0;
