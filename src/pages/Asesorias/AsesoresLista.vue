@@ -1,6 +1,6 @@
 <template>
   <div>
-    <h3>ASESORES</h3>
+    <h3 class="title-produce">ASESORES</h3>
     <div class="filters-notary">
       <div>
         <!-- <a-button style="margin-right: 1rem;" class="btn-produce" type="primary" @click="showDrawer">AGREGAR</a-button> -->

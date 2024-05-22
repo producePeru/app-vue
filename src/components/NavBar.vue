@@ -11,7 +11,7 @@
         
         <!-- <pre>{{photoProfile}}</pre> -->
         <!-- <a-avatar v-if="photoProfile" :src="photoProfile"></a-avatar> -->
-        <a-avatar >{{ user.name.charAt(0) }}</a-avatar>
+        <a-avatar style="background-color: var(--primary)">{{ user.name.charAt(0) }}</a-avatar>
 
       </a>
       <template #overlay>

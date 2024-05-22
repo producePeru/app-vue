@@ -17,12 +17,12 @@
       
       <div class="filters" >
         <div class="rango">
-          <label>Por rango de fechas</label>
+          <label>Buscar por rango de Fechas</label>
           <a-range-picker v-model:value="byDateRange" :presets="rangePresets" />
         </div>
 
         <div class="asesor" v-if="storageRole[0].id == 1">
-          <label>Por asesores</label>
+          <label>Buscar por Asesores</label>
           <a-select v-model:value="byAsesores" mode="multiple" placeholder="Selecciona asesores" max-tag-count="responsive" :options="store.asesores" />
         </div>
 
@@ -134,6 +134,27 @@
           {{ record.mype?.ruc ? `20${record.mype?.ruc}` : '' }}
         </template>
 
+        <template v-if="column.dataIndex == 'actions'">
+          <a-dropdown :trigger="['click']">
+            <a class="ant-dropdown-link" @click.prevent>
+              <a-button shape="circle" :icon="h(MoreOutlined)" size="small" />
+            </a>
+            <template #overlay>
+              <a-menu>
+                <a-menu-item>
+                  <a @click="handleEditItem(record)">Editar</a>
+                </a-menu-item>
+                <a-menu-item>
+                  <a-popconfirm title="¿Seguro de eliminar?" @confirm="handleDeleteItem(record)" class="prod-alert">
+                    <template #icon><question-circle-outlined style="color: red" /></template>
+                    <a>Eliminar</a>
+                  </a-popconfirm>
+                </a-menu-item>
+              </a-menu>
+            </template>
+          </a-dropdown>
+        </template>
+
       </template>
       
     </a-table>
@@ -146,6 +167,20 @@
     <a-pagination size="small" :total="total" :pageSize="pageSize"  @change="handlePaginator" :showSizeChanger="false" :defaultCurrent="2" />
   </div>
 
+  <a-drawer 
+    title="Editar asesoría" 
+    v-model:open="open1" 
+    placement="right">
+    <EditarAsesoria :info="infoUser" @closeDraw="open1 = false, fetchData()" />
+  </a-drawer>
+
+  <a-drawer 
+    title="Editar Formalización RUC 10" 
+    v-model:open="open2" 
+    placement="right">
+    <EditarFormalizacion10 :info="infoUser" @closeDraw="open2 = false, fetchData()" />
+  </a-drawer>
+
 </template>
 
 <script setup>
@@ -155,12 +190,18 @@ dayjs.locale('es');
 
 import axios from 'axios';
 import { makeRequest } from '@/utils/api.js'
-import { ref, onMounted, onBeforeUnmount, computed } from 'vue';
+import { h, ref, onMounted, onBeforeUnmount, computed } from 'vue';
 import { message } from 'ant-design-vue';
 import Cookies from 'js-cookie';
 import { requestNoToken } from '@/utils/noToken.js';
 import { useCounterStore } from '@/stores/selectes.js';
+import { MoreOutlined, QuestionCircleOutlined } from '@ant-design/icons-vue';
+import EditarAsesoria from '@/pages/Asesorias/components/EditarAsesoria.vue';
+import EditarFormalizacion10 from '@/pages/Asesorias/components/EditarFormalizacionRUC10.vue';
 
+const open1 = ref(false);
+const open2 = ref(false);
+const infoUser = ref(null);
 const storageRole = JSON.parse(localStorage.getItem('role'));
 const token = Cookies.get('token');
 const prod = import.meta.env.VITE_APP_API_URL_PRODUCTION
@@ -231,6 +272,7 @@ const columnsAsesoria = ref([
   { title: 'Componente', dataIndex: 'componente', width: 180 },
   { title: 'Tema', dataIndex: 'tema_componente', width: 180 },
   { title: 'Modalidad', dataIndex: 'modality', width: 120, align: 'center' },
+  { title: '', dataIndex: 'actions', width: 50, align: 'center', fixed: 'right'}
 ]);
 
 const columnsRuc10 = ref([
@@ -247,12 +289,11 @@ const columnsRuc10 = ref([
   { title: 'Región', dataIndex: 'mype_region', width: 140 },
   { title: 'Provincia', dataIndex: 'mype_provincia', width: 160 },
   { title: 'Distrito', dataIndex: 'mype_distrito', width: 160 },
-
   { title: 'Detalle del trámite', dataIndex: 'detalle_tramite', width: 180 },
   { title: 'Sector económico', dataIndex: 'sector_economico', width: 180 },
   { title: 'Actividad comercial', dataIndex: 'atividad_comercial', width: 180 },
-
   { title: 'Modalidad', dataIndex: 'modality', width: 120, align: 'center' },
+  { title: '', dataIndex: 'actions', width: 50, align: 'center', fixed: 'right'}
 ]);
 
 const columnsRuc20 = ref([
@@ -310,7 +351,46 @@ const handleNamePaginator = (val) => {
   return types[val];
 }
 
+const handleDeleteItem= async(val) => {
+  try {
+    
+    let url = null;
+    
+    if(active.value == 'asesorias') url = `advisory/delete/${val.id}`
+    if(active.value == 'ruc10')     url = `formalization/delete-ruc-10/${val.id}`
+    // if(active.value == 'ruc20') url = `advisory/delete/${val.id}`
 
+    const data = await makeRequest({ url, method: 'DELETE' });
+    
+    
+    fetchData();
+    message.success(data.message);
+  } catch (error) {
+    console.error('Error de red:', error);
+  }
+}
+const handleEditItem = async(val) => {
+
+  try {
+    
+    let url = null;
+    
+    if(active.value == 'asesorias') url = `advisory/find/${val.id}`
+    if(active.value == 'ruc10')     url = `formalization/find-ruc-10/${val.id}`
+    // if(active.value == 'ruc20') url = `advisory/delete/${val.id}`
+    
+    const data = await makeRequest({ url, method: 'GET' });
+    if(data.status == 200) {
+      infoUser.value = data.data; 
+      if(active.value == 'asesorias') open1.value = true;
+      if(active.value == 'ruc10') open2.value = true;
+    }
+  } catch (error) {
+    console.error('Error de red:', error);
+  }
+  
+  
+}
 const handleDownloadAsesorias = async () => {
 
   loadingexc.value = true
@@ -508,9 +588,7 @@ onMounted(() => {
   margin-top: 1.5rem;
 }
 
-.ant-popover-inner {
-  width: 200px;
-}
+
 
 .hdactive {
   background-color: #00a6db;
@@ -520,6 +598,12 @@ onMounted(() => {
 </style>
 
 <style lang="scss">
+.ant-popconfirm-message-title {
+  width: 150px;
+}
+.ant-popconfirm-buttons {
+  text-align: center;
+}
 .table-historial {
   .ant-table-row {
     .ant-table-cell:nth-child(3), .ant-table-cell:nth-child(4) {

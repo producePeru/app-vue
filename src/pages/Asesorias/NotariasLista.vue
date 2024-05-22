@@ -1,6 +1,6 @@
 <template>
   <div class="all-notary">
-    <h3>NOTARÍAS</h3>
+    <h3 class="title-produce">NOTARÍAS</h3>
     <div class="filters-notary">
       
       <div class="filters-center-produce">
@@ -12,12 +12,12 @@
 
       <div class="filters-produce" >
         <div>
-          <label>Buscar por nombre de notaria</label>
+          <label>Buscar por Nombre de Notaría</label>
           <a-input v-model:value="filterName" />
         </div>
 
         <div>
-          <label>Por provincia</label>
+          <label>Buscar Notarías por REGIÓN</label>
           <a-select placeholder="Buscar por Provincia" v-model:value="filterCity" show-search :options="store.cities" :filter-option="filterOption" />
         </div>
         <a-button type="primary" class="btn-produce" @click="fetchData">BUSCAR</a-button>

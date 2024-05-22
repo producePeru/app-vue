@@ -1,6 +1,6 @@
 <template>
   <div>
-    <h3>USUARIOS</h3>
+    <h3 class="title-produce">USUARIOS</h3>
     <br>
 
     <!-- <div class="filters-dig">

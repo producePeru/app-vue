@@ -1,5 +1,5 @@
 <template>
-  <h3>REGISTRO DE USUARIO</h3>
+  <h3 class="title-produce">REGISTRO DE USUARIO</h3>
 
   <a-divider />
 
