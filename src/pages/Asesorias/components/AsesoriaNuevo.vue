@@ -16,6 +16,10 @@
             <a-textarea v-model:value="formState[el.name]" :rows="3" />
           </a-form-item>
 
+          <a-form-item v-if="el.type === 'iText'" :name="el.name" :label="el.label" :rules="[{ required: el.required, message: el.message, type: el.email, max: el.max }]">
+            <a-input v-model:value="formState[el.name]" :maxlength="el.max" @input="validateOnlyNumber(el.name)" />
+          </a-form-item>
+
           <a-form-item class="item-max" v-if="el.type === 'iSelectWrite'" :name="el.name" :label="el.label"
             :rules="[{ required: el.required, message: el.message }]">
             <!-- <a-select v-if="el.name == 'theme_id'" v-model:value="formState[el.name]" show-search :options="store.componentThemes" 
@@ -130,6 +134,11 @@ const formState = reactive({
   district_id: null,
 });
 
+const validateOnlyNumber = (val) => {
+  if(val == 'ruc') {
+    formState[val] = formState[val].replace(/\D/g, '');
+  }
+};
 const handleAddItem = async() => {
   try {
     loadingcategory.value = true;
@@ -201,6 +210,7 @@ const onSubmit = async () => {
       formState.province_id = null;
       formState.district_id = null;
       formState.observations = null;
+      formState.ruc = null;
 
       emit('closeDraw', true)
     }
@@ -241,11 +251,12 @@ const onSubmitFail = () => {
     grid-column: 1/3;
   }
 
-  .ant-form-item:nth-child(4) {
-    grid-column: 1/2;
-  }
+  // .ant-form-item:nth-child(5) {
+  //   grid-row: 3;
+  //   grid-column: 3/3;
+  // }
 
-  .ant-form-item:nth-child(7) {
+  .ant-form-item:nth-child(8) {
     grid-column: 1/4;
   }
 }

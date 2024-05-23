@@ -15,9 +15,9 @@
               :options="store.typeDocuments" :disabled="el.disabled" @change="handleSelectTypeDocument" />
             <a-select v-if="el.name == 'city_id'" v-model:value="formState[el.name]" :options="store.cities" show-search :filter-option="filterOption"
               @change="handleDepartaments" :disabled="el.disabled" />
-            <a-select v-if="el.name == 'province_id'" v-model:value="formState[el.name]" :options="store.provinces" show-search :filter-option="filterOption"
+            <a-select v-if="el.name == 'province_id'" v-model:value="formState[el.name]" :options="provinces" show-search :filter-option="filterOption"
               @change="handleProvinces" :disabled="!formState.city_id" />
-            <a-select v-if="el.name == 'district_id'" v-model:value="formState[el.name]" :options="store.districts" show-search :filter-option="filterOption"
+            <a-select v-if="el.name == 'district_id'" v-model:value="formState[el.name]" :options="districts" show-search :filter-option="filterOption"
               :disabled="!formState.province_id" />
             <a-select v-if="el.name == 'gender_id'" v-model:value="formState[el.name]" :options="store.genders"
               :disabled="el.disabled" />
@@ -28,7 +28,7 @@
           <a-form-item v-if="el.type === 'iSearch'" class="item-max" :name="el.name" :label="el.label"
             :rules="[{ required: el.required, message: el.message }]">
             <a-input-search :loading="searchLoading" v-model:value="formState[el.name]" @search="handleSearchApi"
-              @input="validateNumber" :maxlength="formState.typedocument_id == 1 ? 8 : 20" :disabled="el.disabled" />
+              @input="validateNumber" :maxlength="formState.typedocument_id == 1 ? 8 : 20" disabled />
           </a-form-item>
 
           <a-form-item v-if="el.type === 'iText'" :name="el.name" :label="el.label"
@@ -45,7 +45,7 @@
         </template>
       </div>
       <div>{{ update() }}</div>
-      <!-- <pre>{{ formState }}</pre> -->
+      <!-- <pre>{{ provinces }}</pre> -->
       <a-form-item>
         <a-button class="btn-produce" type="primary" html-type="submit" :loading="loading">REGISTRAR</a-button>
       </a-form-item>
@@ -55,6 +55,7 @@
 </template>
 
 <script setup>
+import { requestNoToken } from '@/utils/noToken.js';
 import { reactive, ref, onMounted } from 'vue';
 import fieldsJs from '@/forms/nuevaPersona.js';
 import { message } from 'ant-design-vue';
@@ -80,6 +81,8 @@ store.fetchTypeDocuments();
 store.fetchCities();
 store.fetchGenders();
 
+const provinces = ref(null);
+const districts = ref(null);
 const router = useRouter();
 const storageData = JSON.parse(localStorage.getItem('profile'))
 const fields = ref(fieldsJs)
@@ -107,6 +110,23 @@ const formState = reactive({
   people_id: storageData.user_id,
   from_id: 1
 });
+
+const fetchProvinces = async(id) =>  {
+  try {
+    const { data } = await requestNoToken({ url: `select/provinces/${id}`, method: 'GET' });
+    provinces.value = data;
+  } catch (error) {
+    console.error('Error de red:', error);
+  }
+}
+const fetchDistricts = async(id) =>  {
+  try {
+    const { data } = await requestNoToken({ url: `select/districts/${id}`, method: 'GET' });
+    districts.value = data;
+  } catch (error) {
+    console.error('Error de red:', error);
+  }
+}
 
 const filterOption = (input, option) => {
   const normalizedInput = input.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "");
@@ -136,36 +156,150 @@ const handleSelectTypeDocument = (val) => {
     formState.documentnumber = null;
   }
 }
-const handleSearchApi = async (val) => {
+
+
+
+const handleSearchApi = async (numberDocument) => {
   searchLoading.value = true
 
-  if (!val) {
+  if (!numberDocument) {
     message.warning("Ingresa un número de documento")
     return searchLoading.value = false
   }
 
   if (formState.typedocument_id == 1) {
-    if (formState.documentnumber.length < 8) {
-      return message.warning("El número de DNI está incompleto")
-    } else {
-      const response = await makeRequest({ url: `user/dni-data/${formState.documentnumber}`, method: 'GET' });
+    
+    const {data} = await makeRequest({ url: `user/api/dni/${formState.documentnumber}`, method: 'GET' });
 
-      if (response.status === 404) {
-        message.warning("No se encontró información con este número de DNI");
-        handleDisabled()
-        return searchLoading.value = false;
+    if(data.body) {
+      formState.lastname = data.body.apePaterno;
+      formState.middlename = data.body.apeMaterno
+      formState.name = data.body.preNombres
+      formState.address = data.body.desDireccion;
+      if(data.body.feNacimiento) formState.birthday = dayjs(data.body.feNacimiento, 'DD/MM/YYYY');
+      if(data.body.feNacimiento) birthdateDate.value = dayjs(data.body.feNacimiento, 'DD/MM/YYYY');
+      
+      if(data.body.ubigeo) {
+        let region = store.cities.find(city => city.label === data.body.ubigeo.departamento);
+        let provincias = await requestNoToken({ url: `select/provinces/${region.value}`, method: 'GET' });
+        provinces.value = provincias.data
+        let provincia = provincias.data.find(province => province.label === data.body.ubigeo.provincia);
+        
+        let distritos = await requestNoToken({ url: `select/districts/${provincia.value}`, method: 'GET' });
+        districts.value = distritos.data
+        let distrito = distritos.data.find(item => item.label === data.body.ubigeo.distrito);
+        
+        formState.city_id = region.value;
+        formState.province_id = provincia.value;
+        formState.district_id = distrito.value;
       }
-
-      formState.lastname = response.data.apellidoPaterno;
-      formState.middlename = response.data.apellidoMaterno;
-      formState.name = response.data.nombres;
-      searchLoading.value = false
     }
+    
+  }
+
+  if (formState.typedocument_id == 2) {
+    const {data} = await makeRequest({ url: `user/api/ce/${formState.documentnumber}`, method: 'GET' });
+    if(data.body) {
+      formState.lastname = data.body.apellido_paterno;
+      formState.middlename = data.body.apellido_materno
+      formState.name = data.body.nombres
+      formState.gender_id = data.body.sexo == 'F' ? 2 : 1;
+      if(data.body.fecha_nacimiento) formState.birthday = dayjs(data.body.fecha_nacimiento, 'DD/MM/YYYY');
+      if(data.body.fecha_nacimiento) birthdateDate.value = dayjs(data.body.fecha_nacimiento, 'DD/MM/YYYY');
+      // formState.country = data.body.nacionalidad
+    }
+  }
+  
+  if (formState.typedocument_id == 3) {
+    const {data} = await makeRequest({ url: `user/api/pas/${formState.documentnumber}`, method: 'GET' });
+    const valuex = data.body.data[0]
+    formState.lastname = valuex.apellido_paterno;
+    formState.middlename = valuex.apellido_materno
+    formState.name = valuex.nombres
+    formState.gender_id = valuex.sexo == 'F' ? 2 : 1;
+    if(valuex.fecha_nacimiento) formState.birthday = dayjs(valuex.fecha_nacimiento, 'DD/MM/YYYY');
+    if(valuex.fecha_nacimiento) birthdateDate.value = dayjs(valuex.fecha_nacimiento, 'DD/MM/YYYY');
+    // formState.country = valuex.nacionalidad
   }
 
   handleDisabled()
-  searchLoading.value = false;
+  return searchLoading.value = false
+  
+
+  
+
+  
+
+ 
+
+
+
+
+
+  // searchLoading.value = true
+
+  // if (!val) {
+  //   message.warning("Ingresa un número de documento")
+  //   return searchLoading.value = false
+  // }
+
+  // if (formState.typedocument_id == 1) {
+  //   if (formState.documentnumber.length < 8) {
+  //     return message.warning("El número de DNI está incompleto")
+  //   } else {
+      
+
+  //     if (response.status === 404) {
+  //       message.warning("No se encontró información con este número de DNI");
+  //       handleDisabled()
+  //       return searchLoading.value = false;
+  //     }
+
+  //     formState.lastname = response.data.apellidoPaterno;
+  //     formState.middlename = response.data.apellidoMaterno;
+  //     formState.name = response.data.nombres;
+  //     searchLoading.value = false
+  //   }
+  // }
+
+  // handleDisabled()
+  // searchLoading.value = false;
 }
+
+// const handleSearchApi = async (val) => {
+//   searchLoading.value = true
+
+//   if (!val) {
+//     message.warning("Ingresa un número de documento")
+//     return searchLoading.value = false
+//   }
+
+//   if (formState.typedocument_id == 1) {
+//     if (formState.documentnumber.length < 8) {
+//       return message.warning("El número de DNI está incompleto")
+//     } else {
+//       const response = await makeRequest({ url: `user/dni-data/${formState.documentnumber}`, method: 'GET' });
+
+//       if (response.status === 404) {
+//         message.warning("No se encontró información con este número de DNI");
+//         handleDisabled()
+//         return searchLoading.value = false;
+//       }
+
+//       formState.lastname = response.data.apellidoPaterno;
+//       formState.middlename = response.data.apellidoMaterno;
+//       formState.name = response.data.nombres;
+//       searchLoading.value = false
+//     }
+//   }
+
+//   handleDisabled()
+//   searchLoading.value = false;
+// }
+
+
+
+
 const validateNumber = () => {
   formState.documentnumber = formState.documentnumber.replace(/\D/g, '');
 };
@@ -175,11 +309,11 @@ const validateNumberPhone = () => {
 const handleDepartaments = (id) => {
   formState.province_id = null
   formState.district_id = null
-  store.fetchProvinces(id)
+  fetchProvinces(id)
 }
 const handleProvinces = (id) => {
   formState.district_id = null
-  store.fetchDistricts(id)
+  fetchDistricts(id)
 }
 const clearFields = () => {
   formState.lastname = null;
@@ -255,13 +389,14 @@ const onSubmitFail = () => {
   message.error('Debes de completar todos los espacios requeridos')
 };
 
-const fetchData = () => {
+const fetchData = async () => {
   disablesInputs()
   if(route.query) {
     formState.typedocument_id = +route.query.type
     handleSelectTypeDocument(route.query.type);
     formState.documentnumber = route.query.number;
-    handleSearchApi(route.query.number);
+    await store.fetchCities();
+    await handleSearchApi(route.query.number);
   }
 }
 

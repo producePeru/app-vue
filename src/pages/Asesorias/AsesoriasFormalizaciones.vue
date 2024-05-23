@@ -7,10 +7,17 @@
       <div class="wrapper-s">
         <div>
           <label class="label">Seleccione el tipo de documento</label>
+          
+          
           <a-radio-group v-model:value="type_document" @change="handleResetDocument" class="radio-produce">
             <a-radio value="1">DNI</a-radio>
             <a-radio value="2">CE</a-radio>
+            <a-radio value="3">PAS</a-radio>
+            <a-radio value="4">PTP</a-radio>
           </a-radio-group>
+        
+        
+        
         </div>
         <div>
           <label class="label">Digite el número de documento</label>

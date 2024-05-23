@@ -6,7 +6,7 @@ const fields = {
     name: 'typedocument_id',
     required: true,
     message: 'Seleccionar tipo de documento',
-    disabled: false
+    disabled: true
   },
   documentnumber: {
     type: 'iSearch',
@@ -42,7 +42,7 @@ const fields = {
   },
   city_id: {
     type: 'iSelect',
-    label: 'Departamento',
+    label: 'Departamento residente',
     name: 'city_id',
     required: true,
     message: 'Seleccionar departamento',
@@ -50,7 +50,7 @@ const fields = {
   },
   province_id: {
     type: 'iSelect',
-    label: 'Provincia',
+    label: 'Provincia residente',
     name: 'province_id',
     required: true,
     message: 'Seleccionar provincia',
@@ -58,7 +58,7 @@ const fields = {
   },
   district_id: {
     type: 'iSelect',
-    label: 'Distrito',
+    label: 'Distrito residente',
     name: 'district_id',
     required: true,
     message: 'Seleccionar distrito',
@@ -71,6 +71,14 @@ const fields = {
     required: false,
     message: 'Escribir dirección',
     disabled: false
+  },
+  birthday: {
+    type: 'iDate',
+    label: 'Fecha de nacimiento',
+    name: 'birthday',
+    required: false,
+    message: 'Seleccionar fecha',
+    disabled: true
   },
   phone: {
     type: 'iText',
@@ -90,14 +98,7 @@ const fields = {
     email: 'email',
     disabled: true
   },
-  birthday: {
-    type: 'iDate',
-    label: 'Fecha de nacimiento',
-    name: 'birthday',
-    required: false,
-    message: 'Seleccionar fecha',
-    disabled: true
-  },
+  
   gender_id: {
     type: 'iSelect',
     label: 'Género',

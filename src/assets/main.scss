@@ -51,6 +51,15 @@ h1 {
   background-color: #f8f8f8 !important;
 }
 
+
+// DISABLES---------
+.ant-input-disabled {
+  color: #4e4e4ee0 !important;
+}
+.ant-select-disabled .ant-select-selection-item {
+  color: #4e4e4ee0 !important;
+}
+
 // .ant-menu-item-selected {
 //   background-color: var(--primary) !important;
 //   &:active {

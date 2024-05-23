@@ -230,6 +230,16 @@ const asesoria = {
     message: 'Seleccionar modalidad',
     disabled: false
   },
+  ruc: {
+    type: 'iText',
+    label: 'Número de RUC',
+    name: 'ruc',
+    required: false,
+    message: 'Escribir número de RUC',
+    disabled: false,
+    max: 11,
+    min: 11
+  },
   city_id: {
     type: 'iSelectWrite',
     label: 'Región del negocio',
