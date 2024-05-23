@@ -241,6 +241,9 @@ const onSubmit = async () => {
     if(data.status == 400) {
       return message.error("El correo electrónico ya está registrado. Por favor, ingresa uno válido.");
     }
+    if(data.status == 401) {
+      return message.error("El número de DNI ya está registrado. Por favor, ingresa uno válido.");
+    }
 
   } catch (error) {
     message.error('No se pudo registrar este usuario');
