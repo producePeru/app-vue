@@ -227,6 +227,12 @@ const onSubmit = async () => {
   try {
     const data = await makeRequest({ url: 'person/create', method: 'POST', data: formState });
     
+    if(data.status == 400) {
+      return message.error("El correo electrónico ya está registrado. Por favor, ingresa uno válido.");
+    }
+    if(data.status == 401) {
+      return message.error("El número de DNI ya está registrado. Por favor, ingresa uno válido.");
+    }
     if(data.status == 200) {
       const query = {
         type: formState.typedocument_id,
@@ -237,14 +243,7 @@ const onSubmit = async () => {
       message.success(data.message);
       return clearFields();
     }
-    
-    if(data.status == 400) {
-      return message.error("El correo electrónico ya está registrado. Por favor, ingresa uno válido.");
-    }
-    if(data.status == 401) {
-      return message.error("El número de DNI ya está registrado. Por favor, ingresa uno válido.");
-    }
-
+  
   } catch (error) {
     message.error('No se pudo registrar este usuario');
   } finally {
