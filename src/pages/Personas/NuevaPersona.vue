@@ -151,7 +151,7 @@ const handleSearchApi = async (val) => {
       const response = await makeRequest({ url: `user/dni-data/${formState.documentnumber}`, method: 'GET' });
 
       if (response.status === 404) {
-        message.warning("Este número de DNI no se pudo encontrar, igual se desabilitará");
+        message.warning("No se encontró información con este número de DNI");
         handleDisabled()
         return searchLoading.value = false;
       }
@@ -226,14 +226,21 @@ const onSubmit = async () => {
 
   try {
     const data = await makeRequest({ url: 'person/create', method: 'POST', data: formState });
-    const query = {
-      type: formState.typedocument_id,
-      number: formState.documentnumber
-    }
-    router.push({ name: 'asesorias-formalizaciones', query });
+    
+    if(data.status == 200) {
+      const query = {
+        type: formState.typedocument_id,
+        number: formState.documentnumber
+      }
+      router.push({ name: 'asesorias-formalizaciones', query });
 
-    message.success(data.message);
-    clearFields();
+      message.success(data.message);
+      return clearFields();
+    }
+    
+    if(data.status == 400) {
+      return message.error("El correo electrónico ya está registrado. Por favor, ingresa uno válido.");
+    }
 
   } catch (error) {
     message.error('No se pudo registrar este usuario');
@@ -241,6 +248,7 @@ const onSubmit = async () => {
     loading.value = false;
   }
 };
+
 const onSubmitFail = () => {
   message.error('Debes de completar todos los espacios requeridos')
 };
