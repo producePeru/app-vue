@@ -157,8 +157,6 @@ const handleSelectTypeDocument = (val) => {
   }
 }
 
-
-
 const handleSearchApi = async (numberDocument) => {
   searchLoading.value = true
 
@@ -225,45 +223,6 @@ const handleSearchApi = async (numberDocument) => {
   handleDisabled()
   return searchLoading.value = false
   
-
-  
-
-  
-
- 
-
-
-
-
-
-  // searchLoading.value = true
-
-  // if (!val) {
-  //   message.warning("Ingresa un número de documento")
-  //   return searchLoading.value = false
-  // }
-
-  // if (formState.typedocument_id == 1) {
-  //   if (formState.documentnumber.length < 8) {
-  //     return message.warning("El número de DNI está incompleto")
-  //   } else {
-      
-
-  //     if (response.status === 404) {
-  //       message.warning("No se encontró información con este número de DNI");
-  //       handleDisabled()
-  //       return searchLoading.value = false;
-  //     }
-
-  //     formState.lastname = response.data.apellidoPaterno;
-  //     formState.middlename = response.data.apellidoMaterno;
-  //     formState.name = response.data.nombres;
-  //     searchLoading.value = false
-  //   }
-  // }
-
-  // handleDisabled()
-  // searchLoading.value = false;
 }
 
 // const handleSearchApi = async (val) => {
@@ -296,9 +255,6 @@ const handleSearchApi = async (numberDocument) => {
 //   handleDisabled()
 //   searchLoading.value = false;
 // }
-
-
-
 
 const validateNumber = () => {
   formState.documentnumber = formState.documentnumber.replace(/\D/g, '');
