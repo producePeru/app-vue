@@ -18,7 +18,7 @@
 
     </div>
 
-    <a-table bordered :scroll="{ x: valueX, y: valueY }" class="ant-table-striped" :columns="columns"
+    <a-table bordered :scroll="{ x: valueX, y: valueY }" class="asesores-table" :columns="columns"
       :data-source="dataSource" :pagination="false" :loading="loading" size="small">
       <template v-slot:bodyCell="{ column, record, index }">
         <template v-if="column.dataIndex == 'idx'">
@@ -26,19 +26,22 @@
         </template>
 
         <template v-if="column.dataIndex == 'name'">
-          {{ record.asesores.profile.name }} 
+          <span class="uppercase">{{ record.asesores.profile?.name }} </span>
         </template>
         <template v-if="column.dataIndex == 'apellidos'">
-          {{ record.asesores.profile.lastname }} {{ record.asesores.profile.middlename }}
+          <span class="uppercase">{{ record.asesores.profile?.lastname }} {{ record.asesores.profile?.middlename }}</span>
         </template>
         <template v-if="column.dataIndex == 'documentnumber'">
           {{ record.asesores.profile.documentnumber }}
         </template>
         <template v-if="column.dataIndex == 'phone'">
-          {{ record.asesores.profile.phone }}
+          {{ record.asesores.profile?.phone }}
         </template>
         <template v-if="column.dataIndex == 'birthday'">
-          {{ record.asesores.profile.birthday }}
+          {{ record.asesores.profile?.birthday }}
+        </template>
+        <template v-if="column.dataIndex == 'sede'">
+          {{ record.asesores.profile?.cde.name }}
         </template>
        
 
@@ -105,10 +108,13 @@ const columns = [
   { title: '#', fixed: 'left', dataIndex: 'idx', align: 'center', width: 70 },
   { title: 'EMAIL', dataIndex: 'email', fixed: 'left', width: 200 },
   { title: 'NOMBRES', dataIndex: 'name', width: 140 },
-  { title: 'APELLIDOS', dataIndex: 'apellidos', width: 140 },
+  { title: 'APELLIDOS', dataIndex: 'apellidos', width: 170 },
   { title: 'NUM. DOC', dataIndex: 'documentnumber', align: 'center', width: 120 },
   { title: 'CELULAR', dataIndex: 'phone', align: 'center', width: 150 },
   { title: 'F.NACIMIENTO', dataIndex: 'birthday', align: 'center', width: 150 },
+
+  { title: 'SEDE', dataIndex: 'sede', align: 'center', width: 150 },
+
 
   // { title: 'PROVINCIA', dataIndex: 'province', align: 'center', width: 150 },
   // { title: 'DISTRITO', dataIndex: 'district', align: 'center', width: 150 },

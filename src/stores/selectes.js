@@ -24,6 +24,8 @@ export const useCounterStore = defineStore('counter', {
       supervisores: null,
       folders: null,
       asesores: null,
+      agreementStatus: null,
+      operationalStatus: null,
     }
   },
 
@@ -200,5 +202,32 @@ export const useCounterStore = defineStore('counter', {
         console.error('Error de red:', error);
       }
     },
+
+    async fetchAgreementStatus() {
+      try {
+        const { data } = await requestNoToken({ url: `select/agreement-status`, method: 'GET' });
+        this.agreementStatus = data;
+      } catch (error) {
+        console.error('Error de red:', error);
+      }
+    },
+
+    async fetchOperationalStatus() {
+      try {
+        const { data } = await requestNoToken({ url: `select/operational-status`, method: 'GET' });
+        this.operationalStatus = data;
+      } catch (error) {
+        console.error('Error de red:', error);
+      }
+    },
+
+    // async fetchAsesores() {
+    //   try {
+    //     const { data } = await requestNoToken({ url: `select/asesores`, method: 'GET' });
+    //     this.asesores = data;
+    //   } catch (error) {
+    //     console.error('Error de red:', error);
+    //   }
+    // },
   },
 })

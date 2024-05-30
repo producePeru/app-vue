@@ -17,7 +17,7 @@
           </a-form-item>
 
           <a-form-item v-if="el.type === 'iText'" :name="el.name" :label="el.label" :rules="[{ required: el.required, message: el.message, type: el.email, max: el.max }]">
-            <a-input v-model:value="formState[el.name]" :maxlength="el.max" @input="validateOnlyNumber(el.name)" />
+            <a-input v-model:value="formState[el.name]" :maxlength="el.max" @input="validateOnlyNumber(el.name)" :placeholder="el.placeholder" />
           </a-form-item>
 
           <a-form-item class="item-max" v-if="el.type === 'iSelectWrite'" :name="el.name" :label="el.label"
@@ -30,9 +30,15 @@
               :filter-option="filterOption" @change="handleProvinces" :disabled="!formState.city_id" />
             <a-select v-if="el.name == 'district_id'" v-model:value="formState[el.name]" show-search :options="store.districts"
               :filter-option="filterOption" :disabled="!formState.province_id" />
+            
+            <a-select v-if="el.name == 'economicsector_id'" v-model:value="formState[el.name]" show-search :options="store.economicSectors"
+              :filter-option="filterOption" />
+            
+            <a-select v-if="el.name == 'comercialactivity_id'" v-model:value="formState[el.name]" show-search :options="store.comercialActivities"
+              :filter-option="filterOption" />
 
             <a-select v-if="el.name == 'component_id'" v-model:value="formState[el.name]" show-search :options="store.components" :filter-option="filterOption" @change="handleSelectComponent">
-              <template #dropdownRender="{ menuNode: menu }">
+              <!-- <template #dropdownRender="{ menuNode: menu }">
                 <v-nodes :vnodes="menu" />
                 <a-divider style="margin: 4px 0" />
                 <a-space style="padding: 4px 8px">
@@ -44,11 +50,11 @@
                     Agregar
                   </a-button>
                 </a-space>
-              </template>
+              </template> -->
             </a-select>
 
             <a-select v-if="el.name == 'theme_id'" v-model:value="formState[el.name]" show-search :options="store.componentThemes" :filter-option="filterOption" :disabled="!formState.component_id">
-              <template #dropdownRender="{ menuNode: menu }">
+              <!-- <template #dropdownRender="{ menuNode: menu }">
                 <v-nodes :vnodes="menu" />
                 <a-divider style="margin: 4px 0" />
                 <a-space style="padding: 4px 8px">
@@ -60,7 +66,7 @@
                     Agregar
                   </a-button>
                 </a-space>
-              </template>
+              </template> -->
             </a-select>
 
 
@@ -111,14 +117,20 @@ store.$patch({ components: store.components });
 store.$patch({ componentThemes: store.componentThemes });
 store.$patch({ modalities: store.modalities });
 store.$patch({ cities: store.cities });
+store.$patch({ economicSectors: store.economicSectors });
+store.$patch({ comercialActivities: store.comercialActivities });
+
 // store.$patch({ provinces: store.provinces });
 // store.$patch({ districts: store.districts });
 
+store.fetchEconomicSectors();
+store.fetchComercialActivities();
 store.fetchComponents();
 store.fetchComponentThemes();
 store.fetchModalities();
 store.fetchCities();
 store.fetchGenders();
+
 
 const spinning = ref(true);
 
@@ -211,6 +223,8 @@ const onSubmit = async () => {
       formState.district_id = null;
       formState.observations = null;
       formState.ruc = null;
+      formState.economicsector_id = null;
+      formState.comercialactivity_id = null;
 
       emit('closeDraw', true)
     }
@@ -236,19 +250,19 @@ const onSubmitFail = () => {
 
 .grid-booking {
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
+  grid-template-columns: repeat(2, 1fr);
   grid-gap: 0 1rem;
 
   .ant-form-item:nth-child(1) {
-    grid-column: 1/3;
+    // grid-column: 1/3;
   }
 
   .ant-form-item:nth-child(2) {
-    grid-column: 1/3;
+    // grid-column: 1/3;
   }
 
   .ant-form-item:nth-child(3) {
-    grid-column: 1/3;
+    // grid-column: 1/3;
   }
 
   // .ant-form-item:nth-child(5) {
@@ -256,8 +270,8 @@ const onSubmitFail = () => {
   //   grid-column: 3/3;
   // }
 
-  .ant-form-item:nth-child(8) {
-    grid-column: 1/4;
+  .ant-form-item:nth-child(10) {
+    grid-column: 1/3;
   }
 }
 </style>

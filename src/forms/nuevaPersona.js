@@ -68,7 +68,7 @@ const fields = {
     type: 'iText',
     label: 'Dirección',
     name: 'address',
-    required: false,
+    required: true,
     message: 'Escribir dirección',
     disabled: false
   },
@@ -76,7 +76,7 @@ const fields = {
     type: 'iDate',
     label: 'Fecha de nacimiento',
     name: 'birthday',
-    required: false,
+    required: true,
     message: 'Seleccionar fecha',
     disabled: true
   },
@@ -84,7 +84,7 @@ const fields = {
     type: 'iText',
     label: 'Número Telefónico del contacto',
     name: 'phone',
-    required: false,
+    required: true,
     message: 'Número de celular',
     max: 9,
     disabled: true

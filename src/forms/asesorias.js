@@ -130,6 +130,22 @@ const final = {
 };
 
 const ructen = {
+  economicsector_id: {
+    type: 'iSelectWrite',
+    label: 'Sector económico',
+    name: 'economicsector_id',
+    required: true,
+    message: 'Seleccionar el sector económico',
+    disabled: false
+  },
+  comercialactivity_id: {
+    type: 'iSelectWrite',
+    label: 'Actividad comercial',
+    name: 'comercialactivity_id',
+    required: true,
+    message: 'Seleccionar la actividad comercial',
+    disabled: false
+  },
   detailprocedure_id: {
     type: 'iSelect',
     label: 'Detalle del trámite',
@@ -146,21 +162,15 @@ const ructen = {
     message: 'Seleccionar modalidad de atención',
     disabled: false
   },
-  economicsector_id: {
-    type: 'iSelectWrite',
-    label: 'Sector económico',
-    name: 'economicsector_id',
+  ruc: {
+    type: 'iText',
+    label: 'Número de RUC',
+    name: 'ruc',
     required: true,
-    message: 'Seleccionar el sector económico',
-    disabled: false
-  },
-  comercialactivity_id: {
-    type: 'iSelectWrite',
-    label: 'Actividad comercial',
-    name: 'comercialactivity_id',
-    required: true,
-    message: 'Seleccionar la actividad comercial',
-    disabled: false
+    message: 'Escribir RUC',
+    disabled: false,
+    max: 11,
+    placeholder: 'EN TRÁMITE completar con CEROS',
   },
   city_id: {
     type: 'iSelectWrite',
@@ -186,26 +196,33 @@ const ructen = {
     message: 'Seleccionar distrito',
     disabled: false
   },
-  ruc: {
-    type: 'iText',
-    label: 'Número de RUC',
-    name: 'ruc',
-    required: false,
-    message: 'Escribir RUC',
-    disabled: false,
-    max: 11
-  },
   address: {
     type: 'iText',
     label: 'Direccion del Negocio',
     name: 'address',
-    required: false,
+    required: true,
     message: 'Escribir la direccion del Negocio',
     disabled: false
   },
 };
 
 const asesoria = {
+  economicsector_id: {
+    type: 'iSelectWrite',
+    label: 'Sector económico',
+    name: 'economicsector_id',
+    required: true,
+    message: 'Seleccionar el sector económico',
+    disabled: false
+  },
+  comercialactivity_id: {
+    type: 'iSelectWrite',
+    label: 'Actividad comercial',
+    name: 'comercialactivity_id',
+    required: true,
+    message: 'Seleccionar la actividad comercial',
+    disabled: false
+  },
   component_id: {
     type: 'iSelectWrite',
     label: 'Componente',
@@ -237,6 +254,7 @@ const asesoria = {
     required: false,
     message: 'Escribir número de RUC',
     disabled: false,
+    placeholder: 'Número de RUC (Opcional)',
     max: 11,
     min: 11
   },

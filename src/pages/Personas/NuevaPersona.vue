@@ -3,9 +3,8 @@
     <h3>Formulario de registro</h3>
     <br>
 
-    <a-spin :spinning="spinning">
-    <a-form layout="vertical" :model="formState" name="basic" autocomplete="off" @finish="onSubmit"
-      @finishFailed="onSubmitFail">
+    <a-spin :spinning="searchLoading">
+    <a-form layout="vertical" :model="formState" name="basic" autocomplete="off" @finish="onSubmit" @finishFailed="onSubmitFail">
       <div class="grid-item">
         <template v-for="(el, idx) in fields" :key="idx">
 
@@ -39,7 +38,7 @@
 
           <a-form-item v-if="el.type === 'iDate'" :name="el.name" :label="el.label"
             :rules="[{ required: el.required, message: el.message }]">
-            <a-date-picker :locale="locale" v-model:value="birthdateDate" style="width: 100%;" :format="dateFormat" placeholder="día / mes / año"
+            <a-date-picker :locale="locale" v-model:value="birthdateDate" style="width: 100%;" :format="dateFormat" placeholder="día/mes/año" @change="formState.birthday = birthdateDate"
               :disabled="el.disabled" />
           </a-form-item>
         </template>

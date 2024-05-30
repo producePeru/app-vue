@@ -14,7 +14,7 @@
 
           <a-form-item v-if="el.type === 'iText'" :name="el.name" :label="el.label"
             :rules="[{ required: el.required, message: el.message, type: el.email, max: el.max }]">
-            <a-input v-model:value="formState[el.name]" :disabled="el.disabled" :maxlength="el.max" @input="validateOnlyNumber(el.name)" />
+            <a-input v-model:value="formState[el.name]" :disabled="el.disabled" :maxlength="el.max" @input="validateOnlyNumber(el.name)" :placeholder="el.placeholder" />
           </a-form-item>
 
           <a-form-item class="item-max" v-if="el.type === 'iSelectWrite'" :name="el.name" :label="el.label"
@@ -38,7 +38,7 @@
 
             <a-select v-if="el.name == 'economicsector_id'" v-model:value="formState[el.name]" show-search :options="store.economicSectors"
               :filter-option="filterOption">
-              <template #dropdownRender="{ menuNode: menu }">
+              <!-- <template #dropdownRender="{ menuNode: menu }">
                 <v-nodes :vnodes="menu" />
                 <a-divider style="margin: 4px 0" />
                 <a-space style="padding: 4px 8px">
@@ -50,7 +50,7 @@
                     Agregar
                   </a-button>
                 </a-space>
-              </template>
+              </template> -->
             </a-select>
 
             <a-select v-if="el.name == 'city_id'" v-model:value="formState[el.name]" show-search :options="store.cities" 
@@ -221,25 +221,25 @@ const onSubmitFail = () => {
 }
 .grid-booking {
   display: grid;
-  grid-template-columns: repeat(3,1fr);
+  grid-template-columns: repeat(2,1fr);
   grid-gap: 0 1rem;
-  .ant-form-item:nth-child(1) {
-    grid-column: 1/3;
-  }
-  .ant-form-item:nth-child(2) {
-    grid-column: 1/3;
-  }
-  .ant-form-item:nth-child(3) {
-    grid-column: 1/3;
-  }
-  .ant-form-item:nth-child(4) {
-    grid-column: 1/3;
-  }
-  .ant-form-item:nth-child(5) {
-    grid-column: 1/2;
-  }
   .ant-form-item:nth-child(9) {
-    grid-column: 2/4;
+    grid-column: 1/3;
   }
+  // .ant-form-item:nth-child(2) {
+  //   grid-column: 1/3;
+  // }
+  // .ant-form-item:nth-child(3) {
+  //   grid-column: 1/3;
+  // }
+  // .ant-form-item:nth-child(4) {
+  //   grid-column: 1/3;
+  // }
+  // .ant-form-item:nth-child(5) {
+  //   grid-column: 1/2;
+  // }
+  // .ant-form-item:nth-child(9) {
+  //   grid-column: 2/4;
+  // }
 }
 </style>

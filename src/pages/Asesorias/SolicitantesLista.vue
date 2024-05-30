@@ -1,22 +1,36 @@
 <template>
   <div>
     <h3 class="title-produce">SOLICITANTES</h3>
-    <div class="filters-notary">
-      <div>
-        <!-- <a-button style="margin-right: 1rem;" class="btn-produce" type="primary" @click="showDrawer">AGREGAR</a-button> -->
-      </div>
+    <br>
 
-      <!-- <div>
-        <a-select 
-        placeholder="Buscar por Provincia"
-        style="width: 200px;"
-        v-model:value="city" 
-        show-search 
-        :options="store.cities" 
-        :filter-option="filterOption" @change="handleDepartaments" />
-      </div> -->
 
-    </div>
+
+    <!-- <a-form layout="inline" :model="formState" @finish="handleFinish" >
+      
+      
+      
+      <a-form-item>
+        <a-select v-model:value="formState.password" :options="options" style="width: 180px;" />
+        
+      </a-form-item>
+
+      <a-form-item>
+        <a-input v-model:value="formState.password" placeholder="Username" />
+      </a-form-item>
+
+
+      <a-form-item>
+        <a-button type="primary" html-type="submit" :disabled="formState.user === '' || formState.password === ''">
+          BUSCAR
+        </a-button>
+      </a-form-item>
+    </a-form>
+
+
+    <pre>{{ formState }}</pre> -->
+
+
+
 
     <a-table bordered :scroll="{ x: valueX, y: valueY }" class="ant-table-striped" :columns="columns"
       :data-source="dataSource" :pagination="false" :loading="loading" size="small" :row-class-name="(_record, index) => (index % 2 === 1 ? 'table-striped' : null)">
@@ -52,7 +66,7 @@
         </template>
 
         <template v-if="column.dataIndex == 'registerby'">
-          {{ record.user[0]?.profile.name }} {{ record.user[0]?.profile.lastname }} {{ record.user[0]?.profile.middlename }} 
+          <span class="uppercase">{{ record.user[0]?.profile.name }} {{ record.user[0]?.profile.lastname }} {{ record.user[0]?.profile.middlename }} </span>
         </template>
 
         <template v-if="column.dataIndex == 'actions'">
@@ -98,7 +112,7 @@
 
 
 <script setup>
-import { ref, onMounted, h, onBeforeUnmount, computed } from 'vue';
+import { ref, onMounted, h, onBeforeUnmount, computed, reactive } from 'vue';
 import SolicitanteEditar from './components/DrawerSolicitante.componente.vue';
 import { LinkOutlined, QuestionCircleOutlined } from '@ant-design/icons-vue';
 import { requestNoToken } from '@/utils/noToken.js';
@@ -111,17 +125,17 @@ import { Modal } from 'ant-design-vue';
 
 const storageData = JSON.parse(localStorage.getItem('profile'))
 const store = useCounterStore();
-store.$patch({ cities: store.cities });
-store.fetchCities();
+// store.$patch({ cities: store.cities });
+// store.fetchCities();
 
 const valueY = ref(window.innerHeight - 100);
 const columns = [
   { title: '#', fixed: 'left', dataIndex: 'idx', align: 'center', width: 70 },
   { title: 'TIPO DOCUMENTO', fixed: 'left', dataIndex: 'tdocument', align: 'center', width: 140 },
-  { title: 'NUM. DOC', dataIndex: 'documentnumber', fixed: 'left', align: 'center', width: 120 },
-  { title: 'NOMBRES', dataIndex: 'name', width: 140 },
-  { title: 'APELLIDOS', dataIndex: 'apellidos', width: 140 },
-  { title: 'DEPARTAMENTO', dataIndex: 'city', align: 'center', width: 150 },
+  { title: 'NUM. DOC', dataIndex: 'documentnumber', fixed: 'left', width: 120 },
+  { title: 'NOMBRES', dataIndex: 'name', width: 170 },
+  { title: 'APELLIDOS', dataIndex: 'apellidos', width: 170 },
+  { title: 'REGIÓN', dataIndex: 'city', align: 'center', width: 150 },
   { title: 'PROVINCIA', dataIndex: 'province', align: 'center', width: 150 },
   { title: 'DISTRITO', dataIndex: 'district', align: 'center', width: 150 },
   { title: 'CELULAR', dataIndex: 'phone', align: 'center', width: 150 },
@@ -131,6 +145,22 @@ const columns = [
   { title: 'REGISTRADO POR', dataIndex: 'registerby', width: 260 },
   { title: '', dataIndex: 'actions', width: 50, align: 'center', fixed: 'right'}
 ];
+const formState = reactive({
+  user: '',
+  password: '',
+});
+
+const handleFinish = values => {
+  console.log(values, formState);
+};
+
+
+const options = [
+  { value: 1, label: 'Número de documento' },
+  { value: 2, label: 'Nombres' },
+  { value: 3, label: 'Región' }
+];
+
 
 const total = ref(0);
 const pageSize = 20;

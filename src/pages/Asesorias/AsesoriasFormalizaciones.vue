@@ -93,7 +93,7 @@
   <section>
 
 
-    <a-drawer width="510" title="Formalización con RUC 20" v-model:open="open1" placement="right">
+    <a-drawer width="510" title="Regitsrar una Formalización con RUC 20" v-model:open="open1" placement="right">
       <a-steps v-model:current="current" size="small" class="steps">
         <a-step v-for="item in steps" :key="item.title" :title="item.title" />
       </a-steps>
@@ -118,7 +118,7 @@
     </a-drawer>
 
     <a-drawer 
-      title="Formalización con RUC 10" 
+      title="Regitsrar Formalización con RUC 10" 
       v-model:open="open2" 
       placement="right">
       <Formalizacion10 
@@ -127,7 +127,7 @@
     </a-drawer>
 
     <a-drawer 
-      title="Nueva asesoría" 
+      title="Registrar una asesoría" 
       v-model:open="open3" 
       placement="right">
       <AsesoriaNuevo 

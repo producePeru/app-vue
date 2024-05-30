@@ -131,8 +131,6 @@ const router = createRouter({
           ]
         },
 
-
-
         {
           path: 'asesorias',
           name: 'asesorias',
@@ -182,37 +180,49 @@ const router = createRouter({
           ]
         },
 
-        
         {
           path: 'convenios',
           name: 'convenios',
           children: [
             {
-              path: 'nuevo-convenio',
-              name: 'nuevo-convenio',
-              component: () => import('../pages/Convenios/NuevoConvenio.vue'),
+              path: 'estado-convenio',
+              name: 'estado-convenio',
+              component: () => import('../pages/ConveniosUGO/ConvenioEstado.vue'),
               meta: { requiresAuth: true },
-            },
-            {
-              path: 'compromisos/:id',
-              name: 'compromisos',
-              component: () => import('../pages/Convenios/CompromisosConvenios.vue'),
-              // meta: { requiresAuth: true },
-            },
-            {
-              path: 'lista-convenios',
-              name: 'lista-convenios',
-              component: () => import('../pages/Convenios/ListaConvenios.vue'),
-              meta: { requiresAuth: true },
-            },
-            {
-              path: 'convenio/:id',
-              name: 'convenio-detalles',
-              component: () => import('../pages/Convenios/ListaConvenioDetalle.vue'),
-              // meta: { requiresAuth: true },
-            }         
+            }
           ]
         },
+        
+        // {
+        //   path: 'convenios',
+        //   name: 'convenios',
+        //   children: [
+        //     {
+        //       path: 'nuevo-convenio',
+        //       name: 'nuevo-convenio',
+        //       component: () => import('../pages/Convenios/NuevoConvenio.vue'),
+        //       meta: { requiresAuth: true },
+        //     },
+        //     {
+        //       path: 'compromisos/:id',
+        //       name: 'compromisos',
+        //       component: () => import('../pages/Convenios/CompromisosConvenios.vue'),
+             
+        //     },
+        //     {
+        //       path: 'lista-convenios',
+        //       name: 'lista-convenios',
+        //       component: () => import('../pages/Convenios/ListaConvenios.vue'),
+        //       meta: { requiresAuth: true },
+        //     },
+        //     {
+        //       path: 'convenio/:id',
+        //       name: 'convenio-detalles',
+        //       component: () => import('../pages/Convenios/ListaConvenioDetalle.vue'),
+     
+        //     }         
+        //   ]
+        // },
         {
           path: 'ruta-digital',
           name: 'rutadigital',
