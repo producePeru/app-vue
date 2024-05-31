@@ -32,7 +32,7 @@
           <span class="uppercase">{{ record.asesores.profile?.lastname }} {{ record.asesores.profile?.middlename }}</span>
         </template>
         <template v-if="column.dataIndex == 'documentnumber'">
-          {{ record.asesores.profile.documentnumber }}
+          {{ record.asesores.profile?.documentnumber }}
         </template>
         <template v-if="column.dataIndex == 'phone'">
           {{ record.asesores.profile?.phone }}
