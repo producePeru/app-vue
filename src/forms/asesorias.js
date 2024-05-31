@@ -1,11 +1,56 @@
 const fields = {
-  codesunarp: {
-    type: 'iText',
-    label: 'Código SID sunarp',
-    name: 'codesunarp',
-    required: false,
-    message: 'Escribir el código SID sunarp',
+
+  city_id: {
+    type: 'iSelectWrite',
+    label: 'Región del negocio',
+    name: 'city_id',
+    required: true,
+    message: 'Seleccionar región',
     disabled: false
+  },
+  province_id: {
+    type: 'iSelectWrite',
+    label: 'Provincia del negocio',
+    name: 'province_id',
+    required: true,
+    message: 'Seleccionar provincia',
+    disabled: false
+  },
+  district_id: {
+    type: 'iSelectWrite',
+    label: 'Distrito del negocio',
+    name: 'district_id',
+    required: true,
+    message: 'Seleccionar distrito',
+    disabled: false
+  },
+  address: {
+    type: 'iText',
+    label: 'Dirección del negocio',
+    name: 'address',
+    required: true,
+    message: 'Digitar la dirección del negocio',
+    disabled: false
+  },
+
+  modality_id: {
+    type: 'iSelect',
+    label: 'Modalidad de atención',
+    name: 'modality_id',
+    required: true,
+    message: 'Seleccionar la modalidad',
+    disabled: false
+  },
+  ruc: {
+    type: 'iText',
+    label: 'Número de RUC',
+    name: 'ruc',
+    required: false,
+    message: 'Escribir número de RUC',
+    disabled: false,
+    max: 11,
+    min: 11,
+    // placeholder: 'EN TRÁMITE completar con CEROS',
   },
   economicsector_id: {
     type: 'iSelectWrite',
@@ -23,6 +68,41 @@ const fields = {
     message: 'Seleccionar la actividad comercial',
     disabled: false
   },
+
+  dateReception: {
+    type: 'iDate',
+    label: 'Fecha de Recepcion todo OK',
+    name: 'dateReception',
+    required: false,
+    message: 'Escribir el código SID sunarp',
+    disabled: false
+  },
+
+  dateTramite: {
+    type: 'iDate',
+    label: 'Fecha tramite SID SUNARP o SUNAT',
+    name: 'dateTramite',
+    required: false,
+    message: 'Escribir el código SID sunarp',
+    disabled: false
+  },
+
+
+
+
+
+
+
+  codesunarp: {
+    type: 'iText',
+    label: 'Código SID sunarp',
+    name: 'codesunarp',
+    required: false,
+    message: 'Escribir el código SID sunarp',
+    disabled: false
+  },
+  
+  
   regime_id: {
     type: 'iSelect',
     label: 'Tipo de régimen societario',
@@ -31,73 +111,31 @@ const fields = {
     message: 'Seleccionar el régimen societario',
     disabled: false
   },
-  city_id: {
-    type: 'iSelectWrite',
-    label: 'Departamento',
-    name: 'city_id',
-    required: true,
-    message: 'Seleccionar departamento',
-    disabled: false
-  },
-  province_id: {
-    type: 'iSelectWrite',
-    label: 'Provincia',
-    name: 'province_id',
-    required: true,
-    message: 'Seleccionar provincia',
-    disabled: false
-  },
-  district_id: {
-    type: 'iSelectWrite',
-    label: 'Distrito',
-    name: 'district_id',
-    required: true,
-    message: 'Seleccionar distrito',
-    disabled: false
-  },
-  address: {
-    type: 'iText',
-    label: 'Dirección del negocio',
-    name: 'address',
-    required: false,
-    message: 'Escribir apellido',
-    disabled: false
-  },
-  modality_id: {
-    type: 'iSelect',
-    label: 'Modalidad de atención',
-    name: 'modality_id',
-    required: true,
-    message: 'Seleccionar la modalidad',
-    disabled: false
-  }
-};
-
-const acto = {
-  name: {
+  
+  nameMype: {
     type: 'iText',
     label: 'Nombre empresa',
-    name: 'name',
+    name: 'nameMype',
     required: true,
     message: 'Escribir nombre de la empresa',
     disabled: false
   },
   numbernotary: {
     type: 'iText',
-    label: 'Número de solicitud de envio a Notaría',
+    label: 'Número de solicitud',
     name: 'numbernotary',
     required: true,
     message: 'Escribir número de solicitud de envio a Notaría',
     disabled: false
   },
-  city: {
-    type: 'iSelect',
-    label: 'Seleciona Provincia',
-    name: 'city',
-    required: false,
-    message: 'Buscar por provincia',
-    disabled: false
-  },
+  // city: {
+  //   type: 'iSelect',
+  //   label: 'Seleciona Provincia',
+  //   name: 'city',
+  //   required: false,
+  //   message: 'Buscar por provincia',
+  //   disabled: false
+  // },
   notary_id: {
     type: 'iSelect',
     label: 'Notaría',
@@ -106,27 +144,12 @@ const acto = {
     message: 'Seleccionar una notaría',
     disabled: false
   },
-  // modality: {
-  //   type: 'iSelect',
-  //   label: 'Modalidad de atención',
-  //   name: 'modality',
-  //   required: false,
-  //   message: 'Seleccionar modalidad',
-  //   disabled: false
-  // }
+  
 };
 
+const acto = {};
 const final = {
-  ruc: {
-    type: 'iText',
-    label: 'Número de RUC',
-    name: 'ruc',
-    required: true,
-    message: 'Escribir número de RUC',
-    disabled: false,
-    max: 9,
-    min: 9
-  }
+  
 };
 
 const ructen = {

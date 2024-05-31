@@ -5,21 +5,21 @@
       <a-col :xs="24" :sm="12" :md="12" :lg="8" :xl="8">
         <div class="box-chart">
           <a-statistic title="Asesorías" :value="chart.totalasesories" style="margin-right: 50px" />
-          <LineChart v-if="asesories.length > 1" :total="chart.asesories" />
+          <LineChart v-if="asesories.length > 1" :total="chart.asesories" color="#fff5df" />
         </div>
       </a-col>
 
       <a-col :xs="24" :sm="12" :md="12" :lg="8" :xl="8">
         <div class="box-chart">
           <a-statistic title="Formalizaciones RUC 10" :value="chart.totalFormalization10" style="margin-right: 50px" />
-          <LineChart v-if="formalization10.length > 1" :total="chart.formalization10" />
+          <LineChart v-if="formalization10.length > 1" :total="chart.formalization10" color="#ffe1e7" />
         </div>
       </a-col>
 
       <a-col :xs="24" :sm="12" :md="12" :lg="8" :xl="8">
         <div class="box-chart">
           <a-statistic title="Formalizaciones RUC 20" :value="chart.totalFormalization20" style="margin-right: 50px" />
-          <LineChart v-if="formalization20.length > 1" :total="chart.formalization20" />
+          <LineChart v-if="formalization20.length > 1" :total="chart.formalization20" color="#def3f2" />
         </div>
       </a-col>
 

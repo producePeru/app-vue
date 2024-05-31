@@ -90,10 +90,7 @@
       </template>
     </a-table>
 
-
-
-    
-    <a-drawer v-model:open="open" class="draw-notary" root-class-name="root-class-name" title="Datos de la notaría"
+    <a-drawer v-model:open="open" class="draw-notary" root-class-name="root-class-name" title="Datos de la notaría" width="600"
       placement="right" @after-open-change="afterOpenChange">
       <formAddNotary @closeDraw="handleCloseDrawopen" :updateNotary="updateNotary" />
     </a-drawer>

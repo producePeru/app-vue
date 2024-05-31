@@ -40,9 +40,11 @@
         </template>
 
         <template v-if="column.dataIndex == 'tdocument'">
-          <!-- {{ record.typedocument.name }}  -->
+          
 
-          <a-tag :color="record.typedocument.name == 'DNI' ? 'green' : 'blue'">{{ record.typedocument.name == 'DNI' ? 'DNI' : 'CE' }}</a-tag>
+          <a-tag :color="handleColorDocument(record.typedocument.avr)">{{ record.typedocument.avr }} </a-tag>
+
+          <!-- <a-tag :color="record.typedocument.name == 'DNI' ? 'green' : 'blue'">{{ record.typedocument.name == 'DNI' ? 'DNI' : 'CE' }}</a-tag> -->
         </template>
 
 
@@ -99,6 +101,7 @@
   </div>
 
   <a-drawer
+    width="600"
     v-model:open="open"
     class="draw-notary"
     root-class-name="root-class-name"
@@ -139,10 +142,10 @@ const columns = [
   { title: 'PROVINCIA', dataIndex: 'province', align: 'center', width: 150 },
   { title: 'DISTRITO', dataIndex: 'district', align: 'center', width: 150 },
   { title: 'CELULAR', dataIndex: 'phone', align: 'center', width: 150 },
-  { title: 'EMAIL', dataIndex: 'email', width: 240 },
-  { title: 'GÉNERO', dataIndex: 'gender', align: 'center', width: 120 },
+  { title: 'EMAIL', dataIndex: 'email', width: 200 },
+  { title: 'GÉNERO', dataIndex: 'gender', align: 'center', width: 90 },
   { title: 'DISCAPACIDAD', dataIndex: 'sickx', align: 'center', width: 120 },
-  { title: 'REGISTRADO POR', dataIndex: 'registerby', width: 260 },
+  { title: 'REGISTRADO POR', dataIndex: 'registerby', width: 200 },
   { title: '', dataIndex: 'actions', width: 50, align: 'center', fixed: 'right'}
 ];
 const formState = reactive({
@@ -172,6 +175,15 @@ const open = ref(false);
 const updateValues = ref(null);
 const city = ref(null);
 
+const handleColorDocument = (type) => {
+  const colors = {
+    'DNI': 'blue',
+    'CE': 'yellow',
+    'PAS': 'red',
+    'PTP': 'purple'
+  }
+  return colors[type]
+}
 const handlePaginator = (current) =>{
   params.value.page = current;
   fetchData()

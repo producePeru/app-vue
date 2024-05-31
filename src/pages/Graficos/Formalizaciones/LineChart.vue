@@ -8,7 +8,7 @@
 import { ref, onMounted, defineProps, watch } from 'vue';
 import Chart from 'chart.js/auto';
 
-const props = defineProps(['total']);
+const props = defineProps(['total', 'color']);
 const myChart = ref(null);
 
 onMounted(() => {
@@ -35,8 +35,8 @@ function renderChart(totalData) {
         data: totalData,
         borderWidth: 1,
         fill: true,
-        // backgroundColor: '#3aa0ff', 
-        // borderColor: '#3aa0ff', 
+        backgroundColor: props.color, 
+        // borderColor: 'blue', 
       }]
     },
     options: {

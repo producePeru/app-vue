@@ -34,6 +34,7 @@ function renderChart(totalData) {
       datasets: [{
         label: 'Registrados',
         data: totalData,
+        backgroundColor: ['#fff5df', '#ffe1e7', '#def3f2'],
         borderWidth: 1
       }]
     },

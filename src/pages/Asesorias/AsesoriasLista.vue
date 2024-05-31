@@ -9,7 +9,7 @@
     <div class="filters-dig">
       <div>
         <div>
-          <a-button @click="handleDownloadAsesorias" :loading="loadingexc" type="primary">
+          <a-button class="btn-excel" @click="handleDownloadAsesorias" :loading="loadingexc" type="primary">
             <img width="20" style="margin: -2px 4px 0 0;" src="@/assets/img/icoexcel.png" /> DESCARGAR
           </a-button>
         </div>
@@ -111,7 +111,7 @@
         </template>
 
         <template v-if="column.dataIndex == 'mype_nombre'">
-          {{ record.mype?.name }}
+          {{ record.nameMype }}
         </template>
         <template v-if="column.dataIndex == 'tipo_regimen'">
           {{ record.regime?.name }}
@@ -131,7 +131,7 @@
         </template>
         
         <template v-if="column.dataIndex == 'ruc'">
-          {{ record.mype?.ruc ? `20${record.mype?.ruc}` : '' }}
+          {{ record.ruc ? record.ruc : 'EN TRÁMITE' }}
         </template>
 
         <template v-if="column.dataIndex == 'actions'">
@@ -167,7 +167,8 @@
     <a-pagination size="small" :total="total" :pageSize="pageSize"  @change="handlePaginator" :showSizeChanger="false" :defaultCurrent="2" />
   </div>
 
-  <a-drawer 
+  <a-drawer
+    width="600" 
     title="Editar asesoría" 
     v-model:open="open1" 
     placement="right">
@@ -175,6 +176,7 @@
   </a-drawer>
 
   <a-drawer 
+    width="650"
     title="Editar Formalización RUC 10" 
     v-model:open="open2" 
     placement="right">
@@ -311,8 +313,8 @@ const columnsRuc20 = ref([
   { title: 'Provincia', dataIndex: 'mype_provincia', width: 160 },
   { title: 'Distrito', dataIndex: 'mype_distrito', width: 160 },
   { title: 'Dirección', dataIndex: 'mype_direccion', width: 230 },
-  { title: 'Nombre empresa', dataIndex: 'mype_nombre', width: 180 },
-  { title: 'Régimen', dataIndex: 'tipo_regimen', width: 80, align: 'center' },
+  { title: 'Nombre de Empresa Constituida', dataIndex: 'mype_nombre', width: 240 },
+  { title: 'Régimen', dataIndex: 'tipo_regimen', width: 76, align: 'center' },
   { title: 'Número de notaría', dataIndex: 'numero_envio_notaria', width: 140 },
   { title: 'Notaría', dataIndex: 'notaria', width: 150 },
   { title: 'Modalidad', dataIndex: 'modality', width: 120, align: 'center' },
@@ -622,6 +624,13 @@ onMounted(() => {
 .asesorias-search {
   button {
     background-color: #cf1322;
+  }
+}
+.btn-excel {
+  background-color: #209e62;
+  border-color: #249157 !important;
+  &:hover {
+    background-color: #0f7840 !important;
   }
 }
 </style>

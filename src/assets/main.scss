@@ -147,6 +147,8 @@ $color-background: #F7F7FA;
 // styles
 .btn-produce {
   background-color: var(--primary);
+  border-color: var(--primary);
+  cursor: pointer;
 }
 .title-produce {
   // color: var(--secondary);
@@ -209,10 +211,9 @@ $color-background: #F7F7FA;
 //   background-color: #d9363e !important;
 // }
 .ant-drawer-content-wrapper {
-  // width: 100%;
-  width: 100% !important;
-  @media screen and (min-width: 600px) {
-    width: 600px !important;
+  @media screen and (max-width: 600px) {
+    width: 100% !important;
+    // width: 600px !important;
   }
 }
 .quill-editor {
@@ -240,4 +241,17 @@ $color-background: #F7F7FA;
 .filters-center-produce {
   display: flex;
   align-items: center;
+}
+
+.ant-table-body::-webkit-scrollbar {
+  width: 10px; 
+  height: 10px; 
+}
+.ant-table-body::-webkit-scrollbar-thumb {
+  background: #ccc; 
+  border-radius: 0px; 
+}
+.ant-table-body::-webkit-scrollbar-track {
+  background: #e1e1e1; 
+  border-radius: 0px; 
 }

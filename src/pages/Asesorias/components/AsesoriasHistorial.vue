@@ -90,21 +90,21 @@ const formalization10 = [
 // ruc10
 const formalization20 = [
 { title: '#', dataIndex: 'idx', width: 50, align: 'center' },
-  { title: 'Fecha registro', dataIndex: 'date_start', width: 120 },
-  { title: 'Asesor', dataIndex: 'asesor', width: 150 },
-  { title: 'Paso', dataIndex: 'task', width: 50 },
+  { title: 'Fecha registro', dataIndex: 'date_start', width: 140 },
+  { title: 'Asesor', dataIndex: 'asesor', width: 180 },
+  // { title: 'Paso', dataIndex: 'task', width: 50 },
   { title: 'Código SUNARP', dataIndex: 'codesunarp', width: 100 },
   { title: 'Sector económico', dataIndex: 'economicsector', width: 100 },
   { title: 'Actividad comercial', dataIndex: 'comercialactivity', width: 100 },
   { title: 'Notaría', dataIndex: 'numbernotary', width: 100 },
   { title: 'Régimen', dataIndex: 'regime', width: 80, align: 'center' },
-  { title: 'MYPE', dataIndex: 'mypename', width: 100 },
+  { title: 'MYPE', dataIndex: 'mypename', width: 240 },
   { title: 'MYPE RUC', dataIndex: 'myperuc', width: 80 },
-  { title: 'Modalidad', dataIndex: 'modality', align: 'center', width: 80 },
+  { title: 'Modalidad', dataIndex: 'modality', align: 'center', width: 70 },
   { title: 'Ciudad', dataIndex: 'city', width: 30 },
   { title: 'Provincia', dataIndex: 'province', width: 30 },
   { title: 'Distrito', dataIndex: 'district', width: 30 },
-  { title: 'Dirección', dataIndex: 'address', width: 100 },
+  { title: 'Dirección', dataIndex: 'address', width: 240 },
 ];
 
 

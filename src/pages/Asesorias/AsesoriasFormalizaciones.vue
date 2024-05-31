@@ -7,17 +7,12 @@
       <div class="wrapper-s">
         <div>
           <label class="label">Seleccione el tipo de documento</label>
-          
-          
           <a-radio-group v-model:value="type_document" @change="handleResetDocument" class="radio-produce">
             <a-radio value="1">DNI</a-radio>
             <a-radio value="2">CE</a-radio>
             <a-radio value="3">PAS</a-radio>
             <a-radio value="4">PTP</a-radio>
           </a-radio-group>
-        
-        
-        
         </div>
         <div>
           <label class="label">Digite el número de documento</label>
@@ -82,7 +77,7 @@
           <a-button @click="open3 = true" :class="open3 && 'actived'">Asesoría</a-button>
         </div>
       </template> -->
-
+    
     <div class="card-as" v-if="historialData" style="padding: 1rem;">
       <h4 class="title-produce">HISTORIAL</h4>
       <HISTORIAL :totaladvisories="totaladvisories" :totalformalization10="totalformalization10" :totalformalization20="totalformalization20" />
@@ -93,31 +88,38 @@
   <section>
 
 
-    <a-drawer width="510" title="Regitsrar una Formalización con RUC 20" v-model:open="open1" placement="right">
-      <a-steps v-model:current="current" size="small" class="steps">
+    <a-drawer title="Regitsrar una Formalización con RUC 20" v-model:open="open1" placement="right" width="820px">
+      <!-- <a-steps v-model:current="current" size="small" class="steps">
         <a-step v-for="item in steps" :key="item.title" :title="item.title" />
-      </a-steps>
+      </a-steps> -->
+
+        <AllFormalizacion20 :info="setValues" @closeDraw="open1 = false, handleUpdateValues()" />
       
-      <div class="steps-content">
-        <ReservaNombre 
+
+        <!-- <ReservaNombre 
         v-if="current == 0" 
         :info="setValues" 
-        @closeDraw="open1 = false, handleUpdateValues()" />
+        @closeDraw="open1 = false, handleUpdateValues()" /> -->
         
-        <ActoConstitutivo 
+        <!-- <ActoConstitutivo 
         v-if="current == 1" 
         :info="setValues" 
         :itemSelectedF20="itemSelectedF20"
-        @closeDraw="open1 = false, handleUpdateValues()" />
+        @closeDraw="open1 = false, handleUpdateValues()" /> -->
         
-        <MypeFinal 
+        <!-- <MypeFinal 
         v-if="current == 2" 
         :itemSelectedF20="itemSelectedF20"
-        @closeDraw="open1 = false, handleUpdateValues()" />
+        @closeDraw="open1 = false, handleUpdateValues()" /> -->
+      <div class="steps-content">
       </div>
+
+
+      
     </a-drawer>
 
     <a-drawer 
+      width="600px"
       title="Regitsrar Formalización con RUC 10" 
       v-model:open="open2" 
       placement="right">
@@ -127,6 +129,7 @@
     </a-drawer>
 
     <a-drawer 
+      width="600px"
       title="Registrar una asesoría" 
       v-model:open="open3" 
       placement="right">
@@ -138,23 +141,28 @@
     <!-- MODAL MAS DE UNA SOLICITUD -->
     <a-modal v-model:open="openModal" title="Pendientes" :closable="true" cancelText="Cerrar" :footer="null" :maskClosable="false" width="380px">
       <a-spin :spinning="spinning">
-        <div v-for="(item, key) in dataPndingRequest" :key="key" @click="handleSelectRequest(item)">
+        <div v-for="(item, key) in dataPndingRequest" :key="key" >
           <div  class="pendient">
-            <div class="info-tag" v-if="item.task == 0"><b>Paso</b> <a-tag color="error">Reserva de nombre</a-tag></div>
+            <!-- @click="handleSelectRequest(item)" -->
+            <!-- <div class="info-tag" v-if="item.task == 0"><b>Paso</b> <a-tag color="error">Reserva de nombre</a-tag></div>
               <div class="info-tag" v-if="item.task == 1"><b>Siguiente paso</b> <a-tag color="warning">Acto
                   constitutivo</a-tag></div>
               <div class="info-tag" v-if="item.task == 2"><b>Siguiente paso</b> <a-tag color="success">Formalizar</a-tag>
-            </div>
+            </div> -->
+
             <div class="info">
               <b>Código SID SUNARP</b>
-              <span><b class="code-number">{{ item.codesunarp }}</b></span>
-              <b>Última consulta</b>
+              <span><b class="code-number"><a-tag color="error" style="margin: 0;">{{ item.codesunarp }}</a-tag></b></span>
+              <b>Atendido por: </b>
+              <span>{{ item.user.profile.name }} {{ item.user.profile.lastname }}</span>
+              <b>Fecha de registro: </b>
               <span>{{ formatDate(item.updated_at) }}</span>
             </div>
+            <!-- <pre>{{ item }}</pre> -->
           </div>
         </div>
         <div class="pendient pendient-btn btn-produce" @click="handleStartProcessRUC20">
-          <div style="text-align: center;">NUEVO TRÁMITE</div>
+          <div style="text-align: center;">NUEVO REGISTRO</div>
         </div>
       </a-spin>
     </a-modal>
@@ -162,6 +170,7 @@
     <!-- <pre>{{ type_document }}</pre> -->
 
     <a-drawer
+    width="600"
     v-model:open="open"
     class="draw-notary"
     root-class-name="root-class-name"
@@ -177,6 +186,7 @@
 
 <script setup>
 import { ref, onMounted } from 'vue';
+import AllFormalizacion20 from './components/AllFormalizacion20.vue';
 import ReservaNombre from './components/ReservaNombre.vue';
 import ActoConstitutivo from './components/ActoConstitutivo.vue';
 import MypeFinal from './components/MypeFinal.vue'
@@ -238,6 +248,7 @@ const validateNumber = () => {
   dniNumber.value = dniNumber.value.replace(/\D/g, '');
 };
 const handleResetDocument = () => {
+  historialData.value = false;
   dniNumber.value = '';
   infoUser.value = [];
   historial.value = [];
@@ -399,7 +410,6 @@ onMounted(() => {
 }
 .ico-reload {
   color: #1677ff;
-  cursor: pointer;
   position: absolute;
   right: 1rem;
   top: 1rem;
@@ -481,7 +491,7 @@ onMounted(() => {
   padding: .6rem;
   margin: 10px 0;
   line-height: 1.7;
-  cursor: pointer;
+  // cursor: pointer;
 
   b {
     font-weight: 400;
@@ -505,10 +515,10 @@ onMounted(() => {
     }
   }
   &:hover {
-    border: 1px solid var(--primary);
-    .code-number {
-      color: var(--primary);
-    }
+    // border: 1px solid var(--primary);
+    // .code-number {
+    //   color: var(--primary);
+    // }
   }
 }
 

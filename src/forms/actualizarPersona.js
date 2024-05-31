@@ -42,17 +42,17 @@ const fields = {
   },
   city_id: {
     type: 'iSelect',
-    label: 'Departamento',
+    label: 'Región',
     name: 'city_id',
-    required: false,
-    message: 'Seleccionar departamento',
+    required: true,
+    message: 'Seleccionar una región',
     disabled: false
   },
   province_id: {
     type: 'iSelect',
     label: 'Provincia',
     name: 'province_id',
-    required: false,
+    required: true,
     message: 'Seleccionar provincia',
     disabled: false
   },
@@ -60,7 +60,7 @@ const fields = {
     type: 'iSelect',
     label: 'Distrito',
     name: 'district_id',
-    required: false,
+    required: true,
     message: 'Seleccionar distrito',
     disabled: false
   },
@@ -68,7 +68,7 @@ const fields = {
     type: 'iText',
     label: 'Número de celular',
     name: 'phone',
-    required: false,
+    required: true,
     message: 'Número de contacto y 9 max',
     max: 9,
     disabled: false
@@ -86,7 +86,7 @@ const fields = {
     type: 'iDate',
     label: 'Fecha de nacimiento',
     name: 'birthday',
-    required: false,
+    required: true,
     message: 'Seleccionar fecha',
     disabled: false
   },
@@ -101,7 +101,7 @@ const fields = {
     type: 'iSelect',
     label: '¿Tiene discapacidad?',
     name: 'sick',
-    required: false,
+    required: true,
     message: 'Seleccionar un tipo',
   }
 }

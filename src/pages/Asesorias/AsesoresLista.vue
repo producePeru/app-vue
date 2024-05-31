@@ -75,6 +75,7 @@
   </div>
 
   <a-drawer
+    width="600"
     v-model:open="open"
     class="draw-notary"
     root-class-name="root-class-name"
