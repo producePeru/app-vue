@@ -1,32 +1,43 @@
 <template>
   <div class="notaries">
-
-
-    <div class="notaries-wrapper">
+    <div class="sticky">
       <h1 class="notarie-title">CATÁLOGO DE NOTARIAS</h1>
-      <h3 class="notarie-title-2">SI EL CAPITAL > 1 UIT (S/.5150) ADICIONAL PAGARÁ GASTOS REGISTRALES EN CUALQUIER
-        NOTARIA</h3>
+      <h3 class="notarie-title-2">
+        SI EL CAPITAL > 1 UIT (S/.5150) ADICIONAL PAGARÁ GASTOS REGISTRALES EN CUALQUIER NOTARIA
+      </h3>
+
+      <div class="notaries-filter">
+        <div class="notary-div">
+          <label>Buscar por nombre de notaria</label>
+          <a-input v-model:value="filterName" />
+        </div>
+
+        <div class="notary-div">
+          <label>Por provincia</label>
+          <a-select placeholder="Buscar por Provincia" v-model:value="filterCity" show-search :options="store.cities"
+            :filter-option="filterOption" />
+        </div>
+        <a-button type="primary" class="btn-produce" @click="fetchData">BUSCAR</a-button>
+      </div>
+
     </div>
 
     <br>
 
-   
-
-
-
       <div class=" notaries-wrapper notaries-box" v-for="(item, idx) in dataSource" :key="idx">
         <div>
-          <a-tag color="blue">{{ item.city.name }}</a-tag>
+          <a-tag color="blue" style="margin-bottom: 6px;">{{ item.city.name }}</a-tag>
           <div class="notaries-box-adrres">
             <span>{{ item.province.name }}</span> -
             <span>{{ item.district.name }}</span> -
             <span>{{ item.address }}</span>
           </div>
+
+
           <h3 class="notaries-box-name">{{ item.name }}</h3>
-          <div style="display: flex; align-items: baseline;">
-            <span class="notaries-box-h4">BIOMETRICO: </span> 
-            <span class="notaries-box-html" v-html="item.biometrico"></span>
-          </div>
+      
+          <div class="notaries-box-html-2" v-html="item.infocontacto"></div>
+
         </div>
 
         <div>
@@ -38,35 +49,22 @@
           <h4 class="notaries-box-h4">CONDICIONES</h4>
           <div class="notaries-box-html" v-html="item.conditions"></div>
         </div>
-
-
         <div>
           <h4 class="notaries-box-h4">SOCIO O INTERVINIENTE ADICIONAL</h4>
           <div class="notaries-box-html" v-html="item.sociointerveniente"></div>
+          <div>
+            <h4 class="notaries-box-h4" style="display: block;">BIOMETRICO: </h4> 
+            <span class="notaries-box-html" v-html="item.biometrico"></span>
+          </div>
         </div>
-
-
-
-    
-
-
-
-
-
-
 
       <!-- <EnvironmentOutlined /> -->
       <!-- <a href="https://maps.app.goo.gl/HevFnRUXY9Xips3n8" target="_blank" rel="noopener noreferrer">ir añño</a> -->
 
-
-
-
-
     </div>
-
-
-
-
+    
+    <br>
+    <br>
 
   </div>
 </template>
@@ -156,6 +154,14 @@ onMounted(() => {
 </script>
 
 <style lang="scss">
+.sticky {
+  position: sticky;
+  top: 0;
+  box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.03), 0 1px 6px -1px rgba(0, 0, 0, 0.02), 0 2px 4px 0 rgba(0, 0, 0, 0.02);
+  background-color: #fff;
+  padding: 2rem 0;
+  border-bottom: 1px solid #bebebe;
+}
 .notarie-title {
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, 'Noto Sans', sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
   font-size: 20px;
@@ -173,7 +179,25 @@ onMounted(() => {
 .notaries {
   background-color: rgb(236, 236, 236);
   width: 100%;
-  padding: 1rem 0;
+  min-height: 100vh;
+
+  &-filter {
+    display: flex;
+    align-items: end;
+    justify-content: center;
+    gap: 1rem;
+    margin-top: 1.5rem;
+    .notary-div {
+      display: flex;
+      flex-direction: column;
+      width: 250px;
+      label {
+        font-size: 14px;
+        margin-bottom: .2rem;
+        font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, 'Noto Sans', sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
+      }
+    }
+  }
 
   &-wrapper {
     background-color: #fff;
@@ -208,11 +232,21 @@ onMounted(() => {
       margin: .2rem 0;
     }
 
+    &-html-2 {
+      margin: .3rem 0;
+      padding: .5rem 0;
+      border-top: 1px solid #eee;
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, 'Noto Sans', sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
+      p {
+        margin: 0;
+        font-size: 13px
+      }
+    }
+
     &-html {
       br {
         display: none;
       }
-
       h1,
       h2,
       h3,

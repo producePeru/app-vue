@@ -21,9 +21,9 @@
           <a-range-picker v-model:value="byDateRange" :presets="rangePresets" />
         </div>
 
-        <div class="asesor" v-if="storageRole[0].id == 1">
+        <div class="asesor" v-if="storageRole[0].id == 1" style="width: 300px;">
           <label>Buscar por Asesores</label>
-          <a-select v-model:value="byAsesores" mode="multiple" placeholder="Selecciona asesores" max-tag-count="responsive" :options="store.asesores" />
+          <a-select v-model:value="byAsesores" mode="multiple" placeholder="Selecciona asesores" max-tag-count="responsive" :options="store.asesores"  />
         </div>
 
         <a-button @click="handleSearchFilter">BUSCAR</a-button>
@@ -63,7 +63,7 @@
         </template>
 
         <template v-if="column.dataIndex == 'sol_email'">
-          {{ record.people.email }}
+          {{ record.people.email ? record.people.email : '-' }}
         </template>
         <template v-if="column.dataIndex == 'sol_phone'">
           {{ record.people.phone }}
@@ -127,7 +127,7 @@
         </template>
         
         <template v-if="column.dataIndex === 'modality'">
-          <a-tag :color="record.modality?.name == 'Presencial' ? 'green' : 'orange'">{{ record.modality?.name }}</a-tag>
+          <a-tag :color="record.modality?.name == 'PRESENCIAL' ? 'green' : 'orange'">{{ record.modality?.name }}</a-tag>
         </template>
         
         <template v-if="column.dataIndex == 'ruc'">
@@ -183,6 +183,15 @@
     <EditarFormalizacion10 :info="infoUser" @closeDraw="open2 = false, fetchData()" />
   </a-drawer>
 
+  <a-drawer 
+    width="820"
+    title="Editar Formalización RUC 20" 
+    v-model:open="open3" 
+    placement="right">
+    <!-- <EditarFormalizacion10 :info="infoUser" @closeDraw="open2 = false, fetchData()" /> -->
+    <EditarFormalizacion20 :info="infoUser" @closeDraw="open3 = false, fetchData()" />
+  </a-drawer>
+
 </template>
 
 <script setup>
@@ -200,9 +209,11 @@ import { useCounterStore } from '@/stores/selectes.js';
 import { MoreOutlined, QuestionCircleOutlined } from '@ant-design/icons-vue';
 import EditarAsesoria from '@/pages/Asesorias/components/EditarAsesoria.vue';
 import EditarFormalizacion10 from '@/pages/Asesorias/components/EditarFormalizacionRUC10.vue';
+import EditarFormalizacion20 from '@/pages/Asesorias/components/EditarFormalizacionRUC20.vue';
 
 const open1 = ref(false);
 const open2 = ref(false);
+const open3 = ref(false);
 const infoUser = ref(null);
 const storageRole = JSON.parse(localStorage.getItem('role'));
 const token = Cookies.get('token');
@@ -249,7 +260,7 @@ const rangePresets = ref([
 // filter_end
 
 const actualizarAltura = () => {
-  valueY.value = window.innerHeight - 320;
+  valueY.value = window.innerHeight - 360;
 };
 onBeforeUnmount(() => {
   window.removeEventListener('resize', actualizarAltura);
@@ -259,38 +270,41 @@ const columns = ref([]);
 
 const columnsAsesoria = ref([
   { title: '#', dataIndex: 'idx', fixed: 'left', align: 'center', width: 50 },
-  { title: 'Fecha', dataIndex: 'ase_fecha', fixed: 'left', align: 'center', width: 130 },
-  { title: 'Solicitante Apellidos', dataIndex: 'sol_apellidos', width: 180 },
-  { title: 'Solicitante Nombres', dataIndex: 'sol_nombres', width: 180 },
-  { title: 'S. Tipo Documento', dataIndex: 'sol_tipo_doc', width: 160 },
-  { title: 'S. Núm. Documento', dataIndex: 'sol_num_doc', width: 150 },
-  { title: 'S. Email', dataIndex: 'sol_email', width: 200 },
-  { title: 'S. Celular', dataIndex: 'sol_phone', width: 110, align: 'center' },
-  { title: 'Asesorado por', dataIndex: 'asesor', width: 200 },
-  { title: 'Supervisor', dataIndex: 'misupervisor', width: 200 },
-  { title: 'Región', dataIndex: 'mype_region', width: 140 },
+  { title: 'FECHA', dataIndex: 'ase_fecha', fixed: 'left', align: 'center', width: 130 },
+  { title: 'ASESOR (a) - Nombre Completo', dataIndex: 'asesor', width: 150 },
+  // { title: 'SUPERVISOR', dataIndex: 'misupervisor', wdth: 140 },
+  ...(storageRole[0].id === 1 ? [{ title: 'SUPERVISOR', dataIndex: 'misupervisor', width: 140 }] : []),
+  { title: 'Tipo de documento', dataIndex: 'sol_tipo_doc', width: 110, align: 'center' },
+  { title: 'Número de Documento', dataIndex: 'sol_num_doc', width: 100 },
+  { title: 'Solicitante Apellidos', dataIndex: 'sol_apellidos', width: 160 },
+  { title: 'Solicitante Nombres', dataIndex: 'sol_nombres', width: 160 },
+  { title: 'Correo electrónico', dataIndex: 'sol_email', width: 220 },
+  { title: 'Celular', dataIndex: 'sol_phone', width: 90, align: 'center' },
+  { title: 'Región', dataIndex: 'mype_region', width: 120 },
   { title: 'Provincia', dataIndex: 'mype_provincia', width: 160 },
   { title: 'Distrito', dataIndex: 'mype_distrito', width: 160 },
+   
   { title: 'Componente', dataIndex: 'componente', width: 180 },
-  { title: 'Tema', dataIndex: 'tema_componente', width: 180 },
+  { title: 'Tema', dataIndex: 'tema_componente', width: 160 },
   { title: 'Modalidad', dataIndex: 'modality', width: 120, align: 'center' },
   { title: '', dataIndex: 'actions', width: 50, align: 'center', fixed: 'right'}
 ]);
 
 const columnsRuc10 = ref([
   { title: '#', dataIndex: 'idx', fixed: 'left', align: 'center', width: 50 },
-  { title: 'Fecha', dataIndex: 'ase_fecha', fixed: 'left', align: 'center', width: 130 },
-  { title: 'Solicitante Apellidos', dataIndex: 'sol_apellidos', width: 180 },
-  { title: 'Solicitante Nombres', dataIndex: 'sol_nombres', width: 180 },
-  { title: 'S. Tipo Documento', dataIndex: 'sol_tipo_doc', width: 160 },
-  { title: 'S. Núm. Documento', dataIndex: 'sol_num_doc', width: 150 },
-  { title: 'S. Email', dataIndex: 'sol_email', width: 200 },
-  { title: 'S. Celular', dataIndex: 'sol_phone', width: 110, align: 'center' },
-  { title: 'Asesorado por', dataIndex: 'asesor', width: 200 },
-  { title: 'Supervisor', dataIndex: 'misupervisor', width: 200 },
-  { title: 'Región', dataIndex: 'mype_region', width: 140 },
+  { title: 'FECHA', dataIndex: 'ase_fecha', fixed: 'left', align: 'center', width: 130 },
+  { title: 'ASESOR (a) - Nombre Completo', dataIndex: 'asesor', width: 150 },
+  ...(storageRole[0].id === 1 ? [{ title: 'SUPERVISOR', dataIndex: 'misupervisor', width: 140 }] : []),
+  { title: 'Tipo de documento', dataIndex: 'sol_tipo_doc', width: 110, align: 'center' },
+  { title: 'Número de Documento', dataIndex: 'sol_num_doc', width: 100 },
+  { title: 'Solicitante Apellidos', dataIndex: 'sol_apellidos', width: 160 },
+  { title: 'Solicitante Nombres', dataIndex: 'sol_nombres', width: 160 },
+  { title: 'Correo electrónico', dataIndex: 'sol_email', width: 220 },
+  { title: 'Celular', dataIndex: 'sol_phone', width: 90, align: 'center' },
+  { title: 'Región', dataIndex: 'mype_region', width: 120 },
   { title: 'Provincia', dataIndex: 'mype_provincia', width: 160 },
   { title: 'Distrito', dataIndex: 'mype_distrito', width: 160 },
+
   { title: 'Detalle del trámite', dataIndex: 'detalle_tramite', width: 180 },
   { title: 'Sector económico', dataIndex: 'sector_economico', width: 180 },
   { title: 'Actividad comercial', dataIndex: 'atividad_comercial', width: 180 },
@@ -300,25 +314,26 @@ const columnsRuc10 = ref([
 
 const columnsRuc20 = ref([
   { title: '#', dataIndex: 'idx', fixed: 'left', align: 'center', width: 50 },
-  { title: 'Fecha', dataIndex: 'ase_fecha', fixed: 'left', align: 'center', width: 130 },
-  { title: 'Solicitante Apellidos', dataIndex: 'sol_apellidos', width: 180 },
-  { title: 'Solicitante Nombres', dataIndex: 'sol_nombres', width: 180 },
-  { title: 'S. Tipo Documento', dataIndex: 'sol_tipo_doc', width: 160 },
-  { title: 'S. Núm. Documento', dataIndex: 'sol_num_doc', width: 150 },
-  { title: 'S. Email', dataIndex: 'sol_email', width: 200 },
-  { title: 'S. Celular', dataIndex: 'sol_phone', width: 110, align: 'center' },
-  { title: 'Asesorado por', dataIndex: 'asesor', width: 200 },
-  { title: 'Supervisor', dataIndex: 'misupervisor', width: 200 },
-  { title: 'Región', dataIndex: 'mype_region', width: 140 },
-  { title: 'Provincia', dataIndex: 'mype_provincia', width: 160 },
-  { title: 'Distrito', dataIndex: 'mype_distrito', width: 160 },
-  { title: 'Dirección', dataIndex: 'mype_direccion', width: 230 },
+  { title: 'FECHA', dataIndex: 'ase_fecha', fixed: 'left', align: 'center', width: 130 },
+  { title: 'ASESOR (a) - Nombre Completo', dataIndex: 'asesor', width: 150 },
+  ...(storageRole[0].id === 1 ? [{ title: 'SUPERVISOR', dataIndex: 'misupervisor', width: 140 }] : []),
+  { title: 'Tipo de documento', dataIndex: 'sol_tipo_doc', width: 110, align: 'center' },
+  { title: 'Número de Documento', dataIndex: 'sol_num_doc', width: 100 },
+  { title: 'Solicitante Apellidos', dataIndex: 'sol_apellidos', width: 140 },
+  { title: 'Solicitante Nombres', dataIndex: 'sol_nombres', width: 140 },
+  { title: 'Correo electrónico', dataIndex: 'sol_email', width: 220 },
+  { title: 'Celular', dataIndex: 'sol_phone', width: 90, align: 'center' },
+  { title: 'Región del negocio', dataIndex: 'mype_region', width: 140 },
+  { title: 'Provincia del Negocio', dataIndex: 'mype_provincia', width: 160 },
+  { title: 'Distrito del Negocio', dataIndex: 'mype_distrito', width: 160 },
+
+  { title: 'Direccion del Negocio', dataIndex: 'mype_direccion', width: 230 },
+  { title: 'N_RUC', dataIndex: 'ruc', width: 100, align: 'center' },
   { title: 'Nombre de Empresa Constituida', dataIndex: 'mype_nombre', width: 240 },
-  { title: 'Régimen', dataIndex: 'tipo_regimen', width: 76, align: 'center' },
-  { title: 'Número de notaría', dataIndex: 'numero_envio_notaria', width: 140 },
+  { title: 'Régimen', dataIndex: 'tipo_regimen', width: 74, align: 'center' },
   { title: 'Notaría', dataIndex: 'notaria', width: 150 },
   { title: 'Modalidad', dataIndex: 'modality', width: 120, align: 'center' },
-  { title: 'RUC', dataIndex: 'ruc', width: 120, align: 'center' },
+  { title: '', dataIndex: 'actions', width: 50, align: 'center', fixed: 'right'}
 ]);
 
 const handleSearchFilter = async() => {
@@ -355,16 +370,13 @@ const handleNamePaginator = (val) => {
 
 const handleDeleteItem= async(val) => {
   try {
-    
     let url = null;
     
     if(active.value == 'asesorias') url = `advisory/delete/${val.id}`
     if(active.value == 'ruc10')     url = `formalization/delete-ruc-10/${val.id}`
-    // if(active.value == 'ruc20') url = `advisory/delete/${val.id}`
+    if(active.value == 'ruc20')     url = `formalization/delete-ruc-20/${val.id}`
 
     const data = await makeRequest({ url, method: 'DELETE' });
-    
-    
     fetchData();
     message.success(data.message);
   } catch (error) {
@@ -372,27 +384,25 @@ const handleDeleteItem= async(val) => {
   }
 }
 const handleEditItem = async(val) => {
-
   try {
-    
     let url = null;
     
     if(active.value == 'asesorias') url = `advisory/find/${val.id}`
     if(active.value == 'ruc10')     url = `formalization/find-ruc-10/${val.id}`
-    // if(active.value == 'ruc20') url = `advisory/delete/${val.id}`
-    
+    if(active.value == 'ruc20')     url = `formalization/find-ruc-20/${val.id}`
+
     const data = await makeRequest({ url, method: 'GET' });
     if(data.status == 200) {
       infoUser.value = data.data; 
       if(active.value == 'asesorias') open1.value = true;
-      if(active.value == 'ruc10') open2.value = true;
+      if(active.value == 'ruc10')     open2.value = true;
+      if(active.value == 'ruc20')     open3.value = true;
     }
   } catch (error) {
     console.error('Error de red:', error);
   }
-  
-  
 }
+
 const handleDownloadAsesorias = async () => {
 
   loadingexc.value = true
@@ -611,11 +621,11 @@ onMounted(() => {
     .ant-table-cell:nth-child(3), .ant-table-cell:nth-child(4) {
       text-transform: uppercase;
     }
-    .ant-table-cell:nth-child(9) {
+    .ant-table-cell:nth-child(3) {
       background-color: #feffe3 !important;
     }
 
-    .ant-table-cell:nth-child(10) {
+    .ant-table-cell:nth-child(4) {
       background-color: #e6fff4 !important;
     }
   }

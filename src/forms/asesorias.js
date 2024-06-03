@@ -1,5 +1,4 @@
 const fields = {
-
   city_id: {
     type: 'iSelectWrite',
     label: 'Región del negocio',
@@ -32,13 +31,20 @@ const fields = {
     message: 'Digitar la dirección del negocio',
     disabled: false
   },
-
   modality_id: {
     type: 'iSelect',
     label: 'Modalidad de atención',
     name: 'modality_id',
     required: true,
     message: 'Seleccionar la modalidad',
+    disabled: false
+  },
+  nameMype: {
+    type: 'iText',
+    label: 'Nombre empresa',
+    name: 'nameMype',
+    required: true,
+    message: 'Escribir nombre de la empresa',
     disabled: false
   },
   ruc: {
@@ -68,41 +74,6 @@ const fields = {
     message: 'Seleccionar la actividad comercial',
     disabled: false
   },
-
-  dateReception: {
-    type: 'iDate',
-    label: 'Fecha de Recepcion todo OK',
-    name: 'dateReception',
-    required: false,
-    message: 'Escribir el código SID sunarp',
-    disabled: false
-  },
-
-  dateTramite: {
-    type: 'iDate',
-    label: 'Fecha tramite SID SUNARP o SUNAT',
-    name: 'dateTramite',
-    required: false,
-    message: 'Escribir el código SID sunarp',
-    disabled: false
-  },
-
-
-
-
-
-
-
-  codesunarp: {
-    type: 'iText',
-    label: 'Código SID sunarp',
-    name: 'codesunarp',
-    required: false,
-    message: 'Escribir el código SID sunarp',
-    disabled: false
-  },
-  
-  
   regime_id: {
     type: 'iSelect',
     label: 'Tipo de régimen societario',
@@ -111,21 +82,36 @@ const fields = {
     message: 'Seleccionar el régimen societario',
     disabled: false
   },
-  
-  nameMype: {
-    type: 'iText',
-    label: 'Nombre empresa',
-    name: 'nameMype',
+  notary_id: {
+    type: 'iSelect',
+    label: 'Notaría',
+    name: 'notary_id',
     required: true,
-    message: 'Escribir nombre de la empresa',
+    message: 'Seleccionar una notaría',
     disabled: false
   },
   numbernotary: {
     type: 'iText',
-    label: 'Número de solicitud',
+    label: 'Número solicitud constancia',
     name: 'numbernotary',
     required: true,
     message: 'Escribir número de solicitud de envio a Notaría',
+    disabled: false
+  },
+  dateReception: {
+    type: 'iDate',
+    label: 'Fecha de Recepcion todo OK',
+    name: 'dateReception',
+    required: false,
+    message: 'Escribir el código SID sunarp',
+    disabled: false
+  },
+  dateTramite: {
+    type: 'iDate',
+    label: 'Fecha tramite SID SUNARP o SUNAT',
+    name: 'dateTramite',
+    required: false,
+    message: 'Escribir el código SID sunarp',
     disabled: false
   },
   // city: {
@@ -136,14 +122,14 @@ const fields = {
   //   message: 'Buscar por provincia',
   //   disabled: false
   // },
-  notary_id: {
-    type: 'iSelect',
-    label: 'Notaría',
-    name: 'notary_id',
-    required: true,
-    message: 'Seleccionar una notaría',
-    disabled: false
-  },
+    // codesunarp: {
+  //   type: 'iText',
+  //   label: 'Código SID sunarp',
+  //   name: 'codesunarp',
+  //   required: false,
+  //   message: 'Escribir el código SID sunarp',
+  //   disabled: false
+  // },
   
 };
 

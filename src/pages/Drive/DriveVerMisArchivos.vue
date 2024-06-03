@@ -120,7 +120,7 @@ const columns = [
   { title: 'NOMBRE DEL ARCHIVO',  dataIndex: 'name', width: 140 },
   { title: 'FECHA',               dataIndex: 'date', width: 120, align: 'center'},
   { title: 'DESCARGAR',           dataIndex: 'download', width: 120, align: 'center'},
-  ...(storageRole[0].id === 3 || storageRole[0].id === 1 ? [{ title: '', dataIndex: 'actions', width: 50, align: 'center', fixed: 'right' }] : [])
+  ...(storageRole[0].id === 3 || storageRole[0].id === 1 ? [{ title: '', dataIndex: 'actions', width: 50, align: 'center', fixed: 'right' }] : [])    //🚩
 ];
 
 const computeIndex = computed(() => (index) => {

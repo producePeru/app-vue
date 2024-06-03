@@ -78,7 +78,7 @@ const fields = {
     label: 'Correo electrónico',
     name: 'email',
     required: false,
-    message: 'Número de contacto y 9 max',
+    message: 'Escribir un email',
     email: 'email',
     disabled: false
   },
