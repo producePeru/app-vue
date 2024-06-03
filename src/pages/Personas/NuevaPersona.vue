@@ -4,51 +4,53 @@
     <br>
 
     <a-spin :spinning="searchLoading">
-    <a-form layout="vertical" :model="formState" name="basic" autocomplete="off" @finish="onSubmit" @finishFailed="onSubmitFail">
-      <div class="grid-item">
-        <template v-for="(el, idx) in fields" :key="idx">
+      <a-form layout="vertical" :model="formState" name="basic" autocomplete="off" @finish="onSubmit"
+        @finishFailed="onSubmitFail">
+        <div class="grid-item">
+          <template v-for="(el, idx) in fields" :key="idx">
 
-          <a-form-item class="item-max" v-if="el.type === 'iSelect'" :name="el.name" :label="el.label"
-            :rules="[{ required: el.required, message: el.message }]">
-            <a-select v-if="el.name == 'typedocument_id'" v-model:value="formState[el.name]"
-              :options="store.typeDocuments" :disabled="el.disabled" @change="handleSelectTypeDocument" />
-            <a-select v-if="el.name == 'city_id'" v-model:value="formState[el.name]" :options="store.cities" show-search :filter-option="filterOption"
-              @change="handleDepartaments" :disabled="el.disabled" />
-            <a-select v-if="el.name == 'province_id'" v-model:value="formState[el.name]" :options="provinces" show-search :filter-option="filterOption"
-              @change="handleProvinces" :disabled="!formState.city_id" />
-            <a-select v-if="el.name == 'district_id'" v-model:value="formState[el.name]" :options="districts" show-search :filter-option="filterOption"
-              :disabled="!formState.province_id" />
-            <a-select v-if="el.name == 'gender_id'" v-model:value="formState[el.name]" :options="store.genders"
-              :disabled="el.disabled" />
-            <a-select v-if="el.name == 'lession'" v-model:value="formState[el.name]" :options="disabilities"
-              :disabled="el.disabled" />
-          </a-form-item>
+            <a-form-item class="item-max" v-if="el.type === 'iSelect'" :name="el.name" :label="el.label"
+              :rules="[{ required: el.required, message: el.message }]">
+              <a-select v-if="el.name == 'typedocument_id'" v-model:value="formState[el.name]"
+                :options="store.typeDocuments" :disabled="el.disabled" @change="handleSelectTypeDocument" />
+              <a-select v-if="el.name == 'city_id'" v-model:value="formState[el.name]" :options="store.cities"
+                show-search :filter-option="filterOption" @change="handleDepartaments" :disabled="el.disabled" />
+              <a-select v-if="el.name == 'province_id'" v-model:value="formState[el.name]" :options="provinces"
+                show-search :filter-option="filterOption" @change="handleProvinces" :disabled="!formState.city_id" />
+              <a-select v-if="el.name == 'district_id'" v-model:value="formState[el.name]" :options="districts"
+                show-search :filter-option="filterOption" :disabled="!formState.province_id" />
+              <a-select v-if="el.name == 'gender_id'" v-model:value="formState[el.name]" :options="store.genders"
+                :disabled="el.disabled" />
+              <a-select v-if="el.name == 'lession'" v-model:value="formState[el.name]" :options="disabilities"
+                :disabled="el.disabled" />
+            </a-form-item>
 
-          <a-form-item v-if="el.type === 'iSearch'" class="item-max" :name="el.name" :label="el.label"
-            :rules="[{ required: el.required, message: el.message }]">
-            <a-input-search :loading="searchLoading" v-model:value="formState[el.name]" @search="handleSearchApi"
-              @input="validateNumber" :maxlength="formState.typedocument_id == 1 ? 8 : 20" disabled />
-          </a-form-item>
+            <a-form-item v-if="el.type === 'iSearch'" class="item-max" :name="el.name" :label="el.label"
+              :rules="[{ required: el.required, message: el.message }]">
+              <a-input-search :loading="searchLoading" v-model:value="formState[el.name]" @search="handleSearchApi"
+                @input="validateNumber" :maxlength="formState.typedocument_id == 1 ? 8 : 20" disabled />
+            </a-form-item>
 
-          <a-form-item v-if="el.type === 'iText'" :name="el.name" :label="el.label"
-            :rules="[{ required: el.required, message: el.message, type: el.email, max: el.max }]">
-            <a-input v-if="el.name == 'phone'" v-model:value="formState[el.name]" :disabled="el.disabled" :maxlength="el.max" @input="validateNumberPhone" />
-            <a-input v-else v-model:value="formState[el.name]" :disabled="el.disabled" :maxlength="el.max" />
-          </a-form-item>
+            <a-form-item v-if="el.type === 'iText'" :name="el.name" :label="el.label"
+              :rules="[{ required: el.required, message: el.message, type: el.email, max: el.max }]">
+              <a-input v-if="el.name == 'phone'" v-model:value="formState[el.name]" :disabled="el.disabled"
+                :maxlength="el.max" @input="validateNumberPhone" />
+              <a-input v-else v-model:value="formState[el.name]" :disabled="el.disabled" :maxlength="el.max" />
+            </a-form-item>
 
-          <a-form-item v-if="el.type === 'iDate'" :name="el.name" :label="el.label"
-            :rules="[{ required: el.required, message: el.message }]">
-            <a-date-picker :locale="locale" v-model:value="birthdateDate" style="width: 100%;" :format="dateFormat" placeholder="día/mes/año" @change="formState.birthday = birthdateDate"
-              :disabled="el.disabled" />
-          </a-form-item>
-        </template>
-      </div>
-      <div>{{ update() }}</div>
-      <!-- <pre>{{ provinces }}</pre> -->
-      <a-form-item>
-        <a-button class="btn-produce" type="primary" html-type="submit" :loading="loading">REGISTRAR</a-button>
-      </a-form-item>
-    </a-form>
+            <a-form-item v-if="el.type === 'iDate'" :name="el.name" :label="el.label"
+              :rules="[{ required: el.required, message: el.message }]">
+              <a-date-picker :locale="locale" v-model:value="birthdateDate" style="width: 100%;" :format="dateFormat"
+                placeholder="día/mes/año" @change="formState.birthday = birthdateDate" :disabled="el.disabled" />
+            </a-form-item>
+          </template>
+        </div>
+        <div>{{ update() }}</div>
+        <!-- <pre>{{ provinces }}</pre> -->
+        <a-form-item>
+          <a-button class="btn-produce" type="primary" html-type="submit" :loading="loading">REGISTRAR</a-button>
+        </a-form-item>
+      </a-form>
     </a-spin>
   </div>
 </template>
@@ -110,7 +112,7 @@ const formState = reactive({
   from_id: 1
 });
 
-const fetchProvinces = async(id) =>  {
+const fetchProvinces = async (id) => {
   try {
     const { data } = await requestNoToken({ url: `select/provinces/${id}`, method: 'GET' });
     provinces.value = data;
@@ -118,7 +120,7 @@ const fetchProvinces = async(id) =>  {
     console.error('Error de red:', error);
   }
 }
-const fetchDistricts = async(id) =>  {
+const fetchDistricts = async (id) => {
   try {
     const { data } = await requestNoToken({ url: `select/districts/${id}`, method: 'GET' });
     districts.value = data;
@@ -133,7 +135,7 @@ const filterOption = (input, option) => {
   return normalizedLabel.includes(normalizedInput);
 };
 const update = () => {
-  if(store.typeDocuments) spinning.value = false;
+  if (store.typeDocuments) spinning.value = false;
 }
 const handleDisabled = () => {
   fields.value.lastname.disabled = false;
@@ -164,65 +166,75 @@ const handleSearchApi = async (numberDocument) => {
     return searchLoading.value = false
   }
 
-  if (formState.typedocument_id == 1) {
-    
-    const {data} = await makeRequest({ url: `user/api/dni/${formState.documentnumber}`, method: 'GET' });
+  try {
+    if (formState.typedocument_id == 1) {
 
-    if(data.body) {
-      formState.lastname = data.body?.apePaterno;
-      formState.middlename = data.body?.apeMaterno
-      formState.name = data.body?.preNombres
-      formState.address = data.body?.desDireccion;
-      if(data.body?.feNacimiento) formState.birthday = dayjs(data.body?.feNacimiento, 'DD/MM/YYYY');
-      if(data.body?.feNacimiento) birthdateDate.value = dayjs(data.body?.feNacimiento, 'DD/MM/YYYY');
-      
-      if(data.body?.ubigeo) {
-        let region = store.cities.find(city => city.label === data.body.ubigeo?.departamento);
-        let provincias = await requestNoToken({ url: `select/provinces/${region.value}`, method: 'GET' });
-        provinces.value = provincias.data
-        let provincia = provincias.data.find(province => province.label === data.body.ubigeo?.provincia);
-        
-        let distritos = await requestNoToken({ url: `select/districts/${provincia.value}`, method: 'GET' });
-        districts.value = distritos.data
-        let distrito = distritos.data.find(item => item.label === data.body.ubigeo?.distrito);
-        
-        formState.city_id = region.value;
-        formState.province_id = provincia.value;
-        formState.district_id = distrito.value;
+      const { data } = await makeRequest({ url: `user/api/dni/${formState.documentnumber}`, method: 'GET' });
+
+      if (data.body) {
+        formState.lastname = data.body?.apePaterno;
+        formState.middlename = data.body?.apeMaterno
+        formState.name = data.body?.preNombres
+        formState.address = data.body?.desDireccion;
+        if (data.body?.feNacimiento) formState.birthday = dayjs(data.body?.feNacimiento, 'DD/MM/YYYY');
+        if (data.body?.feNacimiento) birthdateDate.value = dayjs(data.body?.feNacimiento, 'DD/MM/YYYY');
+
+        if (data.body?.ubigeo) {
+          let region = store.cities.find(city => city.label === data.body.ubigeo?.departamento);
+          let provincias = await requestNoToken({ url: `select/provinces/${region.value}`, method: 'GET' });
+          provinces.value = provincias.data
+          let provincia = provincias.data.find(province => province.label === data.body.ubigeo?.provincia);
+
+          let distritos = await requestNoToken({ url: `select/districts/${provincia.value}`, method: 'GET' });
+          districts.value = distritos.data
+          let distrito = distritos.data.find(item => item.label === data.body.ubigeo?.distrito);
+
+          formState.city_id = region.value;
+          formState.province_id = provincia.value;
+          formState.district_id = distrito.value;
+        }
+      }
+
+    }
+
+    if (formState.typedocument_id == 2) {
+      const { data } = await makeRequest({ url: `user/api/ce/${formState.documentnumber}`, method: 'GET' });
+      if (data.body) {
+        formState.lastname = data.body?.apellido_paterno;
+        formState.middlename = data.body?.apellido_materno
+        formState.name = data.body?.nombres
+        formState.gender_id = data.body?.sexo == 'F' ? 2 : 1;
+        if (data.body?.fecha_nacimiento) formState.birthday = dayjs(data.body?.fecha_nacimiento, 'DD/MM/YYYY');
+        if (data.body?.fecha_nacimiento) birthdateDate.value = dayjs(data.body?.fecha_nacimiento, 'DD/MM/YYYY');
+        // formState.country = data.body.nacionalidad
       }
     }
-    
-  }
 
-  if (formState.typedocument_id == 2) {
-    const {data} = await makeRequest({ url: `user/api/ce/${formState.documentnumber}`, method: 'GET' });
-    if(data.body) {
-      formState.lastname = data.body?.apellido_paterno;
-      formState.middlename = data.body?.apellido_materno
-      formState.name = data.body?.nombres
-      formState.gender_id = data.body?.sexo == 'F' ? 2 : 1;
-      if(data.body?.fecha_nacimiento) formState.birthday = dayjs(data.body?.fecha_nacimiento, 'DD/MM/YYYY');
-      if(data.body?.fecha_nacimiento) birthdateDate.value = dayjs(data.body?.fecha_nacimiento, 'DD/MM/YYYY');
-      // formState.country = data.body.nacionalidad
+    if (formState.typedocument_id == 3) {
+      const { data } = await makeRequest({ url: `user/api/pas/${formState.documentnumber}`, method: 'GET' });
+      const valuex = data.body?.data[0]
+      formState.lastname = valuex.apellido_paterno;
+      formState.middlename = valuex.apellido_materno
+      formState.name = valuex.nombres
+      formState.gender_id = valuex.sexo == 'F' ? 2 : 1;
+      if (valuex.fecha_nacimiento) formState.birthday = dayjs(valuex.fecha_nacimiento, 'DD/MM/YYYY');
+      if (valuex.fecha_nacimiento) birthdateDate.value = dayjs(valuex.fecha_nacimiento, 'DD/MM/YYYY');
+      // formState.country = valuex.nacionalidad
     }
-  }
-  
-  if (formState.typedocument_id == 3) {
-    const {data} = await makeRequest({ url: `user/api/pas/${formState.documentnumber}`, method: 'GET' });
-    const valuex = data.body?.data[0]
-    formState.lastname = valuex.apellido_paterno;
-    formState.middlename = valuex.apellido_materno
-    formState.name = valuex.nombres
-    formState.gender_id = valuex.sexo == 'F' ? 2 : 1;
-    if(valuex.fecha_nacimiento) formState.birthday = dayjs(valuex.fecha_nacimiento, 'DD/MM/YYYY');
-    if(valuex.fecha_nacimiento) birthdateDate.value = dayjs(valuex.fecha_nacimiento, 'DD/MM/YYYY');
-    // formState.country = valuex.nacionalidad
+  } catch (error) {
+    console.log("err", error);
+  } finally {
+    handleDisabled()
+    return searchLoading.value = false
   }
 
-  handleDisabled()
-  return searchLoading.value = false
   
+
 }
+
+
+
+
 
 // const handleSearchApi = async (val) => {
 //   searchLoading.value = true
@@ -315,14 +327,14 @@ const onSubmit = async () => {
 
   try {
     const data = await makeRequest({ url: 'person/create', method: 'POST', data: formState });
-    
-    if(data.status == 400) {
+
+    if (data.status == 400) {
       return message.error("El correo electrónico ya está registrado. Por favor, ingresa uno válido.");
     }
-    if(data.status == 401) {
+    if (data.status == 401) {
       return message.error("El número de DNI ya está registrado. Por favor, ingresa uno válido.");
     }
-    if(data.status == 200) {
+    if (data.status == 200) {
       const query = {
         type: formState.typedocument_id,
         number: formState.documentnumber
@@ -332,7 +344,7 @@ const onSubmit = async () => {
       message.success(data.message);
       return clearFields();
     }
-  
+
   } catch (error) {
     message.error('No se pudo registrar este usuario');
   } finally {
@@ -346,7 +358,7 @@ const onSubmitFail = () => {
 
 const fetchData = async () => {
   disablesInputs()
-  if(route.query) {
+  if (route.query) {
     formState.typedocument_id = +route.query.type
     handleSelectTypeDocument(route.query.type);
     formState.documentnumber = route.query.number;
