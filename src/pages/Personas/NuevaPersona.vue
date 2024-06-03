@@ -85,7 +85,7 @@ const districts = ref(null);
 const router = useRouter();
 const storageData = JSON.parse(localStorage.getItem('profile'))
 const fields = ref(fieldsJs)
-const searchLoading = ref(false);
+const searchLoading = ref(true);
 const birthdateDate = ref(null);
 const dateFormat = 'DD/MM/YYYY';
 const loading = ref(false);
@@ -169,22 +169,22 @@ const handleSearchApi = async (numberDocument) => {
     const {data} = await makeRequest({ url: `user/api/dni/${formState.documentnumber}`, method: 'GET' });
 
     if(data.body) {
-      formState.lastname = data.body.apePaterno;
-      formState.middlename = data.body.apeMaterno
-      formState.name = data.body.preNombres
-      formState.address = data.body.desDireccion;
-      if(data.body.feNacimiento) formState.birthday = dayjs(data.body.feNacimiento, 'DD/MM/YYYY');
-      if(data.body.feNacimiento) birthdateDate.value = dayjs(data.body.feNacimiento, 'DD/MM/YYYY');
+      formState.lastname = data.body?.apePaterno;
+      formState.middlename = data.body?.apeMaterno
+      formState.name = data.body?.preNombres
+      formState.address = data.body?.desDireccion;
+      if(data.body?.feNacimiento) formState.birthday = dayjs(data.body?.feNacimiento, 'DD/MM/YYYY');
+      if(data.body?.feNacimiento) birthdateDate.value = dayjs(data.body?.feNacimiento, 'DD/MM/YYYY');
       
-      if(data.body.ubigeo) {
-        let region = store.cities.find(city => city.label === data.body.ubigeo.departamento);
+      if(data.body?.ubigeo) {
+        let region = store.cities.find(city => city.label === data.body.ubigeo?.departamento);
         let provincias = await requestNoToken({ url: `select/provinces/${region.value}`, method: 'GET' });
         provinces.value = provincias.data
-        let provincia = provincias.data.find(province => province.label === data.body.ubigeo.provincia);
+        let provincia = provincias.data.find(province => province.label === data.body.ubigeo?.provincia);
         
         let distritos = await requestNoToken({ url: `select/districts/${provincia.value}`, method: 'GET' });
         districts.value = distritos.data
-        let distrito = distritos.data.find(item => item.label === data.body.ubigeo.distrito);
+        let distrito = distritos.data.find(item => item.label === data.body.ubigeo?.distrito);
         
         formState.city_id = region.value;
         formState.province_id = provincia.value;
@@ -197,19 +197,19 @@ const handleSearchApi = async (numberDocument) => {
   if (formState.typedocument_id == 2) {
     const {data} = await makeRequest({ url: `user/api/ce/${formState.documentnumber}`, method: 'GET' });
     if(data.body) {
-      formState.lastname = data.body.apellido_paterno;
-      formState.middlename = data.body.apellido_materno
-      formState.name = data.body.nombres
-      formState.gender_id = data.body.sexo == 'F' ? 2 : 1;
-      if(data.body.fecha_nacimiento) formState.birthday = dayjs(data.body.fecha_nacimiento, 'DD/MM/YYYY');
-      if(data.body.fecha_nacimiento) birthdateDate.value = dayjs(data.body.fecha_nacimiento, 'DD/MM/YYYY');
+      formState.lastname = data.body?.apellido_paterno;
+      formState.middlename = data.body?.apellido_materno
+      formState.name = data.body?.nombres
+      formState.gender_id = data.body?.sexo == 'F' ? 2 : 1;
+      if(data.body?.fecha_nacimiento) formState.birthday = dayjs(data.body?.fecha_nacimiento, 'DD/MM/YYYY');
+      if(data.body?.fecha_nacimiento) birthdateDate.value = dayjs(data.body?.fecha_nacimiento, 'DD/MM/YYYY');
       // formState.country = data.body.nacionalidad
     }
   }
   
   if (formState.typedocument_id == 3) {
     const {data} = await makeRequest({ url: `user/api/pas/${formState.documentnumber}`, method: 'GET' });
-    const valuex = data.body.data[0]
+    const valuex = data.body?.data[0]
     formState.lastname = valuex.apellido_paterno;
     formState.middlename = valuex.apellido_materno
     formState.name = valuex.nombres
