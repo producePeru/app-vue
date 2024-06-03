@@ -189,11 +189,10 @@ const ructen = {
     type: 'iText',
     label: 'Número de RUC',
     name: 'ruc',
-    required: true,
+    required: false,
     message: 'Escribir RUC',
     disabled: false,
-    max: 11,
-    placeholder: 'EN TRÁMITE completar con CEROS',
+    max: 11
   },
   city_id: {
     type: 'iSelectWrite',
