@@ -327,12 +327,13 @@ const onSubmitFail = () => {
     grid-column: 1/3;
   }
 
-  .ant-form-item:nth-child(13) {
-    grid-column: 2/4;
+  .ant-form-item:nth-child(6) {
+    // grid-row: 4;
+    grid-column: 1/3;
   }
 
-  .ant-form-item:nth-child(15) {
-    grid-column: 2/4;
+  .ant-form-item:nth-child(11) {
+    grid-column: 1/3;
   }
 
 
@@ -348,32 +349,6 @@ const onSubmitFail = () => {
       grid-column: 1/3;
     }
   }
-
-  // .ant-form-item:nth-child(2) {
-  //   grid-column: 1/4;
-  //   max-width: 297px;
-  // }
-  // .ant-form-item:nth-child(3) {
-  //   grid-column: 1/4;
-  //   max-width: 297px;
-  // }
-  // .ant-form-item:nth-child(3) {
-  //   grid-column: 1/4;
-  //   max-width: 297px;
-  // }
-  // .ant-form-item:nth-child(4) {
-  //   grid-column: 1/4;
-  //   grid-row: 4;
-  //   max-width: 297px;
-  // }
-  // .ant-form-item:nth-child(8) {
-  //   grid-column: 1/3;
-  //   grid-row: 7;
-  // }
-  // .ant-form-item:nth-child(9) {
-  //   grid-column: 3/4;
-  //   grid-row: 7;
-  // }
 }
 
 .select-notaries {
@@ -398,11 +373,5 @@ const onSubmitFail = () => {
     font-size: 12px;
     line-height: 1.2;
   }
-}
-</style>
-
-<style>
-.ant-form-item-label {
-  /* padding: 0 0 2px 0 !important; */
 }
 </style>
