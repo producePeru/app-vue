@@ -23,7 +23,7 @@
 
         <div class="asesor" v-if="storageRole[0].id == 1" style="width: 300px;">
           <label>Buscar por Asesores</label>
-          <a-select v-model:value="byAsesores" mode="multiple" placeholder="Selecciona asesores" max-tag-count="responsive" :options="store.asesores"  />
+          <a-select v-model:value="byAsesores" mode="multiple" placeholder="Selecciona asesores" max-tag-count="responsive" :options="store.asesores" :filter-option="filterOption" />
         </div>
 
         <a-button @click="handleSearchFilter">BUSCAR</a-button>
@@ -258,7 +258,11 @@ const rangePresets = ref([
   },
 ]);
 // filter_end
-
+const filterOption = (input, option) => {
+  const normalizedInput = input.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "");
+  const normalizedLabel = option.label.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "");
+  return normalizedLabel.includes(normalizedInput);
+};
 const actualizarAltura = () => {
   valueY.value = window.innerHeight - 360;
 };
@@ -429,6 +433,9 @@ const handleDownloadAsesorias = async () => {
     if (byDateRange.value) {
       values.dateStart = dayjs(byDateRange.value[0]).format('YYYY-MM-DD');
       values.dateEnd = dayjs(byDateRange.value[1]).format('YYYY-MM-DD');
+    }
+    if(byAsesores.value) {
+      values.idAsesor = byAsesores.value[0]
     }
 
     const { data } = await axios.get(`${apiUrl}${urlx}`, {

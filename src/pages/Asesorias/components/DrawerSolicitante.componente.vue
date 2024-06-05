@@ -22,7 +22,7 @@
 
         <a-form-item v-if="el.type === 'iDate'" :name="el.name" :label="el.label"
           :rules="[{ required: el.required, message: el.message }]">
-          <a-date-picker :locale="locale" v-model:value="birthdateDate" style="width: 100%;" :format="dateFormat" placeholder="día / mes / año" />
+          <a-date-picker :locale="locale" v-model:value="formState[el.name]" style="width: 100%;" :format="dateFormat" placeholder="día/mes/año" />
         </a-form-item>
       </template>
     </div>
@@ -32,6 +32,7 @@
       <a-button class="btn-produce" type="primary" html-type="submit" :loading="loading">GUARDAR</a-button>
     </a-form-item>
   </a-form>
+  <!-- <pre>{{ formState }}</pre> -->
 </a-spin>
 </template>
 
@@ -87,7 +88,7 @@ const lessions = [
   {label: "No", value: "no"}
 ]
 const update = (val) => {
-  if(store.genders?.length) spinning.value = false;
+  
 
   if (val) {
     formState.typedocument_id = val.typedocument_id;
@@ -103,10 +104,12 @@ const update = (val) => {
     formState.phone = val.phone;
     formState.email = val.email;
     formState.gender_id = val.gender_id;
-    formState.birthday = val.birthday;
+    // formState.birthday = val.birthday;
     formState.sick = val.sick;
-    if(val.birthday) birthdateDate.value = dayjs(val.birthday, 'YYYY-MM-DD');
+    if(val.birthday) formState.birthday = dayjs(val.birthday, 'YYYY-MM-DD');
   }
+
+  if(store.genders?.length) spinning.value = false;
 }
 
 const handleDepartaments = (id) => {
@@ -125,10 +128,23 @@ const filterOption = (input, option) => {
 };
 
 const onSubmit = async () => {
-  formState.birthday = birthdateDate.value ? dayjs(birthdateDate.value).format('YYYY-MM-DD') : null;
-  let payload = formState
-  delete payload.documentnumber
-  delete payload.typedocument_id
+
+  let payload = {
+    lastname: formState.lastname,
+    middlename: formState.middlename,
+    name: formState.name,
+    city_id: formState.city_id,
+    province_id: formState.province_id,
+    district_id: formState.district_id,
+    phone: formState.phone,
+    email: formState.email,
+    gender_id: formState.gender_id,
+    birthday: formState.birthday ? dayjs(formState.birthday).format('YYYY-MM-DD') : null,
+    sick: formState.sick,
+    // user_id : storageData.id,     //creador
+  }
+  // delete payload.documentnumber 🚩
+
   loading.value = true
   try {
     const data = await makeRequest({ url: `person/update/${props.updateValues.id}`, method: 'PUT', data: payload });

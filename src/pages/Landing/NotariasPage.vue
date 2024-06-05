@@ -22,7 +22,7 @@
 
     </div>
 
-    <br>
+    
 
       <div class=" notaries-wrapper notaries-box" v-for="(item, idx) in dataSource" :key="idx">
         <div>
@@ -161,6 +161,10 @@ onMounted(() => {
   background-color: #fff;
   padding: 2rem 0;
   border-bottom: 1px solid #bebebe;
+  @media screen and (max-width: 600px) {
+    position: initial;
+    padding: 1rem 0;
+  }
 }
 .notarie-title {
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, 'Noto Sans', sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
@@ -197,6 +201,13 @@ onMounted(() => {
         font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, 'Noto Sans', sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
       }
     }
+    @media screen and (max-width: 600px) {
+      flex-direction: column;
+      align-items: center;
+      .notary-div {
+        width: 80%;
+      }
+    }
   }
 
   &-wrapper {
@@ -208,7 +219,6 @@ onMounted(() => {
 
   &-box {
     border-radius: 4px;
-    // border: 1px solid #f0f0f0;
     box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.03), 0 1px 6px -1px rgba(0, 0, 0, 0.02), 0 2px 4px 0 rgba(0, 0, 0, 0.02);
     padding: 2rem 1rem 1.5rem 1rem;
     margin: 1rem auto;
@@ -269,6 +279,18 @@ onMounted(() => {
 
         }
       }
+    }
+
+
+    @media screen and (max-width: 780px) {
+      grid-template-columns: 1fr 1fr;
+      grid-gap: 0 1rem;
+      margin: 1rem;
+    }
+
+    @media screen and (max-width: 600px) {
+      grid-template-columns: 1fr;
+      padding: 1.5rem 1rem 1rem;
     }
   }
 }

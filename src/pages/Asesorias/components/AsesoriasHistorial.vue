@@ -5,7 +5,7 @@
     <a-tab-pane key="1" tab="ASESORÍAS">
       <a-card>
         <a-table :columns="asesorias" :data-source="props.totaladvisories" bordered :pagination="false" size="small"
-          :scroll="{ x: 1600 }" :expand-column-width="100">
+          :scroll="{ x: 1200 }" :expand-column-width="100">
           <template #bodyCell="{ index, column, record }">
             <template v-if="column.dataIndex === 'idx'">
               <span>{{ index + 1 }}</span>
@@ -62,12 +62,12 @@ const props = defineProps(['totaladvisories', 'totalformalization10', 'totalform
 const activeKey = ref('1');
 
 const asesorias = [
-  { title: '#', dataIndex: 'idx', width: 50, align: 'center' },
-  { title: 'Fecha registro', dataIndex: 'date_start', width: 40 },
-  { title: 'Asesor', dataIndex: 'asesor', width: 100 },
-  { title: 'Componente', dataIndex: 'component', width: 100 },
+  { title: '#', dataIndex: 'idx', width: 30, align: 'center' },
+  { title: 'Fecha registro', dataIndex: 'date_start', width: 110, align: 'center' },
+  { title: 'Asesor', dataIndex: 'asesor', width: 140 },
+  { title: 'Componente', dataIndex: 'component', width: 20 },
   { title: 'Tema', dataIndex: 'theme', width: 100 },
-  { title: 'Modalidad', dataIndex: 'modality', align: 'center', width: 100 },
+  { title: 'Modalidad', dataIndex: 'modality', align: 'center', width: 60 },
   { title: 'Ciudad', dataIndex: 'city', width: 40 },
   { title: 'Provincia', dataIndex: 'province', width: 40 },
   { title: 'Distrito', dataIndex: 'district', width: 40 },
@@ -75,36 +75,38 @@ const asesorias = [
 
 
 const formalization10 = [
-  { title: '#', dataIndex: 'idx', width: 50, align: 'center' },
-  { title: 'Fecha registro', dataIndex: 'date_start', width: 40 },
-  { title: 'Asesor', dataIndex: 'asesor', width: 100 },
-  { title: 'Detalle del trámite', dataIndex: 'detailprocedure', width: 100 },
+  { title: '#', dataIndex: 'idx', width: 30, align: 'center' },
+  { title: 'Fecha registro', dataIndex: 'date_start', width: 110 },
+  { title: 'Asesor', dataIndex: 'asesor', width: 140 },
   { title: 'Sector económico', dataIndex: 'economicsector', width: 100 },
   { title: 'Actividad comercial', dataIndex: 'comercialactivity', width: 100 },
+  { title: 'Detalle del trámite', dataIndex: 'detailprocedure', width: 100 },
   { title: 'Modalidad', dataIndex: 'modality', align: 'center', width: 100 },
+  { title: 'RUC', dataIndex: 'ruc', width: 50 },
   { title: 'Ciudad', dataIndex: 'city', width: 40 },
   { title: 'Provincia', dataIndex: 'province', width: 40 },
   { title: 'Distrito', dataIndex: 'district', width: 40 }
 ];
 
-// ruc10
+// ruc20
 const formalization20 = [
-{ title: '#', dataIndex: 'idx', width: 50, align: 'center' },
-  { title: 'Fecha registro', dataIndex: 'date_start', width: 140 },
-  { title: 'Asesor', dataIndex: 'asesor', width: 180 },
-  // { title: 'Paso', dataIndex: 'task', width: 50 },
-  { title: 'Código SUNARP', dataIndex: 'codesunarp', width: 100 },
+  { title: '#', dataIndex: 'idx', width: 30, align: 'center' },
+  { title: 'Fecha registro', dataIndex: 'date_start', width: 110 },
+  { title: 'Asesor', dataIndex: 'asesor', width: 140 },
+
   { title: 'Sector económico', dataIndex: 'economicsector', width: 100 },
   { title: 'Actividad comercial', dataIndex: 'comercialactivity', width: 100 },
-  { title: 'Notaría', dataIndex: 'numbernotary', width: 100 },
   { title: 'Régimen', dataIndex: 'regime', width: 80, align: 'center' },
-  { title: 'MYPE', dataIndex: 'mypename', width: 240 },
-  { title: 'MYPE RUC', dataIndex: 'myperuc', width: 80 },
+  // { title: 'Notaría', dataIndex: 'numbernotary', width: 100 },
+
+  { title: 'Número solicitud constancia', dataIndex: 'numbernotary', width: 100 },
+  { title: 'Nombre empresa', dataIndex: 'mypename', width: 160 },
+  { title: 'RUC', dataIndex: 'ruc', width: 80 },
   { title: 'Modalidad', dataIndex: 'modality', align: 'center', width: 70 },
   { title: 'Ciudad', dataIndex: 'city', width: 30 },
-  { title: 'Provincia', dataIndex: 'province', width: 30 },
-  { title: 'Distrito', dataIndex: 'district', width: 30 },
-  { title: 'Dirección', dataIndex: 'address', width: 240 },
+  { title: 'Provincia', dataIndex: 'province', width: 20 },
+  { title: 'Distrito', dataIndex: 'district', width: 20 },
+  { title: 'Dirección', dataIndex: 'address', width: 200 },
 ];
 
 

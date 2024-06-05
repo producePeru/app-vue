@@ -1,36 +1,17 @@
 <template>
   <div>
     <h3 class="title-produce">SOLICITANTES</h3>
-    <br>
-
-
-
-    <!-- <a-form layout="inline" :model="formState" @finish="handleFinish" >
-      
-      
-      
+ 
+    <a-form layout="inline" :model="formState" @finish="handleFinish" class="form-filter">
       <a-form-item>
-        <a-select v-model:value="formState.password" :options="options" style="width: 180px;" />
-        
+        <a-input v-model:value="formState.names" placeholder="BUSCAR por Nombres o Apellidos" style="width: 240px;" />
       </a-form-item>
-
       <a-form-item>
-        <a-input v-model:value="formState.password" placeholder="Username" />
-      </a-form-item>
-
-
-      <a-form-item>
-        <a-button type="primary" html-type="submit" :disabled="formState.user === '' || formState.password === ''">
+        <a-button type="primary" html-type="submit" :disabled="formState.names === ''">
           BUSCAR
         </a-button>
       </a-form-item>
     </a-form>
-
-
-    <pre>{{ formState }}</pre> -->
-
-
-
 
     <a-table bordered :scroll="{ x: valueX, y: valueY }" class="ant-table-striped" :columns="columns"
       :data-source="dataSource" :pagination="false" :loading="loading" size="small" :row-class-name="(_record, index) => (index % 2 === 1 ? 'table-striped' : null)">
@@ -96,7 +77,8 @@
     </a-table>
   </div>
 
-  <div class="paginator">
+  <div class="paginator-asesories">
+    <span><a-tag color="blue"><b>{{ total }} </b></a-tag>Solicitantes</span>
     <a-pagination size="small" :total="total" :pageSize="pageSize"  @change="handlePaginator" :showSizeChanger="false" />
   </div>
 
@@ -106,13 +88,10 @@
     class="draw-notary"
     root-class-name="root-class-name"
     title="Datos del solicitante"
-    placement="right"
-    @after-open-change="afterOpenChange">
+    placement="right">
     <SolicitanteEditar @closeDraw="handleCloseDrawopen" :updateValues="updateValues" />
   </a-drawer>
-
 </template>
-
 
 <script setup>
 import { ref, onMounted, h, onBeforeUnmount, computed, reactive } from 'vue';
@@ -149,24 +128,11 @@ const columns = [
   { title: '', dataIndex: 'actions', width: 50, align: 'center', fixed: 'right'}
 ];
 const formState = reactive({
-  user: '',
-  password: '',
+  names: '',
 });
 
-const handleFinish = values => {
-  console.log(values, formState);
-};
-
-
-const options = [
-  { value: 1, label: 'Número de documento' },
-  { value: 2, label: 'Nombres' },
-  { value: 3, label: 'Región' }
-];
-
-
 const total = ref(0);
-const pageSize = 20;
+const pageSize = 100;
 const params = ref({ page: 0 });
 const valueX = ref(1200)
 const dataSource = ref([])
@@ -184,6 +150,10 @@ const handleColorDocument = (type) => {
   }
   return colors[type]
 }
+
+const handleFinish = () => {
+  fetchData(formState.names);
+};
 const handlePaginator = (current) =>{
   params.value.page = current;
   fetchData()
@@ -206,9 +176,6 @@ const filterOption = (input, option) => {
 };
 const actualizarAltura = () => {
   valueY.value = window.innerHeight - 280;
-};
-const afterOpenChange = bool => {
-  console.log('open', bool);
 };
 const showDrawer = () => {
   updateValues.value = null;
@@ -242,10 +209,18 @@ const computeIndex = computed(() => (index) => {
   let numb = params.value.page == 0 ? 1 : params.value.page
   return  (numb - 1) * pageSize + index + 1;
 });
-const fetchData = async () => {
+
+const fetchData = async (search) => {
   try {
     loading.value = true;
-    let parx = params.value.page == 0 ? '' : params.value;
+
+    let parx;             // 🚩
+
+    if(search){
+      parx = { ...formState.names && {search: search}, page: 1 }
+    } else {
+      parx = {...params.value.page != 0 && {page: params.value.page}}
+    }
 
     const data = await makeRequest({ url: `person/list`, method: 'GET', params:parx });
     dataSource.value = data.data
@@ -267,9 +242,14 @@ onMounted(() => {
 </script>
 
 <style lang="scss">
-.paginator {
+.form-filter {
   display: flex;
   justify-content: flex-end;
+  margin: .5rem 0 1rem 0;
+}
+.paginator-asesories {
+  display: flex;
+  justify-content: space-between;
   margin-top: 1.5rem;
 }
 .ant-popover-inner {
