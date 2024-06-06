@@ -61,7 +61,7 @@
         </template>
 
         <template v-if="column.dataIndex == 'sol_tipo_doc'">
-          {{ record.people?.typedocument?.name }}
+          {{ record.people?.typedocument?.avr }}
         </template>
         <template v-if="column.dataIndex == 'sol_num_doc'">
           {{ record.people?.documentnumber }}
@@ -159,7 +159,33 @@
             </template>
           </a-dropdown>
         </template>
+      </template>
 
+      <template #customFilterDropdown="{ setSelectedKeys, selectedKeys, confirm, clearFilters, column }">
+        <div style="padding: 8px">
+          <a-input
+          ref="searchInput"
+          :placeholder="`${column.title}`"
+          :value="selectedKeys[0]"
+          style="width: 188px; margin-bottom: 8px; display: block"
+          @change="e => setSelectedKeys(e.target.value ? [e.target.value] : [])"
+          @pressEnter="handleSearch(selectedKeys, confirm, column.dataIndex)"/>
+          
+          <a-button
+          type="primary"
+          size="small"
+          style="width: 90px; margin-right: 8px"
+          @click="handleSearch(selectedKeys, confirm, column.dataIndex)">
+          <template #icon><SearchOutlined /></template>
+          Buscar
+          </a-button>
+
+          <a-button size="small" style="width: 90px" @click="handleReset(clearFilters)">Cancelar</a-button>
+        </div>
+      </template>
+
+      <template #customFilterIcon="{ filtered }">
+        <search-outlined style="color: var(--secondary);" />
       </template>
       
     </a-table>
@@ -211,7 +237,7 @@ import { message } from 'ant-design-vue';
 import Cookies from 'js-cookie';
 import { requestNoToken } from '@/utils/noToken.js';
 import { useCounterStore } from '@/stores/selectes.js';
-import { MoreOutlined, QuestionCircleOutlined } from '@ant-design/icons-vue';
+import { MoreOutlined, QuestionCircleOutlined, SearchOutlined } from '@ant-design/icons-vue';
 import EditarAsesoria from '@/pages/Asesorias/components/EditarAsesoria.vue';
 import EditarFormalizacion10 from '@/pages/Asesorias/components/EditarFormalizacionRUC10.vue';
 import EditarFormalizacion20 from '@/pages/Asesorias/components/EditarFormalizacionRUC20.vue';
@@ -284,7 +310,7 @@ const columnsAsesoria = ref([
   { title: 'ASESOR (a) - Nombre Completo', dataIndex: 'asesor', width: 150 },
   // { title: 'SUPERVISOR', dataIndex: 'misupervisor', wdth: 140 },
   ...(storageRole[0].id === 1 ? [{ title: 'SUPERVISOR', dataIndex: 'misupervisor', width: 140 }] : []),
-  { title: 'Tipo de documento', dataIndex: 'sol_tipo_doc', width: 110, align: 'center' },
+  { title: 'Tipo doc.', dataIndex: 'sol_tipo_doc', width: 60, align: 'center' },
   { title: 'Número de Documento', dataIndex: 'sol_num_doc', width: 100 },
   { title: 'Solicitante Apellidos', dataIndex: 'sol_apellidos', width: 160 },
   { title: 'Solicitante Nombres', dataIndex: 'sol_nombres', width: 160 },
@@ -305,7 +331,7 @@ const columnsRuc10 = ref([
   { title: 'FECHA', dataIndex: 'ase_fecha', fixed: 'left', align: 'center', width: 130 },
   { title: 'ASESOR (a) - Nombre Completo', dataIndex: 'asesor', width: 150 },
   ...(storageRole[0].id === 1 ? [{ title: 'SUPERVISOR', dataIndex: 'misupervisor', width: 140 }] : []),
-  { title: 'Tipo de documento', dataIndex: 'sol_tipo_doc', width: 110, align: 'center' },
+  { title: 'Tipo doc.', dataIndex: 'sol_tipo_doc', width: 60, align: 'center' },
   { title: 'Número de Documento', dataIndex: 'sol_num_doc', width: 100 },
   { title: 'Solicitante Apellidos', dataIndex: 'sol_apellidos', width: 160 },
   { title: 'Solicitante Nombres', dataIndex: 'sol_nombres', width: 160 },
@@ -327,7 +353,7 @@ const columnsRuc20 = ref([
   { title: 'FECHA', dataIndex: 'ase_fecha', fixed: 'left', align: 'center', width: 130 },
   { title: 'ASESOR (a) - Nombre Completo', dataIndex: 'asesor', width: 150 },
   ...(storageRole[0].id === 1 ? [{ title: 'SUPERVISOR', dataIndex: 'misupervisor', width: 140 }] : []),
-  { title: 'Tipo de documento', dataIndex: 'sol_tipo_doc', width: 110, align: 'center' },
+  { title: 'Tipo doc.', dataIndex: 'sol_tipo_doc', width: 60, align: 'center' },
   { title: 'Número de Documento', dataIndex: 'sol_num_doc', width: 100 },
   { title: 'Solicitante Apellidos', dataIndex: 'sol_apellidos', width: 140 },
   { title: 'Solicitante Nombres', dataIndex: 'sol_nombres', width: 140 },
@@ -339,27 +365,30 @@ const columnsRuc20 = ref([
 
   { title: 'Direccion del Negocio', dataIndex: 'mype_direccion', width: 230 },
   { title: 'N_RUC', dataIndex: 'ruc', width: 100, align: 'center' },
-  { title: 'Nombre de Empresa Constituida', dataIndex: 'mype_nombre', width: 240 },
+
+
+  { 
+    title: 'Nombre de Empresa Constituida', 
+    dataIndex: 'mype_nombre', 
+    width: 240, 
+    customFilterDropdown: true, 
+  },
+
   { title: 'Régimen', dataIndex: 'tipo_regimen', width: 74, align: 'center' },
   { title: 'Notaría', dataIndex: 'notaria', width: 150 },
   { title: 'Modalidad', dataIndex: 'modality', width: 120, align: 'center' },
   { title: '', dataIndex: 'actions', width: 50, align: 'center', fixed: 'right'}
 ]);
 
+const handleSearch = (selectedKeys, confirm, dataIndex) => {
+  // console.log("handleSearch", selectedKeys);
+  console.log("handleSearch", dataIndex);
+
+}
+
+const handleReset = clearFilters => {}
 const handleSearchFilter = async() => {
-  // const values = {
-  //   ...byAsesores.value.length >= 1 && {user_id: byAsesores.value.toString()},
-  //   ...byDateRange.value && {dateStart: dayjs(byDateRange.value[0]).format('YYYY-MM-DD')},
-  //   ...byDateRange.value && {dateEnd: dayjs(byDateRange.value[1]).format('YYYY-MM-DD')},
-  //   ...params.value.page != 0 && {page: params.value.page}
-  // }
-
-  // if(active.value == 'asesorias') url.value = 'historial/advisories/filters';
-  // if(active.value == 'ruc10') url.value = 'historial/formalizations-10/filters';
-  // if(active.value == 'ruc20') url.value = 'historial/formalizations-20/filters';
-
   fetchData(active.value)
-
 }
 
 const handlePaginator = (current) => {

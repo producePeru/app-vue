@@ -1,5 +1,6 @@
 <template>
   <div class="wrapper-booking">
+    <a-spin :spinning="spinning">
     <a-form layout="vertical" :model="formState" name="basic" autocomplete="off" @finish="onSubmit"
       @finishFailed="onSubmitFail">
       <div class="grid-booking">
@@ -69,6 +70,8 @@
       </a-form-item>
 
     </a-form>
+    <div>{{ update() }}</div>
+    </a-spin>
   </div>
 </template>
 
@@ -117,6 +120,7 @@ store.fetchEconomicSectors()
 store.fetchComercialActivities()
 store.fetchCities();
 
+const spinning = ref(true);
 const formState = reactive({
   detailprocedure_id: null,
   modality_id: null,
@@ -128,6 +132,10 @@ const formState = reactive({
   user_id: storageData.user_id
 });
 
+const update = () => {
+  formState.dni = props.info.documentnumber;
+  if(store.cities) spinning.value = false;
+}
 const validateOnlyNumber = (val) => {
   if(val == 'ruc') {
     formState[val] = formState[val].replace(/\D/g, '');
@@ -183,9 +191,26 @@ const handleAddItemSector = async() => {
 }
 const onSubmit = async () => {
   loading.value = true;
-  formState.people_id = props.info.id;
+
+  if(!props.info.id) return message.error("Error al registrar, actualiza la página");
+  
+  const payload = {
+    dni: formState.dni,
+    detailprocedure_id: formState.detailprocedure_id,
+    modality_id: formState.modality_id,
+    economicsector_id: formState.economicsector_id,
+    comercialactivity_id: formState.comercialactivity_id,
+    city_id: formState.city_id,
+    province_id: formState.province_id,
+    district_id: formState.district_id,
+    address: formState.address,
+    ruc: formState.ruc,
+    user_id: storageData.user_id,
+    people_id: props.info.id
+  }
+  
   try {
-    const response = await makeRequest({ url: 'formalization/create-ruc-10', method: 'POST', data: formState});
+    const response = await makeRequest({ url: 'formalization/create-ruc-10', method: 'POST', data: payload});
     if (response.status === 200) {
       message.success(response.message);
       formState.detailprocedure_id = null;
@@ -223,8 +248,8 @@ const onSubmitFail = () => {
   display: grid;
   grid-template-columns: repeat(2,1fr);
   grid-gap: 0 1rem;
-  .ant-form-item:nth-child(9) {
-    grid-column: 1/3;
+  .ant-form-item:nth-child(10) {
+    // grid-column: 1/3;
   }
   // .ant-form-item:nth-child(2) {
   //   grid-column: 1/3;

@@ -88,8 +88,6 @@ const lessions = [
   {label: "No", value: "no"}
 ]
 const update = (val) => {
-  
-
   if (val) {
     formState.typedocument_id = val.typedocument_id;
     formState.documentnumber = val.documentnumber;
@@ -106,6 +104,7 @@ const update = (val) => {
     formState.gender_id = val.gender_id;
     // formState.birthday = val.birthday;
     formState.sick = val.sick;
+    formState.country = val.typedocument_id == 1 ? 'PERÚ' : val.country;
     if(val.birthday) formState.birthday = dayjs(val.birthday, 'YYYY-MM-DD');
   }
 

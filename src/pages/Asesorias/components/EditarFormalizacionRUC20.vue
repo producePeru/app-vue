@@ -93,7 +93,7 @@
 </template>
 
 <script setup>
-import { reactive, ref, defineComponent } from 'vue';
+import { reactive, ref, defineComponent, onMounted } from 'vue';
 import { useCounterStore } from '@/stores/selectes.js';
 import { fields } from '@/forms/asesorias.js'
 import { makeRequest } from '@/utils/api.js';
@@ -169,7 +169,7 @@ const validateOnlyNumber = (val) => {
   }
 };
 const update = () => {
-
+  // handleGetNotariesByRegion()
   formState.city_id = props.info.city_id;
   handleDepartaments(props.info.city_id)
   formState.province_id = props.info.province_id;
@@ -241,7 +241,7 @@ const handleDepartaments = (id) => {
   formState.province_id = null
   formState.district_id = null
   store.fetchProvinces(id);
-  handleGetNotariesByRegion()
+  // handleGetNotariesByRegion()
 }
 const handleProvinces = (id) => {
   formState.district_id = null
@@ -335,6 +335,10 @@ const onSubmit = async () => {
 const onSubmitFail = () => {
   message.warning('Debes de completar todos los espacios requeridos');
 };
+
+onMounted(() => {
+  handleGetNotariesByRegion()
+});
 </script>
 
 <style scoped lang="scss">

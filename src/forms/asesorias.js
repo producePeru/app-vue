@@ -95,7 +95,7 @@ const fields = {
     label: 'Número solicitud constancia',
     name: 'numbernotary',
     required: true,
-    message: 'Escribir número de solicitud de envio a Notaría',
+    message: 'Escribir número de solicitud de constancia',
     disabled: false
   },
   dateReception: {
@@ -113,6 +113,15 @@ const fields = {
     required: false,
     message: 'Escribir el código SID sunarp',
     disabled: false
+  },
+  dni: {
+    type: 'iText',
+    label: 'Número de documento de identidad',
+    name: 'dni',
+    required: true,
+    message: 'Escribir número de documento',
+    disabled: false,
+    placeholder: 'Número documento'
   },
   // city: {
   //   type: 'iSelect',
@@ -139,6 +148,15 @@ const final = {
 };
 
 const ructen = {
+  dni: {
+    type: 'iText',
+    label: 'Número de documento de identidad',
+    name: 'dni',
+    required: true,
+    message: 'Escribir número de documento',
+    disabled: false,
+    placeholder: 'Número documento'
+  },
   economicsector_id: {
     type: 'iSelectWrite',
     label: 'Sector económico',
@@ -215,6 +233,15 @@ const ructen = {
 };
 
 const asesoria = {
+  dni: {
+    type: 'iText',
+    label: 'Número de documento',
+    name: 'dni',
+    required: true,
+    message: 'Escribir número de documento',
+    disabled: false,
+    placeholder: 'Número documento'
+  },
   economicsector_id: {
     type: 'iSelectWrite',
     label: 'Sector económico',

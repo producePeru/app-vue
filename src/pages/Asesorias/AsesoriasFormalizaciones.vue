@@ -397,7 +397,6 @@ const handleShowHistorial = async (id) => {
 
 onMounted(() => {
   if (route.query.type) {
-    console.log("ooaoooaoaa", route.query.type);
     type_document.value = route.query.type
     dniNumber.value = route.query.number
   }

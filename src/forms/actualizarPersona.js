@@ -103,7 +103,15 @@ const fields = {
     name: 'sick',
     required: true,
     message: 'Seleccionar un tipo',
-  }
+  },
+  country: {
+    type: 'iText',
+    label: 'País Origen',
+    name: 'country',
+    required: true,
+    message: 'Escribir nombre',
+    disabled: false
+  },
 }
 
 export default fields;

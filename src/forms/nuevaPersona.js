@@ -40,6 +40,14 @@ const fields = {
     message: 'Escribir nombre',
     disabled: true
   },
+  country: {
+    type: 'iText',
+    label: 'País Origen',
+    name: 'country',
+    required: true,
+    message: 'Escribir nombre',
+    disabled: false
+  },
   city_id: {
     type: 'iSelect',
     label: 'Departamento residente',
@@ -86,6 +94,7 @@ const fields = {
     name: 'phone',
     required: true,
     message: 'Número de celular',
+    min: 9,
     max: 9,
     disabled: true
   },

@@ -69,7 +69,7 @@
             </a-form-item>
 
             <a-form-item v-if="el.type === 'iText'" :name="el.name" :label="el.label"
-              :rules="[{ required: el.required, message: el.message, type: el.email, max: el.max }]">
+              :rules="[{ required: el.required, message: el.message, type: el.email, max: el.max, min: el.min }]">
 
               <a-input @input="validateOnlyNumber(el.name)" v-model:value="formState[el.name]" :disabled="el.disabled"
                 :maxlength="el.max" :placeholder="el.placeholder" />
@@ -161,6 +161,7 @@ const validateOnlyNumber = (val) => {
   }
 };
 const update = () => {
+  formState.dni = props.info.documentnumber;
   if (store.regimes?.length) spinning.value = false;
 }
 const filterNotaries = (input, option) => {
@@ -257,7 +258,8 @@ const filterOption = (input, option) => {
 
 const onSubmit = async () => {
   loading.value = true;
-  // formState.people_id = props.info.id;
+
+  if(!props.info.id) return message.error("Error al registrar, actualiza la página");
 
   const payload = {
     codesunarp: formState.codesunarp,
@@ -277,14 +279,13 @@ const onSubmit = async () => {
     nameMype: formState.nameMype,
     dateReception: formState.dateReception ? dayjs(formState.dateReception).format('YYYY-MM-DD') : null,
     dateTramite: formState.dateTramite ? dayjs(formState.dateTramite).format('YYYY-MM-DD') : null,
-    ruc: formState.ruc
+    ruc: formState.ruc,
+    dni: formState.dni,
   }
 
   try {
     const response = await makeRequest({ url: 'formalization/create-ruc20', method: 'POST', data: payload });
 
-    console.log("Success", response);
-    
     if (response.status === 200) {
       message.success(response.message);
       formState.codesunarp = null;

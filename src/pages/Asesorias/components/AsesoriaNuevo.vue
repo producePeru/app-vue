@@ -79,6 +79,7 @@
         <a-button type="primary" class="btn-produce" html-type="submit" :loading="loading">GUARDAR</a-button>
       </a-form-item>
       <!-- <pre>{{ formState }}</pre> -->
+      <!-- <pre>{{ props.info }}</pre> -->
     </a-form>
     </a-spin>
   </div>
@@ -135,15 +136,18 @@ store.fetchGenders();
 const spinning = ref(true);
 
 const formState = reactive({
-  observations: null,
-  user_id: storageData.user_id,
-  people_id: null,
+  dni: null,
+  economicsector_id: null,
+  comercialactivity_id: null,
   component_id: null,
   theme_id: null,
   modality_id: null,
+  ruc: null,
   city_id: null,
   province_id: null,
   district_id: null,
+  observations: null,
+  user_id: storageData.user_id,
 });
 
 const validateOnlyNumber = (val) => {
@@ -187,6 +191,7 @@ const handleAddThemeNew = async() => {
   }
 }
 const update = () => {
+  formState.dni = props.info.documentnumber;
   if(store.cities) spinning.value = false;
 }
 const handleSelectComponent = (id) => {
@@ -209,9 +214,27 @@ const filterOption = (input, option) => {
 };
 const onSubmit = async () => {
   loading.value = true;
-  formState.people_id = props.info.id
+
+  if(!props.info.id) return message.error("Error al registrar actualiza la página");
+
+  const payload = {
+    dni: formState.dni,
+    economicsector_id: formState.economicsector_id,
+    comercialactivity_id: formState.comercialactivity_id,
+    observations: formState.observations,
+    user_id: storageData.user_id,
+    people_id: props.info.id,
+    component_id: formState.component_id,
+    theme_id: formState.theme_id,
+    modality_id: formState.modality_id,
+    city_id: formState.city_id,
+    province_id: formState.province_id,
+    district_id: formState.district_id,
+    ruc: formState.ruc
+  }
+
   try {
-    const response = await makeRequest({ url: 'advisory/create', method: 'POST', data: formState});
+    const response = await makeRequest({ url: 'advisory/create', method: 'POST', data: payload});
     
     if (response.status === 200) {
       message.success(response.message);
@@ -270,7 +293,7 @@ const onSubmitFail = () => {
   //   grid-column: 3/3;
   // }
 
-  .ant-form-item:nth-child(10) {
+  .ant-form-item:nth-child(11) {
     grid-column: 1/3;
   }
 }
