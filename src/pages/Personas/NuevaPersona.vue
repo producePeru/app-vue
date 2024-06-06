@@ -171,6 +171,14 @@ const handleSearchApi = async (numberDocument) => {
 
       const { data } = await makeRequest({ url: `user/api/dni/${formState.documentnumber}`, method: 'GET' });
 
+      if (!data || !data.body || !data.body.apePaterno) {
+        const response = await makeRequest({ url: `user/only-dni/${formState.documentnumber}`, method: 'GET' });
+        formState.lastname = response.data.apellidoPaterno;
+        formState.middlename = response.data.apellidoMaterno;
+        formState.name = response.data.nombres; 
+        return searchLoading.value = false
+      }
+    
       if (data.body) {
         formState.lastname = data.body?.apePaterno;
         formState.middlename = data.body?.apeMaterno

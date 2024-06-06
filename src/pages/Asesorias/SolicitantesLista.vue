@@ -4,7 +4,7 @@
  
     <a-form layout="inline" :model="formState" @finish="handleFinish" class="form-filter">
       <a-form-item>
-        <a-input v-model:value="formState.names" placeholder="BUSCAR por Nombres o Apellidos" style="width: 240px;" />
+        <a-input v-model:value="formState.names" placeholder="BUSCAR por Nombres o Apellidos" style="width: 240px;" @input="handleResetSearch" />
       </a-form-item>
       <a-form-item>
         <a-button type="primary" html-type="submit" :disabled="formState.names === ''">
@@ -141,6 +141,11 @@ const open = ref(false);
 const updateValues = ref(null);
 const city = ref(null);
 
+const handleResetSearch = () => {
+  if(!formState.names) {
+    console.log("Res");
+  }
+}
 const handleColorDocument = (type) => {
   const colors = {
     'DNI': 'blue',

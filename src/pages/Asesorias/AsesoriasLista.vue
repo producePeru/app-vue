@@ -16,6 +16,11 @@
       </div>
       
       <div class="filters" >
+        <!-- <div class="rango" style="width: 200px;">
+          <label>Buscar Solicitantes</label>
+          <a-input v-model:value="solicitante" placeholder="Buscar datos solicitante"  />
+        </div> -->
+
         <div class="rango">
           <label>Buscar por rango de Fechas</label>
           <a-range-picker v-model:value="byDateRange" :presets="rangePresets" />
@@ -49,24 +54,24 @@
         </template>
         
         <template v-if="column.dataIndex == 'sol_apellidos'">
-          {{ record.people.lastname }} {{ record.people.middlename }}
+          {{ record.people?.lastname }} {{ record.people?.middlename }}
         </template>
         <template v-if="column.dataIndex == 'sol_nombres'">
-          {{ record.people.name }}
+          {{ record.people?.name }}
         </template>
 
         <template v-if="column.dataIndex == 'sol_tipo_doc'">
-          {{ record.people.typedocument.name }}
+          {{ record.people?.typedocument?.name }}
         </template>
         <template v-if="column.dataIndex == 'sol_num_doc'">
-          {{ record.people.documentnumber }}
+          {{ record.people?.documentnumber }}
         </template>
 
         <template v-if="column.dataIndex == 'sol_email'">
-          {{ record.people.email ? record.people.email : '-' }}
+          {{ record.people?.email ? record.people.email : '-' }}
         </template>
         <template v-if="column.dataIndex == 'sol_phone'">
-          {{ record.people.phone }}
+          {{ record.people?.phone }}
         </template>
         
         <template v-if="column.dataIndex == 'asesor'">
@@ -227,13 +232,14 @@ const loadingexc = ref(false);
 const total = ref(0)
 const params = ref({ page: 0 });
 const active = ref('asesorias');
-const pageSize = 20;
+const pageSize = 50;
 const valueX = ref(1200)
 const valueY = ref(window.innerHeight - 100);
 const url = ref('historial/advisories/filters');
 
 const byAsesores = ref([]);
 const byDateRange = ref(null);
+const solicitante = ref(null);
 
 store.$patch({ asesores: store.asesores });
 store.fetchAsesores();

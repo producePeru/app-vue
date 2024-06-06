@@ -37,7 +37,7 @@
 
               <a-form-item v-if="el.type === 'iDate'" :name="el.name" :label="el.label"
                 :rules="[{ required: el.required, message: el.message }]">
-                <a-date-picker :locale="locale" v-model:value="birthdateDate" style="width: 100%;" :format="dateFormat" placeholder="DÍA/MES/AÑO" />
+                <a-date-picker :locale="locale" v-model:value="formState[el.name]" style="width: 100%;" :format="dateFormat" placeholder="DÍA/MES/AÑO" />
               </a-form-item>
             </template>
           </div>
@@ -137,10 +137,22 @@ const handleProvinces = (id) => {
 
 const onSubmit = async () => {
   loading.value = true;
-  formState.birthday = birthdateDate.value ? dayjs(birthdateDate.value).format('YYYY-MM-DD') : null;
-  let payload = formState
-  delete payload.email
-  delete payload.documentnumber
+  // delete payload.email
+  // delete payload.documentnumber
+  const payload = {
+    email: formState.email,
+    documentnumber: formState.documentnumber,
+    name: formState.name,
+    lastname: formState.lastname,
+    middlename: formState.middlename,
+    birthday: formState.birthday ? dayjs(formState.birthday).format('YYYY-MM-DD') : null,
+    sick: formState.sick,
+    phone: formState.phone,
+    gender_id: formState.gender_id,
+    cde_id: formState.cde_id,
+    office_id: formState.office_id,
+    user_id: storageData.id,     
+  }
   try {
     const data = await makeRequest({ url: `user/update/${storageData.id}`, method: 'PUT', data: payload });
     message.success(data.message)
@@ -173,7 +185,8 @@ const fetchData = async() => {
       formState.gender_id = data.gender_id;
       formState.cde_id = data.cde_id;
       formState.office_id = data.office_id;
-      if(data.birthday) birthdateDate.value = dayjs(data.birthday, 'YYYY-MM-DD');
+      formState.birthday = data.birthday ? dayjs(data.birthday, 'YYYY-MM-DD') : null;
+      // if(data.birthday) birthdateDate.value = dayjs(data.birthday, 'YYYY-MM-DD');
     }
 
   } catch (error) {
