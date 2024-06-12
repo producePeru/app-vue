@@ -43,12 +43,12 @@
         <template v-if="column.dataIndex == 'inicioperaciones'">
           {{ formatDate(record?.homeOperations) }}
         </template>
-        <template v-if="column.dataIndex == 'operatividad'">
+        <!-- <template v-if="column.dataIndex == 'operatividad'">
           {{ record?.estado_operatividad.name }}
-        </template>
-        <template v-if="column.dataIndex == 'convenio'">
+        </template> -->
+        <!-- <template v-if="column.dataIndex == 'convenio'">
           {{ record?.estado_convenio.name }}
-        </template>
+        </template> -->
 
         <template v-if="column.dataIndex == 'entidades'">
           <div v-for="(initial, index) in record.initials" :key="index">
@@ -59,9 +59,9 @@
         <template v-if="column.dataIndex == 'startDate'">
           {{ formatDate(record?.startDate) }}
         </template>
+        
         <template v-if="column.dataIndex == 'numbyears'">
-          <p style="line-height: 1.2; margin: 0;">{{ restDate(record.endDate, record.startDate) }}</p>
-          
+          <p style="line-height: 1.2; margin: 0; font-size: 12px;">{{ restDate(record.endDate, record.startDate) }}</p>
         </template>
 
         <template v-if="column.dataIndex == 'endDate'">
@@ -70,23 +70,26 @@
 
         <template v-if="column.dataIndex == 'acciones'"> 
           <div class="accion-total">
-            <span class="accion-numb">5</span>
-            <FileAddOutlined class="ico-acciones" @click="handleAcciones(record)" />
+            <MessageOutlined class="ico-acciones" @click="handleAcciones(record)" />
+            <span class="accion-numb">{{ record.acciones.length }} MENSAJES</span>
           </div>
         </template>
 
-        <!-- <template v-if="column.dataIndex == 'actions'">
+        <template v-if="column.dataIndex == 'actions'">
           <a-dropdown :trigger="['click']">
             <a class="ant-dropdown-link" @click.prevent>
               <a-button shape="circle" :icon="h(MoreOutlined)" size="small" />
             </a>
             <template #overlay>
               <a-menu>
-                <a-menu-item>
+                <!-- <a-menu-item>
                   <a @click="handleEditSolicitante(record)">Editar</a>
+                </a-menu-item> -->
+                <a-menu-item>
+                  <a @click="handleUpFile(record)">Archivos</a>
                 </a-menu-item>
                 <a-menu-item>
-                  <a-popconfirm title="¿Seguro de eliminar?" @confirm="handleDeleteNotary(record)">
+                  <a-popconfirm title="¿Seguro de eliminar?" @confirm="handleDelete(record)">
                     <template #icon><question-circle-outlined style="color: red" /></template>
                     <a>Eliminar</a>
                   </a-popconfirm>
@@ -94,23 +97,27 @@
               </a-menu>
             </template>
           </a-dropdown>
-        </template> -->
+        </template>
 
       </template>
     </a-table>
   </div>
 
   <div class="paginator">
+    <span><a-tag color="blue"><b>{{ total }} </b></a-tag>Convenios</span>
     <a-pagination size="small" :total="total" :pageSize="pageSize" @change="handlePaginator" :showSizeChanger="false" />
   </div>
-  <!-- <pre>{{ dataSource }}</pre> -->
-  <a-drawer v-model:open="open" class="draw-notary" root-class-name="root-class-name" title="Convenios" placement="right">
-    <!-- <SolicitanteEditar @closeDraw="handleCloseDrawopen" :updateValues="updateValues" /> -->
-    <NuevoConvenio />
+
+  <a-drawer v-model:open="open" class="draw-notary" root-class-name="root-class-name" title="Convenios" placement="right" width="650" >
+    <NuevoConvenio @closeDraw="handleCloseDrawopen(1)" />
   </a-drawer>
 
-  <a-drawer v-model:open="openAcciones" title="Acciones" placement="right">
-    <DrawAcciones :idConvenio="idConvenio" />
+  <a-drawer v-model:open="openAcciones" title="Acciones" placement="right" width="550">
+    <DrawAcciones :idConvenio="idConvenio" @closeDraw="handleCloseDrawopen(2)" />
+  </a-drawer>
+
+  <a-drawer v-model:open="openDrives" title="Cargar Archivos" placement="right" width="550">
+    <DrawFiles :idConvenio="idConvenio" @closeDraw="handleCloseDrawopen(3)" />
   </a-drawer>
 
 </template>
@@ -120,7 +127,8 @@
 import { ref, onMounted, h, onBeforeUnmount, computed, reactive } from 'vue';
 import NuevoConvenio from './components/DrawConvenio.vue';
 import DrawAcciones from './components/DrawAcciones.vue';
-import { LinkOutlined, QuestionCircleOutlined, FileAddOutlined } from '@ant-design/icons-vue';
+import DrawFiles from './components/DrawFiles.vue';
+import { LinkOutlined, QuestionCircleOutlined, MessageOutlined } from '@ant-design/icons-vue';
 import { requestNoToken } from '@/utils/noToken.js';
 import { MoreOutlined } from '@ant-design/icons-vue';
 import { useRouter } from 'vue-router';
@@ -145,14 +153,14 @@ const dataSource = ref([])
 const loading = ref(false)
 const open = ref(false);
 const openAcciones = ref(false);
+const openDrives = ref(false);
 const updateValues = ref(null);
 const city = ref(null);
 const valueY = ref(window.innerHeight - 100);
 const columns = [
   { title: '#', fixed: 'left', dataIndex: 'idx', align: 'center', width: 70 },
-
   { title: 'REGIÓN', fixed: 'left', dataIndex: 'region', width: 120 },
-  { title: 'PROVINCIA', fixed: 'left', dataIndex: 'provincia', width: 140 },
+  { title: 'PROVINCIA', fixed: 'left', dataIndex: 'provincia', width: 120 },
   { title: 'DISTRITO', fixed: 'left', dataIndex: 'district', width: 140 },
   { title: 'DENOMINACIÓN', dataIndex: 'denomination', fixed: 'left', width: 150 },
   { title: 'ENTIDAD ALIADA', dataIndex: 'alliedEntity', width: 170 },
@@ -215,9 +223,13 @@ const restDate = (end, start) => {
   return resultArray.join(' con ');
 }
 
+const handleUpFile = (record) => {
+  idConvenio.value = record.id;
+  openDrives.value = true;
+}
 const dateTrafficLight = (end, start) => {
   const startDate = new Date(start);
-  const currentDate = new Date();
+  const currentDate = new Date(end);
   const differenceInTime = currentDate.getTime() - startDate.getTime();
   const differenceInDays = Math.floor(differenceInTime / (1000 * 3600 * 24));
   return differenceInDays;
@@ -241,26 +253,22 @@ const handlePaginator = (current) => {
 }
 
 const actualizarAltura = () => {
-  valueY.value = window.innerHeight - 350;
+  valueY.value = window.innerHeight - 320;
 };
 
 const showDrawer = () => {
   updateValues.value = null;
   open.value = true;
 };
-const handleCloseDrawopen = () => {
+const handleCloseDrawopen = (draw) => {
   fetchData();
-  open.value = false;
+  draw == 1 && (open.value = false);
+  draw == 2 && (openAcciones.value = false);
 }
-const handleDeleteNotary = async (val) => {
+const handleDelete = async (val) => {
   try {
-    const data = await makeRequest({ url: `person/delete/${val.id}`, method: 'DELETE' });
-    if (data.status == 500) {
-      Modal.warning({
-        title: 'Aviso',
-        content: data.message,
-      });
-    } else {
+    const data = await makeRequest({ url: `agreement/delete/${val.id}`, method: 'DELETE' });
+    if (data.status == 200) {
       fetchData();
       message.success(data.message);
     }
@@ -281,12 +289,9 @@ const fetchData = async () => {
   try {
     loading.value = true;
     let parx = params.value.page == 0 ? '' : params.value;
-
     const {data} = await makeRequest({ url: `agreement/list`, method: 'GET', params: parx });
-
     dataSource.value = data.data
     total.value = data.total
-
   } catch (error) {
     console.error('Error de red:', error);
   } finally {
@@ -320,18 +325,32 @@ onMounted(() => {
   cursor: pointer;
 }
 .accion-total {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
+  display: flex;
+  flex-direction: column;
   align-items: center;
   .accion-numb {
-    font-size: 12px;
+    margin-top: 4px;
+    font-size: 10px;
   }
 }
 .table-agreements {
+  tr {
+    font-size: 13px;
+  }
   .ant-table-row {
     .ant-table-cell:nth-child(16) {
       background-color: #feffe2 !important;
     }
   }
+}
+
+//**** 
+.paginator {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 1.5rem;
+}
+.ant-popover-inner {
+  width: 200px;
 }
 </style>

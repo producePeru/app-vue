@@ -1,6 +1,7 @@
 :root {
   --primary: #00a6db;
   --secondary: #dc1c19;
+  --error: #ff4d4f;
 }
 
 h1 {
@@ -245,7 +246,7 @@ $color-background: #F7F7FA;
 
 .ant-table-body::-webkit-scrollbar {
   width: 10px; 
-  height: 10px; 
+  height: 12px; 
 }
 .ant-table-body::-webkit-scrollbar-thumb {
   background: #ccc; 

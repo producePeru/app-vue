@@ -30,7 +30,7 @@
           </a-form-item>
 
           <a-form-item v-if="el.type === 'iCheckbox'" :name="el.name" :label="el.label" :rules="[{ required: el.required, message: el.message }]">
-            <a-checkbox-group v-model:value="formState[el.name]" name="checkboxgroup" :options="plainOptions" />
+            <a-checkbox-group v-model:value="formState[el.name]" name="checkboxgroup" :options="plainOptions" style="display: grid; grid-gap: .2rem;" />
           </a-form-item>
         </template>
 
@@ -57,6 +57,7 @@ dayjs.locale('es');
 const storageData = JSON.parse(localStorage.getItem('profile'));
 const store = useCounterStore();
 const dateFormat = 'DD/MM/YYYY';
+const emit = defineEmits(['closeDraw']);
 
 store.$patch({ cities: store.cities });
 store.$patch({ provinces: store.provinces });
@@ -110,7 +111,7 @@ const clearFields = () => {
   formState.district_id = null
   formState.operationalstatus_id = null
   formState.agreementstatus_id = null
-  formState.createdBy = storageData.user_id
+  formState.created_id = storageData.user_id
 }
 const onSubmit = async () => {
   loading.value = true
@@ -130,7 +131,7 @@ const onSubmit = async () => {
     district_id: formState.district_id,
     operationalstatus_id: formState.operationalstatus_id,
     agreementstatus_id: formState.agreementstatus_id,
-    createdBy: storageData.user_id
+    created_id: storageData.user_id
   }
 
   try {
@@ -138,6 +139,7 @@ const onSubmit = async () => {
 
     if(data.status == 200) {
       message.success(data.message);
+      emit('closeDraw', true)
       clearFields();
     }
 
