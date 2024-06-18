@@ -26,6 +26,7 @@ export const useCounterStore = defineStore('counter', {
       asesores: null,
       agreementStatus: null,
       operationalStatus: null,
+      typeCapital: null,
     }
   },
 
@@ -221,13 +222,13 @@ export const useCounterStore = defineStore('counter', {
       }
     },
 
-    // async fetchAsesores() {
-    //   try {
-    //     const { data } = await requestNoToken({ url: `select/asesores`, method: 'GET' });
-    //     this.asesores = data;
-    //   } catch (error) {
-    //     console.error('Error de red:', error);
-    //   }
-    // },
+    async fetchTypeCapital() {
+      try {
+        const { data } = await requestNoToken({ url: `select/type-capital`, method: 'GET' });
+        this.typeCapital = data;
+      } catch (error) {
+        console.error('Error de red:', error);
+      }
+    },
   },
 })

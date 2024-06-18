@@ -12,7 +12,8 @@
           <a-select v-if="el.name == 'district_id'" v-model:value="formState[el.name]" show-search :options="store.districts" :filter-option="filterOption" />
           <a-select v-if="el.name == 'gender_id'" v-model:value="formState[el.name]" :options="store.genders" />
           <a-select v-if="el.name == 'sick'" v-model:value="formState[el.name]" :options="lessions" />
-          
+          <a-select v-if="el.name == 'hasSoon'" v-model:value="formState[el.name]" :options="hasSoon" />
+    
         </a-form-item>
 
         <a-form-item v-if="el.type === 'iText'" :name="el.name" :label="el.label"
@@ -83,6 +84,10 @@ const formState = reactive({
   // user_id : storageData.id,     //creador
 });
 
+const hasSoon = [
+  {value: 'SI', label: 'Si'},
+  {value: 'NO', label: 'No'}
+]
 const lessions = [
   {label: "Si", value: "yes"},
   {label: "No", value: "no"}
@@ -104,7 +109,9 @@ const update = (val) => {
     formState.gender_id = val.gender_id;
     // formState.birthday = val.birthday;
     formState.sick = val.sick;
-    formState.country = val.typedocument_id == 1 ? 'PERÚ' : val.country;
+    formState.country = val.country;
+    formState.address = val.address;
+    formState.hasSoon = val.hasSoon;
     if(val.birthday) formState.birthday = dayjs(val.birthday, 'YYYY-MM-DD');
   }
 
@@ -140,6 +147,7 @@ const onSubmit = async () => {
     gender_id: formState.gender_id,
     birthday: formState.birthday ? dayjs(formState.birthday).format('YYYY-MM-DD') : null,
     sick: formState.sick,
+    hasSoon: formState.hasSoon,
     // user_id : storageData.id,     //creador
   }
   // delete payload.documentnumber 🚩

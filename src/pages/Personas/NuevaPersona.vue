@@ -21,7 +21,9 @@
                 show-search :filter-option="filterOption" :disabled="!formState.province_id" />
               <a-select v-if="el.name == 'gender_id'" v-model:value="formState[el.name]" :options="store.genders"
                 :disabled="el.disabled" />
-              <a-select v-if="el.name == 'lession'" v-model:value="formState[el.name]" :options="disabilities"
+              <a-select v-if="el.name == 'sick'" v-model:value="formState[el.name]" :options="sicks"
+                :disabled="el.disabled" />
+              <a-select v-if="el.name == 'hasSoon'" v-model:value="formState[el.name]" :options="hasSoon"
                 :disabled="el.disabled" />
             </a-form-item>
 
@@ -61,7 +63,6 @@ import { reactive, ref, onMounted } from 'vue';
 import fieldsJs from '@/forms/nuevaPersona.js';
 import { message } from 'ant-design-vue';
 import { useCounterStore } from '@/stores/selectes.js';
-import { disabilities } from '@/utils/selects.js'
 import { makeRequest } from '@/utils/api.js';
 import { useRouter, useRoute } from 'vue-router';
 import locale from 'ant-design-vue/es/date-picker/locale/es_ES';
@@ -92,6 +93,14 @@ const birthdateDate = ref(null);
 const dateFormat = 'DD/MM/YYYY';
 const loading = ref(false);
 const spinning = ref(true);
+const sicks = [
+  {value: 'yes', label: 'SI'},
+  {value: 'no', label: 'NO'}
+]
+const hasSoon = [
+  {value: 'SI', label: 'SI'},
+  {value: 'NO', label: 'NO'}
+]
 
 const formState = reactive({
   typedocument_id: null,
@@ -108,7 +117,7 @@ const formState = reactive({
   email: null,
   birthday: null,
   gender_id: null,
-  lession: null,
+  sick: null,
   people_id: storageData.user_id,
   from_id: 1
 });
@@ -150,7 +159,7 @@ const handleDisabled = () => {
   fields.value.email.disabled = false;
   fields.value.birthday.disabled = false;
   fields.value.gender_id.disabled = false;
-  fields.value.lession.disabled = false;
+  fields.value.sick.disabled = false;
 }
 const handleSelectTypeDocument = (val) => {
   if (val) {
@@ -306,7 +315,7 @@ const clearFields = () => {
   formState.email = null;
   formState.birthday = null;
   formState.gender_id = null;
-  formState.lession = null;
+  formState.sick = null;
   formState.typedocument_id = null;
   formState.documentnumber = null;
   formState.from_id = 1;
@@ -329,7 +338,7 @@ const disablesInputs = () => {
   fields.value.email.disabled = true;
   fields.value.birthday.disabled = true;
   fields.value.gender_id.disabled = true;
-  fields.value.lession.disabled = true;
+  fields.value.sick.disabled = true;
 }
 
 const onSubmit = async () => {

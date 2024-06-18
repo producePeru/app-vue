@@ -41,7 +41,7 @@
 
 <script setup>
 import { reactive, ref, defineComponent } from 'vue';
-import { ructen } from '@/forms/asesorias.js';
+import { ructen } from '@/forms/asesoriasEdit.js';
 import { message } from 'ant-design-vue';
 import { useCounterStore } from '@/stores/selectes.js';
 import { makeRequest } from '@/utils/api.js';
@@ -80,6 +80,7 @@ const formState = reactive({
 });
 
 const update = () => {
+  formState.dni = props.info.dni;
   formState.detailprocedure_id = props.info.detailprocedure_id
   formState.modality_id = props.info.modality_id
   formState.economicsector_id = props.info.economicsector_id

@@ -50,10 +50,10 @@ const fields = {
   },
   city_id: {
     type: 'iSelect',
-    label: 'Departamento residente',
+    label: 'Región residente',
     name: 'city_id',
     required: true,
-    message: 'Seleccionar departamento',
+    message: 'Seleccionar región',
     disabled: true
   },
   province_id: {
@@ -116,13 +116,21 @@ const fields = {
     message: 'Seleccionar un tipo de género',
     disabled: true
   },
-  lession: {
+  sick: {
     type: 'iSelect',
     label: '¿Tiene discapacidad?',
-    name: 'lession',
+    name: 'sick',
     required: true,
     message: '¿Tiene discapacidad?',
     disabled: true
+  },
+  hasSoon: {
+    type: 'iSelect',
+    label: '¿Tiene hijos?',
+    name: 'hasSoon',
+    required: true,
+    message: '¿Tiene hijos?',
+    disabled: false
   },
 }
 

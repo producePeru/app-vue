@@ -14,6 +14,12 @@
               <a-select v-if="el.name == 'modality_id'" v-model:value="formState[el.name]"
                 :options="store.modalities" />
 
+              <a-select v-if="el.name == 'typecapital_id'" v-model:value="formState[el.name]"
+                :options="store.typeCapital" />
+
+              <a-select v-if="el.name == 'isbic'" v-model:value="formState[el.name]"
+                :options="bic" />
+
               <a-select v-if="el.name == 'notary_id'" v-model:value="formState[el.name]" :options="notaries"
                 option-label-prop="name" :disabled="!formState.city_id" show-search :filter-option="filterNotaries">
                 <template #option="{ value: val, name, city, province, district, address }">
@@ -68,18 +74,33 @@
 
             </a-form-item>
 
-            <a-form-item v-if="el.type === 'iText'" :name="el.name" :label="el.label"
-              :rules="[{ required: el.required, message: el.message, type: el.email, max: el.max, min: el.min }]">
-
+            <a-form-item v-if="el.type === 'iText'" :name="el.name" :label="el.label" :rules="[{ required: el.required, message: el.message, type: el.email, max: el.max, min: el.min }]">
               <a-input @input="validateOnlyNumber(el.name)" v-model:value="formState[el.name]" :disabled="el.disabled"
                 :maxlength="el.max" :placeholder="el.placeholder" />
+            </a-form-item>
 
+            <a-form-item v-if="el.type === 'iNumber'" :name="el.name" :label="el.label" :rules="[{ required: el.required, message: el.message }]">
+              <a-input-number style="width: 100%;" v-model:value="formState[el.name]" :maxlength="11" @change="onlyRUC(el.name)"  />
+            </a-form-item>
+
+            <a-form-item v-if="el.type === 'iTextLol'" :name="el.name" :label="el.label" :rules="[{ required: el.required, message: el.message }]">
+              <a-input @input="validateOnlyNumber(el.name)" v-model:value="formState.dni" :disabled="!props.documentnumber"
+                :maxlength="el.max" :placeholder="el.placeholder" />
+            </a-form-item>
+
+            <a-form-item v-if="el.type === 'iMoney'" :name="el.name" :label="el.label" :rules="[{ required: el.required, message: el.message }]">
+              <a-input-number
+              :min:="0"
+              style="width: 100%;"
+              v-model:value="formState[el.name]"
+              :formatter="value => `S/ ${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')"
+              :parser="value => value.replace(/S\/\s?|(,*)/g, '')" />
             </a-form-item>
 
           </template>
         </div>
-        <!-- <pre>{{ props.info }}</pre>
-      <pre>:::::{{ formState }}</pre> -->
+        <!-- <pre>{{ props.info }}</pre> -->
+        <!-- <pre>:::::{{ formState }}</pre>  -->
         <div>{{ update() }}</div>
         <a-form-item>
           <a-button class="btn-produce" type="primary" html-type="submit" :loading="loading">GUARDAR</a-button>
@@ -133,15 +154,17 @@ store.$patch({ modalities: store.modalities });
 store.$patch({ economicSectors: store.economicSectors });
 store.$patch({ comercialActivities: store.comercialActivities });
 store.$patch({ regimes: store.regimes });
-// store.$patch({ notaries: store.notaries });
+store.$patch({ typeCapital: store.typeCapital });
 
 // store.fetchNotaries();
 store.fetchEconomicSectors();
 store.fetchComercialActivities();
 store.fetchRegimes();
 store.fetchModalities();
+store.fetchTypeCapital();
 store.fetchCities();
 
+const numberDNI = ref(null);
 const formState = reactive({
   task: 1,
   codesunarp: null,
@@ -153,10 +176,25 @@ const formState = reactive({
   district_id: null,
   address: null,
   modality_id: null,
-  user_id: storageData.user_id
+  user_id: storageData.user_id,
+  montocapital: null,
+  ruc: null
 });
+const bic = [
+  {value: 'SI', label: 'SI'},
+  {value: 'NO', label: 'NO'}
+]
+
+const onlyRUC = (name) => {
+  if(name == 'ruc') {
+    const value = formState.ruc;
+    if (value < 20000000000 || value > 20999999999) {
+      formState.ruc = null;
+    }
+  }
+}
 const validateOnlyNumber = (val) => {
-  if (val == 'ruc') {
+  if (val == 'ruc' || val == 'montocapital') {
     formState[val] = formState[val].replace(/\D/g, '');
   }
 };
@@ -281,6 +319,11 @@ const onSubmit = async () => {
     dateTramite: formState.dateTramite ? dayjs(formState.dateTramite).format('YYYY-MM-DD') : null,
     ruc: formState.ruc,
     dni: formState.dni,
+
+    typecapital_id: formState.typecapital_id,
+    isbic: formState.isbic,
+    montocapital: formState.montocapital
+
   }
 
   try {
@@ -303,6 +346,9 @@ const onSubmit = async () => {
       formState.notary_id = null;
       formState.ruc = null;
       formState.numbernotary = null;
+      formState.isbic = null;
+      formState.montocapital = null;
+      formState.typecapital_id = null;
 
       emit('closeDraw', true)
     }

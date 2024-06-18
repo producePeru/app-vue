@@ -114,15 +114,15 @@ const fields = {
     message: 'Escribir el código SID sunarp',
     disabled: false
   },
-  dni: {
-    type: 'iTextLol',
-    label: 'Núm. documento Identidad',
-    name: 'dni',
-    required: true,
-    message: 'Escribir número de documento',
-    disabled: false,
-    placeholder: 'Número documento'
-  },
+  // dni: {
+  //   type: 'iTextLol',
+  //   label: 'Núm. documento Identidad',
+  //   name: 'dni',
+  //   required: true,
+  //   message: 'Escribir número de documento',
+  //   disabled: false,
+  //   placeholder: 'Número documento'
+  // },
 
   isbic: {
     type: 'iSelect',
@@ -157,15 +157,7 @@ const final = {
 };
 
 const ructen = {
-  dni: {
-    type: 'iText',
-    label: 'Número de documento de identidad',
-    name: 'dni',
-    required: true,
-    message: 'Escribir número de documento',
-    disabled: false,
-    placeholder: 'Número documento'
-  },
+
   economicsector_id: {
     type: 'iSelectWrite',
     label: 'Sector económico',
@@ -242,15 +234,6 @@ const ructen = {
 };
 
 const asesoria = {
-  dni: {
-    type: 'iText',
-    label: 'Número de documento',
-    name: 'dni',
-    required: true,
-    message: 'Escribir número de documento',
-    disabled: false,
-    placeholder: 'Número documento'
-  },
   economicsector_id: {
     type: 'iSelectWrite',
     label: 'Sector económico',

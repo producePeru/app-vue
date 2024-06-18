@@ -40,6 +40,14 @@ const fields = {
     message: 'Escribir nombre',
     disabled: false
   },
+  country: {
+    type: 'iText',
+    label: 'País Origen',
+    name: 'country',
+    required: true,
+    message: 'Escribir nombre',
+    disabled: false
+  },
   city_id: {
     type: 'iSelect',
     label: 'Región',
@@ -64,6 +72,22 @@ const fields = {
     message: 'Seleccionar distrito',
     disabled: false
   },
+  address: {
+    type: 'iText',
+    label: 'Dirección',
+    name: 'address',
+    required: true,
+    message: 'Escribir dirección',
+    disabled: false
+  },
+  birthday: {
+    type: 'iDate',
+    label: 'Fecha de nacimiento',
+    name: 'birthday',
+    required: true,
+    message: 'Seleccionar fecha',
+    disabled: false
+  },
   phone: {
     type: 'iText',
     label: 'Número de celular',
@@ -82,14 +106,6 @@ const fields = {
     email: 'email',
     disabled: false
   },
-  birthday: {
-    type: 'iDate',
-    label: 'Fecha de nacimiento',
-    name: 'birthday',
-    required: true,
-    message: 'Seleccionar fecha',
-    disabled: false
-  },
   gender_id: {
     type: 'iSelect',
     label: 'Género',
@@ -102,16 +118,17 @@ const fields = {
     label: '¿Tiene discapacidad?',
     name: 'sick',
     required: true,
-    message: 'Seleccionar un tipo',
+    message: 'Seleccionar',
   },
-  country: {
-    type: 'iText',
-    label: 'País Origen',
-    name: 'country',
+  hasSoon: {
+    type: 'iSelect',
+    label: '¿Tiene hijos?',
+    name: 'hasSoon',
     required: true,
-    message: 'Escribir nombre',
+    message: '¿Tiene hijos?',
     disabled: false
   },
+
 }
 
 export default fields;

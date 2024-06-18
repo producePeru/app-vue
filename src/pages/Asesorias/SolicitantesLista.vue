@@ -13,22 +13,16 @@
       </a-form-item>
     </a-form>
 
-    <a-table bordered :scroll="{ x: valueX, y: valueY }" class="ant-table-striped" :columns="columns"
-      :data-source="dataSource" :pagination="false" :loading="loading" size="small" :row-class-name="(_record, index) => (index % 2 === 1 ? 'table-striped' : null)">
+    <a-table bordered :scroll="{ x: valueX, y: valueY }" class="asesores-table" :columns="columns"
+      :data-source="dataSource" :pagination="false" :loading="loading" size="small">
       <template v-slot:bodyCell="{ column, record, index }">
         <template v-if="column.dataIndex == 'idx'">
           {{ computeIndex(index) }}
         </template>
 
         <template v-if="column.dataIndex == 'tdocument'">
-          
-
           <a-tag :color="handleColorDocument(record.typedocument.avr)">{{ record.typedocument.avr }} </a-tag>
-
-          <!-- <a-tag :color="record.typedocument.name == 'DNI' ? 'green' : 'blue'">{{ record.typedocument.name == 'DNI' ? 'DNI' : 'CE' }}</a-tag> -->
         </template>
-
-
         <template v-if="column.dataIndex == 'apellidos'">
           {{ record.lastname }} {{ record.middlename }}
         </template>
@@ -46,6 +40,11 @@
         </template>
         <template v-if="column.dataIndex == 'sickx'">
           <a-tag :color="record.sick == 'no' ? 'blue' : 'pink'">{{ record.sick == 'no' ? 'NO' : 'SI' }}</a-tag>
+        </template>
+
+        <template v-if="column.dataIndex == 'hasSoon'">
+          <a-tag v-if="record.hasSoon == 'no'" color="pink">NO</a-tag>
+          <a-tag v-if="record.hasSoon == 'si'" color="green">SI</a-tag>
         </template>
 
         <template v-if="column.dataIndex == 'registerby'">
@@ -124,6 +123,7 @@ const columns = [
   { title: 'EMAIL', dataIndex: 'email', width: 200 },
   { title: 'GÉNERO', dataIndex: 'gender', align: 'center', width: 90 },
   { title: 'DISCAPACIDAD', dataIndex: 'sickx', align: 'center', width: 120 },
+  { title: 'HIJOS', dataIndex: 'hasSoon', align: 'center', width: 120 },
   { title: 'REGISTRADO POR', dataIndex: 'registerby', width: 200 },
   { title: '', dataIndex: 'actions', width: 50, align: 'center', fixed: 'right'}
 ];
@@ -132,7 +132,7 @@ const formState = reactive({
 });
 
 const total = ref(0);
-const pageSize = 100;
+const pageSize = 50;
 const params = ref({ page: 0 });
 const valueX = ref(1200)
 const dataSource = ref([])

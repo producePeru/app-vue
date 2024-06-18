@@ -42,7 +42,7 @@
 <script setup>
 import { reactive, ref } from 'vue';
 import { message } from 'ant-design-vue';
-import { asesoria } from '@/forms/asesorias.js'
+import { asesoria } from '@/forms/asesoriasEdit.js'
 import { useCounterStore } from '@/stores/selectes.js';
 import { makeRequest } from '@/utils/api.js';
 import { PlusOutlined } from '@ant-design/icons-vue';
@@ -83,6 +83,7 @@ const formState = reactive({
 
 const update = () => {
   if(store.cities) spinning.value = false;
+  // formState.dni = props.info.dni;
   formState.economicsector_id = props.info.economicsector_id,
   formState.comercialactivity_id = props.info.comercialactivity_id;
   formState.ruc = props.info.ruc;

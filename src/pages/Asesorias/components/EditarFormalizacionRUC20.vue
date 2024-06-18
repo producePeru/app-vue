@@ -25,6 +25,8 @@
                 </template>
               </a-select>
 
+              <a-select v-if="el.name == 'isbic'" v-model:value="formState[el.name]" :options="bic" />
+              <a-select v-if="el.name == 'typecapital_id'" v-model:value="formState[el.name]" :options="store.typeCapital" />
             </a-form-item>
 
             <a-form-item v-if="el.type === 'iDate'" :name="el.name" :label="el.label"
@@ -70,17 +72,33 @@
 
             <a-form-item v-if="el.type === 'iText'" :name="el.name" :label="el.label"
               :rules="[{ required: el.required, message: el.message, type: el.email, max: el.max }]">
-
               <a-input @input="validateOnlyNumber(el.name)" v-model:value="formState[el.name]" :disabled="el.disabled"
                 :maxlength="el.max" :placeholder="el.placeholder" />
+            </a-form-item>
 
+            <a-form-item v-if="el.type === 'iNumber'" :name="el.name" :label="el.label" :rules="[{ required: el.required, message: el.message }]">
+              <a-input-number style="width: 100%;" v-model:value="formState[el.name]" :maxlength="11" @change="onlyRUC(el.name)"  />
+            </a-form-item>
+
+            <a-form-item v-if="el.type === 'iTextLol'" :name="el.name" :label="el.label" :rules="[{ required: el.required, message: el.message }]">
+              <a-input @input="validateOnlyNumber(el.name)" v-model:value="formState.dni" :disabled="!!props.info.dni"
+                :maxlength="el.max" :placeholder="el.placeholder" />
+            </a-form-item>
+
+            <a-form-item v-if="el.type === 'iMoney'" :name="el.name" :label="el.label" :rules="[{ required: el.required, message: el.message }]">
+              <a-input-number
+              :min:="0"
+              style="width: 100%;"
+              v-model:value="formState[el.name]"
+              :formatter="value => `S/ ${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')"
+              :parser="value => value.replace(/S\/\s?|(,*)/g, '')" />
             </a-form-item>
 
           </template>
         </div>
 
       
-        <!-- <pre>{{ notaries }}</pre> -->
+        <!-- <pre>{{ props.info }}</pre> -->
         
         <div>{{ update() }}</div>
         <a-form-item>
@@ -95,7 +113,7 @@
 <script setup>
 import { reactive, ref, defineComponent, onMounted } from 'vue';
 import { useCounterStore } from '@/stores/selectes.js';
-import { fields } from '@/forms/asesorias.js'
+import { fields } from '@/forms/asesoriasEdit.js'
 import { makeRequest } from '@/utils/api.js';
 import { message } from 'ant-design-vue';
 import { PlusOutlined } from '@ant-design/icons-vue';
@@ -137,6 +155,7 @@ store.$patch({ modalities: store.modalities });
 store.$patch({ economicSectors: store.economicSectors });
 store.$patch({ comercialActivities: store.comercialActivities });
 store.$patch({ regimes: store.regimes });
+store.$patch({ typeCapital: store.typeCapital });
 // store.$patch({ notaries: store.notaries });
 
 // store.fetchNotaries();
@@ -144,6 +163,7 @@ store.fetchEconomicSectors();
 store.fetchComercialActivities();
 store.fetchRegimes();
 store.fetchModalities();
+store.fetchTypeCapital();
 store.fetchCities();
 
 const formState = reactive({
@@ -162,12 +182,25 @@ const formState = reactive({
   dateReception: null,
   dateTramite: null,
   // user_id: storageData.user_id,
+  montocapital: null
 });
+const bic = [
+  {value: 'SI', label: 'SI'},
+  {value: 'NO', label: 'NO'}
+]
 const validateOnlyNumber = (val) => {
   if (val == 'ruc') {
     formState[val] = formState[val].replace(/\D/g, '');
   }
 };
+const onlyRUC = (name) => {
+  if(name == 'ruc') {
+    const value = formState.ruc;
+    if (value < 20000000000 || value > 20999999999) {
+      formState.ruc = null;
+    }
+  }
+}
 const update = () => {
   // handleGetNotariesByRegion()
   formState.city_id = props.info.city_id;
@@ -184,6 +217,10 @@ const update = () => {
   formState.regime_id = props.info.regime_id;
   formState.numbernotary = props.info.numbernotary;
   formState.notary_id = props.info.notary_id;
+  formState.dni = props.info.dni;
+  formState.typecapital_id = props.info.typecapital_id
+  formState.isbic = props.info.isbic;
+  formState.montocapital = props.info.montocapital
   if(props.info.dateReception) formState.dateReception = dayjs(props.info.dateReception, 'YYYY-MM-DD');
   if(props.info.dateTramite) formState.dateTramite = dayjs(props.info.dateTramite, 'YYYY-MM-DD');
 
@@ -292,6 +329,7 @@ const onSubmit = async () => {
     modality_id: formState.modality_id,
     nameMype: formState.nameMype,
     ruc: formState.ruc,
+    dni: formState.dni,
     economicsector_id: formState.economicsector_id,
     comercialactivity_id: formState.comercialactivity_id,
     regime_id: formState.regime_id,
@@ -299,7 +337,11 @@ const onSubmit = async () => {
     notary_id: formState.notary_id,
     dateReception: formState.dateReception ? dayjs(formState.dateReception).format('YYYY-MM-DD') : null,
     dateTramite: formState.dateTramite ? dayjs(formState.dateTramite).format('YYYY-MM-DD') : null,
-    userupdated_id: storageData.user_id
+    userupdated_id: storageData.user_id,
+
+    typecapital_id: formState.typecapital_id,
+    isbic: formState.isbic,
+    montocapital: formState.montocapital
   }
 
   try {
@@ -322,6 +364,9 @@ const onSubmit = async () => {
       formState.notary_id = null;
       formState.ruc = null;
       formState.numbernotary = null;
+      formState.isbic = null;
+      formState.montocapital = null;
+      formState.typecapital_id = null;
 
       emit('closeDraw', true)
     }
