@@ -178,6 +178,7 @@ textarea {
   }
   p {
     margin: 0;
+    font-size: 13px
   }
 }
 </style>

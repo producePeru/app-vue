@@ -68,6 +68,12 @@
           {{ formatDate(record?.endDate) }}
         </template>
 
+        <template v-if="column.dataIndex == 'numbrestantes'">
+          <p v-if="dateTrafficLight(record.endDate, record.startDate) >= 1" class="list-days">{{ dateTrafficLight(record.endDate, record.startDate) }} días faltantes</p>
+          <p v-else class="list-days">{{ dateTrafficLight(record.endDate, record.startDate) }} días vencidos</p>
+          
+        </template>
+
         <template v-if="column.dataIndex == 'acciones'"> 
           <div class="accion-total">
             <MessageOutlined class="ico-acciones" @click="handleAcciones(record)" />
@@ -175,6 +181,7 @@ const columns = [
   { title: 'INICIO CONVENIO VIGENTE', dataIndex: 'startDate', align: 'center', width: 120 },
   { title: 'NUM. AÑOS DEL CONVENIO', dataIndex: 'numbyears', align: 'center', width: 110 },
   { title: 'FIN DEL CONVENIO', dataIndex: 'endDate', align: 'center', width: 120 },
+  { title: 'DÍAS', dataIndex: 'numbrestantes', align: 'center', width: 70 },
   { title: 'ACCIONES', dataIndex: 'acciones', align: 'center', width: 100 },
   { title: '', dataIndex: 'actions', width: 50, align: 'center', fixed: 'right' }
 ];
@@ -228,10 +235,16 @@ const handleUpFile = (record) => {
   openDrives.value = true;
 }
 const dateTrafficLight = (end, start) => {
-  const startDate = new Date(start);
-  const currentDate = new Date(end);
-  const differenceInTime = currentDate.getTime() - startDate.getTime();
-  const differenceInDays = Math.floor(differenceInTime / (1000 * 3600 * 24));
+  // return console.log("date", end);
+  // const startDate = new Date(start);
+  // const currentDate = new Date(end);
+  // const differenceInTime = currentDate.getTime() - startDate.getTime();
+  // const differenceInDays = Math.floor(differenceInTime / (1000 * 3600 * 24));
+  // return differenceInDays;
+  const endDate = new Date(end);
+  const currentDate = new Date();
+  const differenceInTime =  endDate.getTime() - currentDate.getTime();
+  const differenceInDays = Math.floor(differenceInTime / (1000 * 3600 * 24)) + 1;
   return differenceInDays;
 };
 
@@ -309,6 +322,14 @@ onMounted(() => {
 });
 </script>
 
+<style scoped lang="scss">
+.list-days {
+  line-height: 1.2; 
+  margin: 0; 
+  font-size: 12px;
+}
+</style>
+
 <style lang="scss">
 .paginator {
   display: flex;
@@ -340,6 +361,9 @@ onMounted(() => {
   .ant-table-row {
     .ant-table-cell:nth-child(16) {
       background-color: #feffe2 !important;
+    }
+    .ant-table-cell:nth-child(18) {
+      background-color: #f5f5ff !important;
     }
   }
 }
