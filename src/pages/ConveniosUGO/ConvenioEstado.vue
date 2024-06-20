@@ -3,7 +3,11 @@
     <h3 class="title-produce">ESTADO DE CONVENIOS</h3>
 
     <div class="filters">
-      <a-button type="primary" @click="showDrawer">NUEVO</a-button>
+      <a-button type="primary" @click="showDrawer" style="margin-right: .5rem;">NUEVO</a-button>
+
+      <a-button class="btn-excel" @click="handleDownload" :loading="loadingFile" type="primary">
+        <img width="20" style="margin: -2px 0 0 0;" src="@/assets/img/icoexcel.png" /> 
+      </a-button>
     </div>
 
     <a-table 
@@ -130,26 +134,35 @@
 
 
 <script setup>
+import axios from 'axios';
 import { ref, onMounted, h, onBeforeUnmount, computed, reactive } from 'vue';
 import NuevoConvenio from './components/DrawConvenio.vue';
 import DrawAcciones from './components/DrawAcciones.vue';
 import DrawFiles from './components/DrawFiles.vue';
 import { LinkOutlined, QuestionCircleOutlined, MessageOutlined } from '@ant-design/icons-vue';
-import { requestNoToken } from '@/utils/noToken.js';
+// import { requestNoToken } from '@/utils/noToken.js';
 import { MoreOutlined } from '@ant-design/icons-vue';
 import { useRouter } from 'vue-router';
 import { makeRequest } from '@/utils/api.js';
 import { message } from 'ant-design-vue';
 import { useCounterStore } from '@/stores/selectes.js';
-import { Modal } from 'ant-design-vue';
+// import { Modal } from 'ant-design-vue';
+import Cookies from 'js-cookie';
 import dayjs from 'dayjs';
 import 'dayjs/locale/es';
 dayjs.locale('es');
 
 const storageData = JSON.parse(localStorage.getItem('profile'))
 const store = useCounterStore();
+const token = Cookies.get('token');
+const props = defineProps(['idConvenio']);
+const prod = import.meta.env.VITE_APP_API_URL_PRODUCTION;
+const dev = import.meta.env.VITE_APP_API_URL_LOCAL;
+const apiUrl = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1' ? dev : prod;
+
 // store.$patch({ cities: store.cities });
 // store.fetchCities();
+const loadingFile = ref(false);
 const idConvenio = ref(null);
 const total = ref(0);
 const pageSize = 20;
@@ -309,6 +322,34 @@ const fetchData = async () => {
     console.error('Error de red:', error);
   } finally {
     loading.value = false;
+  }
+}
+
+const handleDownload = async () => {
+  loadingFile.value = true;
+  try {
+    const response = await axios({
+      url: `${apiUrl}agreement/download`,
+      method: 'POST',
+      responseType: 'blob',
+      headers: {
+        'Authorization': `Bearer ${token}`,
+      },
+    });
+
+    const url = window.URL.createObjectURL(new Blob([response.data]));
+    const link = document.createElement('a');
+    const name = 'convenios.xlsx';
+    link.href = url;
+    link.setAttribute('download', name); 
+    document.body.appendChild(link);
+    link.click();
+    window.URL.revokeObjectURL(url);
+    document.body.removeChild(link);
+  } catch (error) {
+    console.error('Error downloading file:', error);
+  } finally {
+    loadingFile.value = false;
   }
 }
 
