@@ -126,9 +126,9 @@ const fields = {
   },
   hasSoon: {
     type: 'iSelect',
-    label: '¿Tiene hijos?',
+    label: '¿Tiene hijos? (Opcional)',
     name: 'hasSoon',
-    required: true,
+    required: false,
     message: '¿Tiene hijos?',
     disabled: false
   },

@@ -128,7 +128,7 @@ const fields = {
     type: 'iSelect',
     label: '¿Es una sociedad BIC?',
     name: 'isbic',
-    required: true,
+    required: false,
     message: 'Buscar BIC',
     disabled: false
   },
@@ -136,7 +136,7 @@ const fields = {
     type: 'iSelect',
     label: 'Tipo de aporte de capital',
     name: 'typecapital_id',
-    required: true,
+    required: false,
     message: 'Seleccionar BIC',
     disabled: false
   },
@@ -144,7 +144,7 @@ const fields = {
     type: 'iMoney',
     label: 'Monto de capital social',
     name: 'montocapital',
-    required: true,
+    required: false,
     message: 'Escribir el Monto de capital social',
     disabled: false
   },
