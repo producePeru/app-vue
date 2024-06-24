@@ -19,6 +19,18 @@
     :pagination="false" 
     :loading="loading" 
     size="small">
+      <template #headerCell="{ column }">
+        <template v-if="column.dataIndex == 'region'">
+          <div class="table-head">
+            <span>REGIÓN</span>
+            <div class="t-icons">
+              <CaretUpOutlined :class="{'arrActive' : rowascdesc == 'asc'}" class="ii" @click="handleSelectOrder('asc')" />
+              <CaretDownOutlined :class="{'arrActive' : rowascdesc == 'desc'}" class="ii" @click="handleSelectOrder('desc')" />
+            </div>
+          </div>
+        </template>
+      </template>
+
       <template v-slot:bodyCell="{ column, record, index }">
         <template v-if="column.dataIndex == 'idx'">
           {{ computeIndex(index) }}
@@ -139,8 +151,7 @@ import { ref, onMounted, h, onBeforeUnmount, computed, reactive } from 'vue';
 import NuevoConvenio from './components/DrawConvenio.vue';
 import DrawAcciones from './components/DrawAcciones.vue';
 import DrawFiles from './components/DrawFiles.vue';
-import { LinkOutlined, QuestionCircleOutlined, MessageOutlined } from '@ant-design/icons-vue';
-// import { requestNoToken } from '@/utils/noToken.js';
+import { CaretUpOutlined, CaretDownOutlined, QuestionCircleOutlined, MessageOutlined } from '@ant-design/icons-vue';
 import { MoreOutlined } from '@ant-design/icons-vue';
 import { useRouter } from 'vue-router';
 import { makeRequest } from '@/utils/api.js';
@@ -162,10 +173,11 @@ const apiUrl = window.location.hostname === 'localhost' || window.location.hostn
 
 // store.$patch({ cities: store.cities });
 // store.fetchCities();
+const rowascdesc = ref(null);
 const loadingFile = ref(false);
 const idConvenio = ref(null);
 const total = ref(0);
-const pageSize = 20;
+const pageSize = ref(0);
 const params = ref({ page: 0 });
 const valueX = ref(1200)
 const dataSource = ref([])
@@ -209,6 +221,12 @@ const handleColor = (idx) => {
     5: 'pink'
   }
   return colors[idx];
+}
+
+const handleSelectOrder = (type) => {
+  rowascdesc.value = type
+  let params = { order: type }
+  fetchData(params)
 }
 const handleAcciones = (record) => {
   idConvenio.value = record.id;
@@ -308,16 +326,21 @@ const handleEditSolicitante = (data) => {
 }
 const computeIndex = computed(() => (index) => {
   let numb = params.value.page == 0 ? 1 : params.value.page
-  return (numb - 1) * pageSize + index + 1;
+  return (numb - 1) * pageSize.value + index + 1;
 });
 
-const fetchData = async () => {
+const fetchData = async (val) => {
   try {
     loading.value = true;
-    let parx = params.value.page == 0 ? '' : params.value;
+    let parx;
+
+    parx = params.value.page == 0 ? '' : params.value;
+    parx = val? {...parx,...val } : parx;
+
     const {data} = await makeRequest({ url: `agreement/list`, method: 'GET', params: parx });
     dataSource.value = data.data
     total.value = data.total
+    pageSize.value = 50
   } catch (error) {
     console.error('Error de red:', error);
   } finally {
@@ -364,6 +387,9 @@ onMounted(() => {
 </script>
 
 <style scoped lang="scss">
+.arrActive {
+  color: var(--primary);
+}
 .list-days {
   line-height: 1.2; 
   margin: 0; 
@@ -417,5 +443,23 @@ onMounted(() => {
 }
 .ant-popover-inner {
   width: 200px;
+}
+
+.table-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  .t-icons {
+    display: flex;
+    flex-direction: column;
+    opacity: .7;
+    font-size: 11px;
+    .ii {
+      &:hover {
+        color: var(--primary);
+        cursor: pointer;
+      }
+    }
+  }
 }
 </style>

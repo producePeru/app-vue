@@ -1,6 +1,6 @@
 <template>
   <section>
-    <h3>CONVENIOS SUSCRIPTOS</h3>
+    <h3>CONVENIOS SUSCRIPTOS <pre>::::{{ total }}</pre></h3>
 
     <br>
     <a-button @click="handleFileUploadExcel" :loading="spinning">
@@ -58,6 +58,7 @@ import { MoreOutlined } from '@ant-design/icons-vue'
 const spinning = ref(false);
 const loading = ref(false);
 const total = ref(0)
+const pageSize = ref(0)
 const valueX = ref(1200)
 const valueY = ref(window.innerHeight - 100);
 const dataSource = ref([])
@@ -110,7 +111,8 @@ const fetchData = async() => {
     loading.value = true;
     const data = await makeRequest({ url: '/mype', method: 'GET', params:params.value });
     dataSource.value = data.data
-    total.value = data.meta.total;
+    total.value = data.total;
+    pageSize.value = data.per_page
   } catch (error) {
     console.error('Error de red:', error);
   } finally {
