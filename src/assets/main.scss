@@ -60,6 +60,17 @@ h1 {
   color: #4e4e4ee0 !important;
 }
 
+.ant-form-item-label label {
+  font-size: 13px !important;
+  color: #606060 !important;
+}
+.ant-btn-primary {
+  font-weight: 400;
+  font-size: 13px;
+}
+
+
+
 // .ant-menu-item-selected {
 //   background-color: var(--primary) !important;
 //   &:active {
@@ -151,7 +162,12 @@ $color-background: #F7F7FA;
   cursor: pointer;
 }
 .title-produce {
-  // color: var(--secondary);
+  font-weight: 500;
+  color: #000;
+  font-size: 13px;
+}
+.ant-select-selection-item, .ant-input {
+  // font-size: 13px !important;
 }
 :where(.css-dev-only-do-not-override-ju8ixa).ant-tabs .ant-tabs-tab.ant-tabs-tab-active .ant-tabs-tab-btn {
   font-weight: 500;

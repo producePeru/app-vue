@@ -13,9 +13,9 @@
             <!-- <a-select v-if="el.name == 'economicsector_id'" v-model:value="formState[el.name]" :options="store.economicSectors" /> -->
           </a-form-item>
 
-          <a-form-item v-if="el.type === 'iText'" :name="el.name" :label="el.label"
+          <a-form-item v-if="el.type === 'iText'" :name="el.name" :label="el.label" 
             :rules="[{ required: el.required, message: el.message, type: el.email, max: el.max }]">
-            <a-input v-model:value="formState[el.name]" :disabled="el.disabled" :maxlength="el.max" @input="validateOnlyNumber(el.name)" :placeholder="el.placeholder" />
+            <a-input v-model:value="formState[el.name]" :disabled="el.name === 'dni' && !!formState[el.name]" :maxlength="el.max" @input="validateOnlyNumber(el.name)" :placeholder="el.placeholder" />
           </a-form-item>
 
           <a-form-item class="item-max" v-if="el.type === 'iSelectWrite'" :name="el.name" :label="el.label"
@@ -60,8 +60,10 @@
               :filter-option="filterOption" @change="handleProvinces" :disabled="!formState.city_id" />
             <a-select v-if="el.name == 'district_id'" v-model:value="formState[el.name]" show-search :options="store.districts"
               :filter-option="filterOption" :disabled="!formState.province_id" />
+            
+            <!-- <a-select v-if="el.name == 'cde_id'" v-model:value="formState[el.name]" :options="store.cdes" show-search :filter-option="filterOption" /> -->
+            
           </a-form-item>
-
         </template>
       </div>
 
@@ -82,6 +84,7 @@ import { message } from 'ant-design-vue';
 import { useCounterStore } from '@/stores/selectes.js';
 import { makeRequest } from '@/utils/api.js';
 import { PlusOutlined } from '@ant-design/icons-vue';
+import { dProfile } from '@/utils/storage.js';
 
 const VNodes = defineComponent({
   props: {
@@ -96,7 +99,7 @@ const VNodes = defineComponent({
 });
 
 const storageData = JSON.parse(localStorage.getItem('profile'));
-const props = defineProps(['info']);
+const props = defineProps(['info', 'idCde']);
 const emit = defineEmits(['closeDraw']);
 
 const loading = ref(false);
@@ -106,6 +109,8 @@ const loadingNewItenSector = ref(false);
 
 const store = useCounterStore();
 const loadingcategory = ref(false);
+
+// store.$patch({ cdes: store.cdes });
 store.$patch({ cities: store.cities });
 store.$patch({ provinces: store.provinces });
 store.$patch({ districts: store.districts });
@@ -114,6 +119,7 @@ store.$patch({ detailProcedures: store.detailProcedures });
 store.$patch({ economicSectors: store.economicSectors });
 store.$patch({ comercialActivities: store.comercialActivities });
 
+// store.fetchCdes()
 store.fetchDetailProcedures();
 store.fetchModalities();
 store.fetchEconomicSectors()
@@ -132,13 +138,25 @@ const formState = reactive({
   user_id: storageData.user_id
 });
 
+const onlyRUC = (name) => {
+  if(name == 'ruc') {
+    const value = formState.ruc;
+    if (value < 10000000000 || value > 10999999999) {
+      formState.ruc = null;
+    }
+  }
+}
 const update = () => {
   formState.dni = props.info.documentnumber;
   if(store.cities) spinning.value = false;
+  // dProfile.cde_id ? formState.cde_id = dProfile.cde_id : null;
 }
 const validateOnlyNumber = (val) => {
   if(val == 'ruc') {
-    formState[val] = formState[val].replace(/\D/g, '');
+    const value = formState.ruc;
+    if (value < 10000000000 || value > 10999999999) {
+      formState.ruc = null;
+    }
   }
 };
 const handleAddItem = async() => {
@@ -206,7 +224,8 @@ const onSubmit = async () => {
     address: formState.address,
     ruc: formState.ruc,
     user_id: storageData.user_id,
-    people_id: props.info.id
+    people_id: props.info.id,
+    cde_id: props.idCde
   }
   
   try {
@@ -248,8 +267,8 @@ const onSubmitFail = () => {
   display: grid;
   grid-template-columns: repeat(2,1fr);
   grid-gap: 0 1rem;
-  .ant-form-item:nth-child(10) {
-    // grid-column: 1/3;
+  .ant-form-item:nth-child(11) {
+    grid-column: 1/3;
   }
   // .ant-form-item:nth-child(2) {
   //   grid-column: 1/3;

@@ -144,7 +144,7 @@ const views = CryptoJS.AES.decrypt(encryptedLocalStore, 'appvistas').toString(Cr
 
 
 const handleCollapse = (name) => {
-  if (openKeys.value[1] == undefined) return console.log(name);
+  if (openKeys.value[1] == undefined) return true;
   if (openKeys.value[1]) {
     openKeys.value = ["inicio", name]
   } else {

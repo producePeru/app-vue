@@ -1,4 +1,29 @@
 const fields = {
+  // cde_id: {
+  //   type: 'iSelectWrite',
+  //   label: 'Seleccionar CDE',
+  //   name: 'cde_id',
+  //   required: true,
+  //   message: 'Seleccionar cde',
+  //   disabled: false
+  // },
+  dni: {
+    type: 'iTextLol',
+    label: 'Núm. documento Identidad',
+    name: 'dni',
+    required: true,
+    message: 'Escribir número de documento',
+    disabled: false,
+    placeholder: 'Número documento'
+  },
+  modality_id: {
+    type: 'iSelect',
+    label: 'Modalidad de atención',
+    name: 'modality_id',
+    required: true,
+    message: 'Seleccionar la modalidad',
+    disabled: false
+  },
   city_id: {
     type: 'iSelectWrite',
     label: 'Región del negocio',
@@ -31,14 +56,15 @@ const fields = {
     message: 'Digitar la dirección del negocio',
     disabled: false
   },
-  modality_id: {
+  regime_id: {
     type: 'iSelect',
-    label: 'Modalidad de atención',
-    name: 'modality_id',
+    label: 'Tipo de régimen societario',
+    name: 'regime_id',
     required: true,
-    message: 'Seleccionar la modalidad',
+    message: 'Seleccionar el régimen societario',
     disabled: false
   },
+  
   nameMype: {
     type: 'iText',
     label: 'Nombre empresa',
@@ -74,14 +100,7 @@ const fields = {
     message: 'Seleccionar la actividad comercial',
     disabled: false
   },
-  regime_id: {
-    type: 'iSelect',
-    label: 'Tipo de régimen societario',
-    name: 'regime_id',
-    required: true,
-    message: 'Seleccionar el régimen societario',
-    disabled: false
-  },
+  
   notary_id: {
     type: 'iSelect',
     label: 'Notaría',
@@ -108,21 +127,13 @@ const fields = {
   },
   dateTramite: {
     type: 'iDate',
-    label: 'Fecha tramite SID SUNARP o SUNAT',
+    label: 'Fec. trámite SID SUNARP-SUNAT',
     name: 'dateTramite',
     required: false,
     message: 'Escribir el código SID sunarp',
     disabled: false
   },
-  dni: {
-    type: 'iTextLol',
-    label: 'Núm. documento Identidad',
-    name: 'dni',
-    required: true,
-    message: 'Escribir número de documento',
-    disabled: false,
-    placeholder: 'Número documento'
-  },
+  
 
   isbic: {
     type: 'iSelect',
@@ -157,6 +168,14 @@ const final = {
 };
 
 const ructen = {
+  // cde_id: {
+  //   type: 'iSelectWrite',
+  //   label: 'Seleccionar CDE',
+  //   name: 'cde_id',
+  //   required: true,
+  //   message: 'Seleccionar cde',
+  //   disabled: false
+  // },
   dni: {
     type: 'iText',
     label: 'Número de documento de identidad',
@@ -202,8 +221,8 @@ const ructen = {
     type: 'iText',
     label: 'Número de RUC',
     name: 'ruc',
-    required: false,
-    message: 'Escribir RUC',
+    required: true,
+    message: 'Escribir el número de RUC',
     disabled: false,
     max: 11
   },
@@ -212,7 +231,7 @@ const ructen = {
     label: 'Región del negocio',
     name: 'city_id',
     required: true,
-    message: 'Seleccionar departamento',
+    message: 'Seleccionar región',
     disabled: false
   },
   province_id: {

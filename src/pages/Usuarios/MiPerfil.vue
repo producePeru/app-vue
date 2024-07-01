@@ -41,7 +41,7 @@
               </a-form-item>
             </template>
           </div>
-          <!-- <pre>:::::{{ birthdateDate }}</pre> -->
+          <!-- <pre>:::::{{ dProfile }}</pre> -->
           <a-form-item>
             <a-button class="btn-produce" type="primary" html-type="submit" :loading="loading">ACTUALIZAR</a-button>
           </a-form-item>
@@ -64,8 +64,15 @@ import 'dayjs/locale/es';
 dayjs.locale('es');
 
 const store = useCounterStore();
+
+
 const storageData = JSON.parse(localStorage.getItem('profile'));
 const storageEmail = JSON.parse(localStorage.getItem('email'));
+
+
+import { dProfile, dEmail } from '@/utils/storage.js';
+
+
 const emit = defineEmits(['closeDraw']);
 const spinning = ref(false);
 

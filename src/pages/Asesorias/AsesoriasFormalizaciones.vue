@@ -62,11 +62,20 @@
       </a-card>
       
       <a-card class="card-as" v-if="infoUser.length != 0">
+       <div style="margin-bottom: 2.5rem;">
+        <h4 class="title-produce">SELECCIONAR CDE</h4>
+        <div class="card-as-btn" style="margin: 0;">
+          <a-select style="min-width: 200px;" v-model:value="value2" :options="store.cdes" show-search :filter-option="filterOption" @change="handleChangeCde" />
+        </div>
+       </div>
+       
+       <div>
         <h4 class="title-produce">¿DESEA REGISTRAR UN NUEVO SERVICIO?</h4>
-        <div class="card-as-btn">
-          <a-select style="min-width: 200px;" v-model:value="value1" :options="options1" />
+        <div class="card-as-btn" style="margin: 0;">
+          <a-select style="min-width: 300px;" v-model:value="value1" :options="options1" />
           <a-button class="btn-produce" type="primary" @click="handleSelectAction">REGISTRAR</a-button>
         </div>
+       </div>
       </a-card>
     </div>
 
@@ -88,12 +97,16 @@
   <section>
 
 
-    <a-drawer title="Regitsrar una Formalización con RUC 20" v-model:open="open1" placement="right" width="820px">
+    <a-drawer title="Regitsrar una Formalización con RUC 20" v-model:open="open1" placement="right" width="880px">
       <!-- <a-steps v-model:current="current" size="small" class="steps">
         <a-step v-for="item in steps" :key="item.title" :title="item.title" />
       </a-steps> -->
 
-        <AllFormalizacion20 :info="setValues" @closeDraw="open1 = false, handleUpdateValues()" />
+        <AllFormalizacion20 
+        :info="setValues" 
+        :idCde="value2"
+        @closeDraw="open1 = false, 
+        handleUpdateValues()" />
       
 
         <!-- <ReservaNombre 
@@ -125,6 +138,7 @@
       placement="right">
       <Formalizacion10 
         :info="infoUser" 
+        :idCde="value2"
         @closeDraw="open2 = false, handleUpdateValues()" />
     </a-drawer>
 
@@ -135,6 +149,7 @@
       placement="right">
       <AsesoriaNuevo 
         :info="infoUser" 
+        :idCde="value2"
         @closeDraw="open3 = false, handleUpdateValues()" />
     </a-drawer>
 
@@ -199,19 +214,26 @@ import { ExclamationCircleOutlined, EditOutlined, RedoOutlined } from '@ant-desi
 import moment from 'moment';
 import HISTORIAL from './components/AsesoriasHistorial.vue';
 import SolicitanteEditar from './components/DrawerSolicitante.componente.vue';
+import { dProfile } from '@/utils/storage.js';
+import { useCounterStore } from '@/stores/selectes.js';
+import CryptoJS from 'crypto-js';
 
-
+const store = useCounterStore();
 const router = useRouter();
 const route = useRoute();
 
 const type_document = ref(0);
 
 const value1 = ref(null);
+const value2 = ref(null);
 const options1 = ref([
   {value: 'asesoria',label: 'ASESORÍA'},
   {value: 'ruc20',label: 'RUC 20'},
   {value: 'ruc10',label: 'RUC 10'}
-])
+]);
+
+store.$patch({ cdes: store.cdes });
+store.fetchCdes()
 
 const updateValues = ref(null);
 const open = ref(false);
@@ -234,6 +256,18 @@ const totalformalization10 = ref([]);
 const totalformalization20 = ref([]);
 const historialData = ref(false);
 
+const handleChangeCde = (id) => {
+  let data = dProfile;
+  dProfile.cde_id = id;
+  localStorage.setItem('profile', JSON.stringify(data));
+  const encryptProfile = CryptoJS.AES.encrypt(JSON.stringify(data), 'appProfile').toString();
+  localStorage.setItem('eProfile', encryptProfile);
+}
+const filterOption = (input, option) => {
+  const normalizedInput = input.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "");
+  const normalizedLabel = option.label.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "");
+  return normalizedLabel.includes(normalizedInput);
+};
 const handleCloseDrawopen = () => {
   handleSearchApi(dniNumber.value);
   open.value = false;
@@ -368,6 +402,7 @@ const handleSearchApi = async (val) => {
   if(data.status == 200) {
     infoUser.value = data.data
     handleShowHistorial(data.data.id)
+    value2.value = dProfile.cde_id;
     return searchLoading.value = false;
   }
   
@@ -398,7 +433,7 @@ const handleShowHistorial = async (id) => {
 onMounted(() => {
   if (route.query.type) {
     type_document.value = route.query.type
-    dniNumber.value = route.query.number
+    dniNumber.value = route.query.number;
   }
 });
 </script>

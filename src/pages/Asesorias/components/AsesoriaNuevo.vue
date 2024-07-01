@@ -17,7 +17,7 @@
           </a-form-item>
 
           <a-form-item v-if="el.type === 'iText'" :name="el.name" :label="el.label" :rules="[{ required: el.required, message: el.message, type: el.email, max: el.max }]">
-            <a-input v-model:value="formState[el.name]" :maxlength="el.max" @input="validateOnlyNumber(el.name)" :placeholder="el.placeholder" />
+            <a-input v-model:value="formState[el.name]" :maxlength="el.max" @input="validateOnlyNumber(el.name)" :placeholder="el.placeholder" :disabled="el.name === 'dni' && !!formState[el.name]"  />
           </a-form-item>
 
           <a-form-item class="item-max" v-if="el.type === 'iSelectWrite'" :name="el.name" :label="el.label"
@@ -36,7 +36,9 @@
             
             <a-select v-if="el.name == 'comercialactivity_id'" v-model:value="formState[el.name]" show-search :options="store.comercialActivities"
               :filter-option="filterOption" />
-
+            
+            <!-- <a-select v-if="el.name == 'cde_id'" v-model:value="formState[el.name]" :options="store.cdes" show-search :filter-option="filterOption" @change="handleChangeCde"/> -->
+            
             <a-select v-if="el.name == 'component_id'" v-model:value="formState[el.name]" show-search :options="store.components" :filter-option="filterOption" @change="handleSelectComponent">
               <!-- <template #dropdownRender="{ menuNode: menu }">
                 <v-nodes :vnodes="menu" />
@@ -78,8 +80,8 @@
       <a-form-item>
         <a-button type="primary" class="btn-produce" html-type="submit" :loading="loading">GUARDAR</a-button>
       </a-form-item>
-      <!-- <pre>{{ formState }}</pre> -->
-      <!-- <pre>{{ props.info }}</pre> -->
+      <!-- <pre>{{ dProfile }}</pre> -->
+      <!-- <pre>::::{{ idCde }}</pre> -->
     </a-form>
     </a-spin>
   </div>
@@ -92,6 +94,7 @@ import { asesoria } from '@/forms/asesorias.js'
 import { useCounterStore } from '@/stores/selectes.js';
 import { makeRequest } from '@/utils/api.js';
 import { PlusOutlined } from '@ant-design/icons-vue';
+import CryptoJS from 'crypto-js';
 
 const VNodes = defineComponent({
   props: {
@@ -108,12 +111,13 @@ const VNodes = defineComponent({
 const store = useCounterStore();
 const storageData = JSON.parse(localStorage.getItem('profile'));
 const loading = ref(false);
-const props = defineProps(['info']);
+const props = defineProps(['info', 'idCde']);
 const emit = defineEmits(['closeDraw']);
 const loadingcategory = ref(false);
 const nameNewItem = ref(null);
 const nameNewItem2 = ref(null);
 
+// store.$patch({ cdes: store.cdes });
 store.$patch({ components: store.components });
 store.$patch({ componentThemes: store.componentThemes });
 store.$patch({ modalities: store.modalities });
@@ -123,7 +127,7 @@ store.$patch({ comercialActivities: store.comercialActivities });
 
 // store.$patch({ provinces: store.provinces });
 // store.$patch({ districts: store.districts });
-
+// store.fetchCdes()
 store.fetchEconomicSectors();
 store.fetchComercialActivities();
 store.fetchComponents();
@@ -136,6 +140,7 @@ store.fetchGenders();
 const spinning = ref(true);
 
 const formState = reactive({
+  cde_id: null,
   dni: null,
   economicsector_id: null,
   comercialactivity_id: null,
@@ -150,6 +155,13 @@ const formState = reactive({
   user_id: storageData.user_id,
 });
 
+const handleChangeCde = (id) => {
+  let data = dProfile;
+  dProfile.cde_id = id;
+  localStorage.setItem('profile', JSON.stringify(data));
+  const encryptProfile = CryptoJS.AES.encrypt(JSON.stringify(data), 'appProfile').toString();
+  localStorage.setItem('eProfile', encryptProfile);
+}
 const validateOnlyNumber = (val) => {
   if(val == 'ruc') {
     formState[val] = formState[val].replace(/\D/g, '');
@@ -193,6 +205,7 @@ const handleAddThemeNew = async() => {
 const update = () => {
   formState.dni = props.info.documentnumber;
   if(store.cities) spinning.value = false;
+  // dProfile.cde_id ? formState.cde_id = dProfile.cde_id : null;
 }
 const handleSelectComponent = (id) => {
   formState.theme_id = null
@@ -230,7 +243,8 @@ const onSubmit = async () => {
     city_id: formState.city_id,
     province_id: formState.province_id,
     district_id: formState.district_id,
-    ruc: formState.ruc
+    ruc: formState.ruc,
+    cde_id: props.idCde
   }
 
   try {
@@ -264,37 +278,19 @@ const onSubmitFail = () => {
 
 <style scoped lang="scss">
 .wrapper-booking {
-  max-width: 700px;
-  width: 100%;
   h3 {
     margin-bottom: 2rem;
   }
 }
 
 .grid-booking {
-  display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  grid-gap: 0 1rem;
-
-  .ant-form-item:nth-child(1) {
-    // grid-column: 1/3;
-  }
-
-  .ant-form-item:nth-child(2) {
-    // grid-column: 1/3;
-  }
-
-  .ant-form-item:nth-child(3) {
-    // grid-column: 1/3;
-  }
-
-  // .ant-form-item:nth-child(5) {
-  //   grid-row: 3;
-  //   grid-column: 3/3;
-  // }
-
-  .ant-form-item:nth-child(11) {
-    grid-column: 1/3;
+  @media (width >= 820px) {
+    display: grid;
+    grid-gap: 0 1rem;
+    grid-template-columns: repeat(2, 270px);
+    .ant-form-item:nth-child(11) {
+      grid-column: 1/3;
+    }
   }
 }
 </style>

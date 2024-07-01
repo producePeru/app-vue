@@ -66,8 +66,20 @@ const onSubmit =async() => {
     localStorage.setItem('role', JSON.stringify(data.role));
     localStorage.setItem('email', JSON.stringify(data.email));
 
-    const encViews = CryptoJS.AES.encrypt(JSON.stringify(data.views), 'appvistas').toString();
-    localStorage.setItem('views', encViews);
+
+    /* NUEVO */
+    const encryptToken = CryptoJS.AES.encrypt(JSON.stringify(data.views), 'appToken').toString();
+    const encryptProfile = CryptoJS.AES.encrypt(JSON.stringify(data.profile), 'appProfile').toString();
+    const encryptRole = CryptoJS.AES.encrypt(JSON.stringify(data.role), 'appRole').toString();
+    const encryptEmail = CryptoJS.AES.encrypt(JSON.stringify(data.email), 'appEmail').toString();
+    const encryptViews = CryptoJS.AES.encrypt(JSON.stringify(data.views), 'appvistas').toString();
+
+    localStorage.setItem('eToken', encryptToken);
+    localStorage.setItem('eProfile', encryptProfile);
+    localStorage.setItem('eRole', encryptRole);
+    localStorage.setItem('eEmail', encryptEmail);
+    localStorage.setItem('views', encryptViews);
+
 
     Cookies.set('token', data.token);
 

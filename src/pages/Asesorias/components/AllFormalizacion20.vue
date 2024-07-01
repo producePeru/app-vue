@@ -3,7 +3,7 @@
     <a-spin :spinning="spinning">
       <a-form layout="vertical" :model="formState" name="basic" autocomplete="off" @finish="onSubmit"
         @finishFailed="onSubmitFail">
-        <div class="grid-booking">
+        <div class="grid-ruc20">
           <template v-for="(el, idx) in fields" :key="idx">
 
             <a-form-item class="item-max" v-if="el.type === 'iSelect'" :name="el.name" :label="el.label"
@@ -19,9 +19,10 @@
 
               <a-select v-if="el.name == 'isbic'" v-model:value="formState[el.name]"
                 :options="bic" />
-
+              
+              
               <a-select v-if="el.name == 'notary_id'" v-model:value="formState[el.name]" :options="notaries"
-                option-label-prop="name" :disabled="!formState.city_id" show-search :filter-option="filterNotaries">
+                option-label-prop="name" show-search :filter-option="filterNotaries">
                 <template #option="{ value: val, name, city, province, district, address }">
                   <div class="select-notaries">
                     <span class="name">{{ name }}</span>
@@ -58,6 +59,8 @@
                   </a-space>
                 </template>
               </a-select>
+
+              <!-- <a-select v-if="el.name == 'cde_id'" v-model:value="formState[el.name]" :options="store.cdes" show-search :filter-option="filterOption" @change="handleChangeCde" /> -->
 
               <a-select v-if="el.name == 'economicsector_id'" v-model:value="formState[el.name]" show-search
                 :options="store.economicSectors" :filter-option="filterOption" />
@@ -111,6 +114,7 @@
 </template>
 
 <script setup>
+import CryptoJS from 'crypto-js';
 import { reactive, ref, defineComponent } from 'vue';
 import { useCounterStore } from '@/stores/selectes.js';
 import { fields } from '@/forms/asesorias.js'
@@ -119,6 +123,7 @@ import { message } from 'ant-design-vue';
 import { PlusOutlined } from '@ant-design/icons-vue';
 import { useRoute } from 'vue-router';
 import { requestNoToken } from '@/utils/noToken.js';
+import { dProfile } from '@/utils/storage.js';
 import locale from 'ant-design-vue/es/date-picker/locale/es_ES';
 import dayjs from 'dayjs';
 import 'dayjs/locale/es';
@@ -139,7 +144,7 @@ const VNodes = defineComponent({
 const dateFormat = 'DD/MM/YYYY';
 const route = useRoute();
 const storageData = JSON.parse(localStorage.getItem('profile'));
-const props = defineProps(['info']);
+const props = defineProps(['info', 'idCde']);
 const emit = defineEmits(['closeDraw']);
 const loadingcategory = ref(false);
 const nameNewItem = ref(null);
@@ -149,6 +154,7 @@ const loading = ref(false);
 const store = useCounterStore();
 const notaries = ref(null);
 
+// store.$patch({ cdes: store.cdes });
 store.$patch({ cities: store.cities });
 store.$patch({ modalities: store.modalities });
 store.$patch({ economicSectors: store.economicSectors });
@@ -157,6 +163,7 @@ store.$patch({ regimes: store.regimes });
 store.$patch({ typeCapital: store.typeCapital });
 
 // store.fetchNotaries();
+// store.fetchCdes()
 store.fetchEconomicSectors();
 store.fetchComercialActivities();
 store.fetchRegimes();
@@ -166,6 +173,7 @@ store.fetchCities();
 
 const numberDNI = ref(null);
 const formState = reactive({
+  // cde_id: null,
   task: 1,
   codesunarp: null,
   economicsector_id: null,
@@ -180,6 +188,14 @@ const formState = reactive({
   montocapital: null,
   ruc: null
 });
+
+const handleChangeCde = (id) => {
+  let data = dProfile;
+  // dProfile.cde_id = id;
+  localStorage.setItem('profile', JSON.stringify(data));
+  const encryptProfile = CryptoJS.AES.encrypt(JSON.stringify(data), 'appProfile').toString();
+  localStorage.setItem('eProfile', encryptProfile);
+}
 const bic = [
   {value: 'SI', label: 'SI'},
   {value: 'NO', label: 'NO'}
@@ -201,6 +217,7 @@ const validateOnlyNumber = (val) => {
 const update = () => {
   formState.dni = props.info.documentnumber;
   if (store.regimes?.length) spinning.value = false;
+  // dProfile.cde_id ? formState.cde_id = dProfile.cde_id : null;
 }
 const filterNotaries = (input, option) => {
   const normalizedInput = input.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "");
@@ -322,8 +339,8 @@ const onSubmit = async () => {
 
     typecapital_id: formState.typecapital_id,
     isbic: formState.isbic,
-    montocapital: formState.montocapital
-
+    montocapital: formState.montocapital,
+    cde_id: props.idCde
   }
 
   try {
@@ -365,34 +382,15 @@ const onSubmitFail = () => {
 </script>
 
 <style scoped lang="scss">
-.grid-booking {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  grid-gap: 0 1rem;
-
-  .ant-form-item:nth-child(4) {
-    grid-column: 1/3;
-  }
-
-  .ant-form-item:nth-child(6) {
-    // grid-row: 4;
-    grid-column: 1/3;
-  }
-
-  .ant-form-item:nth-child(11) {
-    grid-column: 1/3;
-  }
-
-
-  @media screen and (max-width: 600px) {
-    grid-template-columns: repeat(2, 1fr);
-
-    .ant-form-item:nth-child(4),
-    .ant-form-item:nth-child(13) {
-      grid-column: initial;
+.grid-ruc20 {
+  @media (width >= 820px) {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    grid-gap: 0 1rem;
+    .ant-form-item:nth-child(11) {
+      grid-column: 2/4;
     }
-
-    .ant-form-item:nth-child(10) {
+    .ant-form-item:nth-child(12) {
       grid-column: 1/3;
     }
   }
