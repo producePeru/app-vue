@@ -80,7 +80,7 @@ import { DeleteOutlined, StarOutlined } from '@ant-design/icons-vue';
 import { message } from 'ant-design-vue';
 import { makeRequest } from '@/utils/api.js'
 import router from "@/router";
-import idUserStorage from '@/utils/storage'
+// import idUserStorage from '@/utils/storage'
 
 const loading = ref(false);
 const question = ref({
