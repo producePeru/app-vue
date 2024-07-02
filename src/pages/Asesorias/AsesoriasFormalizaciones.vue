@@ -93,10 +93,7 @@
     </div>
   </div>
 
-
   <section>
-
-
     <a-drawer title="Regitsrar una Formalización con RUC 20" v-model:open="open1" placement="right" width="880px">
       <!-- <a-steps v-model:current="current" size="small" class="steps">
         <a-step v-for="item in steps" :key="item.title" :title="item.title" />
