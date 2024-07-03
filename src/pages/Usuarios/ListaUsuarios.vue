@@ -72,6 +72,9 @@
                 <a-menu-item>
                   <a @click="handleEditUser(record)">Editar</a>
                 </a-menu-item>
+                <a-menu-item>
+                  <a @click="handleViewsUser(record)">Administrar</a>
+                </a-menu-item>
                 <!-- <a-menu-item>
                   <a-popconfirm title="¿Seguro de eliminar?" @confirm="handleDeleteUser(record)">
                     <template #icon><question-circle-outlined style="color: red" /></template>
@@ -88,17 +91,26 @@
   </div>
 
   <div class="paginator">
-    <a-pagination size="small" :total="total" :pageSize="pageSize"  @change="handlePaginator" :showSizeChanger="false" />
+    <a-pagination size="small" :total="total" :pageSize="pageSize" @change="handlePaginator" :showSizeChanger="false" />
   </div>
 
   <a-drawer
-      v-model:open="open"
-      class="draw-notary"
-      title="Editar Perfil"
-      placement="right"
-      @after-open-change="afterOpenChange">
-      <EditarProfileUsuario :updateUser="updateUser" @closeDraw="handleCloseDrawopen" />
-    </a-drawer>
+  v-model:open="open"
+  class="draw-notary"
+  title="Editar Perfil"
+  placement="right"
+  @after-open-change="afterOpenChange">
+  <EditarProfileUsuario :updateUser="updateUser" @closeDraw="handleCloseDrawopen" />
+  </a-drawer>
+
+  <a-drawer
+  width="450"
+  v-model:open="open2"
+  class="draw-notary"
+  title="Administrar Vistas"
+  placement="right">
+  <VistasUsuarios :idUser="updateUser" @closeDraw="handleCloseDrawopen" />
+  </a-drawer>
 
 </template>
 
@@ -110,7 +122,8 @@ import { message } from 'ant-design-vue';
 import { useRouter } from 'vue-router';
 import { QuestionCircleOutlined } from '@ant-design/icons-vue';
 import { useCounterStore } from '@/stores/selectes.js';
-import EditarProfileUsuario from './components/EditarPerfil.componente.vue'
+import EditarProfileUsuario from './components/EditarPerfil.componente.vue';
+import VistasUsuarios from './components/DrawAdministrarVistasUsuario.vue';
 
 const store = useCounterStore();
 store.$patch({ cdes: store.cdes });
@@ -127,13 +140,14 @@ const updateUser = ref(null);
 const spinning = ref(false);
 const openModal = ref(false);
 const open1 = ref(false);
+const open2 = ref(false);
 const current = ref(0);
 const information = ref(false);
 const dataRecordSelected = ref(false);
 const dataPndingRequest = ref(false);
 const rol = ref('solicitante');
 const access = ref(5);
-const pageSize = 20;
+const pageSize = 50;
 const dataSource = ref([])
 const loading = ref(false)
 const total = ref(0)
@@ -174,6 +188,7 @@ const columns = [
 const handleCloseDrawopen = () => {
   fetchData();
   open.value = false;
+  open2.value = false;
 }
 
 const handlePaginator = (current) =>{
@@ -185,6 +200,11 @@ const handleEditUser = (data) => {
   updateUser.value = data
   open.value = true;
 }
+const handleViewsUser = (data) => {
+  updateUser.value = data
+  open2.value = true;
+}
+
 const handleFormalization20 = async(val) => {
   try {
     

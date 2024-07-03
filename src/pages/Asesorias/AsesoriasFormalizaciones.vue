@@ -65,10 +65,10 @@
        <div style="margin-bottom: 2.5rem;">
         <h4 class="title-produce">SELECCIONAR CDE</h4>
         <div class="card-as-btn" style="margin: 0;">
-          <a-select style="min-width: 200px;" v-model:value="value2" :options="store.cdes" show-search :filter-option="filterOption" @change="handleChangeCde" />
+          <a-select style="min-width: 200px;" v-model:value="value2.cde_id" :options="store.cdes" show-search :filter-option="filterOption" @change="handleChangeCde" />
         </div>
        </div>
-       
+     
        <div>
         <h4 class="title-produce">¿DESEA REGISTRAR UN NUEVO SERVICIO?</h4>
         <div class="card-as-btn" style="margin: 0;">
@@ -101,7 +101,7 @@
 
         <AllFormalizacion20 
         :info="setValues" 
-        :idCde="value2"
+        :idCde="value2.cde_id"
         @closeDraw="open1 = false, 
         handleUpdateValues()" />
       
@@ -135,7 +135,7 @@
       placement="right">
       <Formalizacion10 
         :info="infoUser" 
-        :idCde="value2"
+        :idCde="value2.cde_id"
         @closeDraw="open2 = false, handleUpdateValues()" />
     </a-drawer>
 
@@ -146,7 +146,7 @@
       placement="right">
       <AsesoriaNuevo 
         :info="infoUser" 
-        :idCde="value2"
+        :idCde="value2.cde_id"
         @closeDraw="open3 = false, handleUpdateValues()" />
     </a-drawer>
 
@@ -191,8 +191,6 @@
       <SolicitanteEditar @closeDraw="handleCloseDrawopen" :updateValues="updateValues" />
     </a-drawer>
   </section>
-
-  
 
 </template>
 
@@ -254,11 +252,8 @@ const totalformalization20 = ref([]);
 const historialData = ref(false);
 
 const handleChangeCde = (id) => {
-  let data = dProfile;
-  dProfile.cde_id = id;
-  localStorage.setItem('profile', JSON.stringify(data));
-  const encryptProfile = CryptoJS.AES.encrypt(JSON.stringify(data), 'appProfile').toString();
-  localStorage.setItem('eProfile', encryptProfile);
+  value2.value.cde_id = id
+  localStorage.setItem('profile', JSON.stringify(value2.value));
 }
 const filterOption = (input, option) => {
   const normalizedInput = input.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "");
@@ -399,7 +394,10 @@ const handleSearchApi = async (val) => {
   if(data.status == 200) {
     infoUser.value = data.data
     handleShowHistorial(data.data.id)
-    value2.value = dProfile.cde_id;
+
+    value2.value = JSON.parse(localStorage.getItem('profile'));
+
+
     return searchLoading.value = false;
   }
   

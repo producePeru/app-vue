@@ -74,10 +74,10 @@ const onSubmit =async() => {
     const encryptEmail = CryptoJS.AES.encrypt(JSON.stringify(data.email), 'appEmail').toString();
     const encryptViews = CryptoJS.AES.encrypt(JSON.stringify(data.views), 'appvistas').toString();
 
-    localStorage.setItem('eToken', encryptToken);
-    localStorage.setItem('eProfile', encryptProfile);
-    localStorage.setItem('eRole', encryptRole);
-    localStorage.setItem('eEmail', encryptEmail);
+    // localStorage.setItem('eToken', encryptToken);
+    // localStorage.setItem('eProfile', encryptProfile);
+    // localStorage.setItem('eRole', encryptRole);
+    // localStorage.setItem('eEmail', encryptEmail);
     localStorage.setItem('views', encryptViews);
 
 
