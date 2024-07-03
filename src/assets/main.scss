@@ -1,6 +1,7 @@
 :root {
   --primary: #00a6db;
   --secondary: #dc1c19;
+  --error: #ff4d4f;
 }
 
 h1 {
@@ -261,7 +262,7 @@ $color-background: #F7F7FA;
 
 .ant-table-body::-webkit-scrollbar {
   width: 10px; 
-  height: 10px; 
+  height: 12px; 
 }
 .ant-table-body::-webkit-scrollbar-thumb {
   background: #ccc; 
@@ -270,4 +271,11 @@ $color-background: #F7F7FA;
 .ant-table-body::-webkit-scrollbar-track {
   background: #e1e1e1; 
   border-radius: 0px; 
+}
+.btn-excel {
+  background-color: #209e62;
+  border-color: #249157 !important;
+  &:hover {
+    background-color: #0f7840 !important;
+  }
 }

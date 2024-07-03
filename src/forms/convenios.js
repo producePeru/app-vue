@@ -90,22 +90,22 @@ const fields = {
     disabled: true
   },
   
-  operationalstatus_id: {
-    type: 'iSelect',
-    label: 'Estado de operatividad',
-    name: 'operationalstatus_id',
-    required: true,
-    message: 'Seleccionar estado de operatividad',
-    disabled: true
-  },
-  agreementstatus_id: {
-    type: 'iSelect',
-    label: 'Estado de convenio',
-    name: 'agreementstatus_id',
-    required: true,
-    message: 'Seleccionar estado de convenio',
-    disabled: true
-  },
+  // operationalstatus_id: {
+  //   type: 'iSelect',
+  //   label: 'Estado de operatividad',
+  //   name: 'operationalstatus_id',
+  //   required: true,
+  //   message: 'Seleccionar estado de operatividad',
+  //   disabled: true
+  // },
+  // agreementstatus_id: {
+  //   type: 'iSelect',
+  //   label: 'Estado de convenio',
+  //   name: 'agreementstatus_id',
+  //   required: true,
+  //   message: 'Seleccionar estado de convenio',
+  //   disabled: true
+  // },
   initials: {
     type: 'iCheckbox',
     label: 'Entidades',

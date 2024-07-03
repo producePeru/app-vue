@@ -1,31 +1,32 @@
 <template>
   <div>
-    <div class="acciones" v-for="(item, idx) in stateData" :key="idx">
-      <div class="accion-icons">
-        <EditOutlined class="pointer ico-acc" @click="handleEdit(item)" />
-        <SaveOutlined class="pointer ico-save" v-if="active === item.id" @click="handleSave(item)" />
-        <DeleteOutlined class="pointer ico-acc" />
+    <a-spin :spinning="spinning">
+      <div class="acciones" v-for="(item, idx) in stateData" :key="idx">
+        <div class="accion-icons">
+          <EditOutlined class="pointer ico-acc" @click="handleEdit(item)" />
+          <SaveOutlined class="pointer ico-save" v-if="active === item.id" @click="handleSave(item)" />
+          <DeleteOutlined class="pointer ico-acc" @click="handleDelete(item)" />
+        </div>
+        <div v-if="active === item.id">
+          <a-textarea v-model:value="editedDescription" @input="autoResize" id="auto-resize" />
+        </div>
+        <p v-else>{{ item.description }}</p>
       </div>
-      <div v-if="active === item.id">
-        <a-textarea v-model:value="editedDescription" @input="autoResize" id="auto-resize" />
-      </div>
-      <p v-else>{{ item.description }}</p>
-    </div>
-
+    </a-spin>
+    
     <a-form layout="vertical" :model="formState" name="basic" autocomplete="off" @finish="onSubmit">
-      <a-form-item name="description" label="Descripción" :rules="[{ required: true, message: 'Escribir la descripción' }]">
+      <a-form-item name="description" label="Registra una acción" :rules="[{ required: true, message: 'Escribir la descripción' }]">
         <a-textarea v-model:value="formState.description" :maxlength="250" :rows="4" />
       </a-form-item>
       <a-form-item>
-        <a-button type="primary" html-type="submit" :loading="loading">GUARDAR</a-button>
+        <a-button type="primary" html-type="submit" :loading="loading">CREAR</a-button>
       </a-form-item>
     </a-form>
   </div>
-  <pre>::: {{ idConvenio }}</pre>
 </template>
 
 <script setup>
-import { ref, reactive, nextTick, watch } from 'vue';
+import { ref, reactive, nextTick, watch, onMounted } from 'vue';
 import { EditOutlined, SaveOutlined, DeleteOutlined } from '@ant-design/icons-vue';
 import { makeRequest } from '@/utils/api.js';
 import { message } from 'ant-design-vue';
@@ -33,21 +34,8 @@ import { message } from 'ant-design-vue';
 const props = defineProps(['idConvenio']);
 const emit = defineEmits(['closeDraw']);
 
-const stateData = ref([
-  {
-    id: 1,
-    description: 'Lorem'
-  },
-  {
-    id: 2,
-    description: 'Lorem  alias autem velit. A obcaecati incidunt vitae. Vero veniam reiciendis quis eveniet.'
-  },
-  {
-    id: 3,
-    description: 'Lorem  alias autem velit. A obcaecati incidunt vitae. Vero veniam reiciendis quis eveniet.'
-  }
-]);
-
+const stateData = ref([]);
+const spinning = ref(true);
 const active = ref(null);
 const editedDescription = ref('');
 const loading = ref(false);
@@ -57,13 +45,23 @@ const formState = reactive({
   description: null
 });
 
+onMounted(() => {
+  if (props.idConvenio) {
+    fetchData(props.idConvenio);
+  }
+});
+
+watch(() => props.idConvenio, (newValue) => {
+  if (newValue) {
+    fetchData(newValue);
+  }
+});
+
 function handleEdit(item) {
   active.value = item.id;
   editedDescription.value = item.description;
   nextTick(() => {
-   
-      autoResize();
-    
+    autoResize();
   });
 }
 
@@ -73,12 +71,35 @@ function handleSave(item) {
     stateData.value[index].description = editedDescription.value;
   }
   active.value = null;
+  handleUpdateAction(item.id)
 }
 
-function handleDelete(item) {
-  stateData.value = stateData.value.filter(i => i.id !== item.id);
+const handleDelete = async (val) => {
+  try {
+    const data = await makeRequest({ url: `agreement/delete-acction/${val.id}`, method: 'DELETE' });
+    if (data.status == 200) {
+      fetchData();
+      message.success(data.message);
+    }
+  } catch (error) {
+    console.error('Error de red:', error);
+  }
 }
 
+const handleUpdateAction = async(id) => {
+  try {
+    const payload = {
+      description: editedDescription.value
+    }
+    const data = await makeRequest({ url: `agreement/update/${id}`, method: 'PUT', data: payload });
+    if (data.status == 200) {
+      message.success(data.message);
+      fetchData();
+    }
+  } catch (error) {
+    console.error('Error de red:', error);
+  }
+};
 const onSubmit = async() => {
   try {
     const payload = {
@@ -88,12 +109,28 @@ const onSubmit = async() => {
     const data = await makeRequest({ url: `agreement/create-acction`, method: 'POST', data: payload });
     if (data.status == 200) {
       message.success(data.message);
+      // emit('closeDraw', true)
+      fetchData();
+      formState.description = null;
     }
   } catch (error) {
     console.error('Error de red:', error);
   }
 };
-
+const fetchData = async() => {
+  spinning.value = true;
+  try {
+    const data = await makeRequest({ url: `agreement/list/${props.idConvenio}`, method: 'GET' });
+    if (data.status == 200) {
+      stateData.value = data.data;
+      console.log("Success", data);
+    }
+  } catch (error) {
+    
+  } finally {
+    spinning.value = false;
+  }
+}
 const autoResize = () => {
   nextTick(() => {
     const textarea = document.getElementById('auto-resize');
@@ -101,6 +138,7 @@ const autoResize = () => {
     textarea.style.height = textarea.scrollHeight + 'px';
   });
 };
+
 
 </script>
 
@@ -118,7 +156,7 @@ textarea {
   padding: 1rem;
   border-radius: 4px;
   position: relative;
-  margin-bottom: 1.5rem;
+  margin-bottom: .8rem;
   .accion-icons {
     position: absolute;
     right: .5rem;
@@ -140,6 +178,7 @@ textarea {
   }
   p {
     margin: 0;
+    font-size: 13px
   }
 }
 </style>

@@ -3,7 +3,11 @@
     <h3 class="title-produce">ESTADO DE CONVENIOS</h3>
 
     <div class="filters">
-      <a-button type="primary" @click="showDrawer">NUEVO</a-button>
+      <a-button type="primary" @click="showDrawer" style="margin-right: .5rem;">NUEVO</a-button>
+
+      <a-button class="btn-excel" @click="handleDownload" :loading="loadingFile" type="primary">
+        <img width="20" style="margin: -2px 0 0 0;" src="@/assets/img/icoexcel.png" /> 
+      </a-button>
     </div>
 
     <a-table 
@@ -15,6 +19,18 @@
     :pagination="false" 
     :loading="loading" 
     size="small">
+      <template #headerCell="{ column }">
+        <template v-if="column.dataIndex == 'region'">
+          <div class="table-head">
+            <span>REGIÓN</span>
+            <div class="t-icons">
+              <CaretUpOutlined :class="{'arrActive' : rowascdesc == 'asc'}" class="ii" @click="handleSelectOrder('asc')" />
+              <CaretDownOutlined :class="{'arrActive' : rowascdesc == 'desc'}" class="ii" @click="handleSelectOrder('desc')" />
+            </div>
+          </div>
+        </template>
+      </template>
+
       <template v-slot:bodyCell="{ column, record, index }">
         <template v-if="column.dataIndex == 'idx'">
           {{ computeIndex(index) }}
@@ -43,12 +59,12 @@
         <template v-if="column.dataIndex == 'inicioperaciones'">
           {{ formatDate(record?.homeOperations) }}
         </template>
-        <template v-if="column.dataIndex == 'operatividad'">
+        <!-- <template v-if="column.dataIndex == 'operatividad'">
           {{ record?.estado_operatividad.name }}
-        </template>
-        <template v-if="column.dataIndex == 'convenio'">
+        </template> -->
+        <!-- <template v-if="column.dataIndex == 'convenio'">
           {{ record?.estado_convenio.name }}
-        </template>
+        </template> -->
 
         <template v-if="column.dataIndex == 'entidades'">
           <div v-for="(initial, index) in record.initials" :key="index">
@@ -59,34 +75,43 @@
         <template v-if="column.dataIndex == 'startDate'">
           {{ formatDate(record?.startDate) }}
         </template>
+        
         <template v-if="column.dataIndex == 'numbyears'">
-          <p style="line-height: 1.2; margin: 0;">{{ restDate(record.endDate, record.startDate) }}</p>
-          
+          <p style="line-height: 1.2; margin: 0; font-size: 12px;">{{ restDate(record.endDate, record.startDate) }}</p>
         </template>
 
         <template v-if="column.dataIndex == 'endDate'">
           {{ formatDate(record?.endDate) }}
         </template>
 
+        <template v-if="column.dataIndex == 'numbrestantes'">
+          <p v-if="dateTrafficLight(record.endDate, record.startDate) >= 1" class="list-days">{{ dateTrafficLight(record.endDate, record.startDate) }} días faltantes</p>
+          <p v-else class="list-days">{{ dateTrafficLight(record.endDate, record.startDate) }} días vencidos</p>
+          
+        </template>
+
         <template v-if="column.dataIndex == 'acciones'"> 
           <div class="accion-total">
-            <span class="accion-numb">5</span>
-            <FileAddOutlined class="ico-acciones" @click="handleAcciones(record)" />
+            <MessageOutlined class="ico-acciones" @click="handleAcciones(record)" />
+            <span class="accion-numb">{{ record.acciones.length }} MENSAJES</span>
           </div>
         </template>
 
-        <!-- <template v-if="column.dataIndex == 'actions'">
+        <template v-if="column.dataIndex == 'actions'">
           <a-dropdown :trigger="['click']">
             <a class="ant-dropdown-link" @click.prevent>
               <a-button shape="circle" :icon="h(MoreOutlined)" size="small" />
             </a>
             <template #overlay>
               <a-menu>
-                <a-menu-item>
+                <!-- <a-menu-item>
                   <a @click="handleEditSolicitante(record)">Editar</a>
+                </a-menu-item> -->
+                <a-menu-item>
+                  <a @click="handleUpFile(record)">Archivos</a>
                 </a-menu-item>
                 <a-menu-item>
-                  <a-popconfirm title="¿Seguro de eliminar?" @confirm="handleDeleteNotary(record)">
+                  <a-popconfirm title="¿Seguro de eliminar?" @confirm="handleDelete(record)">
                     <template #icon><question-circle-outlined style="color: red" /></template>
                     <a>Eliminar</a>
                   </a-popconfirm>
@@ -94,65 +119,79 @@
               </a-menu>
             </template>
           </a-dropdown>
-        </template> -->
+        </template>
 
       </template>
     </a-table>
   </div>
 
   <div class="paginator">
+    <span><a-tag color="blue"><b>{{ total }} </b></a-tag>Convenios</span>
     <a-pagination size="small" :total="total" :pageSize="pageSize" @change="handlePaginator" :showSizeChanger="false" />
   </div>
-  <!-- <pre>{{ dataSource }}</pre> -->
-  <a-drawer v-model:open="open" class="draw-notary" root-class-name="root-class-name" title="Convenios" placement="right">
-    <!-- <SolicitanteEditar @closeDraw="handleCloseDrawopen" :updateValues="updateValues" /> -->
-    <NuevoConvenio />
+
+  <a-drawer v-model:open="open" class="draw-notary" root-class-name="root-class-name" title="Convenios" placement="right" width="650" >
+    <NuevoConvenio @closeDraw="handleCloseDrawopen(1)" />
   </a-drawer>
 
-  <a-drawer v-model:open="openAcciones" title="Acciones" placement="right">
-    <DrawAcciones :idConvenio="idConvenio" />
+  <a-drawer v-model:open="openAcciones" title="Acciones" placement="right" width="550">
+    <DrawAcciones :idConvenio="idConvenio" @closeDraw="handleCloseDrawopen(2)" />
+  </a-drawer>
+
+  <a-drawer v-model:open="openDrives" title="Cargar Archivos" placement="right" width="550">
+    <DrawFiles :idConvenio="idConvenio" @closeDraw="handleCloseDrawopen(3)" />
   </a-drawer>
 
 </template>
 
 
 <script setup>
+import axios from 'axios';
 import { ref, onMounted, h, onBeforeUnmount, computed, reactive } from 'vue';
 import NuevoConvenio from './components/DrawConvenio.vue';
 import DrawAcciones from './components/DrawAcciones.vue';
-import { LinkOutlined, QuestionCircleOutlined, FileAddOutlined } from '@ant-design/icons-vue';
-import { requestNoToken } from '@/utils/noToken.js';
+import DrawFiles from './components/DrawFiles.vue';
+import { CaretUpOutlined, CaretDownOutlined, QuestionCircleOutlined, MessageOutlined } from '@ant-design/icons-vue';
 import { MoreOutlined } from '@ant-design/icons-vue';
 import { useRouter } from 'vue-router';
 import { makeRequest } from '@/utils/api.js';
 import { message } from 'ant-design-vue';
 import { useCounterStore } from '@/stores/selectes.js';
-import { Modal } from 'ant-design-vue';
+// import { Modal } from 'ant-design-vue';
+import Cookies from 'js-cookie';
 import dayjs from 'dayjs';
 import 'dayjs/locale/es';
 dayjs.locale('es');
 
 const storageData = JSON.parse(localStorage.getItem('profile'))
 const store = useCounterStore();
+const token = Cookies.get('token');
+const props = defineProps(['idConvenio']);
+const prod = import.meta.env.VITE_APP_API_URL_PRODUCTION;
+const dev = import.meta.env.VITE_APP_API_URL_LOCAL;
+const apiUrl = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1' ? dev : prod;
+
 // store.$patch({ cities: store.cities });
 // store.fetchCities();
+const rowascdesc = ref(null);
+const loadingFile = ref(false);
 const idConvenio = ref(null);
 const total = ref(0);
-const pageSize = 20;
+const pageSize = ref(0);
 const params = ref({ page: 0 });
 const valueX = ref(1200)
 const dataSource = ref([])
 const loading = ref(false)
 const open = ref(false);
 const openAcciones = ref(false);
+const openDrives = ref(false);
 const updateValues = ref(null);
 const city = ref(null);
 const valueY = ref(window.innerHeight - 100);
 const columns = [
   { title: '#', fixed: 'left', dataIndex: 'idx', align: 'center', width: 70 },
-
   { title: 'REGIÓN', fixed: 'left', dataIndex: 'region', width: 120 },
-  { title: 'PROVINCIA', fixed: 'left', dataIndex: 'provincia', width: 140 },
+  { title: 'PROVINCIA', fixed: 'left', dataIndex: 'provincia', width: 120 },
   { title: 'DISTRITO', fixed: 'left', dataIndex: 'district', width: 140 },
   { title: 'DENOMINACIÓN', dataIndex: 'denomination', fixed: 'left', width: 150 },
   { title: 'ENTIDAD ALIADA', dataIndex: 'alliedEntity', width: 170 },
@@ -167,6 +206,7 @@ const columns = [
   { title: 'INICIO CONVENIO VIGENTE', dataIndex: 'startDate', align: 'center', width: 120 },
   { title: 'NUM. AÑOS DEL CONVENIO', dataIndex: 'numbyears', align: 'center', width: 110 },
   { title: 'FIN DEL CONVENIO', dataIndex: 'endDate', align: 'center', width: 120 },
+  { title: 'DÍAS', dataIndex: 'numbrestantes', align: 'center', width: 70 },
   { title: 'ACCIONES', dataIndex: 'acciones', align: 'center', width: 100 },
   { title: '', dataIndex: 'actions', width: 50, align: 'center', fixed: 'right' }
 ];
@@ -181,6 +221,12 @@ const handleColor = (idx) => {
     5: 'pink'
   }
   return colors[idx];
+}
+
+const handleSelectOrder = (type) => {
+  rowascdesc.value = type
+  let params = { order: type }
+  fetchData(params)
 }
 const handleAcciones = (record) => {
   idConvenio.value = record.id;
@@ -215,11 +261,21 @@ const restDate = (end, start) => {
   return resultArray.join(' con ');
 }
 
+const handleUpFile = (record) => {
+  idConvenio.value = record.id;
+  openDrives.value = true;
+}
 const dateTrafficLight = (end, start) => {
-  const startDate = new Date(start);
+  // return console.log("date", end);
+  // const startDate = new Date(start);
+  // const currentDate = new Date(end);
+  // const differenceInTime = currentDate.getTime() - startDate.getTime();
+  // const differenceInDays = Math.floor(differenceInTime / (1000 * 3600 * 24));
+  // return differenceInDays;
+  const endDate = new Date(end);
   const currentDate = new Date();
-  const differenceInTime = currentDate.getTime() - startDate.getTime();
-  const differenceInDays = Math.floor(differenceInTime / (1000 * 3600 * 24));
+  const differenceInTime =  endDate.getTime() - currentDate.getTime();
+  const differenceInDays = Math.floor(differenceInTime / (1000 * 3600 * 24)) + 1;
   return differenceInDays;
 };
 
@@ -241,26 +297,22 @@ const handlePaginator = (current) => {
 }
 
 const actualizarAltura = () => {
-  valueY.value = window.innerHeight - 350;
+  valueY.value = window.innerHeight - 320;
 };
 
 const showDrawer = () => {
   updateValues.value = null;
   open.value = true;
 };
-const handleCloseDrawopen = () => {
+const handleCloseDrawopen = (draw) => {
   fetchData();
-  open.value = false;
+  draw == 1 && (open.value = false);
+  draw == 2 && (openAcciones.value = false);
 }
-const handleDeleteNotary = async (val) => {
+const handleDelete = async (val) => {
   try {
-    const data = await makeRequest({ url: `person/delete/${val.id}`, method: 'DELETE' });
-    if (data.status == 500) {
-      Modal.warning({
-        title: 'Aviso',
-        content: data.message,
-      });
-    } else {
+    const data = await makeRequest({ url: `agreement/delete/${val.id}`, method: 'DELETE' });
+    if (data.status == 200) {
       fetchData();
       message.success(data.message);
     }
@@ -274,23 +326,53 @@ const handleEditSolicitante = (data) => {
 }
 const computeIndex = computed(() => (index) => {
   let numb = params.value.page == 0 ? 1 : params.value.page
-  return (numb - 1) * pageSize + index + 1;
+  return (numb - 1) * pageSize.value + index + 1;
 });
 
-const fetchData = async () => {
+const fetchData = async (val) => {
   try {
     loading.value = true;
-    let parx = params.value.page == 0 ? '' : params.value;
+    let parx;
+
+    parx = params.value.page == 0 ? '' : params.value;
+    parx = val? {...parx,...val } : parx;
 
     const {data} = await makeRequest({ url: `agreement/list`, method: 'GET', params: parx });
-
     dataSource.value = data.data
     total.value = data.total
-
+    pageSize.value = 50
   } catch (error) {
     console.error('Error de red:', error);
   } finally {
     loading.value = false;
+  }
+}
+
+const handleDownload = async () => {
+  loadingFile.value = true;
+  try {
+    const response = await axios({
+      url: `${apiUrl}agreement/download`,
+      method: 'POST',
+      responseType: 'blob',
+      headers: {
+        'Authorization': `Bearer ${token}`,
+      },
+    });
+
+    const url = window.URL.createObjectURL(new Blob([response.data]));
+    const link = document.createElement('a');
+    const name = 'convenios.xlsx';
+    link.href = url;
+    link.setAttribute('download', name); 
+    document.body.appendChild(link);
+    link.click();
+    window.URL.revokeObjectURL(url);
+    document.body.removeChild(link);
+  } catch (error) {
+    console.error('Error downloading file:', error);
+  } finally {
+    loadingFile.value = false;
   }
 }
 
@@ -303,6 +385,17 @@ onMounted(() => {
   fetchData();
 });
 </script>
+
+<style scoped lang="scss">
+.arrActive {
+  color: var(--primary);
+}
+.list-days {
+  line-height: 1.2; 
+  margin: 0; 
+  font-size: 12px;
+}
+</style>
 
 <style lang="scss">
 .paginator {
@@ -320,17 +413,52 @@ onMounted(() => {
   cursor: pointer;
 }
 .accion-total {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
+  display: flex;
+  flex-direction: column;
   align-items: center;
   .accion-numb {
-    font-size: 12px;
+    margin-top: 4px;
+    font-size: 10px;
   }
 }
 .table-agreements {
+  tr {
+    font-size: 13px;
+  }
   .ant-table-row {
     .ant-table-cell:nth-child(16) {
       background-color: #feffe2 !important;
+    }
+    .ant-table-cell:nth-child(18) {
+      background-color: #f5f5ff !important;
+    }
+  }
+}
+
+//**** 
+.paginator {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 1.5rem;
+}
+.ant-popover-inner {
+  width: 200px;
+}
+
+.table-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  .t-icons {
+    display: flex;
+    flex-direction: column;
+    opacity: .7;
+    font-size: 11px;
+    .ii {
+      &:hover {
+        color: var(--primary);
+        cursor: pointer;
+      }
     }
   }
 }

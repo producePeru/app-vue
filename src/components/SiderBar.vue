@@ -64,7 +64,7 @@
           <!-- <a-menu-item key="supervisores" v-if="views.includes('supervisores')"> <router-link to="/admin/asesorias/supervisores">Supervisores</router-link> </a-menu-item> -->
         </a-sub-menu>
 
-        <!-- <a-sub-menu key="convenios" @click="handleCollapse('convenios')">
+        <a-sub-menu key="convenios" @click="handleCollapse('convenios')">
           <template #title>
             <span>
               <CopyOutlined />
@@ -72,7 +72,7 @@
             </span>
           </template>
           <a-menu-item key="estado-convenio"> <router-link to="/admin/convenios/estado-convenio">Estado de convenios</router-link> </a-menu-item>
-        </a-sub-menu> -->
+        </a-sub-menu>
 
 
         <!-- Convenios  -->
