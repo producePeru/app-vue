@@ -14,7 +14,7 @@
   </a-spin>
 
   <br><br>
-  
+
   <a-button type="primary" html-type="submit" :loading="loading" @click="onSubmit">GUARDAR</a-button>
 
   <!-- <pre>::::- {{ props.idUser }}</pre> -->
@@ -45,6 +45,9 @@ const plainOptions = [
   'drive-mis-archivos',
   'drive-subir-archivo',
   'drive-mis-carpetas',
+
+  'convenios',
+  'estado-convenio',
 ];
 
 onMounted(() => {

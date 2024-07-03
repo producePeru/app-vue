@@ -20,7 +20,7 @@
     <a-table 
     bordered
     :scroll="{ x: valueX, y: valueY }" 
-    class="ant-table-striped"
+    class="table-users" 
     :columns="columns" 
     :data-source="dataSource" 
     :pagination="false"
@@ -30,10 +30,6 @@
         <template v-if="column.dataIndex == 'idx'">
           {{ computeIndex(index) }}
         </template>
-        <template v-if="column.dataIndex == 'lastName'">
-          {{ record.last_name }} {{ record.middle_name }}
-        </template>
-
         <template v-if="column.dataIndex == 'documentnumber'">
           {{ record.profile?.documentnumber }}
         </template>
@@ -51,7 +47,7 @@
           <a-tag color="blue" v-if="record.profile?.office.name == 'UGSE'">{{ record.profile?.office.name }} </a-tag>
           <a-tag color="orange" v-if="record.profile?.office.name == 'UGO'">{{ record.profile?.office.name }} </a-tag>
           <a-tag color="green" v-if="record.profile?.office.name == 'DE'">{{ record.profile?.office.name }} </a-tag>
-          <a-tag color="red" v-if="record.profile?.office.name == 'UGEER'">{{ record.profile?.office.name }} </a-tag>
+          <a-tag color="gray" v-if="record.profile?.office.name == 'UGEER'">{{ record.profile?.office.name }} </a-tag>
           <!-- <pre>{{ record.profile?.office.name }}</pre> -->
         </template>
 
@@ -91,6 +87,7 @@
   </div>
 
   <div class="paginator">
+    <span><a-tag color="blue"><b>{{ total }} </b></a-tag>Usuarios</span>
     <a-pagination size="small" :total="total" :pageSize="pageSize" @change="handlePaginator" :showSizeChanger="false" />
   </div>
 
@@ -173,7 +170,7 @@ const steps = [
 ];
 const columns = [
   { title: '#',                   dataIndex: 'idx', fixed: 'left', align: 'center', width: 50},
-  { title: 'DNI',                 dataIndex: 'documentnumber', fixed: 'left', width: 100 },
+  { title: 'DNI',                 dataIndex: 'documentnumber', fixed: 'left', width: 80 },
   { title: 'Nombres',             dataIndex: 'name', width: 120 },
   { title: 'Apellidos',           dataIndex: 'lastname', width: 120 },
   { title: 'Correo',              dataIndex: 'email', width: 200},
@@ -288,71 +285,15 @@ onMounted(() => {
 });
 </script>
 
-<style lang="scss" scoped>
-.filters-dig {
-  margin: 1rem 0;
-  /* display: flex;
-  align-items: center;
-  justify-content: space-between; */
-  display: grid;
-  grid-template-columns: 1fr;
-  grid-gap: 1rem;
-  @media screen and (min-width: 900px) {
-    grid-template-columns: 200px 260px;
-    justify-content: space-between;
-  }
-}
+<style lang="scss">
 .paginator {
   display: flex;
-  justify-content: flex-end;
+  justify-content: space-between;
   margin-top: 1.5rem;
 }
-.ant-popover-inner {
-  width: 200px;
-}
-.pendient-btn {
-  background-color: #BA0F0F;
-  color: #fff;
-} 
-.pendient {
-  border: 1px solid #BA0F0F;
-  display: flex;
-  flex-direction: column;
-  border-radius: 4px;
-  padding: .6rem;
-  margin: 10px 0;
-  line-height: 1.7;
-  cursor: pointer;
-
-  b {
-    font-weight: 400;
-  }
-
-  .info-tag {
-    display: grid;
-    grid-template-columns: 4fr 1fr;
-
-    span {
-      margin: 0;
-    }
-  }
-
-  .info {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-
-    span {
-      text-align: right;
-    }
-  }
-}
-.un-tramite {
-  display: flex;
-  justify-content: space-between;
-  margin-bottom: 1rem;
-  .go {
-    color: #1677ff;
-    cursor: pointer;
+.table-users {
+  tr {
+    font-size: 13px;
   }
 }
 </style>

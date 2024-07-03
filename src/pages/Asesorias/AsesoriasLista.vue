@@ -68,7 +68,9 @@
         </template>
 
         <template v-if="column.dataIndex == 'sol_email'">
-          {{ record.people?.email ? record.people.email : '-' }}
+          <span style="text-transform: lowercase;">
+            {{ record.people?.email ? record.people.email : '-' }}
+          </span>
         </template>
         <template v-if="column.dataIndex == 'sol_phone'">
           {{ record.people?.phone }}
@@ -190,8 +192,6 @@
       
     </a-table>
   </div>
-  <!-- <pre>byAsesores {{ byAsesores }}</pre>
-  <pre>byDateRange {{ byDateRange }}</pre> -->
   
   <div class="paginator-asesories">
     <span><a-tag color="blue"><b>{{ total }} </b></a-tag>{{ handleNamePaginator(active) }}</span>
@@ -312,8 +312,8 @@ const columnsAsesoria = ref([
   ...(storageRole[0].id === 1 ? [{ title: 'SUPERVISOR', dataIndex: 'misupervisor', width: 140 }] : []),
   { title: 'Tipo doc.', dataIndex: 'sol_tipo_doc', width: 60, align: 'center' },
   { title: 'Número de Documento', dataIndex: 'sol_num_doc', width: 100 },
-  { title: 'Solicitante Apellidos', dataIndex: 'sol_apellidos', width: 160 },
-  { title: 'Solicitante Nombres', dataIndex: 'sol_nombres', width: 160 },
+  { title: 'Solicitante Apellidos', dataIndex: 'sol_apellidos', width: 140 },
+  { title: 'Solicitante Nombres', dataIndex: 'sol_nombres', width: 140 },
   { title: 'Correo electrónico', dataIndex: 'sol_email', width: 220 },
   { title: 'Celular', dataIndex: 'sol_phone', width: 90, align: 'center' },
   { title: 'Región', dataIndex: 'mype_region', width: 120 },
@@ -333,8 +333,8 @@ const columnsRuc10 = ref([
   ...(storageRole[0].id === 1 ? [{ title: 'SUPERVISOR', dataIndex: 'misupervisor', width: 140 }] : []),
   { title: 'Tipo doc.', dataIndex: 'sol_tipo_doc', width: 60, align: 'center' },
   { title: 'Número de Documento', dataIndex: 'sol_num_doc', width: 100 },
-  { title: 'Solicitante Apellidos', dataIndex: 'sol_apellidos', width: 160 },
-  { title: 'Solicitante Nombres', dataIndex: 'sol_nombres', width: 160 },
+  { title: 'Solicitante Apellidos', dataIndex: 'sol_apellidos', width: 140 },
+  { title: 'Solicitante Nombres', dataIndex: 'sol_nombres', width: 140 },
   { title: 'Correo electrónico', dataIndex: 'sol_email', width: 220 },
   { title: 'Celular', dataIndex: 'sol_phone', width: 90, align: 'center' },
   { title: 'Región', dataIndex: 'mype_region', width: 120 },
@@ -613,7 +613,6 @@ onMounted(() => {
 
 .header-rep {
   display: flex;
-
   // gap: 0 1rem;
   h3 {
     cursor: pointer;
@@ -642,8 +641,6 @@ onMounted(() => {
   margin-top: 1.5rem;
 }
 
-
-
 .hdactive {
   background-color: #00a6db;
   color: #fff;
@@ -657,6 +654,11 @@ onMounted(() => {
 }
 .ant-popconfirm-buttons {
   text-align: center;
+}
+.table-historial {
+  tr {
+    font-size: 13px;
+  }
 }
 .table-historial {
   .ant-table-row {

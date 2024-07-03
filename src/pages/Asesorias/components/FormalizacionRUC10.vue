@@ -154,7 +154,7 @@ const update = () => {
 const validateOnlyNumber = (val) => {
   if(val == 'ruc') {
     const value = formState.ruc;
-    if (value < 10000000000 || value > 10999999999) {
+    if (value < 10000000000 || value > 20999999999) {
       formState.ruc = null;
     }
   }
