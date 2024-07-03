@@ -244,7 +244,7 @@ const onSubmit = async () => {
     province_id: formState.province_id,
     district_id: formState.district_id,
     ruc: formState.ruc,
-    cde_id: props.idCde
+    cde_id: props.idCde ? props.idCde : null
   }
 
   try {

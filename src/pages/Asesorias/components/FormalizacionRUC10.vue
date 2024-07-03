@@ -15,7 +15,7 @@
 
           <a-form-item v-if="el.type === 'iText'" :name="el.name" :label="el.label" 
             :rules="[{ required: el.required, message: el.message, type: el.email, max: el.max }]">
-            <a-input v-model:value="formState[el.name]" :disabled="el.name === 'dni' && !!formState[el.name]" :maxlength="el.max" @input="validateOnlyNumber(el.name)" :placeholder="el.placeholder" />
+            <a-input v-model:value="formState[el.name]" :disabled="el.name === 'dni' && !!formState[el.name]" :maxlength="el.max" :placeholder="el.placeholder" />
           </a-form-item>
 
           <a-form-item class="item-max" v-if="el.type === 'iSelectWrite'" :name="el.name" :label="el.label"
@@ -225,7 +225,7 @@ const onSubmit = async () => {
     ruc: formState.ruc,
     user_id: storageData.user_id,
     people_id: props.info.id,
-    cde_id: props.idCde
+    cde_id: props.idCde ? props.idCde : null
   }
   
   try {

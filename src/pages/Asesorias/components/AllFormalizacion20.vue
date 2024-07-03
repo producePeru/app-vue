@@ -340,7 +340,7 @@ const onSubmit = async () => {
     typecapital_id: formState.typecapital_id,
     isbic: formState.isbic,
     montocapital: formState.montocapital,
-    cde_id: props.idCde
+    cde_id: props.idCde ? props.idCde : null
   }
 
   try {
