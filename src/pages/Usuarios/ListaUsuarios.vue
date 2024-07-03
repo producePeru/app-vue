@@ -73,7 +73,7 @@
                   <a @click="handleEditUser(record)">Editar</a>
                 </a-menu-item>
                 <a-menu-item>
-                  <a @click="handleViewsUser(record)">Administrar</a>
+                  <a @click="handleViewsUser(record)">Vistas</a>
                 </a-menu-item>
                 <!-- <a-menu-item>
                   <a-popconfirm title="¿Seguro de eliminar?" @confirm="handleDeleteUser(record)">

@@ -123,7 +123,6 @@ const fetchData = async() => {
     const data = await makeRequest({ url: `agreement/list/${props.idConvenio}`, method: 'GET' });
     if (data.status == 200) {
       stateData.value = data.data;
-      console.log("Success", data);
     }
   } catch (error) {
     
