@@ -1,22 +1,23 @@
 <template>
   <div>
-    <h3 class="title-produce">USUARIOS</h3>
-    <br>
-
-    <!-- <div class="filters-dig">
-      <a-select
-      v-model:value="cedeSelected"
-      placeholder="Filtrar por CDES"
-      :options="store.cdes"
-      @change="handleFilter" />
-
-      <a-input-search
-      v-model:value="searchUser"
-      placeholder=""
-      enter-button="Buscar"
-      @search="handleSearch" />
-    </div> -->
+    <h3 class="title-produce">USUARIOS DEL PROGRAMA PNTE</h3>
     
+    <a-row style="margin: 1rem 0;">
+      <a-col :xs="24" :md="12" :lg="18">
+        <!-- <a-button type="primary" style="margin-right: .5rem;">NUEVO</a-button> -->
+        <!-- <a-button class="btn-excel" @click="handleDownload" :loading="loadingFile" type="primary">
+          <img width="20" style="margin: -2px 0 0 0;" src="@/assets/img/icoexcel.png" /> 
+        </a-button> -->
+      </a-col>
+
+      <a-col :xs="24" :md="12" :lg="6">
+        <a-input-group compact>
+          <a-input v-model:value="formState.search" style="width: calc(100% - 80px)" @input="handleResetSearch" />
+          <a-button type="primary" :disabled="formState.search === ''" @click="handleFinish">BUSCAR</a-button>
+        </a-input-group>
+      </a-col>
+    </a-row>
+
     <a-table 
     bordered
     :scroll="{ x: valueX, y: valueY }" 
@@ -40,7 +41,10 @@
           {{ record.profile?.lastname }} {{ record.profile?.middlename }}
         </template>
         <template v-if="column.dataIndex == 'phone'">
-          {{ record.profile?.phone }} 
+          {{ record.profile?.phone ? record.profile?.phone : '🔒' }} 
+        </template>
+        <template v-if="column.dataIndex == 'birthday'">
+          {{ record.profile?.birthday ? record.profile?.birthday : '🔒' }}
         </template>
         
         <template v-if="column.dataIndex == 'office'">
@@ -92,6 +96,7 @@
   </div>
 
   <a-drawer
+  width="550"
   v-model:open="open"
   class="draw-notary"
   title="Editar Perfil"
@@ -113,7 +118,7 @@
 
 <script setup>
 import { makeRequest } from '@/utils/api.js'
-import { ref, onMounted, h, onBeforeUnmount, computed } from 'vue';
+import { ref, onMounted, h, onBeforeUnmount, computed, reactive } from 'vue';
 import { MoreOutlined } from '@ant-design/icons-vue';
 import { message } from 'ant-design-vue';
 import { useRouter } from 'vue-router';
@@ -139,21 +144,14 @@ const openModal = ref(false);
 const open1 = ref(false);
 const open2 = ref(false);
 const current = ref(0);
-const information = ref(false);
-const dataRecordSelected = ref(false);
-const dataPndingRequest = ref(false);
-const rol = ref('solicitante');
-const access = ref(5);
-const pageSize = 50;
+
+
+const pageSize = ref(50);
 const dataSource = ref([])
 const loading = ref(false)
 const total = ref(0)
-const router = useRouter();
-const params = ref({ page: 1 });
-const searchUser = ref('')
+const params = ref({ page: 0 });
 const url = ref('user/list')
-const cedes = ref([]);
-const cedeSelected = ref(null)
 const valueX = ref(1200)
 const valueY = ref(window.innerHeight - 100);
 const actualizarAltura = () => {
@@ -175,12 +173,25 @@ const columns = [
   { title: 'Apellidos',           dataIndex: 'lastname', width: 120 },
   { title: 'Correo',              dataIndex: 'email', width: 200},
   { title: 'Celular',             dataIndex: 'phone', width: 100, align: 'center'},
+  { title: 'Fecha Nac.',          dataIndex: 'birthday', width: 100, align: 'center'},
   { title: 'Oficina',             dataIndex: 'office', width: 120, align: 'center'},
   { title: 'CDE',                 dataIndex: 'cde', width: 140},
   { title: 'ROL',                 dataIndex: 'role', width: 160},
   { title: '',                    dataIndex: 'actions', align: 'center', width: 50, fixed: 'right'}
 ];
 
+const formState = reactive({
+  search: '',
+});
+const handleFinish = () => {
+  let params = { search: formState.search }
+  fetchData(params)
+};
+const handleResetSearch = () => {
+  if(!formState.search) {
+    fetchData();
+  }
+}
 
 const handleCloseDrawopen = () => {
   fetchData();
@@ -192,7 +203,6 @@ const handlePaginator = (current) =>{
   params.value.page = current;
   fetchData()
 }
-
 const handleEditUser = (data) => {
   updateUser.value = data
   open.value = true;
@@ -200,50 +210,6 @@ const handleEditUser = (data) => {
 const handleViewsUser = (data) => {
   updateUser.value = data
   open2.value = true;
-}
-
-const handleFormalization20 = async(val) => {
-  try {
-    
-    information.value = null
-    openModal.value = false
-    open1.value = false
-
-    const { data } = await makeRequest({ url: `/my-formalizations20/${val.number_document}`, method: 'GET' });
-
-    information.value = {
-      id: val.id_person,
-      dni: val.number_document
-    }
-
-    if(data.length >= 1) {
-      openModal.value = true
-    } else {
-      open1.value = true
-    }
-    
-  } catch (error) {
-    console.log(error);
-  } 
-}
-
-const handleFilter = (val) => {
-  // if(val != 1000) {
-  //   url.value = `/formalization-digital?department=${val}`
-  //   fetchData()
-  //   return
-  // }
-  // url.value = '/formalization-digital'
-  // fetchData()
-}
-const handleSearch = () => {
-  if(searchUser.value) {
-    url.value = `/formalization-digital?search=${searchUser.value}`
-    fetchData()
-    return
-  }
-  url.value = '/formalization-digital'
-  fetchData()
 }
 
 const handleDeleteUser= async(val) => {
@@ -258,15 +224,18 @@ const handleDeleteUser= async(val) => {
   }
 }
 
-const fetchData = async() => {
+const fetchData = async(val) => {
   try {
     loading.value = true;
-    let parms = params.value.page == 1 ? '' : params.value
+
+    let parx;
+    parx = params.value.page == 0 ? '' : params.value;
+    parx = val? {...parx,...val } : parx;
     
-    const data = await makeRequest({ url: url.value, method: 'GET', params:parms });
+    const {data} = await makeRequest({ url: url.value, method: 'GET', params:parx });
     dataSource.value = data.data
     total.value = data.total;
-
+    pageSize.value = data.per_page;
   } catch (error) {
     console.error('Error de red:', error);
   } finally {
@@ -275,7 +244,7 @@ const fetchData = async() => {
 }
 
 const computeIndex = computed(() => (index) => {
-  return  (params.value.page - 1) * pageSize + index + 1;
+  return  (params.value.page) * pageSize.value + index + 1;
 });
 
 onMounted(() => {

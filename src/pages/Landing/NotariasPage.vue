@@ -22,47 +22,37 @@
 
     </div>
 
-    
-
-      <div class=" notaries-wrapper notaries-box" v-for="(item, idx) in dataSource" :key="idx">
-        <div>
-          <a-tag color="blue" style="margin-bottom: 6px;">{{ item.city.name }}</a-tag>
-          <div class="notaries-box-adrres">
-            <span>{{ item.province.name }}</span> -
-            <span>{{ item.district.name }}</span> -
-            <span>{{ item.address }}</span>
-          </div>
-
-
-          <h3 class="notaries-box-name">{{ item.name }}</h3>
-      
-          <div class="notaries-box-html-2" v-html="item.infocontacto"></div>
-
+    <div class=" notaries-wrapper notaries-box" v-for="(item, idx) in dataSource" :key="idx">
+      <div>
+        <a-tag color="blue" style="margin-bottom: 6px;">{{ item.city.name }}</a-tag>
+        <div class="notaries-box-adrres">
+          <span>{{ item.province.name }}</span> -
+          <span>{{ item.district.name }}</span> -
+          <span>{{ item.address }}</span>
         </div>
+        <h3 class="notaries-box-name">{{ item.name }}</h3>
+        <div class="notaries-box-html-2" v-html="item.infocontacto"></div>
+      </div>
 
+      <div>
+        <h4 class="notaries-box-h4">GASTOS NOTARIALES</h4>
+        <div class="notaries-box-html" v-html="item.price"></div>
+      </div>
+
+      <div>
+        <h4 class="notaries-box-h4">CONDICIONES</h4>
+        <div class="notaries-box-html" v-html="item.conditions"></div>
+      </div>
+      <div>
+        <h4 class="notaries-box-h4">SOCIO O INTERVINIENTE ADICIONAL</h4>
+        <div class="notaries-box-html" v-html="item.sociointerveniente"></div>
         <div>
-          <h4 class="notaries-box-h4">GASTOS NOTARIALES</h4>
-          <div class="notaries-box-html" v-html="item.price"></div>
+          <h4 class="notaries-box-h4" style="display: block;">BIOMETRICO: </h4>
+          <span class="notaries-box-html" v-html="item.biometrico"></span>
         </div>
-
-        <div>
-          <h4 class="notaries-box-h4">CONDICIONES</h4>
-          <div class="notaries-box-html" v-html="item.conditions"></div>
-        </div>
-        <div>
-          <h4 class="notaries-box-h4">SOCIO O INTERVINIENTE ADICIONAL</h4>
-          <div class="notaries-box-html" v-html="item.sociointerveniente"></div>
-          <div>
-            <h4 class="notaries-box-h4" style="display: block;">BIOMETRICO: </h4> 
-            <span class="notaries-box-html" v-html="item.biometrico"></span>
-          </div>
-        </div>
-
-      <!-- <EnvironmentOutlined /> -->
-      <!-- <a href="https://maps.app.goo.gl/HevFnRUXY9Xips3n8" target="_blank" rel="noopener noreferrer">ir añño</a> -->
-
+      </div>
     </div>
-    
+
     <br>
     <br>
 
@@ -161,11 +151,13 @@ onMounted(() => {
   background-color: #fff;
   padding: 2rem 0;
   border-bottom: 1px solid #bebebe;
+
   @media screen and (max-width: 600px) {
     position: initial;
     padding: 1rem 0;
   }
 }
+
 .notarie-title {
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, 'Noto Sans', sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
   font-size: 20px;
@@ -191,19 +183,23 @@ onMounted(() => {
     justify-content: center;
     gap: 1rem;
     margin-top: 1.5rem;
+
     .notary-div {
       display: flex;
       flex-direction: column;
       width: 250px;
+
       label {
         font-size: 14px;
         margin-bottom: .2rem;
         font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, 'Noto Sans', sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
       }
     }
+
     @media screen and (max-width: 600px) {
       flex-direction: column;
       align-items: center;
+
       .notary-div {
         width: 80%;
       }
@@ -247,6 +243,7 @@ onMounted(() => {
       padding: .5rem 0;
       border-top: 1px solid #eee;
       font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, 'Noto Sans', sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
+
       p {
         margin: 0;
         font-size: 13px
@@ -257,6 +254,7 @@ onMounted(() => {
       br {
         display: none;
       }
+
       h1,
       h2,
       h3,

@@ -2,13 +2,24 @@
   <div>
     <h3 class="title-produce">ESTADO DE CONVENIOS</h3>
 
-    <div class="filters">
-      <a-button type="primary" @click="showDrawer" style="margin-right: .5rem;">NUEVO</a-button>
+    <!-- <div class="filters"> -->
+      
+    <a-row style="margin: 1rem 0;">
+      <a-col :xs="24" :md="12" :lg="18">
+        <a-button type="primary" @click="showDrawer" style="margin-right: .5rem;">NUEVO</a-button>
+        <a-button class="btn-excel" @click="handleDownload" :loading="loadingFile" type="primary">
+          <img width="20" style="margin: -2px 0 0 0;" src="@/assets/img/icoexcel.png" /> 
+        </a-button>
+      </a-col>
 
-      <a-button class="btn-excel" @click="handleDownload" :loading="loadingFile" type="primary">
-        <img width="20" style="margin: -2px 0 0 0;" src="@/assets/img/icoexcel.png" /> 
-      </a-button>
-    </div>
+      <a-col :xs="24" :md="12" :lg="6">
+        <a-input-group compact>
+          <a-input v-model:value="formState.search" style="width: calc(100% - 80px)" @input="handleResetSearch" />
+          <a-button type="primary" :disabled="formState.search === ''" @click="handleFinish">BUSCAR</a-button>
+        </a-input-group>
+      </a-col>
+    </a-row>
+    <!-- </div> -->
 
     <a-table 
     bordered
@@ -26,6 +37,16 @@
             <div class="t-icons">
               <CaretUpOutlined :class="{'arrActive' : rowascdesc == 'asc'}" class="ii" @click="handleSelectOrder('asc')" />
               <CaretDownOutlined :class="{'arrActive' : rowascdesc == 'desc'}" class="ii" @click="handleSelectOrder('desc')" />
+            </div>
+          </div>
+        </template>
+
+        <template v-if="column.dataIndex == 'denomination'">
+          <div class="table-head">
+            <span>DENOMINACIÓN</span>
+            <div class="t-icons">
+              <CaretUpOutlined :class="{'arrActive' : denominationascdesc == 'asc'}" class="ii" @click="handleSelectDenomination('asc')" />
+              <CaretDownOutlined :class="{'arrActive' : denominationascdesc == 'desc'}" class="ii" @click="handleSelectDenomination('desc')" />
             </div>
           </div>
         </template>
@@ -135,7 +156,7 @@
   </a-drawer>
 
   <a-drawer v-model:open="openAcciones" title="Acciones" placement="right" width="550">
-    <DrawAcciones :idConvenio="idConvenio" @closeDraw="handleCloseDrawopen(2)" />
+    <DrawAcciones :idConvenio="idConvenio" @closeDraw="handleCloseDrawopen(2)" @refreshTable="fetchData()" />
   </a-drawer>
 
   <a-drawer v-model:open="openDrives" title="Cargar Archivos" placement="right" width="550">
@@ -174,10 +195,11 @@ const apiUrl = window.location.hostname === 'localhost' || window.location.hostn
 // store.$patch({ cities: store.cities });
 // store.fetchCities();
 const rowascdesc = ref(null);
+const denominationascdesc = ref(null);
 const loadingFile = ref(false);
 const idConvenio = ref(null);
 const total = ref(0);
-const pageSize = ref(0);
+const pageSize = ref(50);
 const params = ref({ page: 0 });
 const valueX = ref(1200)
 const dataSource = ref([])
@@ -210,6 +232,18 @@ const columns = [
   { title: 'ACCIONES', dataIndex: 'acciones', align: 'center', width: 100 },
   { title: '', dataIndex: 'actions', width: 50, align: 'center', fixed: 'right' }
 ];
+const formState = reactive({
+  search: '',
+});
+const handleFinish = () => {
+  let params = { search: formState.search }
+  fetchData(params)
+};
+const handleResetSearch = () => {
+  if(!formState.search) {
+    fetchData();
+  }
+}
 
 const handleColor = (idx) => {
   const colors = {
@@ -226,6 +260,11 @@ const handleColor = (idx) => {
 const handleSelectOrder = (type) => {
   rowascdesc.value = type
   let params = { order: type }
+  fetchData(params)
+}
+const handleSelectDenomination = (type) => {
+  denominationascdesc.value = type
+  let params = { date_diff_order : type }
   fetchData(params)
 }
 const handleAcciones = (record) => {
@@ -325,22 +364,21 @@ const handleEditSolicitante = (data) => {
   open.value = true;
 }
 const computeIndex = computed(() => (index) => {
-  let numb = params.value.page == 0 ? 1 : params.value.page
-  return (numb - 1) * pageSize.value + index + 1;
+  return  (params.value.page) * pageSize.value + index + 1;
 });
 
 const fetchData = async (val) => {
   try {
     loading.value = true;
+    
     let parx;
-
     parx = params.value.page == 0 ? '' : params.value;
     parx = val? {...parx,...val } : parx;
-
+   
     const {data} = await makeRequest({ url: `agreement/list`, method: 'GET', params: parx });
     dataSource.value = data.data
     total.value = data.total
-    pageSize.value = 50
+    pageSize.value = data.per_page;
   } catch (error) {
     console.error('Error de red:', error);
   } finally {

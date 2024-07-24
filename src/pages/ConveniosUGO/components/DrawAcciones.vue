@@ -32,7 +32,7 @@ import { makeRequest } from '@/utils/api.js';
 import { message } from 'ant-design-vue';
 
 const props = defineProps(['idConvenio']);
-const emit = defineEmits(['closeDraw']);
+const emit = defineEmits(['refreshTable']);
 
 const stateData = ref([]);
 const spinning = ref(true);
@@ -80,6 +80,7 @@ const handleDelete = async (val) => {
     if (data.status == 200) {
       fetchData();
       message.success(data.message);
+      emit('refreshTable', true)
     }
   } catch (error) {
     console.error('Error de red:', error);
@@ -109,7 +110,7 @@ const onSubmit = async() => {
     const data = await makeRequest({ url: `agreement/create-acction`, method: 'POST', data: payload });
     if (data.status == 200) {
       message.success(data.message);
-      // emit('closeDraw', true)
+      emit('refreshTable', true)
       fetchData();
       formState.description = null;
     }

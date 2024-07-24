@@ -22,9 +22,9 @@
               <a-select v-if="el.name == 'role_id'" v-model:value="formState[el.name]" :options="rolesKarina" @change="handleSelectSupervisor" />
             </template>
 
-            <!-- <template v-else>
+            <template v-if="storageRole[0].id == 5">
               <a-select v-if="el.name == 'role_id'" v-model:value="formState[el.name]" :options="store.roles" @change="handleSelectSupervisor" />
-            </template> -->
+            </template>
             
             <a-select v-if="el.name == 'supervisor_id'" v-model:value="formState[el.name]" :options="store.supervisores" />
 
@@ -126,7 +126,8 @@ const nameNewItem = ref(null);
 
 const rolesMilian = [
   {label: 'Supervisor', value: 1},
-  {label: 'Asesor', value: 2}
+  {label: 'Asesor', value: 2},
+  {label: 'Notario', value: 7}
 ]
 const rolesKarina = [
   {label: 'Drive Administrador', value: 3},
@@ -196,6 +197,9 @@ const filterOption = (input, option) => {
   return normalizedLabel.includes(normalizedInput);
 };
 const handleSelectSupervisor = (val) => {
+
+  console.log("handleSelectSupervisor", val);
+
   const supervisor_id = {
     type: 'iSelect',
     label: 'Supervisador',
@@ -205,11 +209,58 @@ const handleSelectSupervisor = (val) => {
     disabled: true
   };
 
+  const city = {
+    type: 'iText',
+    label: 'Ciudad de la notaría',
+    name: 'city',
+    required: true,
+    message: 'Ciudad de la notaría',
+    disabled: false
+  };
+  const province = {
+    type: 'iText',
+    label: 'Provincia de la de la notaría',
+    name: 'province',
+    required: true,
+    message: 'Provincia de la de la notaría',
+    disabled: false
+  };
+  const district = {
+    type: 'iText',
+    label: 'Distrito de la notaría',
+    name: 'district',
+    required: true,
+    message: 'Distrito de la notaría',
+    disabled: false
+  };
+  const address = {
+    type: 'iText',
+    label: 'Dirección de la notaría',
+    name: 'address',
+    required: false,
+    message: 'Dirección de la notaría',
+    disabled: false
+  };
+
+
   if (val === 2) {
     store.fetchSupervisores();
     fieldx.value = { ...fieldx.value, supervisor_id };
-  } else {
+
+    const { city, province, district, address, ...newValue } = fieldx.value;
+    fieldx.value = newValue;
+
+  } else if(val === 7) {
+    fieldx.value = { ...fieldx.value, city, province, district, address };
+
+
     const { supervisor_id: removed, ...newValue } = fieldx.value;
+    fieldx.value = newValue;
+    
+    fieldx.value.cde_id.required = false;
+
+  } else {
+    let { city, province, district, address, supervisor_id, ...newValue } = fieldx.value;
     fieldx.value = newValue;
   }
 }

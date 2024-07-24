@@ -54,6 +54,12 @@
               to="/admin/asesorias/asesorias-formalizaciones">Registro</router-link> </a-menu-item>
           <a-menu-item key="asesorias" v-if="views.includes('asesorias')"> <router-link
               to="/admin/asesorias/asesorias">Reportes</router-link> </a-menu-item>
+          
+          
+          <a-menu-item key="planes-accion"  v-if="views.includes('planes-accion')"> <router-link
+              to="/admin/asesorias/planes-accion">Planes de Acción</router-link> </a-menu-item> 
+
+
           <a-menu-item key="solicitantes" v-if="views.includes('solicitantes')"> <router-link
               to="/admin/asesorias/solicitantes">Solicitantes</router-link> </a-menu-item>
           <!-- <a-menu-item key="solicitudes" v-if="views.includes('asesorias')"> <router-link to="/admin/asesorias/solicitudes">Solicitudes F.D.</router-link> </a-menu-item>  -->
@@ -116,6 +122,17 @@
               to="/admin/usuarios/lista">Lista usuarios</router-link> </a-menu-item>
         </a-sub-menu>
 
+        <a-sub-menu key="configuraciones" v-if="views.includes('configuraciones')" @click="handleCollapse('configuraciones')">
+          <template #title>
+            <span>
+              <SettingOutlined />
+              <span>Configuraciones</span>
+            </span>
+          </template>
+          <a-menu-item key="tokens"> <router-link
+              to="/admin/configuraciones/tokens">Token</router-link> </a-menu-item>
+        </a-sub-menu>
+
       </a-menu>
 
     </a-layout-sider>
@@ -133,7 +150,8 @@ import {
   TeamOutlined,
   AuditOutlined,
   CloudOutlined,
-  CopyOutlined
+  CopyOutlined,
+  SettingOutlined
 } from '@ant-design/icons-vue';
 
 const route = useRoute();

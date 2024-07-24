@@ -13,7 +13,7 @@
       </a-form-item>
     </a-form>
 
-    <a-table bordered :scroll="{ x: valueX, y: valueY }" class="asesores-table" :columns="columns"
+    <a-table bordered :scroll="{ x: valueX, y: valueY }" class="solicitantes-table" :columns="columns"
       :data-source="dataSource" :pagination="false" :loading="loading" size="small">
       <template v-slot:bodyCell="{ column, record, index }">
         <template v-if="column.dataIndex == 'idx'">
@@ -37,6 +37,9 @@
         </template>
         <template v-if="column.dataIndex == 'gender'">
           {{ record.gender?.name }}
+        </template>
+        <template v-if="column.dataIndex == 'email'">
+          <span class="lowercase">{{ record.email }}</span>
         </template>
         <template v-if="column.dataIndex == 'sickx'">
           <a-tag :color="record.sick == 'no' ? 'blue' : 'pink'">{{ record.sick == 'no' ? 'NO' : 'SI' }}</a-tag>
@@ -119,8 +122,8 @@ const columns = [
   { title: 'REGIÓN', dataIndex: 'city', align: 'center', width: 150 },
   { title: 'PROVINCIA', dataIndex: 'province', align: 'center', width: 150 },
   { title: 'DISTRITO', dataIndex: 'district', align: 'center', width: 150 },
-  { title: 'CELULAR', dataIndex: 'phone', align: 'center', width: 150 },
-  { title: 'EMAIL', dataIndex: 'email', width: 200 },
+  { title: 'CELULAR', dataIndex: 'phone', align: 'center', width: 100 },
+  { title: 'EMAIL', dataIndex: 'email', width: 240 },
   { title: 'GÉNERO', dataIndex: 'gender', align: 'center', width: 90 },
   { title: 'DISCAPACIDAD', dataIndex: 'sickx', align: 'center', width: 120 },
   { title: 'HIJOS', dataIndex: 'hasSoon', align: 'center', width: 120 },
@@ -247,6 +250,11 @@ onMounted(() => {
 </script>
 
 <style lang="scss">
+.solicitantes-table {
+  tr {
+    font-size: 13px;
+  }
+}
 .form-filter {
   display: flex;
   justify-content: flex-end;

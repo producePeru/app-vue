@@ -34,9 +34,10 @@
             </a-form-item>
 
             <a-form-item v-if="el.type === 'iText'" :name="el.name" :label="el.label"
-              :rules="[{ required: el.required, message: el.message, type: el.email, max: el.max, min:el.min }]">
-              
-              <a-input v-if="el.name == 'phone'" v-model:value="formState[el.name]" :disabled="el.disabled" :maxlength="el.max" @input="validateNumberPhone"  />
+              :rules="[{ required: el.required, message: el.message, type: el.email, max: el.max, min: el.min }]">
+
+              <a-input v-if="el.name == 'phone'" v-model:value="formState[el.name]" :disabled="el.disabled"
+                :maxlength="el.max" @input="validateNumberPhone" />
               <a-input v-else v-model:value="formState[el.name]" :disabled="el.disabled" :maxlength="el.max" />
             </a-form-item>
 
@@ -61,7 +62,7 @@
 import { requestNoToken } from '@/utils/noToken.js';
 import { reactive, ref, onMounted } from 'vue';
 import fieldsJs from '@/forms/nuevaPersona.js';
-import { message } from 'ant-design-vue';
+import { message, notification } from 'ant-design-vue';
 import { useCounterStore } from '@/stores/selectes.js';
 import { makeRequest } from '@/utils/api.js';
 import { useRouter, useRoute } from 'vue-router';
@@ -94,12 +95,12 @@ const dateFormat = 'DD/MM/YYYY';
 const loading = ref(false);
 const spinning = ref(true);
 const sicks = [
-  {value: 'yes', label: 'SI'},
-  {value: 'no', label: 'NO'}
+  { value: 'yes', label: 'SI' },
+  { value: 'no', label: 'NO' }
 ]
 const hasSoon = [
-  {value: 'SI', label: 'SI'},
-  {value: 'NO', label: 'NO'}
+  { value: 'SI', label: 'SI' },
+  { value: 'NO', label: 'NO' }
 ]
 
 const formState = reactive({
@@ -169,6 +170,7 @@ const handleSelectTypeDocument = (val) => {
 }
 
 const handleSearchApi = async (numberDocument) => {
+
   searchLoading.value = true
 
   if (!numberDocument) {
@@ -178,79 +180,30 @@ const handleSearchApi = async (numberDocument) => {
 
   try {
     if (formState.typedocument_id == 1) {
+      const response = await makeRequest({ url: `user/only-dni/${formState.documentnumber}`, method: 'GET' });
 
-      const { data } = await makeRequest({ url: `user/api/dni/${formState.documentnumber}`, method: 'GET' });
+      if (response.status === 404) {
+        notification.open({
+          message: 'Notificación',
+          description: 'Se superó el número de consultas, comentale a tu supervisor',
+        });
+      }
 
-      if (!data || !data.body || !data.body.apePaterno) {
-        const response = await makeRequest({ url: `user/only-dni/${formState.documentnumber}`, method: 'GET' });
+      if (response.status == 200) {
+        formState.country = 'PERÚ'
         formState.lastname = response.data.apellidoPaterno;
         formState.middlename = response.data.apellidoMaterno;
-        formState.name = response.data.nombres; 
-        formState.country = 'PERÚ'
-        return searchLoading.value = false
-      }
-    
-      if (data.body) {
-        formState.lastname = data.body?.apePaterno;
-        formState.middlename = data.body?.apeMaterno
-        formState.name = data.body?.preNombres
-        formState.address = data.body?.desDireccion;
-        formState.country = 'PERÚ'
-        if (data.body?.feNacimiento) formState.birthday = dayjs(data.body?.feNacimiento, 'DD/MM/YYYY');
-        if (data.body?.feNacimiento) birthdateDate.value = dayjs(data.body?.feNacimiento, 'DD/MM/YYYY');
-
-        if (data.body?.ubigeo) {
-          let region = store.cities.find(city => city.label === data.body.ubigeo?.departamento);
-          let provincias = await requestNoToken({ url: `select/provinces/${region.value}`, method: 'GET' });
-          provinces.value = provincias.data
-          let provincia = provincias.data.find(province => province.label === data.body.ubigeo?.provincia);
-
-          let distritos = await requestNoToken({ url: `select/districts/${provincia.value}`, method: 'GET' });
-          districts.value = distritos.data
-          let distrito = distritos.data.find(item => item.label === data.body.ubigeo?.distrito);
-
-          formState.city_id = region.value;
-          formState.province_id = provincia.value;
-          formState.district_id = distrito.value;
-        }
-      }
-
-    }
-
-    if (formState.typedocument_id == 2) {
-      const { data } = await makeRequest({ url: `user/api/ce/${formState.documentnumber}`, method: 'GET' });
-      if (data.body) {
-        console.log("data: " + data);
-        formState.lastname = data.body?.apellido_paterno;
-        formState.middlename = data.body?.apellido_materno
-        formState.name = data.body?.nombres
-        formState.gender_id = data.body?.sexo == 'F' ? 2 : 1;
-        if (data.body?.fecha_nacimiento) formState.birthday = dayjs(data.body?.fecha_nacimiento, 'DD/MM/YYYY');
-        if (data.body?.fecha_nacimiento) birthdateDate.value = dayjs(data.body?.fecha_nacimiento, 'DD/MM/YYYY');
-        formState.country = data.body.nacionalidad
+        formState.name = response.data.nombres;
       }
     }
 
-    if (formState.typedocument_id == 3) {
-      const { data } = await makeRequest({ url: `user/api/pas/${formState.documentnumber}`, method: 'GET' });
-      const valuex = data.body?.data[0]
-      formState.lastname = valuex.apellido_paterno;
-      formState.middlename = valuex.apellido_materno
-      formState.name = valuex.nombres
-      formState.gender_id = valuex.sexo == 'F' ? 2 : 1;
-      if (valuex.fecha_nacimiento) formState.birthday = dayjs(valuex.fecha_nacimiento, 'DD/MM/YYYY');
-      if (valuex.fecha_nacimiento) birthdateDate.value = dayjs(valuex.fecha_nacimiento, 'DD/MM/YYYY');
-      // formState.country = valuex.nacionalidad
-    }
+
   } catch (error) {
     console.log("err", error);
   } finally {
     handleDisabled()
     return searchLoading.value = false
   }
-
-  
-
 }
 
 

@@ -29,55 +29,79 @@
       </div>
     </a-card>
 
-    <div class="column-2">
-      <a-card class="card-as" v-if="infoUser.length != 0">
-        <div class="info-update">
-          <h4 class="title-produce">RESULTADO DE LA BÚSQUEDA</h4>
-          <EditOutlined class="ico-edit" @click="handleEditUserData" />
-        </div>
-        <div class="info-personal">
-          <span>Apellidos y nombres: </span>
-          <span>{{ infoUser.lastname }} {{ infoUser.middlename }}, {{ infoUser.name }}</span>
-          <span>Número de celular:</span>
-          <span><span>{{ infoUser.phone ? infoUser.phone : '-' }}</span></span>
-          <span>Correo electrónico:</span>
-          <span>{{ infoUser.email ? infoUser.email : '-' }}</span>
-          
-          <span>Asesorías:</span>
-          <b>{{ infoUser?.idadvisory.length }}</b>
-          <span>Formalizaciones RUC 20:</span>
-          
-          <div class="alert-incomplete">
-            <b>{{ infoUser?.idformalization20.length }}</b>
-            <!-- <span class="alert" v-if="historial[0]?.ruc20.filter(item => item.step === 1 || item.step === 2).length >= 1">
-              <ExclamationCircleOutlined />
-              <span class="small">Tienes {{ historial[0]?.ruc20.filter(item => item.step === 1 || item.step === 2).length }} procesos pendientes</span>
-            </span> -->
-          </div>
-
-          <span>Formalizaciones RUC 10:</span>
-          <b>{{ infoUser?.idformalization10.length }}</b> 
-
-        </div>
-      </a-card>
+    <a-row :gutter="[16,16]">
       
-      <a-card class="card-as" v-if="infoUser.length != 0">
-       <div style="margin-bottom: 2.5rem;">
-        <h4 class="title-produce">SELECCIONAR CDE</h4>
-        <div class="card-as-btn" style="margin: 0;">
-          <a-select style="min-width: 200px;" v-model:value="value2.cde_id" :options="store.cdes" show-search :filter-option="filterOption" @change="handleChangeCde" />
-        </div>
-       </div>
-     
-       <div>
-        <h4 class="title-produce">¿DESEA REGISTRAR UN NUEVO SERVICIO?</h4>
-        <div class="card-as-btn" style="margin: 0;">
-          <a-select style="min-width: 300px;" v-model:value="value1" :options="options1" />
-          <a-button class="btn-produce" type="primary" @click="handleSelectAction">REGISTRAR</a-button>
-        </div>
-       </div>
-      </a-card>
-    </div>
+      <a-col :xs="24" :sm="24" :lg="12">
+        <a-card v-if="infoUser.length != 0">
+          <h4 class="title-produce">RESULTADO DE LA BÚSQUEDA</h4>
+          <EditOutlined class="box-icoedit" @click="handleEditUserData" />
+  
+          <a-row :gutter="[0,2]" class="box-info">
+            <a-col :xs="12" :sm="8">
+              <b class="box-title">Apellidos y nombres:</b>
+            </a-col>
+            <a-col :xs="12" :sm="12">
+              <span>{{ infoUser.lastname }} {{ infoUser.middlename }}, {{ infoUser.name }}</span>
+            </a-col>
+            <a-col :xs="12" :sm="8">
+              <b class="box-title">Número de celular:</b>
+            </a-col>
+            <a-col :xs="12" :sm="12">
+              <span>{{ infoUser.phone ? infoUser.phone : '-' }}</span>
+            </a-col>
+            <a-col :xs="12" :sm="8">
+              <b class="box-title">Correo electrónico:</b>
+            </a-col>
+            <a-col :xs="12" :sm="12">
+              <span>{{ infoUser.email ? infoUser.email : '-' }}</span>
+            </a-col>
+            <a-col :xs="12" :sm="8">
+              <b class="box-title">Asesorías:</b>
+            </a-col>
+            <a-col :xs="12" :sm="12">
+              <span>{{ infoUser?.idadvisory.length }}</span>
+            </a-col>
+            <a-col :xs="12" :sm="8">
+              <b class="box-title">Formalizaciones RUC 20:</b>
+            </a-col>
+            <a-col :xs="12" :sm="12">
+              <span>{{ infoUser?.idformalization20.length }}</span>
+            </a-col>
+            <a-col :xs="12" :sm="8">
+              <b class="box-title">Formalizaciones RUC 10:</b>
+            </a-col>
+            <a-col :xs="12" :sm="12">
+              <span>{{ infoUser?.idformalization10.length }}</span>
+            </a-col>
+          </a-row>
+        
+        </a-card>
+      </a-col>
+      
+      <a-col :xs="24" :sm="24" :lg="12">
+        <a-card v-if="infoUser.length != 0">
+          <a-row :gutter="[16,24]">
+            <a-col :xs="24" :sm="18" :md="8" :lg="8">
+              <h4 class="title-produce">SELECCIONAR CDE</h4>
+              <a-select class="w-100" v-model:value="value2.cde_id" :options="store.cdes" show-search :filter-option="filterOption" @change="handleChangeCde" />
+            </a-col>
+  
+            <a-col :xs="24" :sm="18" :md="12" :lg="17">
+              <h4 class="title-produce">¿DESEA REGISTRAR UN NUEVO SERVICIO?</h4>
+              <a-row :gutter="[10,0]">
+                <a-col :xs="17" :sm="18">
+                  <a-select class="w-100" v-model:value="value1" :options="options1" />
+                </a-col>
+                <a-col :xs="6">
+                  <a-button type="primary" @click="handleSelectAction">REGISTRAR</a-button>
+                </a-col>
+              </a-row>
+            </a-col>
+          </a-row>
+        </a-card>
+      </a-col>
+
+    </a-row>
 
     <!-- <template v-if="infoUser.length != 0">
         <div class="buttons">
@@ -434,6 +458,22 @@ onMounted(() => {
 </script>
 
 <style lang="scss" scoped>
+.box-info {
+  b, span {
+    font-size: 13px;
+  }
+  b {
+    color: var(--primary);
+    font-weight: 500;
+  }
+}
+.box-icoedit {
+  color: var(--secondary);
+  position: absolute;
+  right: 1rem;
+  top: 1rem;
+}
+
 .code-number {
   font-weight: 500 !important;
 }
@@ -488,14 +528,14 @@ onMounted(() => {
 .asesorias {
   width: 100%;
 
-  .column-2 {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    grid-gap: 1rem;
-    @media screen and (max-width:1200px) {
-      grid-template-columns: 1fr;
-    }
-  }
+  // .column-2 {
+  //   display: grid;
+  //   grid-template-columns: 1fr 1fr;
+  //   grid-gap: 1rem;
+  //   @media screen and (max-width:1200px) {
+  //     grid-template-columns: 1fr;
+  //   }
+  // }
 
   // .buttons {
   //   margin: 1rem 0 2rem 0;

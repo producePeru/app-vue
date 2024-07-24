@@ -2,15 +2,15 @@
   <div class="all-notary">
     <h3 class="title-produce">NOTARÍAS</h3>
     <div class="filters-notary">
-      
+
       <div class="filters-center-produce">
-        <a-button style="margin-right: 1rem;" type="primary" @click="showDrawer">AGREGAR</a-button>
+        <a-button style="margin-right: 1rem;" type="primary" @click="showDrawer">Agregar Notaría</a-button>
         <router-link to="/notarias" target="_blank">
-          <LinkOutlined />
+          <ShareAltOutlined /> Link para compartir
         </router-link>
       </div>
 
-      <div class="filters-produce" >
+      <div class="filters-produce">
         <div>
           <label>Buscar por Nombre de Notaría</label>
           <a-input v-model:value="filterName" />
@@ -18,55 +18,87 @@
 
         <div>
           <label>Buscar Notarías por REGIÓN</label>
-          <a-select placeholder="Buscar por Provincia" v-model:value="filterCity" show-search :options="store.cities" :filter-option="filterOption" />
+          <a-select placeholder="Buscar por Provincia" v-model:value="filterCity" show-search :options="store.cities"
+            :filter-option="filterOption" />
         </div>
         <a-button @click="fetchData">BUSCAR</a-button>
       </div>
 
     </div>
 
-    <a-table bordered :scroll="{ x: valueX, y: valueY }" class="ant-table-striped" :columns="columns"
+    <div class=" notaries-wrapper notaries-box" v-for="(item, idx) in dataSource" :key="idx">
+      <div>
+        <a-tag color="blue" style="margin-bottom: 6px;">{{ item.city.name }}</a-tag>
+        <div class="notaries-box-adrres">
+          <span>{{ item.province.name }}</span> -
+          <span>{{ item.district.name }}</span> -
+          <span>{{ item.address }}</span>
+        </div>
+        <h3 class="notaries-box-name">{{ item.name }}</h3>
+        <div class="notaries-box-html-2" v-html="item.infocontacto"></div>
+      </div>
+
+      <div>
+        <h4 class="notaries-box-h4">GASTOS NOTARIALES</h4>
+        <div class="notaries-box-html" v-html="item.price"></div>
+      </div>
+
+      <div>
+        <h4 class="notaries-box-h4">CONDICIONES</h4>
+        <div class="notaries-box-html" v-html="item.conditions"></div>
+      </div>
+      <div>
+        <h4 class="notaries-box-h4">SOCIO O INTERVINIENTE ADICIONAL</h4>
+        <div class="notaries-box-html" v-html="item.sociointerveniente"></div>
+        <div>
+          <h4 class="notaries-box-h4" style="display: block;">BIOMETRICO: </h4>
+          <span class="notaries-box-html" v-html="item.biometrico"></span>
+        </div>
+      </div>
+    </div>
+
+    <!-- <a-table bordered :scroll="{ x: valueX, y: valueY }" class="ant-table-striped" :columns="columns"
       :data-source="dataSource" :pagination="false" :loading="loading" size="small">
       <template v-slot:bodyCell="{ column, record, index }">
         <template v-if="column.dataIndex == 'idx'">
           {{ index + 1 }}
         </template>
-        <template v-if="column.dataIndex == 'lastName'">
+<template v-if="column.dataIndex == 'lastName'">
           {{ record.last_name }} {{ record.middle_name }}
         </template>
-        <template v-if="column.dataIndex == 'departamento'">
+<template v-if="column.dataIndex == 'departamento'">
           {{ record.city?.name }}
         </template>
-        <template v-if="column.dataIndex == 'province'">
+<template v-if="column.dataIndex == 'province'">
           {{ record.province?.name }}
         </template>
-        <template v-if="column.dataIndex == 'distrite'">
+<template v-if="column.dataIndex == 'distrite'">
           {{ record.district?.name }}
         </template>
-        <template v-if="column.dataIndex == 'namenotary'">
+<template v-if="column.dataIndex == 'namenotary'">
           {{ record.name }}
         </template>
-        <template v-if="column.dataIndex == 'pricex'">
+<template v-if="column.dataIndex == 'pricex'">
           <div ref="divRef" class="gastos">
             <div v-html="record.price" class="style-price"></div>
           </div>
         </template>
-        <template v-if="column.dataIndex == 'pricedescriptionx'">
+<template v-if="column.dataIndex == 'pricedescriptionx'">
           <div>
             <div v-html="record.conditions" class="style-conditions"></div>
           </div>
         </template>
-        <template v-if="column.dataIndex == 'socio'">
+<template v-if="column.dataIndex == 'socio'">
           <div v-html="record.sociointerveniente" class="style-contact"></div>
         </template>
-        <template v-if="column.dataIndex == 'bio'">
+<template v-if="column.dataIndex == 'bio'">
           <div v-html="record.biometrico" class="style-contact"></div>
         </template>
-        <template v-if="column.dataIndex == 'contact'">
+<template v-if="column.dataIndex == 'contact'">
           <div v-html="record.infocontacto" class="style-contact"></div>
         </template>
 
-        <template v-if="column.dataIndex == 'actions'">
+<template v-if="column.dataIndex == 'actions'">
           <a-dropdown :trigger="['click']">
             <a class="ant-dropdown-link" @click.prevent>
               <a-button shape="circle" :icon="h(MoreOutlined)" size="small" />
@@ -79,19 +111,19 @@
                 <a-menu-item>
                   <a-popconfirm title="¿Seguro de eliminar?" @confirm="handleDeleteNotary(record)">
                     <template #icon><question-circle-outlined style="color: red" /></template>
-                    <a>Eliminar</a>
-                  </a-popconfirm>
-                </a-menu-item>
-              </a-menu>
-            </template>
-          </a-dropdown>
-        </template>
+<a>Eliminar</a>
+</a-popconfirm>
+</a-menu-item>
+</a-menu>
+</template>
+</a-dropdown>
+</template>
 
-      </template>
-    </a-table>
+</template>
+</a-table> -->
 
-    <a-drawer v-model:open="open" class="draw-notary" root-class-name="root-class-name" title="Datos de la notaría" width="600"
-      placement="right" @after-open-change="afterOpenChange">
+    <a-drawer v-model:open="open" class="draw-notary" root-class-name="root-class-name" title="Datos de la notaría"
+      width="600" placement="right" @after-open-change="afterOpenChange">
       <formAddNotary @closeDraw="handleCloseDrawopen" :updateNotary="updateNotary" />
     </a-drawer>
   </div>
@@ -101,7 +133,7 @@
 <script setup>
 import { ref, onMounted, h, onBeforeUnmount } from 'vue';
 import formAddNotary from './components/DrawerNotaria.componente.vue';
-import { LinkOutlined, QuestionCircleOutlined } from '@ant-design/icons-vue';
+import { LinkOutlined, QuestionCircleOutlined, ShareAltOutlined } from '@ant-design/icons-vue';
 import { requestNoToken } from '@/utils/noToken.js';
 import { MoreOutlined } from '@ant-design/icons-vue';
 import { useRouter } from 'vue-router';
@@ -192,16 +224,16 @@ const fetchData = async () => {
     loading.value = true;
 
     const values = {
-      ...filterName.value && {name: filterName.value},
-      ...filterCity.value && {city_id: filterCity.value}
+      ...filterName.value && { name: filterName.value },
+      ...filterCity.value && { city_id: filterCity.value }
     }
 
-    const data = await requestNoToken({ 
-      url: 'public/notaries-filters', 
+    const data = await requestNoToken({
+      url: 'public/notaries-filters',
       method: 'GET',
       params: values
     });
-    
+
     dataSource.value = data.data
 
   } catch (error) {
@@ -234,145 +266,127 @@ onMounted(() => {
     width: 100%;
   }
 }
-
-.ant-drawer-content-wrapper {
-  // min-width: 550px !important;
-  // width: 100%;
-}
-
-.quill-editor {
-  .ql-editor {
-    height: 100px;
-  }
-}
-
-.custom-content {
-  height: 100%;
-  overflow: auto;
-  outline: 1px solid red;
-}
-
-
 </style>
 
 <style lang="scss">
-.all-notary {
+.notaries {
+  background-color: rgb(236, 236, 236);
+  width: 100%;
+  min-height: 100vh;
 
-  table th,
-  table td {
-    border: 1px solid #444444;
+  &-filter {
+    display: flex;
+    align-items: end;
+    justify-content: center;
+    gap: 1rem;
+    margin-top: 1.5rem;
+
+    .notary-div {
+      display: flex;
+      flex-direction: column;
+      width: 250px;
+
+      label {
+        font-size: 14px;
+        margin-bottom: .2rem;
+        font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, 'Noto Sans', sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
+      }
+    }
+
+    @media screen and (max-width: 600px) {
+      flex-direction: column;
+      align-items: center;
+
+      .notary-div {
+        width: 80%;
+      }
+    }
   }
 
-  .ant-table-thead {
-    .ant-table-cell:nth-child(1),
-    .ant-table-cell:nth-child(2),
-    .ant-table-cell:nth-child(3),
-    .ant-table-cell:nth-child(4),
-    .ant-table-cell:nth-child(5),
-    .ant-table-cell:nth-child(6),
-    .ant-table-cell:nth-child(7),
-    .ant-table-cell:nth-child(8),
-    .ant-table-cell:nth-child(9),
-    .ant-table-cell:nth-child(10),
-    .ant-table-cell:nth-child(11) {
-      background-color: #cfcfcf !important;
+  &-wrapper {
+    background-color: #fff;
+    margin: auto;
+    padding: 2rem 1rem;
+  }
+
+  &-box {
+    border: 1px solid #e9e9e9;
+    border-radius: 4px;
+    box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.03), 0 1px 6px -1px rgba(0, 0, 0, 0.02), 0 2px 4px 0 rgba(0, 0, 0, 0.02);
+    padding: 1.5rem 1rem .5rem 1rem;
+    margin: 1rem auto;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, 'Noto Sans', sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
+    display: grid;
+    grid-template-columns: 1.5fr 1fr 1fr 1fr;
+    grid-gap: 1rem;
+
+    &-h4 {
       font-size: 13px;
-      color: #000;
-      border-bottom: 0px solid #333 !important;
-      border-inline-end: 0 solid transparent !important;
+      color: #BA0F0F;
     }
-  }
 
-  .ant-table-row {
-    .ant-table-cell:nth-child(2) {
+    &-adrres {
       font-size: 13px;
-      font-weight: 700;
+      color: #000000e0;
     }
-    .ant-table-cell:nth-child(3),
-    .ant-table-cell:nth-child(4),
-    .ant-table-cell:nth-child(5) {
-      background-color: #efefef !important;
-      font-size: 13px;
-      font-weight: 700;
+
+    &-name {
+      font-size: 16px;
+      margin: .2rem 0;
     }
-  }
-  .ant-table-row {
-    .ant-table-cell:nth-child(6) {
-      background-color: #fffbd6 !important;
+
+    &-html-2 {
+      margin: .3rem 0;
+      padding: .5rem 0;
+      border-top: 1px solid #eee;
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, 'Noto Sans', sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
+
+      p {
+        margin: 0;
+        font-size: 13px
+      }
     }
-    .ant-table-cell:nth-child(6), .ant-table-cell:nth-child(7) {
-      position: relative;
-      
+
+    &-html {
+      br {
+        display: none;
+      }
+
+      h1,
+      h2,
+      h3,
+      h4 {
+        font-size: 14px;
+        margin: 0;
+
+        strong {
+          color: #000000e0;
+          font-weight: 700;
+        }
+      }
+
+      p {
+        font-size: 13px;
+        margin-top: .3rem;
+
+        strong {
+          font-size: 11px;
+
+        }
+      }
     }
-  }
-  .ant-table-row {
-    .ant-table-cell:nth-child(1), .ant-table-cell:nth-child(2) {
-      background-color: #cfe2f3 !important;
+
+
+    @media screen and (max-width: 780px) {
+      grid-template-columns: 1fr 1fr;
+      grid-gap: 0 1rem;
+      // margin: 1rem;
     }
-   
 
-    
-  }
-
-  .ant-table-row {
-
-    .ant-table-cell:nth-child(10), .ant-table-cell:nth-child(11) {
-      font-size: 13px;
-      line-height: 1.2;
+    @media screen and (max-width: 600px) {
+      grid-template-columns: 1fr;
+      padding: 1.5rem 1rem 1rem;
     }
-  }
-}
-
-.style-price {
-
-  h1 strong,
-  h2 strong {
-    font-size: 16px;
-    font-weight: 700;
-  }
-
-  strong {
-    font-weight: 500;
-    font-size: 12px;
-  }
-}
-
-.style-conditions {
-
-  h1 strong,
-  h2 strong {
-    font-size: 13px;
-  }
-}
-
-.style-price,
-.style-conditions {
-
-  h1 strong,
-  h2 strong {
-    // outline: 1px solid red;
-    width: 100%;
-    display: block;
-    height: 20px;
-  }
-
-  strong {
-    // outline: 1px solid green;
-    width: 100%;
-    display: block;
-    // height: 20px;
-  }
-}
-
-.style-contact {
-  p {
-    margin: 4px;
-  }
-
-  p strong {
-    font-weight: 500;
-    font-size: 13px;
-    display: block;
   }
 }
 </style>

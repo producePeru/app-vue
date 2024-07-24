@@ -154,6 +154,12 @@ const router = createRouter({
               meta: { requiresAuth: true },
             },
             {
+              path: 'planes-accion',
+              name: 'planes-accion',
+              component: () => import('../pages/Asesorias/PlanesDeAccion.vue'),
+              meta: { requiresAuth: true },
+            },
+            {
               path: 'solicitantes',
               name: 'solicitantes',
               component: () => import('../pages/Asesorias/SolicitantesLista.vue'),
@@ -333,6 +339,22 @@ const router = createRouter({
             },     
           ]
         },
+
+        {
+          path: 'configuraciones',
+          name: 'configuraciones',
+          meta: { requiresAuth: true },
+          children: [
+            {
+              path: 'tokens',
+              name: 'tokens',
+              component: () => import('../pages/Configuraciones/MisTokens.vue'),
+              meta: { requiresAuth: true },
+            }, 
+          ]
+        },
+
+
         {
           path: 'mi-perfil',
           name: 'mi-perfil',

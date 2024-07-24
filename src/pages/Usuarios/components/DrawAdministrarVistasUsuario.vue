@@ -33,6 +33,7 @@ const loading = ref(false);
 const plainOptions = [
   'home',
   'asesorias',
+  'planes-accion',
   'asesorias-formalizaciones',
   'solicitudes',
   'solicitantes',
@@ -42,12 +43,16 @@ const plainOptions = [
   'usuarios',
   'usuarios-nuevo',
   'usuarios-lista',
+
   'drive-mis-archivos',
   'drive-subir-archivo',
   'drive-mis-carpetas',
 
   'convenios',
   'estado-convenio',
+
+  'configuraciones',
+  'tokens'
 ];
 
 onMounted(() => {
