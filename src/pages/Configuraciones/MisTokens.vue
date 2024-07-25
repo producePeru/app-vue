@@ -27,7 +27,10 @@
         </template>
 
         <template v-if="column.dataIndex == 'test'">
-          <a-button v-if="value == record.id" primary type="text" @click="handleTestToken" style="font-size: 13px;">PROBAR</a-button>
+          <a-button v-if="value == record.id" primary type="text" @click="handleTestToken" style="font-size: 13px;">
+            <loading-outlined v-if="testLoading" />
+            <span v-else>PROBAR</span>
+          </a-button>
         </template>
         
       </template>
@@ -48,10 +51,9 @@
 <script setup>
 import { makeRequest } from '@/utils/api.js'
 import { ref, onMounted, h, onBeforeUnmount, computed, reactive } from 'vue';
-import { MoreOutlined } from '@ant-design/icons-vue';
+import { LoadingOutlined } from '@ant-design/icons-vue';
 import { message } from 'ant-design-vue';
 import { useRouter } from 'vue-router';
-import { QuestionCircleOutlined } from '@ant-design/icons-vue';
 import { useCounterStore } from '@/stores/selectes.js';
 import moment from 'moment';
 import NuevoToken from './components/NuevoToken.vue'
@@ -61,13 +63,7 @@ store.$patch({ cdes: store.cdes });
 
 const open = ref(false);
 const value = ref(1);
-const selectedRow = ref(null);
-const updateUser = ref(null);
-const spinning = ref(false);
-const openModal = ref(false);
 const current = ref(0);
-
-const rol = ref('solicitante');
 const pageSize = ref(50);
 const dataSource = ref([])
 const loading = ref(false)
@@ -75,13 +71,14 @@ const total = ref(0)
 const router = useRouter();
 const params = ref({ page: 0 });
 const url = ref('token/list')
-const valueX = ref(1200)
+const valueX = ref(1200);
 const valueY = ref(window.innerHeight - 100);
+const testLoading = ref(false);
 
 const columns = [
   { title: '#', dataIndex: 'idx', fixed: 'left', align: 'center', width: 20 },
   { title: 'NOMBRE', dataIndex: 'name', width: 60 },
-  { title: 'TOKEN', dataIndex: 'token', fixed: 'left', width: 120 },
+  { title: 'TOKEN', dataIndex: 'token', width: 120 },
   { title: 'TOTAL', dataIndex: 'count', width: 30, align: 'center'},
   { title: 'CREADO', dataIndex: 'date', width: 50 },
   { title: 'ACTIVADO', dataIndex: 'status', width: 30, align: 'center'},
@@ -103,10 +100,10 @@ const handleChooseToken = async(token) => {
   await makeRequest({ url: `token/update-status/${token.id}`, method: 'PUT' });
 }
 const handleTestToken = async() => {
+  testLoading.value = true;
   try {
     const response = await makeRequest({ url: `user/only-dni/45424747`, method: 'GET' });
-    console.log("response: ", response);
-
+  
     if(response.status == 429) {
       return message.warning(response.message);
     }
@@ -118,6 +115,8 @@ const handleTestToken = async() => {
 
   } catch (error) {
     console.error('Error de red:', error);
+  } finally {
+    testLoading.value = false;
   }
 }
 const showDrawer = () => {

@@ -50,8 +50,10 @@
               <span>Formalizaciones</span>
             </span>
           </template>
+          
           <a-menu-item key="asesorias-formalizaciones" v-if="views.includes('asesorias-formalizaciones')"> <router-link
               to="/admin/asesorias/asesorias-formalizaciones">Registro</router-link> </a-menu-item>
+              
           <a-menu-item key="asesorias" v-if="views.includes('asesorias')"> <router-link
               to="/admin/asesorias/asesorias">Reportes</router-link> </a-menu-item>
           

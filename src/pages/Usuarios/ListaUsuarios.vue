@@ -27,8 +27,8 @@
     :pagination="false"
     :loading="loading"
     size="small">
-      <template v-slot:bodyCell="{column, record, index}">
-        <template v-if="column.dataIndex == 'idx'">
+    <template v-slot:bodyCell="{ column, record, index }">
+        <template v-if="column.dataIndex === 'idx'">
           {{ computeIndex(index) }}
         </template>
         <template v-if="column.dataIndex == 'documentnumber'">
@@ -118,54 +118,24 @@
 
 <script setup>
 import { makeRequest } from '@/utils/api.js'
-import { ref, onMounted, h, onBeforeUnmount, computed, reactive } from 'vue';
+import { ref, onMounted, h, computed, reactive } from 'vue';
 import { MoreOutlined } from '@ant-design/icons-vue';
 import { message } from 'ant-design-vue';
-import { useRouter } from 'vue-router';
-import { QuestionCircleOutlined } from '@ant-design/icons-vue';
-import { useCounterStore } from '@/stores/selectes.js';
 import EditarProfileUsuario from './components/EditarPerfil.componente.vue';
 import VistasUsuarios from './components/DrawAdministrarVistasUsuario.vue';
 
-const store = useCounterStore();
-store.$patch({ cdes: store.cdes });
-
-const open = ref(false);
-const afterOpenChange = bool => {
-  console.log('open', bool);
-};
-const showDrawer = () => {
-  open.value = true;
-};
-
 const updateUser = ref(null);
-const spinning = ref(false);
-const openModal = ref(false);
-const open1 = ref(false);
+const open = ref(false);
 const open2 = ref(false);
-const current = ref(0);
-
-
 const pageSize = ref(50);
 const dataSource = ref([])
 const loading = ref(false)
-const total = ref(0)
-const params = ref({ page: 0 });
-const url = ref('user/list')
-const valueX = ref(1200)
+const total = ref(0);
+const params = ref({ page: 1 });
+const url = ref('user/list');
+const valueX = ref(1200);
 const valueY = ref(window.innerHeight - 100);
-const actualizarAltura = () => {
-  valueY.value = window.innerHeight - 300;
-};
-onBeforeUnmount(() => {
-  window.removeEventListener('resize', actualizarAltura);
-});
 
-const steps = [
-  { title: 'Reserva de nombre' },
-  { title: 'Acto constitutivo', },
-  { title: 'Final' }
-];
 const columns = [
   { title: '#',                   dataIndex: 'idx', fixed: 'left', align: 'center', width: 50},
   { title: 'DNI',                 dataIndex: 'documentnumber', fixed: 'left', width: 80 },
@@ -180,13 +150,18 @@ const columns = [
   { title: '',                    dataIndex: 'actions', align: 'center', width: 50, fixed: 'right'}
 ];
 
+const actualizarAltura = () => {
+  valueY.value = window.innerHeight - 300;
+};
 const formState = reactive({
   search: '',
 });
+
 const handleFinish = () => {
   let params = { search: formState.search }
   fetchData(params)
 };
+
 const handleResetSearch = () => {
   if(!formState.search) {
     fetchData();
@@ -199,10 +174,11 @@ const handleCloseDrawopen = () => {
   open2.value = false;
 }
 
-const handlePaginator = (current) =>{
+const handlePaginator = (current) => {
   params.value.page = current;
-  fetchData()
-}
+  fetchData();
+};
+
 const handleEditUser = (data) => {
   updateUser.value = data
   open.value = true;
@@ -212,27 +188,13 @@ const handleViewsUser = (data) => {
   open2.value = true;
 }
 
-const handleDeleteUser= async(val) => {
-  try {
-    const data = await makeRequest({ url: `user/delete/${val.id}`, method: 'DELETE' });
-    if(data) {
-      fetchData();
-      message.success(data.message);
-    }  
-  } catch (error) {
-    console.error('Error de red:', error);
-  }
-}
-
 const fetchData = async(val) => {
   try {
     loading.value = true;
-
-    let parx;
-    parx = params.value.page == 0 ? '' : params.value;
-    parx = val? {...parx,...val } : parx;
+    const parx = params.value.page === 1 ? '' : params.value;
+    const finalParams = val ? { ...parx, ...val } : parx;
     
-    const {data} = await makeRequest({ url: url.value, method: 'GET', params:parx });
+    const {data} = await makeRequest({ url: url.value, method: 'GET', params:finalParams });
     dataSource.value = data.data
     total.value = data.total;
     pageSize.value = data.per_page;
@@ -244,7 +206,7 @@ const fetchData = async(val) => {
 }
 
 const computeIndex = computed(() => (index) => {
-  return  (params.value.page) * pageSize.value + index + 1;
+  return (params.value.page - 1) * pageSize.value + index + 1;
 });
 
 onMounted(() => {
@@ -252,6 +214,10 @@ onMounted(() => {
   window.addEventListener('resize', actualizarAltura);
   actualizarAltura();
 });
+
+const afterOpenChange = () => {
+  console.log('Drawer state changed');
+};
 </script>
 
 <style lang="scss">

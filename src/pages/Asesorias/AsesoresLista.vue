@@ -1,49 +1,36 @@
 <template>
   <div>
-    <h3 class="title-produce">ASESORES</h3>
-    <div class="filters-notary">
-      <div>
-        <!-- <a-button style="margin-right: 1rem;" class="btn-produce" type="primary" @click="showDrawer">AGREGAR</a-button> -->
-      </div>
-<!-- 
-      <div>
-        <a-select 
-        placeholder="Buscar por Provincia"
-        style="width: 200px;"
-        v-model:value="city" 
-        show-search 
-        :options="store.cities" 
-        :filter-option="filterOption" @change="handleDepartaments" />
-      </div> -->
+    <h3 class="title-produce">ASESORES DEL PROGRAMA</h3>
+    
+    <a-row style="margin: 1rem 0;">
+      <a-col :xs="24" :md="12" :lg="18"></a-col>
+      <a-col :xs="24" :md="12" :lg="6">
+        <a-input-group compact>
+          <a-input v-model:value="formState.search" style="width: calc(100% - 80px)" @input="handleResetSearch" />
+          <a-button type="primary" :disabled="formState.search === ''" @click="handleSearch">BUSCAR</a-button>
+        </a-input-group>
+      </a-col>
+    </a-row>
 
-    </div>
-
-    <a-table bordered :scroll="{ x: valueX, y: valueY }" class="asesores-table" :columns="columns"
-      :data-source="dataSource" :pagination="false" :loading="loading" size="small">
+    <a-table 
+      bordered
+      :scroll="{ x: valueX, y: valueY }" 
+      class="table-users" 
+      :columns="columns" 
+      :data-source="dataSource" 
+      :pagination="false"
+      :loading="loading"
+      size="small">
       <template v-slot:bodyCell="{ column, record, index }">
-        <template v-if="column.dataIndex == 'idx'">
+        <template v-if="column.dataIndex === 'idx'">
           {{ computeIndex(index) }}
         </template>
-
-        <template v-if="column.dataIndex == 'name'">
-          <span class="uppercase">{{ record.asesores.profile?.name }} </span>
+        <template v-if="column.dataIndex === 'lastname'">
+          {{ record.profile_lastname }} {{ record.profile_middlename }}
         </template>
-        <template v-if="column.dataIndex == 'apellidos'">
-          <span class="uppercase">{{ record.asesores.profile?.lastname }} {{ record.asesores.profile?.middlename }}</span>
+        <template v-if="column.dataIndex === 'role'">
+          Asesor
         </template>
-        <template v-if="column.dataIndex == 'documentnumber'">
-          {{ record.asesores.profile?.documentnumber }}
-        </template>
-        <template v-if="column.dataIndex == 'phone'">
-          {{ record.asesores.profile?.phone }}
-        </template>
-        <template v-if="column.dataIndex == 'birthday'">
-          {{ record.asesores.profile?.birthday }}
-        </template>
-        <template v-if="column.dataIndex == 'sede'">
-          {{ record.asesores.profile?.cde.name }}
-        </template>
-       
 
         <template v-if="column.dataIndex == 'actions'">
           <a-dropdown :trigger="['click']">
@@ -52,214 +39,132 @@
             </a>
             <template #overlay>
               <a-menu>
-                <!-- <a-menu-item>
-                  <a @click="handleEditSolicitante(record)">Editar</a>
-                </a-menu-item>
                 <a-menu-item>
-                  <a-popconfirm title="¿Seguro de eliminar?" @confirm="handleDeleteNotary(record)">
-                    <template #icon><question-circle-outlined style="color: red" /></template>
-                    <a>Eliminar</a>
-                  </a-popconfirm>
-                </a-menu-item> -->
+                  <a @click="handleEditItem(record)">Editar</a>
+                </a-menu-item>
               </a-menu>
             </template>
           </a-dropdown>
         </template>
-
+        
       </template>
     </a-table>
   </div>
 
   <div class="paginator">
-    <a-pagination size="small" :total="total" :pageSize="pageSize"  @change="handlePaginator" :showSizeChanger="false" />
+    <span><a-tag color="blue"><b>{{ total }} </b></a-tag>Usuarios</span>
+    <a-pagination size="small" :total="total" :pageSize="pageSize" @change="handlePaginator" :showSizeChanger="false" />
   </div>
 
   <a-drawer
-    width="600"
-    v-model:open="open"
-    class="draw-notary"
-    root-class-name="root-class-name"
-    title="Datos del solicitante"
-    placement="right"
-    @after-open-change="afterOpenChange">
-    <SolicitanteEditar @closeDraw="handleCloseDrawopen" :updateValues="updateValues" />
+  width="550"
+  v-model:open="openDrawer"
+  class="draw"
+  title="Editar datos del asesor"
+  placement="right">
+  <EditarDatosAsesor @closeDraw="handleCloseDrawer" :record="dataItem" />
   </a-drawer>
-
 </template>
 
-
 <script setup>
-import { ref, onMounted, h, onBeforeUnmount, computed } from 'vue';
-import SolicitanteEditar from './components/DrawerSolicitante.componente.vue';
-import { LinkOutlined, QuestionCircleOutlined } from '@ant-design/icons-vue';
-import { requestNoToken } from '@/utils/noToken.js';
+import { makeRequest } from '@/utils/api.js'
+import { h, ref, onMounted, computed, reactive } from 'vue';
 import { MoreOutlined } from '@ant-design/icons-vue';
-import { useRouter } from 'vue-router';
-import { makeRequest } from '@/utils/api.js';
 import { message } from 'ant-design-vue';
-import { useCounterStore } from '@/stores/selectes.js';
+import EditarDatosAsesor from './components/DrawerEditarDatosAsesor.vue';
 
-const storageData = JSON.parse(localStorage.getItem('profile'))
-const store = useCounterStore();
-store.$patch({ cities: store.cities });
-store.fetchCities();
-
+const pageSize = ref(50);
+const dataSource = ref([]);
+const loading = ref(false);
+const total = ref(0);
+const params = ref({ page: 1 });
+const url = ref('user/list-asesories');
+const valueX = ref(1200);
 const valueY = ref(window.innerHeight - 100);
+const openDrawer = ref(false);
+const dataItem = ref(null);
+
 const columns = [
-  { title: '#', fixed: 'left', dataIndex: 'idx', align: 'center', width: 70 },
-  { title: 'EMAIL', dataIndex: 'email', fixed: 'left', width: 200 },
-  { title: 'NOMBRES', dataIndex: 'name', width: 140 },
-  { title: 'APELLIDOS', dataIndex: 'apellidos', width: 170 },
-  { title: 'NUM. DOC', dataIndex: 'documentnumber', align: 'center', width: 120 },
-  { title: 'CELULAR', dataIndex: 'phone', align: 'center', width: 150 },
-  { title: 'F.NACIMIENTO', dataIndex: 'birthday', align: 'center', width: 150 },
-
-  { title: 'SEDE', dataIndex: 'sede', align: 'center', width: 150 },
-
-
-  // { title: 'PROVINCIA', dataIndex: 'province', align: 'center', width: 150 },
-  // { title: 'DISTRITO', dataIndex: 'district', align: 'center', width: 150 },
-  // { title: 'GÉNERO', dataIndex: 'gender', align: 'center', width: 120 },
-  // { title: 'DISCAPACIDAD', dataIndex: 'sickx', align: 'center', width: 120 },
-  // { title: 'REGISTRADO POR', dataIndex: 'contact', align: 'center', width: 260 },
-  // { title: '', dataIndex: 'actions', align: 'center', width: 50, fixed: 'right'}
+  { title: '#', dataIndex: 'idx', fixed: 'left', align: 'center', width: 50 },
+  { title: 'Nombres', dataIndex: 'profile_name', width: 120 },
+  { title: 'Apellidos', dataIndex: 'lastname', width: 160 },
+  { title: 'Num. DNI', dataIndex: 'profile_documentnumber', width: 100, align: 'center'},
+  { title: 'Celular', dataIndex: 'profile_phone', width: 100, align: 'center' },
+  { title: 'CDE', dataIndex: 'cde_name', width: 160 },
+  { title: 'Fecha Nac.', dataIndex: 'profile_birthday', width: 100, align: 'center' },
+  { title: 'Género', dataIndex: 'gender', width: 120, align: 'center' },
+  { title: 'Oficina', dataIndex: 'office_name', width: 100, align: 'center' },
+  { title: 'ROL', dataIndex: 'role', width: 100, align: 'center' },
+  { title: 'CUENTA', dataIndex: 'email', width: 180},
+  { title: '', dataIndex: 'actions', align: 'center', width: 50, fixed: 'right' }
 ];
 
-const total = ref(0);
-const pageSize = 20;
-const params = ref({ page: 0 });
-const valueX = ref(1200)
-const dataSource = ref([])
-const loading = ref(false)
-const open = ref(false);
-const updateValues = ref(null);
-const city = ref(null);
-
-const handlePaginator = (current) =>{
-  params.value.page = current;
-  fetchData()
-}
-const handleDepartaments = async() => {
-  try {
-    loading.value = true;
-    const data = await makeRequest({ url: `notary/list/${city.value}`, method: 'GET' });
-    dataSource.value = data.data
-  } catch (error) {
-    console.error('Error de red:', error);
-  } finally {
-    loading.value = false;
-  }
-}
-const filterOption = (input, option) => {
-  const normalizedInput = input.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "");
-  const normalizedLabel = option.label.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "");
-  return normalizedLabel.includes(normalizedInput);
-};
 const actualizarAltura = () => {
-  valueY.value = window.innerHeight - 280;
+  valueY.value = window.innerHeight - 300;
 };
-const afterOpenChange = bool => {
-  console.log('open', bool);
-};
-const showDrawer = () => {
-  updateValues.value = null;
-  open.value = true;
-};
-const handleCloseDrawopen = () => {
+const handleEditItem = (item) => {
+  openDrawer.value = true;
+  dataItem.value = item;
+}
+const handleCloseDrawer = () => {
+  openDrawer.value = false;
   fetchData();
-  open.value = false;
 }
-const handleDeleteNotary= async(val) => {
-  try {
-    const data = await makeRequest({ url: `notary/delete/${val.id}`, method: 'DELETE' });
-    if(data) {
-      fetchData();
-      message.success(data.message);
-    }  
-  } catch (error) {
-    console.error('Error de red:', error);
-  }
-}
-const handleEditSolicitante = (data) => {
-  updateValues.value = data
-  open.value = true;
-}
-const computeIndex = computed(() => (index) => {
-  let numb = params.value.page == 0 ? 1 : params.value.page
-  return  (numb - 1) * pageSize + index + 1;
+const formState = reactive({
+  search: '',
 });
 
-const fetchData = async () => {
+const handleSearch = () => {
+  fetchData({ search: formState.search });
+};
+
+const handleResetSearch = () => {
+  if (!formState.search) {
+    fetchData();
+  }
+};
+
+const handlePaginator = (current) => {
+  params.value.page = current;
+  fetchData();
+};
+
+const fetchData = async (val) => {
   try {
     loading.value = true;
-    let parx = params.value.page == 0 ? '' : params.value;
-
-    const data = await makeRequest({ url: `user/list-asesories`, method: 'GET', params:parx });
-    dataSource.value = data.data
-    total.value = data.total
+    const parx = params.value.page === 1 ? '' : params.value;
+    const finalParams = val ? { ...parx, ...val } : parx;
+    const data = await makeRequest({ url: url.value, method: 'GET', params: finalParams });
+    dataSource.value = data.data;
+    total.value = data.total;
+    pageSize.value = data.per_page;
   } catch (error) {
     console.error('Error de red:', error);
   } finally {
     loading.value = false;
   }
-}
-onBeforeUnmount(() => {
-  window.removeEventListener('resize', actualizarAltura);
+};
+
+const computeIndex = computed(() => (index) => {
+  return (params.value.page - 1) * pageSize.value + index + 1;
 });
+
 onMounted(() => {
+  fetchData();
   window.addEventListener('resize', actualizarAltura);
   actualizarAltura();
-  fetchData();
 });
 </script>
 
 <style lang="scss">
 .paginator {
   display: flex;
-  justify-content: flex-end;
+  justify-content: space-between;
   margin-top: 1.5rem;
 }
-.ant-popover-inner {
-  width: 200px;
-}
-.filters-notary {
-  margin: .6rem 0 1rem 0;
-  display: flex;
-  justify-content: space-between;
-  .ant-select {
-    width: 100%;
-  }
-}
-.ant-drawer-content-wrapper {
-  // min-width: 550px !important;
-  // width: 100%;
-}
-.quill-editor {
-  .ql-editor {
-    height: 100px;
-  }
-}
-
-.custom-content {
-  height: 100%;
-  overflow: auto; 
-  outline: 1px solid red;
-}
-.all-notaries {
-  padding: 2rem;
-  h1,
-  h2 {
-    font-weight: 600;
-    margin: 0 auto 1rem 0;
-    text-align: center;
-  }
-  h1 {
-    color: #0070c0;
-  }
-  h2 {
-    color: #ff0000;
-    font-size: 22px;
-    margin-bottom: 2rem;
+.table-users {
+  tr {
+    font-size: 13px;
   }
 }
 </style>
