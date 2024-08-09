@@ -1,3 +1,5 @@
+const role = JSON.parse(localStorage.getItem('role'));
+
 const fields = {
   // cde_id: {
   //   type: 'iSelectWrite',
@@ -22,7 +24,7 @@ const fields = {
     name: 'modality_id',
     required: true,
     message: 'Seleccionar la modalidad',
-    disabled: false
+    disabled: role.some(r => r.id === 7) ? true : false
   },
   city_id: {
     type: 'iSelectWrite',
@@ -107,7 +109,7 @@ const fields = {
     name: 'notary_id',
     required: true,
     message: 'Seleccionar una notaría',
-    disabled: false
+    disabled: role.some(r => r.id === 7) ? true : false
   },
   numbernotary: {
     type: 'iText',
@@ -215,7 +217,7 @@ const ructen = {
     name: 'modality_id',
     required: true,
     message: 'Seleccionar modalidad de atención',
-    disabled: false
+    disabled: role.some(r => r.id === 7) ? true : false
   },
   ruc: {
     type: 'iText',
@@ -292,7 +294,7 @@ const asesoria = {
     name: 'component_id',
     required: true,
     message: 'Seleccionar un componente',
-    disabled: false
+    disabled: role.some(r => r.id === 7) ? true : false
   },
   theme_id: {
     type: 'iSelectWrite',
@@ -308,7 +310,7 @@ const asesoria = {
     name: 'modality_id',
     required: true,
     message: 'Seleccionar modalidad',
-    disabled: false
+    disabled: role.some(r => r.id === 7) ? true : false
   },
   ruc: {
     type: 'iText',

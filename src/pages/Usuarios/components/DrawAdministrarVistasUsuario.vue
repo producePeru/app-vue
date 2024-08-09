@@ -43,6 +43,7 @@ const plainOptions = [
   'usuarios',
   'usuarios-nuevo',
   'usuarios-lista',
+  'asesor-externo-notario',
 
   'drive-mis-archivos',
   'drive-subir-archivo',

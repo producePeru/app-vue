@@ -58,8 +58,12 @@ const formState = reactive({
 const onSubmit =async() => {
   // return console.log("iaiiaia", window.location.hostname);
   loading.value = true;
+  const payload = {
+    login: formState.email,
+    password : formState.password
+  }
   try {
-    const data = await requestNoToken({ url: `login`, method: 'POST', data:  formState });
+    const data = await requestNoToken({ url: `login`, method: 'POST', data: payload });
 
     localStorage.setItem('token', JSON.stringify(data.token));
     localStorage.setItem('profile', JSON.stringify(data.profile));

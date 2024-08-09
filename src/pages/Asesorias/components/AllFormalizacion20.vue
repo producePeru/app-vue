@@ -11,8 +11,11 @@
               <a-select v-if="el.name == 'regime_id'" v-model:value="formState[el.name]" :options="store.regimes"
                 show-search :filter-option="filterOption" />
 
-              <a-select v-if="el.name == 'modality_id'" v-model:value="formState[el.name]"
-                :options="store.modalities" />
+              <a-select 
+              v-if="el.name == 'modality_id'" 
+              :disabled="el.disabled"
+              v-model:value="formState[el.name]"
+              :options="store.modalities" />
 
               <a-select v-if="el.name == 'typecapital_id'" v-model:value="formState[el.name]"
                 :options="store.typeCapital" />
@@ -21,8 +24,14 @@
                 :options="bic" />
               
               
-              <a-select v-if="el.name == 'notary_id'" v-model:value="formState[el.name]" :options="notaries"
-                option-label-prop="name" show-search :filter-option="filterNotaries">
+              <a-select 
+              v-if="el.name == 'notary_id'" 
+              :disabled="el.disabled"
+              v-model:value="formState[el.name]" 
+              :options="notaries"
+              option-label-prop="name" 
+              show-search 
+              :filter-option="filterNotaries">
                 <template #option="{ value: val, name, city, province, district, address }">
                   <div class="select-notaries">
                     <span class="name">{{ name }}</span>
@@ -102,8 +111,8 @@
 
           </template>
         </div>
-        <!-- <pre>{{ props.info }}</pre> -->
-        <!-- <pre>:::::{{ formState }}</pre>  -->
+        <!-- <pre>{{ notaries }}</pre> -->
+        <pre style="display: none;">:::::{{ formState }}</pre> 
         <div>{{ update() }}</div>
         <a-form-item>
           <a-button class="btn-produce" type="primary" html-type="submit" :loading="loading">GUARDAR</a-button>
@@ -115,7 +124,7 @@
 
 <script setup>
 import CryptoJS from 'crypto-js';
-import { reactive, ref, defineComponent } from 'vue';
+import { reactive, ref, defineComponent, onMounted } from 'vue';
 import { useCounterStore } from '@/stores/selectes.js';
 import { fields } from '@/forms/asesorias.js'
 import { makeRequest } from '@/utils/api.js';
@@ -141,9 +150,12 @@ const VNodes = defineComponent({
   },
 });
 
+const storageData = JSON.parse(localStorage.getItem('profile'));
+const role = JSON.parse(localStorage.getItem('role'));
+
 const dateFormat = 'DD/MM/YYYY';
 const route = useRoute();
-const storageData = JSON.parse(localStorage.getItem('profile'));
+
 const props = defineProps(['info', 'idCde']);
 const emit = defineEmits(['closeDraw']);
 const loadingcategory = ref(false);
@@ -216,7 +228,17 @@ const validateOnlyNumber = (val) => {
 };
 const update = () => {
   formState.dni = props.info.documentnumber;
+
+  const containsId = role.some(role => role.id === 7);
+
+  if (containsId) {
+    formState.modality_id = 1 
+    formState.notary_id = storageData.notary_id 
+  } 
+
   if (store.regimes?.length) spinning.value = false;
+
+
   // dProfile.cde_id ? formState.cde_id = dProfile.cde_id : null;
 }
 const filterNotaries = (input, option) => {
@@ -271,7 +293,7 @@ const handleDepartaments = (id) => {
   formState.province_id = null
   formState.district_id = null
   store.fetchProvinces(id);
-  handleGetNotariesByRegion()
+  // handleGetNotariesByRegion()
 }
 const handleProvinces = (id) => {
   formState.district_id = null
@@ -328,7 +350,7 @@ const onSubmit = async () => {
     district_id: formState.district_id,
     modality_id: formState.modality_id,
     notary_id: formState.notary_id,
-    user_id: storageData.id,
+    user_id: storageData.user_id,
     people_id: props.info.id,
 
     nameMype: formState.nameMype,
@@ -379,6 +401,10 @@ const onSubmit = async () => {
 const onSubmitFail = () => {
   message.warning('Debes de completar todos los espacios requeridos');
 };
+
+onMounted(() => {
+  handleGetNotariesByRegion()
+});
 </script>
 
 <style scoped lang="scss">

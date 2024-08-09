@@ -9,7 +9,11 @@
           <a-form-item class="item-max" v-if="el.type === 'iSelect'" :name="el.name" :label="el.label"
             :rules="[{ required: el.required, message: el.message }]">
             <a-select v-if="el.name == 'detailprocedure_id'" v-model:value="formState[el.name]" :options="store.detailProcedures" />
-            <a-select v-if="el.name == 'modality_id'" v-model:value="formState[el.name]" :options="store.modalities" />
+            <a-select 
+            v-if="el.name == 'modality_id'" 
+            :disabled="el.disabled"
+            v-model:value="formState[el.name]" 
+            :options="store.modalities" />
             <!-- <a-select v-if="el.name == 'economicsector_id'" v-model:value="formState[el.name]" :options="store.economicSectors" /> -->
           </a-form-item>
 
@@ -86,6 +90,8 @@ import { makeRequest } from '@/utils/api.js';
 import { PlusOutlined } from '@ant-design/icons-vue';
 import { dProfile } from '@/utils/storage.js';
 
+const role = JSON.parse(localStorage.getItem('role'));
+
 const VNodes = defineComponent({
   props: {
     vnodes: {
@@ -148,6 +154,9 @@ const onlyRUC = (name) => {
 }
 const update = () => {
   formState.dni = props.info.documentnumber;
+
+  role.some(r => r.id === 7) ? formState.modality_id = 1 : formState.modality_id = null;
+
   if(store.cities) spinning.value = false;
   // dProfile.cde_id ? formState.cde_id = dProfile.cde_id : null;
 }

@@ -48,10 +48,13 @@
         </template>
         
         <template v-if="column.dataIndex == 'office'">
-          <a-tag color="blue" v-if="record.profile?.office.name == 'UGSE'">{{ record.profile?.office.name }} </a-tag>
-          <a-tag color="orange" v-if="record.profile?.office.name == 'UGO'">{{ record.profile?.office.name }} </a-tag>
-          <a-tag color="green" v-if="record.profile?.office.name == 'DE'">{{ record.profile?.office.name }} </a-tag>
-          <a-tag color="gray" v-if="record.profile?.office.name == 'UGEER'">{{ record.profile?.office.name }} </a-tag>
+          <a-tag color="blue" v-if="record.profile.office?.name == 'UGSE'">{{ record.profile?.office.name }} </a-tag>
+          <a-tag color="orange" v-if="record.profile.office?.name == 'UGO'">{{ record.profile?.office.name }} </a-tag>
+          <a-tag color="green" v-if="record.profile.office?.name == 'DE'">{{ record.profile?.office.name }} </a-tag>
+          <a-tag color="gray" v-if="record.profile.office?.name == 'UGEER'">{{ record.profile?.office.name }} </a-tag>
+          
+          <a-tag color="blue" v-if="record.profile.office?.id == 5">Asesor Notaría </a-tag>
+          
           <!-- <pre>{{ record.profile?.office.name }}</pre> -->
         </template>
 

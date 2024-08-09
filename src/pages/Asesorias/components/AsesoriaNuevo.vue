@@ -8,7 +8,11 @@
           <a-form-item class="item-max" v-if="el.type === 'iSelect'" :name="el.name" :label="el.label"
             :rules="[{ required: el.required, message: el.message }]">
             <!-- <a-select v-if="el.name == 'component_id'" v-model:value="formState[el.name]" :options="store.components" @change="handleSelectComponent" /> -->
-            <a-select v-if="el.name == 'modality_id'" v-model:value="formState[el.name]" :options="store.modalities" />
+            <a-select 
+            v-if="el.name == 'modality_id'" 
+            :disabled="el.disabled"
+            v-model:value="formState[el.name]" 
+            :options="store.modalities" />
           </a-form-item>
 
           <a-form-item v-if="el.type === 'iTextarea'" :name="el.name" :label="el.label"
@@ -39,7 +43,14 @@
             
             <!-- <a-select v-if="el.name == 'cde_id'" v-model:value="formState[el.name]" :options="store.cdes" show-search :filter-option="filterOption" @change="handleChangeCde"/> -->
             
-            <a-select v-if="el.name == 'component_id'" v-model:value="formState[el.name]" show-search :options="store.components" :filter-option="filterOption" @change="handleSelectComponent">
+            <a-select 
+            v-if="el.name == 'component_id'" 
+            :disabled="el.disabled"
+            v-model:value="formState[el.name]" 
+            show-search 
+            :options="store.components" 
+            :filter-option="filterOption"
+            @change="handleSelectComponent">
               <!-- <template #dropdownRender="{ menuNode: menu }">
                 <v-nodes :vnodes="menu" />
                 <a-divider style="margin: 4px 0" />
@@ -95,6 +106,8 @@ import { useCounterStore } from '@/stores/selectes.js';
 import { makeRequest } from '@/utils/api.js';
 import { PlusOutlined } from '@ant-design/icons-vue';
 import CryptoJS from 'crypto-js';
+
+const role = JSON.parse(localStorage.getItem('role'));
 
 const VNodes = defineComponent({
   props: {
@@ -205,6 +218,13 @@ const handleAddThemeNew = async() => {
 const update = () => {
   formState.dni = props.info.documentnumber;
   if(store.cities) spinning.value = false;
+
+  // Validamos si es notario externo el asesor
+  role.some(r => r.id === 7) ? formState.component_id = 4 : formState.component_id = null;
+  role.some(r => r.id === 7) ? formState.modality_id = 1 : formState.modality_id = null;
+  role.some(r => r.id === 7) && store.fetchComponentThemes(4);
+ 
+
   // dProfile.cde_id ? formState.cde_id = dProfile.cde_id : null;
 }
 const handleSelectComponent = (id) => {

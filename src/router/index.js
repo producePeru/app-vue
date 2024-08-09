@@ -28,6 +28,7 @@ const router = createRouter({
       name: 'lasnotarias',
       component: () => import('../pages/Landing/NotariasPage.vue')
     },
+  
     // {
     //   path: '/formalizacion-digital-mapa',
     //   name: 'formalizacion-mapa',
@@ -83,6 +84,7 @@ const router = createRouter({
           path: 'inicio',
           name: 'inicio',
           component: () => import('../pages/Inicio/InicioDashboard.vue'),
+          meta: { requiresAuth: true },
         },
         {
           path: 'gamarra-produce',
@@ -92,7 +94,8 @@ const router = createRouter({
         {
           path: 'registrar-usuario',
           name: 'registrar-persona',
-          component: () => import('../pages/Personas/NuevaPersona.vue')
+          component: () => import('../pages/Personas/NuevaPersona.vue'),
+          meta: { requiresAuth: false },
         },
         {
           path: 'actualizar-usuario',
@@ -321,6 +324,12 @@ const router = createRouter({
               meta: { requiresAuth: true },
             },
             {
+              path: 'asesor-externo-notario',
+              name: 'asesor-externo-notario',
+              component: () => import('../pages/Usuarios/NuevoUsuariosNotaria.vue'),
+              meta: { requiresAuth: false },
+            },
+            {
               path: 'actualizar-usuario/:dni',
               name: 'usuarios-actualizar',
               component: () => import('../pages/Usuarios/ActualizarUsuario.vue'),
@@ -358,7 +367,8 @@ const router = createRouter({
         {
           path: 'mi-perfil',
           name: 'mi-perfil',
-          component: () => import('../pages/Usuarios/MiPerfil.vue')
+          component: () => import('../pages/Usuarios/MiPerfil.vue'),
+          meta: { requiresAuth: false },
         },  
         {
           path: 'cambiar-clave',

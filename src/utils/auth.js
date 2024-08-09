@@ -3,42 +3,39 @@ import router from '../router/index';
 import CryptoJS from 'crypto-js';
 
 router.beforeEach((to, from, next) => {
+  // Verificar si la ruta requiere autenticación
+  if (to.matched.some(record => record.meta.requiresAuth)) {
+    const isAuthenticated = Cookies.get('token');
 
-  const isAuthenticated = Cookies.get('token');
-
-  if (to.path === '/' && isAuthenticated) {
-   
-    let viewsStorage = [];
-    
     if (isAuthenticated) {
+      let viewsStorage = [];
+
       const encryptedLocalStore = localStorage.getItem('views');
       if (encryptedLocalStore) {
         const decryptedViews = CryptoJS.AES.decrypt(encryptedLocalStore, 'appvistas').toString(CryptoJS.enc.Utf8);
-        viewsStorage = JSON.parse(decryptedViews); 
+        viewsStorage = JSON.parse(decryptedViews);
       }
 
-      if (viewsStorage.includes(to.name)) {
-        next();
+      if (!viewsStorage.includes(to.name) && to.name !== 'inicio') {
+        return next('/admin/inicio');
       } else {
-        next('/admin/inicio'); 
+        return next();
       }
+
     } else {
       localStorage.removeItem('user');
       localStorage.removeItem('views');
       Cookies.remove('user');
-      next('/'); 
-    }
-  
-  } else if (to.path !== '/' && !isAuthenticated) {
 
-    if(to.name === 'landing' || to.name === 'lasnotarias' || to.name === 'formalizacion') {
-      return next();
+      const publicPages = ['landing', 'lasnotarias', 'formalizacion', 'videos'];
+      if (publicPages.includes(to.name) || to.path === '/') {
+        return next();
+      } else {
+        return next('/');
+      }
     }
-
-    next('/'); 
-    
   } else {
-    next(); 
+    // Si la ruta no requiere autenticación, permitir el acceso
+    next();
   }
-
 });

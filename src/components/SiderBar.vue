@@ -120,6 +120,10 @@
           </template>
           <a-menu-item key="usuarios-nuevo" v-if="views.includes('usuarios-nuevo')"> <router-link
               to="/admin/usuarios/nuevo-usuario">Nuevo usuario</router-link> </a-menu-item>
+
+          <a-menu-item key="asesor-externo-notario" v-if="views.includes('asesor-externo-notario')"> <router-link
+              to="/admin/usuarios/asesor-externo-notario">Asesor externo</router-link> </a-menu-item>
+
           <a-menu-item key="usuarios-lista" v-if="views.includes('usuarios-lista')"> <router-link
               to="/admin/usuarios/lista">Lista usuarios</router-link> </a-menu-item>
         </a-sub-menu>
