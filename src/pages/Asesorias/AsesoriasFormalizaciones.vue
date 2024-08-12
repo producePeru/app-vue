@@ -88,7 +88,7 @@
         <a-card v-if="infoUser.length != 0" style="height: 100%;">
   
           <a-row :gutter="[16, 24]">
-            <a-col :xs="24" :sm="18" :md="8" :lg="8" v-if="!isNotary()">
+            <a-col :xs="24" :sm="18" :md="12" :lg="12" v-if="!isNotary()">
               <h4 class="title-produce">SELECCIONAR CDE</h4>
               <a-select class="w-100" v-model:value="value2.cde_id" :options="store.cdes" show-search
                 :filter-option="filterOption" @change="handleChangeCde" />
@@ -210,9 +210,9 @@
 <script setup>
 import { ref, onMounted } from 'vue';
 import AllFormalizacion20 from './components/AllFormalizacion20.vue';
-import ReservaNombre from './components/ReservaNombre.vue';
-import ActoConstitutivo from './components/ActoConstitutivo.vue';
-import MypeFinal from './components/MypeFinal.vue'
+// import ReservaNombre from './components/ReservaNombre.vue';
+// import ActoConstitutivo from './components/ActoConstitutivo.vue';
+// import MypeFinal from './components/MypeFinal.vue'
 import Formalizacion10 from './components/FormalizacionRUC10.vue';
 import AsesoriaNuevo from './components/AsesoriaNuevo.vue';
 import { message } from 'ant-design-vue';

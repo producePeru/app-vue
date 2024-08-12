@@ -77,6 +77,7 @@
 
     </a-form>
     <div>{{ update() }}</div>
+    <!-- <pre>{{ formState }}</pre> -->
     </a-spin>
   </div>
 </template>
@@ -141,6 +142,7 @@ const formState = reactive({
   city_id: null,
   province_id: null,
   district_id: null,
+  address: null,
   user_id: storageData.user_id
 });
 
@@ -152,14 +154,29 @@ const onlyRUC = (name) => {
     }
   }
 }
+
 const update = () => {
-  formState.dni = props.info.documentnumber;
+  const { documentnumber, city_id, province_id, district_id, address } = props.info;
+  
+  formState.dni = documentnumber;
+  formState.modality_id = role.some(r => r.id === 7) ? 1 : null;
+  
+  formState.city_id = city_id;
+  handleDepartaments(city_id);
+  
+  formState.province_id = province_id;
+  handleProvinces(province_id);
+  
+  formState.district_id = district_id;
 
-  role.some(r => r.id === 7) ? formState.modality_id = 1 : formState.modality_id = null;
+  formState.address = address;
 
-  if(store.cities) spinning.value = false;
-  // dProfile.cde_id ? formState.cde_id = dProfile.cde_id : null;
-}
+  if (store.cities) {
+    spinning.value = false;
+  }
+};
+
+
 const validateOnlyNumber = (val) => {
   if(val == 'ruc') {
     const value = formState.ruc;
@@ -240,6 +257,16 @@ const onSubmit = async () => {
   try {
     const response = await makeRequest({ url: 'formalization/create-ruc-10', method: 'POST', data: payload});
     if (response.status === 200) {
+
+      const payloadMype = {
+        razonSocial: null,
+        ruc: formState.ruc,
+        createdFrom: 'F10'
+      }
+
+      await makeRequest({ url: 'mype/create', method: 'POST', data: payloadMype});
+      await makeRequest({ url: `mype/update/${formState.ruc}`, method: 'PUT' });
+
       message.success(response.message);
       formState.detailprocedure_id = null;
       formState.modality_id = null;

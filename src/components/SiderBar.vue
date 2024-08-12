@@ -21,6 +21,11 @@
           <span><router-link to="/admin/inicio">inicio</router-link></span>
         </a-menu-item>
 
+        <a-menu-item key="mypes">
+          <ShopOutlined />
+          <span><router-link to="/admin/mypes">MYPEs</router-link></span>
+        </a-menu-item>
+
         <!-- <a-menu-item key="patrimonios">
           <pie-chart-outlined />
           <span><router-link to="/admin/patrimonios">Patrimonios</router-link></span>
@@ -152,6 +157,7 @@ import { useRoute } from 'vue-router';
 import CryptoJS from 'crypto-js';
 import {
   HomeOutlined,
+  ShopOutlined,
   SolutionOutlined,
   TeamOutlined,
   AuditOutlined,

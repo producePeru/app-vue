@@ -91,7 +91,7 @@
       <a-form-item>
         <a-button type="primary" class="btn-produce" html-type="submit" :loading="loading">GUARDAR</a-button>
       </a-form-item>
-      <!-- <pre>{{ dProfile }}</pre> -->
+      <!-- <pre>{{ info }}</pre> -->
       <!-- <pre>::::{{ idCde }}</pre> -->
     </a-form>
     </a-spin>
@@ -216,16 +216,38 @@ const handleAddThemeNew = async() => {
   }
 }
 const update = () => {
-  formState.dni = props.info.documentnumber;
-  if(store.cities) spinning.value = false;
+  // formState.dni = props.info.documentnumber;
+  // formState.city_id = props.info.city_id;
+  // handleDepartaments(props.info.city_id)
+  // formState.province_id = props.info.province_id;
+  // handleProvinces(props.info.province_id)
+  // formState.district_id = props.info.district_id;
+  // // Validamos si es notario externo el asesor
+  // role.some(r => r.id === 7) ? formState.component_id = 4 : formState.component_id = null;
+  // role.some(r => r.id === 7) ? formState.modality_id = 1 : formState.modality_id = null;
+  // role.some(r => r.id === 7) && store.fetchComponentThemes(4);
+  // if(store.cities) spinning.value = false;
+  
+  const { documentnumber, city_id, province_id, district_id } = props.info;
+  const isNotarioExterno = role.some(r => r.id === 7);
 
-  // Validamos si es notario externo el asesor
-  role.some(r => r.id === 7) ? formState.component_id = 4 : formState.component_id = null;
-  role.some(r => r.id === 7) ? formState.modality_id = 1 : formState.modality_id = null;
-  role.some(r => r.id === 7) && store.fetchComponentThemes(4);
- 
+  formState.dni = documentnumber;
 
-  // dProfile.cde_id ? formState.cde_id = dProfile.cde_id : null;
+  formState.city_id = city_id;
+  handleDepartaments(city_id);
+
+  formState.province_id = province_id;
+  handleProvinces(province_id);
+
+  formState.district_id = district_id;
+
+  formState.component_id = isNotarioExterno ? 4 : null;
+  formState.modality_id = isNotarioExterno ? 1 : null;
+
+  if (isNotarioExterno) store.fetchComponentThemes(4);
+
+  if (store.cities) spinning.value = false;
+  
 }
 const handleSelectComponent = (id) => {
   formState.theme_id = null
@@ -271,6 +293,16 @@ const onSubmit = async () => {
     const response = await makeRequest({ url: 'advisory/create', method: 'POST', data: payload});
     
     if (response.status === 200) {
+      
+      const payloadMype = {
+        razonSocial: null,
+        ruc: formState.ruc,
+        createdFrom: 'asesorias'
+      }
+
+      await makeRequest({ url: 'mype/create', method: 'POST', data: payloadMype});
+      await makeRequest({ url: `mype/update/${formState.ruc}`, method: 'PUT' });
+
       message.success(response.message);
       formState.component_id = null;
       formState.theme_id = null;
@@ -284,6 +316,7 @@ const onSubmit = async () => {
       formState.comercialactivity_id = null;
 
       emit('closeDraw', true)
+
     }
   } catch (error) {
     console.log("Error: " + error);

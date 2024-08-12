@@ -45,9 +45,18 @@
 
             <a-form-item v-if="el.type === 'iDate'" :name="el.name" :label="el.label"
               :rules="[{ required: el.required, message: el.message }]">
-              <a-date-picker :locale="locale" v-model:value="formState[el.name]" style="width: 100%;"
-                :format="dateFormat" placeholder="día/mes/año" @change="formState.birthday = birthdateDate"
-                :disabled="el.disabled" />
+              
+              <a-date-picker 
+              :locale="locale" 
+              v-model:value="formState[el.name]" 
+              style="width: 100%;"
+              :format="dateFormat" 
+              placeholder="día/mes/año"
+              :disabled-date="disabledDate"
+              :disabled="el.disabled" 
+              @change="formState.birthday = birthdateDate" />
+
+
             </a-form-item>
 
             <a-form-item class="item-max" v-if="el.type === 'iSelectWrite'" :name="el.name" :label="el.label"
@@ -111,8 +120,8 @@
 
           </template>
         </div>
-        <!-- <pre>{{ notaries }}</pre> -->
-        <pre style="display: none;">:::::{{ formState }}</pre> 
+        <!-- <pre>{{ info }}</pre> -->
+        <!-- <pre style="display: none;">:::::{{ formState }}</pre>  -->
         <div>{{ update() }}</div>
         <a-form-item>
           <a-button class="btn-produce" type="primary" html-type="submit" :loading="loading">GUARDAR</a-button>
@@ -201,17 +210,21 @@ const formState = reactive({
   ruc: null
 });
 
-const handleChangeCde = (id) => {
-  let data = dProfile;
-  // dProfile.cde_id = id;
-  localStorage.setItem('profile', JSON.stringify(data));
-  const encryptProfile = CryptoJS.AES.encrypt(JSON.stringify(data), 'appProfile').toString();
-  localStorage.setItem('eProfile', encryptProfile);
-}
+// const handleChangeCde = (id) => {
+//   let data = dProfile;
+//   // dProfile.cde_id = id;
+//   localStorage.setItem('profile', JSON.stringify(data));
+//   const encryptProfile = CryptoJS.AES.encrypt(JSON.stringify(data), 'appProfile').toString();
+//   localStorage.setItem('eProfile', encryptProfile);
+// }
 const bic = [
   {value: 'SI', label: 'SI'},
   {value: 'NO', label: 'NO'}
 ]
+
+const disabledDate = (current) => {
+  return current && current > dayjs().endOf('day');
+};
 
 const onlyRUC = (name) => {
   if(name == 'ruc') {
@@ -227,20 +240,44 @@ const validateOnlyNumber = (val) => {
   }
 };
 const update = () => {
-  formState.dni = props.info.documentnumber;
+  // formState.dni = props.info.documentnumber;
+  // const containsId = role.some(role => role.id === 7);
+  // if (containsId) {
+  //   formState.modality_id = 1 
+  //   formState.notary_id = storageData.notary_id 
+  // } 
+  // formState.city_id = props.info.city_id;
+  // handleDepartaments(props.info.city_id);
+  // formState.province_id = props.info.province_id;
+  // handleProvinces(props.info.province_id);
+  // formState.district_id = props.info.district_id;
+  // if (store.regimes?.length) spinning.value = false;
 
+  const { documentnumber, city_id, province_id, district_id, address } = props.info;
   const containsId = role.some(role => role.id === 7);
 
+  formState.dni = documentnumber;
+
   if (containsId) {
-    formState.modality_id = 1 
-    formState.notary_id = storageData.notary_id 
-  } 
+    formState.modality_id = 1;
+    formState.notary_id = storageData.notary_id;
+  }
+
+  formState.city_id = city_id;
+  handleDepartaments(city_id);
+
+  formState.province_id = province_id;
+  handleProvinces(province_id);
+
+  formState.district_id = district_id;
+
+  formState.address = address;
 
   if (store.regimes?.length) spinning.value = false;
-
-
-  // dProfile.cde_id ? formState.cde_id = dProfile.cde_id : null;
+  
 }
+
+
 const filterNotaries = (input, option) => {
   const normalizedInput = input.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "");
 
@@ -271,29 +308,28 @@ const handleAddItem = async () => {
     loadingcategory.value = false;
   }
 }
-const handleAddItenSector = async () => {
-  try {
-    loadingcategory.value = true;
-    const payload = {
-      name: nameNewItem2.value
-    }
-    const data = await makeRequest({ url: 'create/economic-sector', method: 'POST', data: payload });
-    if (data.status == 200) {
-      nameNewItem2.value = null;
-      store.fetchEconomicSectors();
-    }
-  } catch (e) {
-    console.log(e);
-  } finally {
-    loadingcategory.value = false;
-  }
-}
+// const handleAddItenSector = async () => {
+//   try {
+//     loadingcategory.value = true;
+//     const payload = {
+//       name: nameNewItem2.value
+//     }
+//     const data = await makeRequest({ url: 'create/economic-sector', method: 'POST', data: payload });
+//     if (data.status == 200) {
+//       nameNewItem2.value = null;
+//       store.fetchEconomicSectors();
+//     }
+//   } catch (e) {
+//     console.log(e);
+//   } finally {
+//     loadingcategory.value = false;
+//   }
+// }
 
 const handleDepartaments = (id) => {
   formState.province_id = null
   formState.district_id = null
   store.fetchProvinces(id);
-  // handleGetNotariesByRegion()
 }
 const handleProvinces = (id) => {
   formState.district_id = null
@@ -369,6 +405,16 @@ const onSubmit = async () => {
     const response = await makeRequest({ url: 'formalization/create-ruc20', method: 'POST', data: payload });
 
     if (response.status === 200) {
+
+      const payloadMype = {
+        razonSocial: null,
+        ruc: formState.ruc,
+        createdFrom: 'F20'
+      }
+
+      await makeRequest({ url: 'mype/create', method: 'POST', data: payloadMype});
+      await makeRequest({ url: `mype/update/${formState.ruc}`, method: 'PUT' });
+
       message.success(response.message);
       formState.codesunarp = null;
       formState.economicsector_id = null;
