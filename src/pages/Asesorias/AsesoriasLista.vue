@@ -268,7 +268,8 @@ const byDateRange = ref(null);
 const solicitante = ref(null);
 
 store.$patch({ asesores: store.asesores });
-store.fetchAsesores();
+
+if(storageRole.some(item => item.id === 1 || item.id === 5)) store.fetchAsesores();
 
 // filter
 const rangePresets = ref([

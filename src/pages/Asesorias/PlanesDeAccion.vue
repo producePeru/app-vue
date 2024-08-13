@@ -4,11 +4,12 @@
 
     <a-row style="margin: 1rem 0;">
       <a-col :xs="24" :md="12" :lg="18">
-        <span @click="openDrawer = true">Agregar</span>
-        <a-date-picker :locale="locale" v-model:value="mountData" picker="month" placeholder="Seleccionar mes" />
-        <a-button v-if="mountData" class="btn-excel" :loading="loadingDownload" type="primary" style="margin-left: .6rem;">
-            <img width="20" style="margin: -2px 4px 0 0;" src="@/assets/img/icoexcel.png" /> DESCARGAR
-          </a-button>
+        <a-button @click="openDrawer = true" type="primary">Agregar</a-button>
+        <!-- <a-date-picker :locale="locale" v-model:value="mountData" picker="month" placeholder="Seleccionar mes" /> -->
+        <!-- <a-button v-if="mountData" class="btn-excel" :loading="loadingDownload" type="primary"
+          style="margin-left: .6rem;">
+          <img width="20" style="margin: -2px 4px 0 0;" src="@/assets/img/icoexcel.png" /> DESCARGAR
+        </a-button> -->
       </a-col>
       <a-col :xs="24" :md="12" :lg="6">
         <a-input-group compact>
@@ -18,8 +19,7 @@
       </a-col>
     </a-row>
 
-    <a-table bordered :scroll="{ x: valueX, y: valueY }" class="table-users" :columns="columns"
-      :data-source="dataSource" :pagination="false" :loading="loading" size="small">
+    <a-table bordered :scroll="{ x: valueX, y: valueY }" class="table-users" :columns="columns" :data-source="dataSource" :pagination="false" :loading="loading" size="small">
       <template v-slot:bodyCell="{ column, record, index }">
         <template v-if="column.dataIndex === 'idx'">
           {{ computeIndex(index) }}
@@ -29,25 +29,15 @@
           cde Miraflores
         </template>
 
-        <template v-if="column.dataIndex === 'acta_compromiso'">
-          <a-select
-          :size="small"
-          v-model:value="acta_compromiso"
-          placeholder="Seleccionar"
-          style="width: 70%"
-          :options="options"
-          @change="handleChange" />
+        <!-- <template v-if="column.dataIndex === 'acta_compromiso'">
+          <a-select :size="small" v-model:value="acta_compromiso" placeholder="Seleccionar" style="width: 70%"
+            :options="options" @change="handleChange" />
         </template>
 
         <template v-if="column.dataIndex === 'envio_correo'">
-          <a-select
-          :size="small"
-          v-model:value="acta_compromiso"
-          placeholder="Seleccionar"
-          style="width: 70%"
-          :options="options"
-          @change="handleChange" />
-        </template>
+          <a-select :size="small" v-model:value="acta_compromiso" placeholder="Seleccionar" style="width: 70%"
+            :options="options" @change="handleChange" />
+        </template> -->
 
 
 
@@ -60,7 +50,7 @@
         :showSizeChanger="false" />
     </div>
 
-    <a-drawer v-model:open="openDrawer" title="Agregar un nuevo Plan de Acción" placement="right" width="650" >
+    <a-drawer v-model:open="openDrawer" title="Agregar un nuevo Plan de Acción" placement="right" width="650">
       <NuevoPlanAccion @closeDraw="handleCloseDrawopen(1)" />
     </a-drawer>
 
@@ -97,30 +87,30 @@ const openDrawer = ref(false);
 const dataItem = ref(null);
 
 const options = ref([
-  {value: 'si', label: 'Si'},
-  {value: 'no', label: 'No'},
+  { value: 'si', label: 'Si' },
+  { value: 'no', label: 'No' },
 ]);
 
 const columns = [
   { title: '#', dataIndex: 'idx', fixed: 'left', align: 'center', width: 50 },
   { title: 'CENTRO TU EMPRESA', dataIndex: 'tuempresa', width: 120 },
   { title: 'ASESOR', dataIndex: 'lastname', width: 180 },
-  { title: 'REGION DEL EMPRENDEDOR O MYPE', dataIndex: 'lastname', width: 170},
+  { title: 'REGION DEL EMPRENDEDOR O MYPE', dataIndex: 'lastname', width: 170 },
   { title: 'PROVINCIA DEL EMPRENDEDOR O MYPE', dataIndex: 'lastname', width: 170 },
   { title: 'DISTRITO DEL EMPRENDEDOR O MYPE', dataIndex: 'lastname', width: 170 },
   { title: 'NOMBRE DEL EMPRENDEDOR O MYPE', dataIndex: 'lastname', width: 170 },
   { title: 'RUC', dataIndex: 'lastname', width: 100, align: 'center' },
   { title: 'Genero', dataIndex: 'lastname', width: 80, align: 'center' },
   { title: 'Tiene alguna Discapacidad ? (SI / NO)', dataIndex: 'lastname', width: 120, align: 'center' },
-  { title: 'COMPONENTE 1', dataIndex: 'lastname', width: 180},
-  { title: 'COMPONENTE 2', dataIndex: 'lastname', width: 180},
-  { title: 'COMPONENTE 3', dataIndex: 'lastname', width: 180},
-  { title: 'NÚMERO DE SESIONES REALIZADAS', dataIndex: 'lastname', width: 180},
-  { title: 'DÍA INICIO', dataIndex: 'lastname', width: 120, align: 'center'},
-  { title: 'DÍA FIN', dataIndex: 'lastname', width: 120, align: 'center'},
-  { title: 'TOTAL DE DÍAS', dataIndex: 'lastname', width: 120},
-  { title: 'ACTA DE COMPROMISO', dataIndex: 'acta_compromiso', width: 180, align: 'center'},
-  { title: 'CULMINÓ EL PLAN DE ACCIÓN Y ENVIÓ CORREO', dataIndex: 'envio_correo', width: 180, align: 'center'},
+  { title: 'COMPONENTE 1', dataIndex: 'lastname', width: 180 },
+  { title: 'COMPONENTE 2', dataIndex: 'lastname', width: 180 },
+  { title: 'COMPONENTE 3', dataIndex: 'lastname', width: 180 },
+  { title: 'NÚMERO DE SESIONES REALIZADAS', dataIndex: 'lastname', width: 180 },
+  { title: 'DÍA INICIO', dataIndex: 'lastname', width: 120, align: 'center' },
+  { title: 'DÍA FIN', dataIndex: 'lastname', width: 120, align: 'center' },
+  { title: 'TOTAL DE DÍAS', dataIndex: 'lastname', width: 120 },
+  { title: 'ACTA DE COMPROMISO', dataIndex: 'acta_compromiso', width: 180, align: 'center' },
+  { title: 'CULMINÓ EL PLAN DE ACCIÓN Y ENVIÓ CORREO', dataIndex: 'envio_correo', width: 180, align: 'center' },
 
   // { title: '', dataIndex: 'actions', align: 'center', width: 50, fixed: 'right' }
 ];
@@ -188,6 +178,7 @@ onMounted(() => {
   justify-content: space-between;
   margin-top: 1.5rem;
 }
+
 .table-users {
   tr {
     font-size: 13px;

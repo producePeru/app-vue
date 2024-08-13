@@ -413,29 +413,34 @@ const onSubmit = async () => {
       }
 
       await makeRequest({ url: 'mype/create', method: 'POST', data: payloadMype});
-      await makeRequest({ url: `mype/update/${formState.ruc}`, method: 'PUT' });
+      
+      try {
+        await makeRequest({ url: `mype/update/${formState.ruc}`, method: 'PUT' });
+      } catch (error) {
+        console.log("Failed to update", error);
+      } finally {
+        message.success(response.message);
+        formState.codesunarp = null;
+        formState.economicsector_id = null;
+        formState.comercialactivity_id = null;
+        formState.regime_id = null;
+        formState.city_id = null;
+        formState.province_id = null;
+        formState.district_id = null;
+        formState.address = null;
+        formState.modality_id = null;
+        formState.nameMype = null;
+        formState.dateReception = null;
+        formState.dateTramite = null;
+        formState.notary_id = null;
+        formState.ruc = null;
+        formState.numbernotary = null;
+        formState.isbic = null;
+        formState.montocapital = null;
+        formState.typecapital_id = null;
 
-      message.success(response.message);
-      formState.codesunarp = null;
-      formState.economicsector_id = null;
-      formState.comercialactivity_id = null;
-      formState.regime_id = null;
-      formState.city_id = null;
-      formState.province_id = null;
-      formState.district_id = null;
-      formState.address = null;
-      formState.modality_id = null;
-      formState.nameMype = null;
-      formState.dateReception = null;
-      formState.dateTramite = null;
-      formState.notary_id = null;
-      formState.ruc = null;
-      formState.numbernotary = null;
-      formState.isbic = null;
-      formState.montocapital = null;
-      formState.typecapital_id = null;
-
-      emit('closeDraw', true)
+        emit('closeDraw', true)
+      }
     }
 
   } catch (error) {
