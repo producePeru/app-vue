@@ -300,27 +300,22 @@ const onSubmit = async () => {
         createdFrom: 'asesorias'
       }
 
-      await makeRequest({ url: 'mype/create', method: 'POST', data: payloadMype});
-      
-      try {
-        await makeRequest({ url: `mype/update/${formState.ruc}`, method: 'PUT' });
-      } catch (error) {
-        console.log("Failed to update", error);
-      } finally {
-        message.success(response.message);
-        formState.component_id = null;
-        formState.theme_id = null;
-        formState.modality_id = null;
-        formState.city_id = null;
-        formState.province_id = null;
-        formState.district_id = null;
-        formState.observations = null;
-        formState.ruc = null;
-        formState.economicsector_id = null;
-        formState.comercialactivity_id = null;
+      // await makeRequest({ url: 'mype/create', method: 'POST', data: payloadMype});
+      message.success(response.message);
+      formState.component_id = null;
+      formState.theme_id = null;
+      formState.modality_id = null;
+      formState.city_id = null;
+      formState.province_id = null;
+      formState.district_id = null;
+      formState.observations = null;
+      formState.ruc = null;
+      formState.economicsector_id = null;
+      formState.comercialactivity_id = null;
 
-        emit('closeDraw', true)
-      }
+      emit('closeDraw', true)
+      
+     
     }
   } catch (error) {
     console.log("Error: " + error);

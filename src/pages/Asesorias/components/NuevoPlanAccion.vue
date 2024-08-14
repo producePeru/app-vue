@@ -29,10 +29,12 @@
 
           <a-form-item v-if="el.type === 'iSearch'" class="item-max" :name="el.name" :label="el.label" :rules="[{ required: el.required, message: el.message }]">
             <a-input-search 
-            :loading="searchLoading" 
-            v-model:value="formState[el.name]" @search="handleSearchApiInfo"
-            @input="validateNumber" 
-            :maxlength="formState.typeDocument == 1 ? 8 : 11" />
+            :loading="searchLoading == el.name" 
+            v-model:value="formState[el.name]" 
+            @search="handleSearchApiInfo(el.name)"
+            @input="validateNumber(el.name)" 
+            @enterButton="handleSearchApiInfo(el.name)"
+            :maxlength="11" />
           </a-form-item>
 
           <a-divider dashed v-if="el.type === 'iDivider'" style="grid-column: 1/3; margin: .5rem 0 1rem 0;"/>
@@ -67,7 +69,7 @@
             v-if="el.name == 'component'" 
             v-model:value="formState[el.name]" 
             show-search 
-            :options="store.cities" 
+            :options="components" 
             :filter-option="filterOption" 
             @change="handleDepartaments" />
           </a-form-item>
@@ -87,7 +89,7 @@
       <a-form-item>
         <a-button class="btn-produce" type="primary" html-type="submit" :loading="loading">GUARDAR</a-button>
       </a-form-item>
-
+      <pre>{{ searchLoading }}</pre>
     </a-form>
   </div>
 </template>
@@ -112,9 +114,18 @@ store.$patch({ genders: store.genders });
 store.fetchCities();
 store.fetchGenders();
 
+const dateFormat = 'DD/MM/YYYY';
 const fields = ref(fieldx)
 const loading = ref(false);
-const searchLoading = ref(false);
+const searchLoading = ref(null);
+
+const components = [
+  { value: 'FORMALIZACIÓN', label: 'FORMALIZACIÓN' },
+  { value: 'GESTIÓN EMPRESARIAL', label: 'GESTIÓN EMPRESARIAL' },
+  { value: 'DIGITALIZACIÓN', label: 'DIGITALIZACIÓN' },
+  { value: 'DESARROLLO PRODUCTIVO', label: 'DESARROLLO PRODUCTIVO' },
+  { value: 'ACCESO AL FINANCIAMIENTO', label: 'ACCESO AL FINANCIAMIENTO' },
+];
 
 const optionsTypeDocuments = [
   { value: 1, label: 'DNI' },
@@ -124,22 +135,70 @@ const lessions = [
   {label: "Si", value: "yes"},
   {label: "No", value: "no"}
 ];
-const formState = reactive({});
+const formState = reactive({
+  numberDocument: null
+});
 
 const disabledDate = (current) => {
   return current && current > dayjs().endOf('day');
 };
-const validateNumber = () => {
-  formState.numberDocument = formState.numberDocument.replace(/\D/g, '');
+const validateNumber = (name) => {
+  formState[name] = formState[name].replace(/\D/g, '');
 };
 const filterOption = (input, option) => {
   const normalizedInput = input.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "");
   const normalizedLabel = option.label.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "");
   return normalizedLabel.includes(normalizedInput);
 };
-const handleSearchApiInfo = async() => {
+const handleSearchApiInfo = async(name) => {
+  
+  if(!formState.numberDocument) return message.warning("Ingrese un número a buscar...");
+
+  try {
+    if(name == 'numberDocument') {
+      searchLoading.value = name;
+      const data = await makeRequest({ url: `person/data/${formState.numberDocument}`, method: 'GET' });
+      console.log("Searching", data);
+      if(data.status == 404) {
+        searchLoading.value = null;
+        formState.numberDocument = null;
+        return message.warning('Este usuario no fue registrado');
+      }
+      if(data.status == 200) {
+        formState.namePerson = data.data.namePerson;
+        formState.city_id = data.data.city_id;
+        handleDepartaments(data.data.city_id);
+        formState.province_id = data.data.province_id;
+        handleProvinces(data.data.province_id);
+        formState.district_id = data.data.district_id;
+        formState.gender_id = data.data.gender_id;
+        formState.sick = data.data.sick;
+      } 
+    }
+
+    if(name == 'ruc') {
+      searchLoading.value = name;
+      const data = await makeRequest({ url: `plans-action/list/${formState.ruc}`, method: 'GET' });
+      if(data.status == 200) {
+        
+      } else {
+        searchLoading.value = null;
+        formState.ruc = null;
+        return message.warning('No se han registrado datos con ese número de RUC');
+      }
+    }
+    
+  } catch (error) {
+    console.log("Failed to update record");
+  } finally {
+    searchLoading.value = null;
+  }
+
+
+
 
 }
+
 const handleDepartaments = (id) => {
   formState.province_id = null
   formState.district_id = null
@@ -153,13 +212,13 @@ const onSubmit = async() => {
   loading.value = true;
   
   const payload = {
-    ruc: formState.ruc,
-    razonSocial: formState.razonSocial,
-    actividadEconomica: formState.actividadEconomica,
-    departamento: formState.departamento,
-    provincia: formState.provincia,
-    distrito: formState.distrito,
-    direccion: formState.direccion,
+    // ruc: formState.ruc,
+    // razonSocial: formState.razonSocial,
+    // actividadEconomica: formState.actividadEconomica,
+    // departamento: formState.departamento,
+    // provincia: formState.provincia,
+    // distrito: formState.distrito,
+    // direccion: formState.direccion,
   }
 
   try {

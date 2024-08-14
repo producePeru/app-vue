@@ -7,10 +7,10 @@ const fields = {
     message: 'Ingresar Número de documento',
     disabled: false
   },
-  razonSocial: {
+  namePerson: {
     type: 'iText',
     label: 'Nombre',
-    name: 'razonSocial',
+    name: 'namePerson',
     required: true,
     message: 'Escribe nombre',
     disabled: false,
@@ -40,15 +40,6 @@ const fields = {
     message: 'Seleccionar distrito',
     disabled: false
   },
-
-  ruc: {
-    type: 'iText',
-    label: 'Número de RUC',
-    name: 'ruc',
-    required: true,
-    message: 'Escribe el número de RUC',
-    disabled: false,
-  },
   gender_id: {
     type: 'iSelect',
     label: 'Género',
@@ -62,6 +53,14 @@ const fields = {
     name: 'sick',
     required: true,
     message: 'Seleccionar estado',
+  },
+  ruc: {
+    type: 'iSearch',
+    label: 'Número de RUC',
+    name: 'ruc',
+    required: true,
+    message: 'Escribe el número de RUC',
+    disabled: false
   },
 
   divider: {

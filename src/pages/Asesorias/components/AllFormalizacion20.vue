@@ -412,13 +412,6 @@ const onSubmit = async () => {
         createdFrom: 'F20'
       }
 
-      await makeRequest({ url: 'mype/create', method: 'POST', data: payloadMype});
-      
-      try {
-        await makeRequest({ url: `mype/update/${formState.ruc}`, method: 'PUT' });
-      } catch (error) {
-        console.log("Failed to update", error);
-      } finally {
         message.success(response.message);
         formState.codesunarp = null;
         formState.economicsector_id = null;
@@ -440,7 +433,7 @@ const onSubmit = async () => {
         formState.typecapital_id = null;
 
         emit('closeDraw', true)
-      }
+
     }
 
   } catch (error) {
