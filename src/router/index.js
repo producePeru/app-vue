@@ -90,7 +90,7 @@ const router = createRouter({
           path: 'mypes',
           name: 'lista-mypes',
           component: () => import('../pages/Mypes/MypesList.vue'),
-          meta: { requiresAuth: false },
+          meta: { requiresAuth: true },
         },
         {
           path: 'gamarra-produce',

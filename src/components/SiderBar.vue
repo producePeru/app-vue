@@ -21,7 +21,7 @@
           <span><router-link to="/admin/inicio">inicio</router-link></span>
         </a-menu-item>
 
-        <a-menu-item key="mypes">
+        <a-menu-item key="mypes" v-if="views.includes('mypes')">
           <ShopOutlined />
           <span><router-link to="/admin/mypes">MYPEs</router-link></span>
         </a-menu-item>

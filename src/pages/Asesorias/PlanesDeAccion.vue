@@ -4,12 +4,10 @@
 
     <a-row style="margin: 1rem 0;">
       <a-col :xs="24" :md="12" :lg="18">
-        <a-button @click="openDrawer = true" type="primary">Agregar</a-button>
-        <!-- <a-date-picker :locale="locale" v-model:value="mountData" picker="month" placeholder="Seleccionar mes" /> -->
-        <!-- <a-button v-if="mountData" class="btn-excel" :loading="loadingDownload" type="primary"
-          style="margin-left: .6rem;">
+        <a-button @click="openDrawer = true" type="primary">NUEVO</a-button>
+        <a-button class="btn-excel" :loading="loadingDownload" type="primary" style="margin-left: .6rem;" @click="handleDownloadExcel">
           <img width="20" style="margin: -2px 4px 0 0;" src="@/assets/img/icoexcel.png" /> DESCARGAR
-        </a-button> -->
+        </a-button>
       </a-col>
       <a-col :xs="24" :md="12" :lg="6">
         <a-input-group compact>
@@ -25,21 +23,48 @@
           {{ computeIndex(index) }}
         </template>
 
-        <template v-if="column.dataIndex === 'tuempresa'">
-          cde Miraflores
+        <template v-if="column.dataIndex === 'component1'">
+          <a-select 
+          style="width: 170px;"
+          v-model:value="record.component_1" 
+          :options="store.components" 
+          :filter-option="filterOption" 
+          @change="(value) => handleSelectComponent(value, record, 'component_1')" />
         </template>
 
-        <!-- <template v-if="column.dataIndex === 'acta_compromiso'">
-          <a-select :size="small" v-model:value="acta_compromiso" placeholder="Seleccionar" style="width: 70%"
-            :options="options" @change="handleChange" />
+        <template v-if="column.dataIndex === 'component2'">
+          <a-select 
+          style="width: 170px;"
+          v-model:value="record.component_2" 
+          :options="store.components" 
+          :filter-option="filterOption" 
+          @change="(value) => handleSelectComponent(value, record, 'component_2')" />
         </template>
 
-        <template v-if="column.dataIndex === 'envio_correo'">
-          <a-select :size="small" v-model:value="acta_compromiso" placeholder="Seleccionar" style="width: 70%"
-            :options="options" @change="handleChange" />
-        </template> -->
+        <template v-if="column.dataIndex === 'component3'">
+          <a-select 
+          style="width: 170px;"
+          v-model:value="record.component_3" 
+          :options="store.components" 
+          :filter-option="filterOption" 
+          @change="(value) => handleSelectComponent(value, record, 'component_3')" />
+        </template>
 
+        <template v-if="column.dataIndex === 'acta'">
+          <a-select 
+          v-model:value="record.actaCompromiso" 
+          style="width: 70%"
+          :options="options" 
+          @change="(value) => handleSelectOption(value, record, 'actaCompromiso')" />
+        </template>
 
+        <template v-if="column.dataIndex === 'envioCorreo'">
+          <a-select 
+          v-model:value="record.envioCorreo" 
+          style="width: 70%"
+          :options="options" 
+          @change="(value) => handleSelectOption(value, record, 'envioCorreo')" />
+        </template>
 
       </template>
     </a-table>
@@ -51,7 +76,7 @@
     </div>
 
     <a-drawer v-model:open="openDrawer" title="Agregar un nuevo Plan de Acción" placement="right" width="650">
-      <NuevoPlanAccion @closeDraw="handleCloseDrawopen(1)" />
+      <NuevoPlanAccion @closeDraw="handleCloseDrawer" />
     </a-drawer>
 
   </div>
@@ -62,15 +87,24 @@
 
 <script setup>
 import { makeRequest } from '@/utils/api.js'
-import { h, ref, onMounted, computed, reactive } from 'vue';
-import { MoreOutlined } from '@ant-design/icons-vue';
-import { message } from 'ant-design-vue';
-import locale from 'ant-design-vue/es/date-picker/locale/es_ES';
-import dayjs from 'dayjs';
-import 'dayjs/locale/es';
-dayjs.locale('es');
-
 import NuevoPlanAccion from './components/NuevoPlanAccion.vue'
+import { ref, onMounted, computed, reactive } from 'vue';
+import { useCounterStore } from '@/stores/selectes.js';
+import { message } from 'ant-design-vue';
+import { downloadExcel } from '@/utils/downloadExcel';
+
+// import { MoreOutlined } from '@ant-design/icons-vue';
+// import locale from 'ant-design-vue/es/date-picker/locale/es_ES';
+// import dayjs from 'dayjs';
+// import 'dayjs/locale/es';
+// dayjs.locale('es');
+
+const storageRole = JSON.parse(localStorage.getItem('role'));
+const store = useCounterStore();
+
+store.$patch({ components: store.components });
+
+store.fetchComponents();
 
 const acta_compromiso = ref(null);
 const loadingDownload = ref(false);
@@ -80,40 +114,78 @@ const dataSource = ref([]);
 const loading = ref(false);
 const total = ref(0);
 const params = ref({ page: 1 });
-const url = ref('user/list-asesories');
+const url = ref('plans-action/list');
 const valueX = ref(1200);
 const valueY = ref(window.innerHeight - 100);
 const openDrawer = ref(false);
 const dataItem = ref(null);
 
 const options = ref([
-  { value: 'si', label: 'Si' },
-  { value: 'no', label: 'No' },
+  { value: 'si', label: 'SI' },
+  { value: 'no', label: 'NO' },
 ]);
 
 const columns = [
   { title: '#', dataIndex: 'idx', fixed: 'left', align: 'center', width: 50 },
-  { title: 'CENTRO TU EMPRESA', dataIndex: 'tuempresa', width: 120 },
-  { title: 'ASESOR', dataIndex: 'lastname', width: 180 },
-  { title: 'REGION DEL EMPRENDEDOR O MYPE', dataIndex: 'lastname', width: 170 },
-  { title: 'PROVINCIA DEL EMPRENDEDOR O MYPE', dataIndex: 'lastname', width: 170 },
-  { title: 'DISTRITO DEL EMPRENDEDOR O MYPE', dataIndex: 'lastname', width: 170 },
-  { title: 'NOMBRE DEL EMPRENDEDOR O MYPE', dataIndex: 'lastname', width: 170 },
-  { title: 'RUC', dataIndex: 'lastname', width: 100, align: 'center' },
-  { title: 'Genero', dataIndex: 'lastname', width: 80, align: 'center' },
-  { title: 'Tiene alguna Discapacidad ? (SI / NO)', dataIndex: 'lastname', width: 120, align: 'center' },
-  { title: 'COMPONENTE 1', dataIndex: 'lastname', width: 180 },
-  { title: 'COMPONENTE 2', dataIndex: 'lastname', width: 180 },
-  { title: 'COMPONENTE 3', dataIndex: 'lastname', width: 180 },
-  { title: 'NÚMERO DE SESIONES REALIZADAS', dataIndex: 'lastname', width: 180 },
-  { title: 'DÍA INICIO', dataIndex: 'lastname', width: 120, align: 'center' },
-  { title: 'DÍA FIN', dataIndex: 'lastname', width: 120, align: 'center' },
-  { title: 'TOTAL DE DÍAS', dataIndex: 'lastname', width: 120 },
-  { title: 'ACTA DE COMPROMISO', dataIndex: 'acta_compromiso', width: 180, align: 'center' },
-  { title: 'CULMINÓ EL PLAN DE ACCIÓN Y ENVIÓ CORREO', dataIndex: 'envio_correo', width: 180, align: 'center' },
+
+  ...(storageRole[0].id != 2 ? [{ title: 'CENTRO TU EMPRESA', dataIndex: 'centro_empresa',  fixed: 'left', width: 150 }] : []),   
+  ...(storageRole[0].id != 2 ? [{ title: 'ASESOR', dataIndex: 'asesor',  fixed: 'left', width: 180 }] : []),  
+
+  { title: 'RUC', dataIndex: 'ruc', width: 100, fixed: 'left', align: 'center' },
+  { title: 'NOMBRE DEL EMPRENDEDOR O MYPE', fixed: 'left', dataIndex: 'emprendedor_nombres', width: 170 },
+  { title: 'REGIÓN DEL EMPRENDEDOR O MYPE', dataIndex: 'emprendedor_region', width: 170 },
+  { title: 'PROVINCIA DEL EMPRENDEDOR O MYPE', dataIndex: 'emprendedor_provincia', width: 170 },
+  { title: 'DISTRITO DEL EMPRENDEDOR O MYPE', dataIndex: 'emprendedor_distrito', width: 170 },
+  { title: 'Genero', dataIndex: 'genero', width: 60, align: 'center' },
+  { title: 'Tiene alguna Discapacidad ? (SI / NO)', dataIndex: 'discapacidad', width: 110, align: 'center' },
+  { title: 'COMPONENTE 1', dataIndex: 'component1', width: 190, align: 'center'},
+  { title: 'COMPONENTE 2', dataIndex: 'component2', width: 190, align: 'center'},
+  { title: 'COMPONENTE 3', dataIndex: 'component3', width: 190, align: 'center'},
+  { title: 'NÚMERO DE SESIONES', dataIndex: 'numberSessions', width: 100, align: 'center'},
+  { title: 'DÍA INICIO', dataIndex: 'startDate', width: 100, align: 'center' },
+  { title: 'DÍA FIN', dataIndex: 'endDate', width: 100, align: 'center'},
+  { title: 'TOTAL DE DÍAS', dataIndex: 'totalDate', width: 100, align: 'center'},
+  { title: 'ACTA DE COMPROMISO', dataIndex: 'acta', width: 160, align: 'center' },
+  { title: 'CULMINÓ EL PLAN Y ENVIÓ CORREO', dataIndex: 'envioCorreo', width: 160, align: 'center' },
+  { title: 'FECHA ACTUALIZACIÓN', dataIndex: 'updated_at', width: 140, align: 'center' },
 
   // { title: '', dataIndex: 'actions', align: 'center', width: 50, fixed: 'right' }
 ];
+
+const setLoading = (state) => {
+  loadingDownload.value = state;
+};
+const handleDownloadExcel = async() => {
+  const url = 'download/actions-plans';
+  downloadExcel(url, setLoading);
+}
+const handleSelectComponent = async(value, record, component) => {
+  const payload = {
+    idPlan: record.id,                      
+    nameComponent: component,   
+    valueComponent: value
+  }
+  const data = await makeRequest({ url: `plans-action/edit-component`, method: 'PUT', data: payload });
+  if(data.status == 200) fetchData()
+  if(data.status == 400) {
+    message.warning(data.message) 
+    fetchData()
+  }
+}
+const handleSelectOption = async(value, record, name) => {
+  const payload = {
+    idPlan: record.id,
+    type: name,
+    value: value
+  }
+  const data = await makeRequest({ url: `plans-action/edit-yes-no`, method: 'PUT', data: payload });
+  if(data.status == 200) fetchData()
+}
+const filterOption = (input, option) => {
+  const normalizedInput = input.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "");
+  const normalizedLabel = option.label.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "");
+  return normalizedLabel.includes(normalizedInput);
+};
 
 const actualizarAltura = () => {
   valueY.value = window.innerHeight - 315;
@@ -152,8 +224,8 @@ const fetchData = async (val) => {
     const finalParams = val ? { ...parx, ...val } : parx;
     const data = await makeRequest({ url: url.value, method: 'GET', params: finalParams });
     dataSource.value = data.data;
-    total.value = data.total;
-    pageSize.value = data.per_page;
+    total.value = data.pagination.total;
+    pageSize.value = data.pagination.per_page;
   } catch (error) {
     console.error('Error de red:', error);
   } finally {
@@ -181,6 +253,9 @@ onMounted(() => {
 
 .table-users {
   tr {
+    font-size: 13px;
+  }
+  .ant-select-selection-item {
     font-size: 13px;
   }
 }

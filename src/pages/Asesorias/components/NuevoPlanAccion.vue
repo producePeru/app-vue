@@ -18,11 +18,13 @@
 
             <a-select 
             v-if="el.name == 'gender_id'" 
+            :disabled="el.disabled"
             v-model:value="formState[el.name]" 
             :options="store.genders" />
 
             <a-select 
             v-if="el.name == 'sick'" 
+            :disabled="el.disabled"
             v-model:value="formState[el.name]" 
             :options="lessions" />
           </a-form-item>
@@ -66,12 +68,14 @@
             :disabled="!formState.province_id" />
 
             <a-select 
-            v-if="el.name == 'component'" 
+            v-if="el.is == 'component'" 
             v-model:value="formState[el.name]" 
             show-search 
-            :options="components" 
+            :options="store.components" 
             :filter-option="filterOption" 
-            @change="handleDepartaments" />
+            @change="(value) => handleSelectComponent(value, el.name)" />
+
+            
           </a-form-item>
 
           <a-form-item v-if="el.type === 'iDate'" :name="el.name" :label="el.label" :rules="[{ required: el.required, message: el.message }]">
@@ -89,7 +93,7 @@
       <a-form-item>
         <a-button class="btn-produce" type="primary" html-type="submit" :loading="loading">GUARDAR</a-button>
       </a-form-item>
-      <pre>{{ searchLoading }}</pre>
+      <!-- <pre>{{ formState }}</pre> -->
     </a-form>
   </div>
 </template>
@@ -105,27 +109,23 @@ import dayjs from 'dayjs';
 import 'dayjs/locale/es';
 dayjs.locale('es');
 
+const storageProfile = JSON.parse(localStorage.getItem('profile'))
+
 const emit = defineEmits(['closeDraw']);
 const store = useCounterStore();
 
 store.$patch({ cities: store.cities });
 store.$patch({ genders: store.genders });
+store.$patch({ components: store.components });
 
 store.fetchCities();
 store.fetchGenders();
+store.fetchComponents();
 
 const dateFormat = 'DD/MM/YYYY';
 const fields = ref(fieldx)
 const loading = ref(false);
 const searchLoading = ref(null);
-
-const components = [
-  { value: 'FORMALIZACIÓN', label: 'FORMALIZACIÓN' },
-  { value: 'GESTIÓN EMPRESARIAL', label: 'GESTIÓN EMPRESARIAL' },
-  { value: 'DIGITALIZACIÓN', label: 'DIGITALIZACIÓN' },
-  { value: 'DESARROLLO PRODUCTIVO', label: 'DESARROLLO PRODUCTIVO' },
-  { value: 'ACCESO AL FINANCIAMIENTO', label: 'ACCESO AL FINANCIAMIENTO' },
-];
 
 const optionsTypeDocuments = [
   { value: 1, label: 'DNI' },
@@ -136,7 +136,10 @@ const lessions = [
   {label: "No", value: "no"}
 ];
 const formState = reactive({
-  numberDocument: null
+  numberDocument: null,
+  component_1: null,
+  component_2: null,
+  component_3: null
 });
 
 const disabledDate = (current) => {
@@ -158,13 +161,14 @@ const handleSearchApiInfo = async(name) => {
     if(name == 'numberDocument') {
       searchLoading.value = name;
       const data = await makeRequest({ url: `person/data/${formState.numberDocument}`, method: 'GET' });
-      console.log("Searching", data);
+      // console.log("Searchingxxx", data);
       if(data.status == 404) {
         searchLoading.value = null;
         formState.numberDocument = null;
         return message.warning('Este usuario no fue registrado');
       }
       if(data.status == 200) {
+        formState.idPerson = data.data.id;
         formState.namePerson = data.data.namePerson;
         formState.city_id = data.data.city_id;
         handleDepartaments(data.data.city_id);
@@ -178,9 +182,13 @@ const handleSearchApiInfo = async(name) => {
 
     if(name == 'ruc') {
       searchLoading.value = name;
-      const data = await makeRequest({ url: `plans-action/list/${formState.ruc}`, method: 'GET' });
+      const data = await makeRequest({ url: `plans-action/components/${formState.ruc}`, method: 'GET' });
       if(data.status == 200) {
-        
+        const resp = data.data
+        resp.component_1 && (formState.component_1 = resp.component_1);
+        resp.component_2 && (formState.component_2 = resp.component_2);
+        resp.component_3 && (formState.component_3 = resp.component_3);
+        resp.endDate && (formState.endDate = dayjs(resp.endDate, 'YYYY-MM-DD'));
       } else {
         searchLoading.value = null;
         formState.ruc = null;
@@ -193,10 +201,6 @@ const handleSearchApiInfo = async(name) => {
   } finally {
     searchLoading.value = null;
   }
-
-
-
-
 }
 
 const handleDepartaments = (id) => {
@@ -208,24 +212,42 @@ const handleProvinces = (id) => {
   formState.district_id = null
   store.fetchDistricts(id)
 }
+
+const handleSelectComponent = (value, fieldName) => {
+  const otherFields = Object.keys(formState).filter(key => 
+    key !== fieldName && key.startsWith('component_')
+  );
+
+  if (otherFields.some(key => formState[key] === value)) {
+    formState[fieldName] = null;
+    console.error('Opción ya seleccionada en otro campo');
+  } else {
+    formState[fieldName] = value;
+  }
+}
+
 const onSubmit = async() => {
   loading.value = true;
   
   const payload = {
-    // ruc: formState.ruc,
-    // razonSocial: formState.razonSocial,
-    // actividadEconomica: formState.actividadEconomica,
-    // departamento: formState.departamento,
-    // provincia: formState.provincia,
-    // distrito: formState.distrito,
-    // direccion: formState.direccion,
+    people_id: formState.idPerson, 
+    cde_id: storageProfile.cde_id,
+    component_1: formState.component_1, 
+    component_2: formState.component_2,
+    component_3: formState.component_3,
+    ruc: formState.ruc,
+    startDate: dayjs(formState.startDate).format('YYYY-MM-DD'),
+    endDate: dayjs(formState.endDate).format('YYYY-MM-DD')
   }
 
   try {
-    const data = await makeRequest({ url: `mype/update-by-ruc/${props.info.id}`, method: 'PUT', data: payload });
+    const data = await makeRequest({ url: `plans-action/create`, method: 'POST', data: payload });
     if(data.status == 200) {
       message.success(data.message);
       emit('closeDraw');
+    } 
+    if(data.status == 400) {
+      message.warning(data.message);
     } 
   } catch (error) {
     console.log("Failed to update record");

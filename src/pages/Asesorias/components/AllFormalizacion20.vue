@@ -1,37 +1,26 @@
 <template>
-  <div class="wrapper-booking">
+  <div>
     <a-spin :spinning="spinning">
-      <a-form layout="vertical" :model="formState" name="basic" autocomplete="off" @finish="onSubmit"
-        @finishFailed="onSubmitFail">
+      <a-form layout="vertical" :model="formState" name="basic" autocomplete="off" @finish="onSubmit">
         <div class="grid-ruc20">
-          <template v-for="(el, idx) in fields" :key="idx">
+          <template v-for="(el, idx) in fields2" :key="idx">
 
             <a-form-item class="item-max" v-if="el.type === 'iSelect'" :name="el.name" :label="el.label"
               :rules="[{ required: el.required, message: el.message }]">
               <a-select v-if="el.name == 'regime_id'" v-model:value="formState[el.name]" :options="store.regimes"
                 show-search :filter-option="filterOption" />
 
-              <a-select 
-              v-if="el.name == 'modality_id'" 
-              :disabled="el.disabled"
-              v-model:value="formState[el.name]"
-              :options="store.modalities" />
+              <a-select v-if="el.name == 'modality_id'" :disabled="el.disabled" v-model:value="formState[el.name]"
+                :options="store.modalities" />
 
               <a-select v-if="el.name == 'typecapital_id'" v-model:value="formState[el.name]"
                 :options="store.typeCapital" />
 
-              <a-select v-if="el.name == 'isbic'" v-model:value="formState[el.name]"
-                :options="bic" />
+              <a-select v-if="el.name == 'isbic'" v-model:value="formState[el.name]" :options="bic" />
               
-              
-              <a-select 
-              v-if="el.name == 'notary_id'" 
-              :disabled="el.disabled"
-              v-model:value="formState[el.name]" 
-              :options="notaries"
-              option-label-prop="name" 
-              show-search 
-              :filter-option="filterNotaries">
+
+              <a-select v-if="el.name == 'notary_id'" :disabled="el.disabled" v-model:value="formState[el.name]"
+                :options="notaries" option-label-prop="name" show-search :filter-option="filterNotaries">
                 <template #option="{ value: val, name, city, province, district, address }">
                   <div class="select-notaries">
                     <span class="name">{{ name }}</span>
@@ -40,22 +29,15 @@
                   </div>
                 </template>
               </a-select>
-
+            
             </a-form-item>
 
             <a-form-item v-if="el.type === 'iDate'" :name="el.name" :label="el.label"
               :rules="[{ required: el.required, message: el.message }]">
-              
-              <a-date-picker 
-              :locale="locale" 
-              v-model:value="formState[el.name]" 
-              style="width: 100%;"
-              :format="dateFormat" 
-              placeholder="día/mes/año"
-              :disabled-date="disabledDate"
-              :disabled="el.disabled" 
-              @change="formState.birthday = birthdateDate" />
 
+              <a-date-picker :locale="locale" v-model:value="formState[el.name]" style="width: 100%;"
+                :format="dateFormat" placeholder="día/mes/año" :disabled-date="disabledDate" :disabled="el.disabled"
+                @change="formState.birthday = birthdateDate" />
 
             </a-form-item>
 
@@ -78,8 +60,6 @@
                 </template>
               </a-select>
 
-              <!-- <a-select v-if="el.name == 'cde_id'" v-model:value="formState[el.name]" :options="store.cdes" show-search :filter-option="filterOption" @change="handleChangeCde" /> -->
-
               <a-select v-if="el.name == 'economicsector_id'" v-model:value="formState[el.name]" show-search
                 :options="store.economicSectors" :filter-option="filterOption" />
 
@@ -95,53 +75,52 @@
 
             </a-form-item>
 
-            <a-form-item v-if="el.type === 'iText'" :name="el.name" :label="el.label" :rules="[{ required: el.required, message: el.message, type: el.email, max: el.max, min: el.min }]">
+            <a-form-item v-if="el.type === 'iText'" :name="el.name" :label="el.label"
+              :rules="[{ required: el.required, message: el.message, type: el.email, max: el.max, min: el.min }]">
               <a-input @input="validateOnlyNumber(el.name)" v-model:value="formState[el.name]" :disabled="el.disabled"
                 :maxlength="el.max" :placeholder="el.placeholder" />
             </a-form-item>
 
-            <a-form-item v-if="el.type === 'iNumber'" :name="el.name" :label="el.label" :rules="[{ required: el.required, message: el.message }]">
-              <a-input-number style="width: 100%;" v-model:value="formState[el.name]" :maxlength="11" @change="onlyRUC(el.name)"  />
+            <a-form-item v-if="el.type === 'iNumber'" :name="el.name" :label="el.label"
+              :rules="[{ required: el.required, message: el.message }]">
+              <a-input-number style="width: 100%;" v-model:value="formState[el.name]" :maxlength="11"
+                @change="onlyRUC(el.name)" />
             </a-form-item>
 
-            <a-form-item v-if="el.type === 'iTextLol'" :name="el.name" :label="el.label" :rules="[{ required: el.required, message: el.message }]">
-              <a-input @input="validateOnlyNumber(el.name)" v-model:value="formState.dni" :disabled="!props.documentnumber"
-                :maxlength="el.max" :placeholder="el.placeholder" />
+            <a-form-item v-if="el.type === 'iTextLol'" :name="el.name" :label="el.label"
+              :rules="[{ required: el.required, message: el.message }]">
+              <a-input @input="validateOnlyNumber(el.name)" v-model:value="formState.dni"
+                :disabled="!props.documentnumber" :maxlength="el.max" :placeholder="el.placeholder" />
             </a-form-item>
 
-            <a-form-item v-if="el.type === 'iMoney'" :name="el.name" :label="el.label" :rules="[{ required: el.required, message: el.message }]">
-              <a-input-number
-              :min:="0"
-              style="width: 100%;"
-              v-model:value="formState[el.name]"
-              :formatter="value => `S/ ${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')"
-              :parser="value => value.replace(/S\/\s?|(,*)/g, '')" />
+            <a-form-item v-if="el.type === 'iMoney'" :name="el.name" :label="el.label"
+              :rules="[{ required: el.required, message: el.message }]">
+              <a-input-number :min:="0" style="width: 100%;" v-model:value="formState[el.name]"
+                :formatter="value => `S/ ${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')"
+                :parser="value => value.replace(/S\/\s?|(,*)/g, '')" />
             </a-form-item>
 
           </template>
         </div>
-        <!-- <pre>{{ info }}</pre> -->
-        <!-- <pre style="display: none;">:::::{{ formState }}</pre>  -->
-        <div>{{ update() }}</div>
+        <!-- <pre>{{ notaries }}</pre> -->
         <a-form-item>
           <a-button class="btn-produce" type="primary" html-type="submit" :loading="loading">GUARDAR</a-button>
         </a-form-item>
+
       </a-form>
     </a-spin>
   </div>
 </template>
 
 <script setup>
-import CryptoJS from 'crypto-js';
-import { reactive, ref, defineComponent, onMounted } from 'vue';
+import { ref, onMounted, defineProps, watch, reactive, defineComponent } from 'vue';
 import { useCounterStore } from '@/stores/selectes.js';
-import { fields } from '@/forms/asesorias.js'
+import { fields } from '@/forms/asesorias.js';
 import { makeRequest } from '@/utils/api.js';
+import { requestNoToken } from '@/utils/noToken.js';
 import { message } from 'ant-design-vue';
 import { PlusOutlined } from '@ant-design/icons-vue';
-import { useRoute } from 'vue-router';
-import { requestNoToken } from '@/utils/noToken.js';
-import { dProfile } from '@/utils/storage.js';
+
 import locale from 'ant-design-vue/es/date-picker/locale/es_ES';
 import dayjs from 'dayjs';
 import 'dayjs/locale/es';
@@ -159,23 +138,23 @@ const VNodes = defineComponent({
   },
 });
 
+const emit = defineEmits(['closeDraw']);
+const props = defineProps(['info', 'idCde']);
+
+const fields2 = ref(null);
 const storageData = JSON.parse(localStorage.getItem('profile'));
 const role = JSON.parse(localStorage.getItem('role'));
-
 const dateFormat = 'DD/MM/YYYY';
-const route = useRoute();
-
-const props = defineProps(['info', 'idCde']);
-const emit = defineEmits(['closeDraw']);
-const loadingcategory = ref(false);
-const nameNewItem = ref(null);
-const nameNewItem2 = ref(null);
-const spinning = ref(true);
-const loading = ref(false);
 const store = useCounterStore();
-const notaries = ref(null);
 
-// store.$patch({ cdes: store.cdes });
+const loading = ref(false);
+const loadingcategory = ref(false);
+const spinning = ref(true);
+const notaries = ref([]);
+const nameNewItem = ref(null);
+
+const formState = reactive({});
+
 store.$patch({ cities: store.cities });
 store.$patch({ modalities: store.modalities });
 store.$patch({ economicSectors: store.economicSectors });
@@ -183,8 +162,6 @@ store.$patch({ comercialActivities: store.comercialActivities });
 store.$patch({ regimes: store.regimes });
 store.$patch({ typeCapital: store.typeCapital });
 
-// store.fetchNotaries();
-// store.fetchCdes()
 store.fetchEconomicSectors();
 store.fetchComercialActivities();
 store.fetchRegimes();
@@ -192,40 +169,14 @@ store.fetchModalities();
 store.fetchTypeCapital();
 store.fetchCities();
 
-const numberDNI = ref(null);
-const formState = reactive({
-  // cde_id: null,
-  task: 1,
-  codesunarp: null,
-  economicsector_id: null,
-  comercialactivity_id: null,
-  regime_id: null,
-  city_id: null,
-  province_id: null,
-  district_id: null,
-  address: null,
-  modality_id: null,
-  user_id: storageData.user_id,
-  montocapital: null,
-  ruc: null
-});
-
-// const handleChangeCde = (id) => {
-//   let data = dProfile;
-//   // dProfile.cde_id = id;
-//   localStorage.setItem('profile', JSON.stringify(data));
-//   const encryptProfile = CryptoJS.AES.encrypt(JSON.stringify(data), 'appProfile').toString();
-//   localStorage.setItem('eProfile', encryptProfile);
-// }
 const bic = [
   {value: 'SI', label: 'SI'},
   {value: 'NO', label: 'NO'}
-]
+];
 
 const disabledDate = (current) => {
   return current && current > dayjs().endOf('day');
 };
-
 const onlyRUC = (name) => {
   if(name == 'ruc') {
     const value = formState.ruc;
@@ -233,50 +184,12 @@ const onlyRUC = (name) => {
       formState.ruc = null;
     }
   }
-}
+};
 const validateOnlyNumber = (val) => {
   if (val == 'ruc' || val == 'montocapital') {
     formState[val] = formState[val].replace(/\D/g, '');
   }
 };
-const update = () => {
-  // formState.dni = props.info.documentnumber;
-  // const containsId = role.some(role => role.id === 7);
-  // if (containsId) {
-  //   formState.modality_id = 1 
-  //   formState.notary_id = storageData.notary_id 
-  // } 
-  // formState.city_id = props.info.city_id;
-  // handleDepartaments(props.info.city_id);
-  // formState.province_id = props.info.province_id;
-  // handleProvinces(props.info.province_id);
-  // formState.district_id = props.info.district_id;
-  // if (store.regimes?.length) spinning.value = false;
-
-  const { documentnumber, city_id, province_id, district_id, address } = props.info;
-  const containsId = role.some(role => role.id === 7);
-
-  formState.dni = documentnumber;
-
-  if (containsId) {
-    formState.modality_id = 1;
-    formState.notary_id = storageData.notary_id;
-  }
-
-  formState.city_id = city_id;
-  handleDepartaments(city_id);
-
-  formState.province_id = province_id;
-  handleProvinces(province_id);
-
-  formState.district_id = district_id;
-
-  formState.address = address;
-
-  if (store.regimes?.length) spinning.value = false;
-  
-}
-
 
 const filterNotaries = (input, option) => {
   const normalizedInput = input.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "");
@@ -291,6 +204,7 @@ const filterNotaries = (input, option) => {
          normalizedProvince.includes(normalizedInput) ||
          normalizedDistrict.includes(normalizedInput);
 };
+
 const handleAddItem = async () => {
   try {
     loadingcategory.value = true;
@@ -308,24 +222,6 @@ const handleAddItem = async () => {
     loadingcategory.value = false;
   }
 }
-// const handleAddItenSector = async () => {
-//   try {
-//     loadingcategory.value = true;
-//     const payload = {
-//       name: nameNewItem2.value
-//     }
-//     const data = await makeRequest({ url: 'create/economic-sector', method: 'POST', data: payload });
-//     if (data.status == 200) {
-//       nameNewItem2.value = null;
-//       store.fetchEconomicSectors();
-//     }
-//   } catch (e) {
-//     console.log(e);
-//   } finally {
-//     loadingcategory.value = false;
-//   }
-// }
-
 const handleDepartaments = (id) => {
   formState.province_id = null
   formState.district_id = null
@@ -337,15 +233,15 @@ const handleProvinces = (id) => {
 }
 const handleGetNotariesByRegion = async () => {
   try {
-    const values = { city_id: formState.city_id }
+    // const values = { city_id: formState.city_id }
     const { data } = await requestNoToken({
       url: 'public/notaries-filters',
       method: 'GET',
       // params: values
     });
 
-    notaries.value = null;
-    formState.notary_id = null;
+    // notaries.value = null;
+    // formState.notary_id = null;
 
     const notarias = data.map(item => ({
       value: item.id,
@@ -357,6 +253,7 @@ const handleGetNotariesByRegion = async () => {
     }));
 
     notaries.value = notarias;
+    spinning.value = false;
 
   } catch (error) {
     console.error('Error de red:', error);
@@ -368,6 +265,33 @@ const filterOption = (input, option) => {
   const normalizedLabel = option.label.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "");
   return normalizedLabel.includes(normalizedInput);
 };
+
+function handleSetInfo(info) {
+  fields2.value = fields
+  const { documentnumber, city_id, province_id, district_id, address } = props.info;
+  const containsId = role.some(role => role.id === 7);
+
+  formState.dni = documentnumber;
+
+  formState.city_id = city_id;
+  handleDepartaments(city_id);
+
+  formState.province_id = province_id;
+  handleProvinces(province_id);
+
+  formState.district_id = district_id;
+
+  formState.address = address;
+
+  handleGetNotariesByRegion();
+
+  if (containsId) {
+    fields2.value.notary_id.disabled = true;
+    fields2.value.modality_id.disabled = true;
+    formState.modality_id = 1;
+    formState.notary_id = storageData.notary_id;
+  }
+}
 
 const onSubmit = async () => {
   loading.value = true;
@@ -442,25 +366,38 @@ const onSubmit = async () => {
     loading.value = false;
   }
 }
-const onSubmitFail = () => {
-  message.warning('Debes de completar todos los espacios requeridos');
-};
 
 onMounted(() => {
-  handleGetNotariesByRegion()
+  if (props.info) {
+    handleSetInfo(props.info);
+  }
 });
+
+watch(() => props.info, (newValue) => {
+  if (newValue) {
+    handleSetInfo(newValue);
+  }
+});
+
 </script>
+
 
 <style scoped lang="scss">
 .grid-ruc20 {
   @media (width >= 820px) {
     display: grid;
-    grid-template-columns: repeat(3, 1fr);
+    grid-template-columns: repeat(4, 1fr);
     grid-gap: 0 1rem;
-    .ant-form-item:nth-child(11) {
-      grid-column: 2/4;
+    .ant-form-item:nth-child(3) {
+      grid-column: 3/5;
     }
     .ant-form-item:nth-child(12) {
+      grid-column: 1/3;
+    }
+    .ant-form-item:nth-child(13) {
+      grid-column: 3/5;
+    }
+    .ant-form-item:nth-child(18) {
       grid-column: 1/3;
     }
   }

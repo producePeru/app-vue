@@ -13,7 +13,7 @@ const fields = {
     name: 'namePerson',
     required: true,
     message: 'Escribe nombre',
-    disabled: false,
+    disabled: true,
   },
 
   city_id: {
@@ -22,7 +22,7 @@ const fields = {
     name: 'city_id',
     required: true,
     message: 'Seleccionar región',
-    disabled: false
+    disabled: true
   },
   province_id: {
     type: 'iSelectWrite',
@@ -30,7 +30,7 @@ const fields = {
     name: 'province_id',
     required: true,
     message: 'Seleccionar provincia',
-    disabled: false
+    disabled: true
   },
   district_id: {
     type: 'iSelectWrite',
@@ -38,7 +38,7 @@ const fields = {
     name: 'district_id',
     required: true,
     message: 'Seleccionar distrito',
-    disabled: false
+    disabled: true
   },
   gender_id: {
     type: 'iSelect',
@@ -46,6 +46,7 @@ const fields = {
     name: 'gender_id',
     required: true,
     message: 'Seleccionar género',
+    disabled: true,
   },
   sick: {
     type: 'iSelect',
@@ -53,6 +54,7 @@ const fields = {
     name: 'sick',
     required: true,
     message: 'Seleccionar estado',
+    disabled: true,
   },
   ruc: {
     type: 'iSearch',
@@ -67,44 +69,47 @@ const fields = {
     type: 'iDivider',
   },
 
-  component1: {
+  component_1: {
     type: 'iSelectWrite',
+    is: 'component',
     label: 'Componente 1',
-    name: 'component',
+    name: 'component_1',
     required: true,
     message: 'Seleccionar componente 1',
     disabled: false
   },
-  component2: {
+  component_2: {
     type: 'iSelectWrite',
+    is: 'component',
     label: 'Componente 2',
-    name: 'component',
-    required: true,
+    name: 'component_2',
+    required: false,
     message: 'Seleccionar componente 2',
     disabled: false
   },
-  component3: {
+  component_3: {
     type: 'iSelectWrite',
+    is: 'component',
     label: 'Componente 3',
-    name: 'component',
-    required: true,
+    name: 'component_3',
+    required: false,
     message: 'Seleccionar componente 3',
     disabled: false
   },
 
-  dateStart: {
+  startDate: {
     type: 'iDate',
     label: 'Día Inicio',
-    name: 'dateStart',
+    name: 'startDate',
     required: true,
     message: 'Seleccionar fecha de inicio',
     placeholder: 'año-mes-día'
   },
 
-  dateEnd: {
+  endDate: {
     type: 'iDate',
     label: 'Día Fin',
-    name: 'dateEnd',
+    name: 'endDate',
     required: true,
     message: 'Seleccionar fecha de fin',
     placeholder: 'año-mes-día'

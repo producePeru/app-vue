@@ -1,6 +1,6 @@
 <template>
   <section>
-    <Formalizaciones v-if="includesRole([1, 2])" />
+    <Formalizaciones v-if="includesRole([1, 2, 7])" />
   </section>
 </template>
 

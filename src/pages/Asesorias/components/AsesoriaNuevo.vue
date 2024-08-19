@@ -246,7 +246,7 @@ const update = () => {
 
   if (isNotarioExterno) store.fetchComponentThemes(4);
 
-  if (store.cities) spinning.value = false;
+  if (store.districts) spinning.value = false;
   
 }
 const handleSelectComponent = (id) => {

@@ -18,13 +18,23 @@ const fields = {
     disabled: false,
     placeholder: 'Número documento'
   },
-  modality_id: {
-    type: 'iSelect',
-    label: 'Modalidad de atención',
-    name: 'modality_id',
+  ruc: {
+    type: 'iNumber',
+    label: 'Número de RUC',
+    name: 'ruc',
+    required: false,
+    message: 'Escribir número de RUC',
+    disabled: false,
+    max: 11,
+    min: 11  
+  },
+  nameMype: {
+    type: 'iText',
+    label: 'Nombre empresa',
+    name: 'nameMype',
     required: true,
-    message: 'Seleccionar la modalidad',
-    disabled: role.some(r => r.id === 7) ? true : false
+    message: 'Escribir nombre de la empresa',
+    disabled: false
   },
   city_id: {
     type: 'iSelectWrite',
@@ -58,6 +68,15 @@ const fields = {
     message: 'Digitar la dirección del negocio',
     disabled: false
   },
+
+  modality_id: {
+    type: 'iSelect',
+    label: 'Modalidad de atención',
+    name: 'modality_id',
+    required: true,
+    message: 'Seleccionar la modalidad',
+    disabled: false
+  },
   regime_id: {
     type: 'iSelect',
     label: 'Tipo de régimen societario',
@@ -67,31 +86,20 @@ const fields = {
     disabled: false
   },
   
-  nameMype: {
-    type: 'iText',
-    label: 'Nombre empresa',
-    name: 'nameMype',
-    required: true,
-    message: 'Escribir nombre de la empresa',
-    disabled: false
-  },
-  ruc: {
-    type: 'iNumber',
-    label: 'Número de RUC',
-    name: 'ruc',
-    required: false,
-    message: 'Escribir número de RUC',
-    disabled: false,
-    max: 11,
-    min: 11,
-    // placeholder: 'EN TRÁMITE completar con CEROS',
-  },
   economicsector_id: {
     type: 'iSelectWrite',
     label: 'Sector económico',
     name: 'economicsector_id',
     required: true,
     message: 'Seleccionar el sector económico',
+    disabled: false
+  },
+  numbernotary: {
+    type: 'iText',
+    label: 'Número solicitud constancia',
+    name: 'numbernotary',
+    required: true,
+    message: 'Escribir número de solicitud de constancia',
     disabled: false
   },
   comercialactivity_id: {
@@ -109,16 +117,9 @@ const fields = {
     name: 'notary_id',
     required: true,
     message: 'Seleccionar una notaría',
-    disabled: role.some(r => r.id === 7) ? true : false
-  },
-  numbernotary: {
-    type: 'iText',
-    label: 'Número solicitud constancia',
-    name: 'numbernotary',
-    required: true,
-    message: 'Escribir número de solicitud de constancia',
     disabled: false
   },
+  
   dateReception: {
     type: 'iDate',
     label: 'Fecha de Recepcion todo OK',
@@ -145,14 +146,6 @@ const fields = {
     message: 'Buscar BIC',
     disabled: false
   },
-  typecapital_id: {
-    type: 'iSelect',
-    label: 'Tipo de aporte de capital',
-    name: 'typecapital_id',
-    required: false,
-    message: 'Seleccionar BIC',
-    disabled: false
-  },
   montocapital: {
     type: 'iMoney',
     label: 'Monto de capital social',
@@ -161,7 +154,14 @@ const fields = {
     message: 'Escribir el Monto de capital social',
     disabled: false
   },
-  
+  typecapital_id: {
+    type: 'iSelect',
+    label: 'Tipo de aporte de capital',
+    name: 'typecapital_id',
+    required: false,
+    message: 'Seleccionar BIC',
+    disabled: false
+  }
 };
 
 const acto = {};
