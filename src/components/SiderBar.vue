@@ -80,12 +80,23 @@
         <a-sub-menu key="convenios" @click="handleCollapse('convenios')" v-if="views.includes('convenios')">
           <template #title>
             <span>
+              
               <CopyOutlined />
               <span>Convenios</span>
             </span>
           </template>
           <a-menu-item key="estado-convenio"> <router-link to="/admin/convenios/estado-convenio" v-if="views.includes('estado-convenio')">Estado de convenios</router-link> </a-menu-item>
         </a-sub-menu>
+
+        <!-- <a-sub-menu key="eventos" @click="handleCollapse('eventos')" v-if="views.includes('convenios')">
+          <template #title>
+            <span>
+              <CalendarOutlined />
+              <span>Eventos</span>
+            </span>
+          </template>
+          <a-menu-item key="eventos-calendario-google"> <router-link to="/admin/eventos/calendario" v-if="views.includes('estado-convenio')">Calendario</router-link> </a-menu-item>
+        </a-sub-menu> -->
 
 
         <!-- Convenios  -->
@@ -163,7 +174,8 @@ import {
   AuditOutlined,
   CloudOutlined,
   CopyOutlined,
-  SettingOutlined
+  SettingOutlined,
+  CalendarOutlined
 } from '@ant-design/icons-vue';
 
 const route = useRoute();

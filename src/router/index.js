@@ -207,6 +207,19 @@ const router = createRouter({
             }
           ]
         },
+
+        {
+          path: 'eventos',
+          name: 'eventos',
+          children: [
+            {
+              path: 'calendario',
+              name: 'eventos-calendario-google',
+              component: () => import('../pages/Google/EventosCalendario.vue'),
+              meta: { requiresAuth: false },
+            }
+          ]
+        },
         
         // {
         //   path: 'convenios',
