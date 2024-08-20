@@ -31,7 +31,7 @@
     :loading="loading" 
     size="small">
       <template #headerCell="{ column }">
-        <template v-if="column.dataIndex == 'region'">
+        <template v-if="column.dataIndex == 'city'">
           <div class="table-head">
             <span>REGIÓN</span>
             <div class="t-icons">
@@ -57,16 +57,6 @@
           {{ computeIndex(index) }}
         </template>
 
-        <template v-if="column.dataIndex == 'region'">
-          {{ record.region.name }}
-        </template>
-        <template v-if="column.dataIndex == 'provincia'">
-          {{ record.provincia.name }}
-        </template>
-        <template v-if="column.dataIndex == 'district'">
-          {{ record.distrito?.name }}
-        </template>
-
         <template v-if="column.dataIndex =='denomination'">
           {{ record.denomination }}
           <a-progress 
@@ -77,28 +67,24 @@
           :strokeColor="colorPeriodo(dateTrafficLight(record.endDate, record.startDate))" />
         </template>
 
-        <template v-if="column.dataIndex == 'inicioperaciones'">
-          {{ formatDate(record?.homeOperations) }}
-        </template>
-        <!-- <template v-if="column.dataIndex == 'operatividad'">
-          {{ record?.estado_operatividad.name }}
-        </template> -->
-        <!-- <template v-if="column.dataIndex == 'convenio'">
-          {{ record?.estado_convenio.name }}
-        </template> -->
-
-        <template v-if="column.dataIndex == 'entidades'">
-          <div v-for="(initial, index) in record.initials" :key="index">
+        <template v-if="column.dataIndex == 'entities'">
+          <div v-for="(initial, index) in record.entities" :key="index">
             <a-tag :color="handleColor(index)" style="margin: .2rem 0;">{{ initial }} </a-tag>
           </div>
+        </template>
+
+        <template v-if="column.dataIndex == 'numbyears'">
+          <p style="line-height: 1.2; margin: 0; font-size: 12px;">
+            {{ restDate(record.endDate, record.startDate) }}
+          </p>
         </template>
 
         <template v-if="column.dataIndex == 'startDate'">
           {{ formatDate(record?.startDate) }}
         </template>
-        
-        <template v-if="column.dataIndex == 'numbyears'">
-          <p style="line-height: 1.2; margin: 0; font-size: 12px;">{{ restDate(record.endDate, record.startDate) }}</p>
+
+        <template v-if="column.dataIndex == 'startOperations'">
+          {{ formatDate(record?.startOperations) }}
         </template>
 
         <template v-if="column.dataIndex == 'endDate'">
@@ -108,7 +94,6 @@
         <template v-if="column.dataIndex == 'numbrestantes'">
           <p v-if="dateTrafficLight(record.endDate, record.startDate) >= 1" class="list-days">{{ dateTrafficLight(record.endDate, record.startDate) }} días faltantes</p>
           <p v-else class="list-days">{{ dateTrafficLight(record.endDate, record.startDate) }} días vencidos</p>
-          
         </template>
 
         <template v-if="column.dataIndex == 'acciones'"> 
@@ -117,6 +102,26 @@
             <span class="accion-numb">{{ record.acciones.length }} MENSAJES</span>
           </div>
         </template>
+
+        <!--  -->
+        <!-- <template v-if="column.dataIndex == 'operatividad'">
+          {{ record?.estado_operatividad.name }}
+        </template> -->
+        <!-- <template v-if="column.dataIndex == 'convenio'">
+          {{ record?.estado_convenio.name }}
+        </template> -->
+
+        <!--  -->
+<!-- 
+        
+        
+         -->
+
+        <!--  -->
+
+        <!--  -->
+
+        <!--  -->
 
         <template v-if="column.dataIndex == 'actions'">
           <a-dropdown :trigger="['click']">
@@ -211,23 +216,23 @@ const updateValues = ref(null);
 const city = ref(null);
 const valueY = ref(window.innerHeight - 100);
 const columns = [
-  { title: '#', fixed: 'left', dataIndex: 'idx', align: 'center', width: 70 },
-  { title: 'REGIÓN', fixed: 'left', dataIndex: 'region', width: 120 },
-  { title: 'PROVINCIA', fixed: 'left', dataIndex: 'provincia', width: 120 },
-  { title: 'DISTRITO', fixed: 'left', dataIndex: 'district', width: 140 },
-  { title: 'DENOMINACIÓN', dataIndex: 'denomination', fixed: 'left', width: 150 },
-  { title: 'ENTIDAD ALIADA', dataIndex: 'alliedEntity', width: 170 },
-  { title: 'INICIO DE OPERACIONES', dataIndex: 'inicioperaciones', align: 'center', width: 120 },
-  { title: 'DIRECCIÓN', dataIndex: 'address', width: 180 },
-  { title: 'REFERENCIA', dataIndex: 'reference', width: 220 },
-  { title: 'ASESORES EMPRESARIALES ASIGNADOS', dataIndex: 'districtxx', align: 'center', width: 125 },
+  { title: '#',                     dataIndex: 'idx', fixed: 'left', align: 'center', width: 70 },
+  { title: 'REGIÓN',                dataIndex: 'city', fixed: 'left', width: 120 },
+  { title: 'PROVINCIA',             dataIndex: 'province', fixed: 'left', width: 120 },
+  { title: 'DISTRITO',              dataIndex: 'district', fixed: 'left', width: 140 },
+  { title: 'DENOMINACIÓN',          dataIndex: 'denomination', fixed: 'left', width: 150 },
+  { title: 'ENTIDAD ALIADA',        dataIndex: 'entity', width: 170 },
+  { title: 'INICIO DE OPERACIONES', dataIndex: 'startOperations', align: 'center', width: 120 },
+  { title: 'DIRECCIÓN',             dataIndex: 'address', width: 180 },
+  { title: 'REFERENCIA',            dataIndex: 'references', width: 220 },
+  // { title: 'ASESORES EMPRESARIALES ASIGNADOS', dataIndex: 'districtxx', align: 'center', width: 125 },
   { title: 'RESOLUCIÓN DE AUTORIZACIÓN PARA CONDICIÓN DE CDE', dataIndex: 'resolution', align: 'center', width: 150 },
-  { title: 'ESTADO DE OPERATIVIDAD', dataIndex: 'operatividad', align: 'center', width: 120 },
-  { title: 'ESTADO DEL CONVENIO', dataIndex: 'convenio', align: 'center', width: 120 },
-  { title: 'ENTIDADES', dataIndex: 'entidades', align: 'center', width: 170 },
+  { title: 'ESTADO DE OPERATIVIDAD',  dataIndex: 'statusOperations', align: 'center', width: 120 },
+  { title: 'ESTADO DEL CONVENIO',     dataIndex: 'statusConveny', align: 'center', width: 120 },
+  { title: 'ENTIDADES',               dataIndex: 'entities', align: 'center', width: 170 },
   { title: 'INICIO CONVENIO VIGENTE', dataIndex: 'startDate', align: 'center', width: 120 },
-  { title: 'NUM. AÑOS DEL CONVENIO', dataIndex: 'numbyears', align: 'center', width: 110 },
-  { title: 'FIN DEL CONVENIO', dataIndex: 'endDate', align: 'center', width: 120 },
+  { title: 'NUM. AÑOS DEL CONVENIO',  dataIndex: 'numbyears', align: 'center', width: 110 },
+  { title: 'FIN DEL CONVENIO',        dataIndex: 'endDate', align: 'center', width: 120 },
   { title: 'DÍAS', dataIndex: 'numbrestantes', align: 'center', width: 70 },
   { title: 'ACCIONES', dataIndex: 'acciones', align: 'center', width: 100 },
   { title: '', dataIndex: 'actions', width: 50, align: 'center', fixed: 'right' }
@@ -376,9 +381,10 @@ const fetchData = async (val) => {
     parx = val? {...parx,...val } : parx;
    
     const {data} = await makeRequest({ url: `agreement/list`, method: 'GET', params: parx });
-    dataSource.value = data.data
+    dataSource.value = data?.data
     total.value = data.total
     pageSize.value = data.per_page;
+    // console.log("dataSourcexxxxx", data.data);
   } catch (error) {
     console.error('Error de red:', error);
   } finally {
