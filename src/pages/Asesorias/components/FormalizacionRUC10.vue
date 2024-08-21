@@ -76,14 +76,14 @@
       </a-form-item>
 
     </a-form>
-    <div>{{ update() }}</div>
+    <!-- <div>{{ update() }}</div> -->
     <!-- <pre>{{ formState }}</pre> -->
     </a-spin>
   </div>
 </template>
 
 <script setup>
-import { reactive, ref, defineComponent } from 'vue';
+import { reactive, ref, defineComponent, onMounted, watch } from 'vue';
 import { ructen } from '@/forms/asesorias.js';
 import { message } from 'ant-design-vue';
 import { useCounterStore } from '@/stores/selectes.js';
@@ -154,28 +154,6 @@ const onlyRUC = (name) => {
     }
   }
 }
-
-const update = () => {
-  const { documentnumber, city_id, province_id, district_id, address } = props.info;
-  
-  formState.dni = documentnumber;
-  formState.modality_id = role.some(r => r.id === 7) ? 1 : null;
-  
-  formState.city_id = city_id;
-  handleDepartaments(city_id);
-  
-  formState.province_id = province_id;
-  handleProvinces(province_id);
-  
-  formState.district_id = district_id;
-
-  formState.address = address;
-
-  if (store.cities) {
-    spinning.value = false;
-  }
-};
-
 
 const validateOnlyNumber = (val) => {
   if(val == 'ruc') {
@@ -307,6 +285,41 @@ const onSubmit = async () => {
 const onSubmitFail = () => {
   message.warning('Debes de completar todos los espacios requeridos')
 };
+
+function handleSetInfo() {
+  const { documentnumber, city_id, province_id, district_id, address } = props.info;
+  const isNotarioExterno = role.some(r => r.id === 7);
+
+  formState.dni = documentnumber;
+  formState.city_id = city_id;
+  handleDepartaments(city_id);
+  formState.province_id = province_id;
+  handleProvinces(province_id);
+  formState.district_id = district_id;
+  formState.address = address;
+
+  if (isNotarioExterno) {
+    formState.modality_id = 1;
+  }
+
+  if(formState.district_id) {
+    setTimeout(() => {
+      spinning.value = false;
+    }, 1500);
+  }
+}
+
+onMounted(() => {
+  if (props.info) {
+    handleSetInfo(props.info);
+  }
+});
+
+watch(() => props.info, (newValue) => {
+  if (newValue) {
+    handleSetInfo(newValue);
+  }
+});
 </script>
 
 <style scoped lang="scss">

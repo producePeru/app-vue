@@ -167,18 +167,12 @@
     </a-drawer>
 
     <!-- MODAL MAS DE UNA SOLICITUD -->
-    <a-modal v-model:open="openModal" title="Pendientes" :closable="true" cancelText="Cerrar" :footer="null"
+    <!-- <a-modal v-model:open="openModal" title="Pendientes" :closable="true" cancelText="Cerrar" :footer="null"
       :maskClosable="false" width="380px">
       <a-spin :spinning="spinning">
         <div v-for="(item, key) in dataPndingRequest" :key="key">
           <div class="pendient">
-            <!-- @click="handleSelectRequest(item)" -->
-            <!-- <div class="info-tag" v-if="item.task == 0"><b>Paso</b> <a-tag color="error">Reserva de nombre</a-tag></div>
-              <div class="info-tag" v-if="item.task == 1"><b>Siguiente paso</b> <a-tag color="warning">Acto
-                  constitutivo</a-tag></div>
-              <div class="info-tag" v-if="item.task == 2"><b>Siguiente paso</b> <a-tag color="success">Formalizar</a-tag>
-            </div> -->
-
+  
             <div class="info">
               <b>Código SID SUNARP</b>
               <span><b class="code-number"><a-tag color="error" style="margin: 0;">{{ item.codesunarp
@@ -188,14 +182,13 @@
               <b>Fecha de registro: </b>
               <span>{{ formatDate(item.updated_at) }}</span>
             </div>
-            <!-- <pre>{{ item }}</pre> -->
           </div>
         </div>
         <div class="pendient pendient-btn btn-produce" @click="handleStartProcessRUC20">
           <div style="text-align: center;">NUEVO REGISTRO</div>
         </div>
       </a-spin>
-    </a-modal>
+    </a-modal> -->
     <!-- MODAL MAS DE UNA SOLICITUD -->
     <!-- <pre>{{ type_document }}</pre> -->
 
@@ -307,7 +300,7 @@ const handleSelectAction = () => {
   if (!value1.value) return message.warning('Seleccionar un tipo de servicio')
   if (value1.value == 'asesoria') open3.value = true
   if (value1.value == 'ruc10') open2.value = true;
-  if (value1.value == 'ruc20') handleProccessRUC20();
+  if (value1.value == 'ruc20') handleStartProcessRUC20();
 };
 
 const steps = [

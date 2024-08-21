@@ -87,7 +87,6 @@
         </template>
       </div>
 
-      <div>{{ update() }}</div>
       <a-form-item>
         <a-button type="primary" class="btn-produce" html-type="submit" :loading="loading">GUARDAR</a-button>
       </a-form-item>
@@ -99,7 +98,7 @@
 </template>
 
 <script setup>
-import { reactive, ref, defineComponent } from 'vue';
+import { reactive, ref, defineComponent, onMounted, watch } from 'vue';
 import { message } from 'ant-design-vue';
 import { asesoria } from '@/forms/asesorias.js'
 import { useCounterStore } from '@/stores/selectes.js';
@@ -121,11 +120,13 @@ const VNodes = defineComponent({
   },
 });
 
-const store = useCounterStore();
-const storageData = JSON.parse(localStorage.getItem('profile'));
-const loading = ref(false);
 const props = defineProps(['info', 'idCde']);
 const emit = defineEmits(['closeDraw']);
+
+const store = useCounterStore();
+const storageData = JSON.parse(localStorage.getItem('profile'));
+
+const loading = ref(false);
 const loadingcategory = ref(false);
 const nameNewItem = ref(null);
 const nameNewItem2 = ref(null);
@@ -144,11 +145,10 @@ store.$patch({ comercialActivities: store.comercialActivities });
 store.fetchEconomicSectors();
 store.fetchComercialActivities();
 store.fetchComponents();
-// store.fetchComponentThemes();
 store.fetchModalities();
 store.fetchCities();
-store.fetchGenders();
-
+// store.fetchComponentThemes();
+// store.fetchGenders();
 
 const spinning = ref(true);
 
@@ -215,42 +215,7 @@ const handleAddThemeNew = async() => {
     loadingcategory.value = false;
   }
 }
-const update = () => {
-  formState.dni = props.info.documentnumber;
-  // formState.city_id = props.info.city_id;
-  // handleDepartaments(props.info.city_id)
-  // formState.province_id = props.info.province_id;
-  // handleProvinces(props.info.province_id)
-  // formState.district_id = props.info.district_id;
-  // // Validamos si es notario externo el asesor
-  // role.some(r => r.id === 7) ? formState.component_id = 4 : formState.component_id = null;
-  // role.some(r => r.id === 7) ? formState.modality_id = 1 : formState.modality_id = null;
-  // role.some(r => r.id === 7) && store.fetchComponentThemes(4);
-  // if(store.cities) spinning.value = false;
-  
-  // const { documentnumber, city_id, province_id, district_id } = props.info;
-  // const isNotarioExterno = role.some(r => r.id === 7);
 
-  // formState.dni = documentnumber;
-
-  // formState.city_id = city_id;
-  // handleDepartaments(city_id);
-
-  // formState.province_id = province_id;
-  // handleProvinces(province_id);
-
-  // formState.district_id = district_id;
-
-  // formState.component_id = isNotarioExterno ? 4 : null;
-  // formState.modality_id = isNotarioExterno ? 1 : null;
-
-  // if (isNotarioExterno) store.fetchComponentThemes(4);
-
-  // if (store.districts) spinning.value = false;
-
-  spinning.value = false;
-  
-}
 const handleSelectComponent = (id) => {
   formState.theme_id = null
   store.fetchComponentThemes(id);
@@ -262,7 +227,7 @@ const handleDepartaments = (id) => {
 }
 const handleProvinces = (id) => {
   formState.district_id = null
-  store.fetchDistricts(id)
+  store.fetchDistricts(id);
 }
 const filterOption = (input, option) => {
   const normalizedInput = input.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "");
@@ -317,7 +282,6 @@ const onSubmit = async () => {
 
       emit('closeDraw', true)
       
-     
     }
   } catch (error) {
     console.log("Error: " + error);
@@ -328,6 +292,42 @@ const onSubmit = async () => {
 const onSubmitFail = () => {
   message.warning('Debes de completar todos los espacios requeridos')
 };
+
+function handleSetInfo() {
+  const { documentnumber, city_id, province_id, district_id } = props.info;
+  const isNotarioExterno = role.some(r => r.id === 7);
+
+  formState.dni = documentnumber;
+  formState.city_id = city_id;
+  handleDepartaments(city_id);
+  formState.province_id = province_id;
+  handleProvinces(province_id);
+  formState.district_id = district_id;
+
+  if (isNotarioExterno) {
+    store.fetchComponentThemes(4);
+    formState.component_id = 4;
+    formState.modality_id = 1;
+  }
+
+  if(formState.district_id) {
+    setTimeout(() => {
+      spinning.value = false;
+    }, 1500);
+  }
+}
+
+onMounted(() => {
+  if (props.info) {
+    handleSetInfo(props.info);
+  }
+});
+
+watch(() => props.info, (newValue) => {
+  if (newValue) {
+    handleSetInfo(newValue);
+  }
+});
 </script>
 
 <style scoped lang="scss">
