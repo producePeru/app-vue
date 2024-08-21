@@ -18,8 +18,16 @@
       </a-col>
     </a-row>
 
-    <a-table bordered :scroll="{ x: valueX, y: valueY }" class="table-users" :columns="columns"
-      :data-source="dataSource" :pagination="false" :loading="loading" size="small">
+    <a-table 
+    bordered 
+    :scroll="{ x: valueX, y: valueY }" 
+    class="table-actions" 
+    :columns="columns"
+    :data-source="dataSource" 
+    :pagination="false" 
+    :loading="loading" 
+    size="small">
+      
       <template v-slot:bodyCell="{ column, record, index }">
         <template v-if="column.dataIndex === 'idx'">
           {{ computeIndex(index) }}
@@ -60,12 +68,16 @@
                 <a-menu-item>
                   <a @click="handleEditIten(record)">Editar</a>
                 </a-menu-item>
-                <!-- <a-menu-item>
-                  <a-popconfirm title="¿Seguro de eliminar?" @confirm="handleDeleteNotary(record)">
+
+                
+                <a-menu-item>
+                  <a-popconfirm title="¿Seguro de eliminar?" @confirm="handleDeleteItem(record)">
                     <template #icon><question-circle-outlined style="color: red" /></template>
                     <a>Eliminar</a>
                   </a-popconfirm>
-                </a-menu-item> -->
+                </a-menu-item>
+
+
               </a-menu>
             </template>
           </a-dropdown>
@@ -97,7 +109,7 @@ import { h, ref, onMounted, computed, reactive } from 'vue';
 import { useCounterStore } from '@/stores/selectes.js';
 import { message } from 'ant-design-vue';
 import { downloadExcel } from '@/utils/downloadExcel';
-import { MoreOutlined } from '@ant-design/icons-vue';
+import { MoreOutlined, QuestionCircleOutlined } from '@ant-design/icons-vue';
 
 // import { MoreOutlined } from '@ant-design/icons-vue';
 // import locale from 'ant-design-vue/es/date-picker/locale/es_ES';
@@ -158,6 +170,17 @@ const columns = [
   { title: '', dataIndex: 'actions', width: 50, align: 'center', fixed: 'right'}
 ];
 
+const handleDeleteItem = async(record) => {
+  try {
+    const data = await makeRequest({ url: `plans-action/delete/${record.id}`, method: 'DELETE' });
+    if(data.status == 200) {
+      message.success(data.message)
+      fetchData()
+    }
+  } catch (error) {
+    console.log("Failed to delete");
+  }
+}
 const handleEditIten = (data) => {
   updateItem.value = data
   openDrawer.value = true;
@@ -205,6 +228,7 @@ const handleEditItem = (item) => {
   dataItem.value = item;
 }
 const handleCloseDrawer = () => {
+  updateItem.value = null;
   openDrawer.value = false;
   fetchData();
 }
@@ -261,7 +285,7 @@ onMounted(() => {
   margin-top: 1.5rem;
 }
 
-.table-users {
+.table-actions {
   tr {
     font-size: 13px;
   }
@@ -269,5 +293,21 @@ onMounted(() => {
   .ant-select-selection-item {
     font-size: 13px;
   }
+}
+</style>
+
+<style lang="scss">
+.table-actions {
+  .ant-table-row {
+    .ant-table-cell:nth-child(11),
+    .ant-table-cell:nth-child(12),
+    .ant-table-cell:nth-child(13) {
+      background-color: #f7f7f7 !important;
+    }
+  }
+}
+
+.ant-popconfirm-message {
+  width: 180px;
 }
 </style>

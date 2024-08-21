@@ -93,7 +93,7 @@
       <a-form-item>
         <a-button class="btn-produce" type="primary" html-type="submit" :loading="loading">GUARDAR</a-button>
       </a-form-item>
-      <pre>{{ info }}</pre>
+      <!-- <pre>{{ formState }}</pre> -->
     </a-form>
   </div>
 </template>
@@ -143,6 +143,20 @@ const formState = reactive({
   component_3: null
 });
 
+const handleClear = () => {
+  formState.numberDocument = null;
+  formState.component_1 = null;
+  formState.component_2 = null;
+  formState.component_3 = null;
+  formState.ruc = null;
+  formState.idPerson = null;
+  formState.namePerson = null;
+  formState.city_id = null;
+  formState.province_id = null;
+  formState.district_id = null;
+  formState.gender_id = null;
+  formState.sick = null;
+}
 const disabledDate = (current) => {
   return current && current > dayjs().endOf('day');
 };
@@ -154,6 +168,7 @@ const filterOption = (input, option) => {
   const normalizedLabel = option.label.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "");
   return normalizedLabel.includes(normalizedInput);
 };
+
 const handleSearchApiInfo = async(name) => {
   
   if(!formState.numberDocument) return message.warning("Ingrese un número a buscar...");
@@ -238,11 +253,16 @@ const onSubmit = async() => {
     component_3: formState.component_3,
     ruc: formState.ruc,
     startDate: dayjs(formState.startDate).format('YYYY-MM-DD'),
-    endDate: dayjs(formState.endDate).format('YYYY-MM-DD')
+    endDate: dayjs(formState.endDate).format('YYYY-MM-DD'),
+    ...(props.info && { idItem: props.info.id })
   }
 
+  let rutaUrl = null;
+
+  props.info ? rutaUrl = `plans-action/update` : rutaUrl = `plans-action/create`;
+
   try {
-    const data = await makeRequest({ url: `plans-action/create`, method: 'POST', data: payload });
+    const data = await makeRequest({ url: `${rutaUrl}`, method: 'POST', data: payload });
     if(data.status == 200) {
       message.success(data.message);
       emit('closeDraw');
@@ -258,7 +278,16 @@ const onSubmit = async() => {
 }
 
 function handleSetInfo(info) {
-  console.log("tuuuuu", info);
+  if(info) {
+    formState.numberDocument = info.emprendedor_dni;
+    handleSearchApiInfo('numberDocument');
+    formState.ruc = info.ruc;
+    formState.component_1 = info.component_1;
+    formState.component_2 = info.component_2;
+    formState.component_3 = info.component_3;
+  } else {
+    handleClear()
+  }
 }
 
 onMounted(() => {
