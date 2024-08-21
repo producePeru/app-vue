@@ -93,13 +93,13 @@
       <a-form-item>
         <a-button class="btn-produce" type="primary" html-type="submit" :loading="loading">GUARDAR</a-button>
       </a-form-item>
-      <!-- <pre>{{ formState }}</pre> -->
+      <pre>{{ info }}</pre>
     </a-form>
   </div>
 </template>
 
 <script setup>
-import { ref, reactive } from 'vue';
+import { ref, reactive, defineProps, watch, onMounted } from 'vue';
 import fieldx from '@/forms/planesAccion.js';
 import { message } from 'ant-design-vue';
 import { makeRequest } from '@/utils/api.js';
@@ -111,8 +111,9 @@ dayjs.locale('es');
 
 const storageProfile = JSON.parse(localStorage.getItem('profile'))
 
-const emit = defineEmits(['closeDraw']);
 const store = useCounterStore();
+const emit = defineEmits(['closeDraw']);
+const props = defineProps(['info']);
 
 store.$patch({ cities: store.cities });
 store.$patch({ genders: store.genders });
@@ -255,6 +256,22 @@ const onSubmit = async() => {
     loading.value = false;
   }
 }
+
+function handleSetInfo(info) {
+  console.log("tuuuuu", info);
+}
+
+onMounted(() => {
+  if (props.info) {
+    handleSetInfo(props.info);
+  }
+});
+
+watch(() => props.info, (newValue) => {
+  if (newValue) {
+    handleSetInfo(newValue);
+  }
+});
 </script>
 
 <style lang="scss" scoped>

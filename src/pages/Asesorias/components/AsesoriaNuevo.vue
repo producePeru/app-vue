@@ -144,7 +144,7 @@ store.$patch({ comercialActivities: store.comercialActivities });
 store.fetchEconomicSectors();
 store.fetchComercialActivities();
 store.fetchComponents();
-store.fetchComponentThemes();
+// store.fetchComponentThemes();
 store.fetchModalities();
 store.fetchCities();
 store.fetchGenders();
@@ -216,7 +216,7 @@ const handleAddThemeNew = async() => {
   }
 }
 const update = () => {
-  // formState.dni = props.info.documentnumber;
+  formState.dni = props.info.documentnumber;
   // formState.city_id = props.info.city_id;
   // handleDepartaments(props.info.city_id)
   // formState.province_id = props.info.province_id;
@@ -228,25 +228,27 @@ const update = () => {
   // role.some(r => r.id === 7) && store.fetchComponentThemes(4);
   // if(store.cities) spinning.value = false;
   
-  const { documentnumber, city_id, province_id, district_id } = props.info;
-  const isNotarioExterno = role.some(r => r.id === 7);
+  // const { documentnumber, city_id, province_id, district_id } = props.info;
+  // const isNotarioExterno = role.some(r => r.id === 7);
 
-  formState.dni = documentnumber;
+  // formState.dni = documentnumber;
 
-  formState.city_id = city_id;
-  handleDepartaments(city_id);
+  // formState.city_id = city_id;
+  // handleDepartaments(city_id);
 
-  formState.province_id = province_id;
-  handleProvinces(province_id);
+  // formState.province_id = province_id;
+  // handleProvinces(province_id);
 
-  formState.district_id = district_id;
+  // formState.district_id = district_id;
 
-  formState.component_id = isNotarioExterno ? 4 : null;
-  formState.modality_id = isNotarioExterno ? 1 : null;
+  // formState.component_id = isNotarioExterno ? 4 : null;
+  // formState.modality_id = isNotarioExterno ? 1 : null;
 
-  if (isNotarioExterno) store.fetchComponentThemes(4);
+  // if (isNotarioExterno) store.fetchComponentThemes(4);
 
-  if (store.districts) spinning.value = false;
+  // if (store.districts) spinning.value = false;
+
+  spinning.value = false;
   
 }
 const handleSelectComponent = (id) => {
