@@ -5,7 +5,8 @@ const fields = {
     name: 'numberDocument',
     required: true,
     message: 'Ingresar Número de documento',
-    disabled: false
+    disabled: false,
+    max: 11
   },
   namePerson: {
     type: 'iText',
@@ -60,9 +61,10 @@ const fields = {
     type: 'iSearch',
     label: 'Número de RUC',
     name: 'ruc',
-    required: true,
+    required: false,
     message: 'Escribe el número de RUC',
-    disabled: false
+    disabled: false,
+    max: 11
   },
 
   divider: {
@@ -83,7 +85,7 @@ const fields = {
     is: 'component',
     label: 'Componente 2',
     name: 'component_2',
-    required: false,
+    required: true,
     message: 'Seleccionar componente 2',
     disabled: false
   },

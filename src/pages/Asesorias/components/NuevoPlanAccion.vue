@@ -36,7 +36,7 @@
             @search="handleSearchApiInfo(el.name)"
             @input="validateNumber(el.name)" 
             @enterButton="handleSearchApiInfo(el.name)"
-            :maxlength="11" />
+            :maxlength="el.max" />
           </a-form-item>
 
           <a-divider dashed v-if="el.type === 'iDivider'" style="grid-column: 1/3; margin: .5rem 0 1rem 0;"/>
@@ -71,7 +71,7 @@
             v-if="el.is == 'component'" 
             v-model:value="formState[el.name]" 
             show-search 
-            :options="store.components" 
+            :options="getFilteredComponents(el.name)" 
             :filter-option="filterOption" 
             @change="(value) => handleSelectComponent(value, el.name)" />
 
@@ -93,7 +93,7 @@
       <a-form-item>
         <a-button class="btn-produce" type="primary" html-type="submit" :loading="loading">GUARDAR</a-button>
       </a-form-item>
-      <!-- <pre>{{ formState }}</pre> -->
+      <!-- <pre>{{ store.components }}</pre> -->
     </a-form>
   </div>
 </template>
@@ -121,13 +121,20 @@ store.$patch({ components: store.components });
 
 store.fetchCities();
 store.fetchGenders();
-store.fetchComponents();
+// store.fetchComponents();
 
 const dateFormat = 'DD/MM/YYYY';
 const fields = ref(fieldx)
 const loading = ref(false);
 const searchLoading = ref(null);
 
+const components = [
+  { label: "DESARROLLO PRODUCTIVO", value: 1 },
+  { label: "DIGITALIZACIÓN",        value: 2 },
+  { label: "FINANZAS",              value: 3 },
+  { label: "FORMALIZACIÓN",         value: 4 },
+  { label: "GESTIÓN EMPRESARIAL",   value: 5 }
+];
 const optionsTypeDocuments = [
   { value: 1, label: 'DNI' },
   { value: 2, label: 'RUC' },
@@ -140,7 +147,8 @@ const formState = reactive({
   numberDocument: null,
   component_1: null,
   component_2: null,
-  component_3: null
+  component_3: null,
+  ruc: null
 });
 
 const handleClear = () => {
@@ -156,13 +164,60 @@ const handleClear = () => {
   formState.district_id = null;
   formState.gender_id = null;
   formState.sick = null;
+  formState.startDate = null;
+  formState.endDate = null;
 }
+
+const getFilteredComponents = (currentField) => {
+  const selectedValues = Object.keys(formState).reduce((acc, key) => {
+      if (key !== currentField && formState[key] !== null) {
+        acc.push(formState[key]);
+      }
+      return acc;
+    }, []);
+  
+    // Filter out selected components
+    return components.filter(component => !selectedValues.includes(component.value));
+  
+};
+
+const handleValidateRUC = () => {
+  const ruc = formState.ruc;
+
+  // Verificar si el RUC tiene exactamente 11 dígitos numéricos
+ if(ruc) {
+  if (!/^\d{11}$/.test(ruc)) {
+    message.error("El número de RUC debe contener exactamente 11 dígitos numéricos.");
+    return { valid: false };
+  }
+ }
+
+  // Verificar si el RUC comienza con 10, 15 o 20
+  const validPrefix = /^(10|15|20)/;
+  if(ruc) {
+    if (!validPrefix.test(ruc)) {
+      message.error("El número de RUC debe comenzar con 10, 15 o 20.");
+      return { valid: false };
+    }
+  }
+
+  // Si ambas validaciones pasan, retornar válido
+  return { valid: true };
+}
+
 const disabledDate = (current) => {
-  return current && current > dayjs().endOf('day');
+  // return current && current > dayjs().endOf('day');
+  if (!current) return false; // No date selected
+  
+  const startDate = formState.startDate ? dayjs(formState.startDate) : null;
+  
+  // Disable dates after the startDate and dates in the future
+  return (startDate && current.isBefore(startDate, 'day')) || current.isAfter(dayjs().endOf('day'), 'day');
 };
 const validateNumber = (name) => {
   formState[name] = formState[name].replace(/\D/g, '');
 };
+
 const filterOption = (input, option) => {
   const normalizedInput = input.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "");
   const normalizedLabel = option.label.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "");
@@ -230,21 +285,29 @@ const handleProvinces = (id) => {
 }
 
 const handleSelectComponent = (value, fieldName) => {
-  const otherFields = Object.keys(formState).filter(key => 
-    key !== fieldName && key.startsWith('component_')
-  );
+  // const otherFields = Object.keys(formState).filter(key => 
+  //   key !== fieldName && key.startsWith('component_')
+  // );
 
-  if (otherFields.some(key => formState[key] === value)) {
-    formState[fieldName] = null;
-    console.error('Opción ya seleccionada en otro campo');
-  } else {
-    formState[fieldName] = value;
-  }
+  // if (otherFields.some(key => formState[key] === value)) {
+  //   formState[fieldName] = null;
+  //   console.error('Opción ya seleccionada en otro campo');
+  // } else {
+  //   formState[fieldName] = value;
+  // }
 }
 
 const onSubmit = async() => {
   loading.value = true;
   
+  const validation = handleValidateRUC();
+
+  
+  if (formState.ruc && validation.valid === false) {
+    loading.value = false;
+    return;
+  }
+
   const payload = {
     people_id: formState.idPerson, 
     cde_id: storageProfile.cde_id,
@@ -265,6 +328,7 @@ const onSubmit = async() => {
     const data = await makeRequest({ url: `${rutaUrl}`, method: 'POST', data: payload });
     if(data.status == 200) {
       message.success(data.message);
+      handleClear()
       emit('closeDraw');
     } 
     if(data.status == 400) {

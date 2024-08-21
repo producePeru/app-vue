@@ -33,7 +33,13 @@
           {{ computeIndex(index) }}
         </template>
 
-        <template v-if="column.dataIndex === 'component1'">
+        <template v-if="column.dataIndex === 'ruc'">
+          <span v-if="record.ruc">{{ record.ruc }}</span>
+          <span v-else style="color: #1677ff;">En trámite</span>
+        </template>
+
+
+        <!-- <template v-if="column.dataIndex === 'component1'">
           <a-select style="width: 170px;" v-model:value="record.component_1" :options="store.components"
             :filter-option="filterOption" @change="(value) => handleSelectComponent(value, record, 'component_1')" />
         </template>
@@ -46,7 +52,7 @@
         <template v-if="column.dataIndex === 'component3'">
           <a-select style="width: 170px;" v-model:value="record.component_3" :options="store.components"
             :filter-option="filterOption" @change="(value) => handleSelectComponent(value, record, 'component_3')" />
-        </template>
+        </template> -->
 
         <template v-if="column.dataIndex === 'acta'">
           <a-select v-model:value="record.actaCompromiso" style="width: 70%" :options="options"
@@ -68,16 +74,12 @@
                 <a-menu-item>
                   <a @click="handleEditIten(record)">Editar</a>
                 </a-menu-item>
-
-                
                 <a-menu-item>
                   <a-popconfirm title="¿Seguro de eliminar?" @confirm="handleDeleteItem(record)">
                     <template #icon><question-circle-outlined style="color: red" /></template>
                     <a>Eliminar</a>
                   </a-popconfirm>
                 </a-menu-item>
-
-
               </a-menu>
             </template>
           </a-dropdown>
@@ -157,9 +159,9 @@ const columns = [
   { title: 'DISTRITO DEL EMPRENDEDOR O MYPE', dataIndex: 'emprendedor_distrito', width: 170 },
   { title: 'Genero', dataIndex: 'genero', width: 60, align: 'center' },
   { title: 'Tiene alguna Discapacidad ? (SI / NO)', dataIndex: 'discapacidad', width: 110, align: 'center' },
-  { title: 'COMPONENTE 1', dataIndex: 'component1', width: 190, align: 'center' },
-  { title: 'COMPONENTE 2', dataIndex: 'component2', width: 190, align: 'center' },
-  { title: 'COMPONENTE 3', dataIndex: 'component3', width: 190, align: 'center' },
+  { title: 'COMPONENTE 1', dataIndex: 'component_1', width: 190, align: 'center' },
+  { title: 'COMPONENTE 2', dataIndex: 'component_2', width: 190, align: 'center' },
+  { title: 'COMPONENTE 3', dataIndex: 'component_3', width: 190, align: 'center' },
   { title: 'NÚMERO DE SESIONES', dataIndex: 'numberSessions', width: 100, align: 'center' },
   { title: 'DÍA INICIO', dataIndex: 'startDate', width: 100, align: 'center' },
   { title: 'DÍA FIN', dataIndex: 'endDate', width: 100, align: 'center' },
@@ -167,7 +169,8 @@ const columns = [
   { title: 'ACTA DE COMPROMISO', dataIndex: 'acta', width: 160, align: 'center' },
   { title: 'CULMINÓ EL PLAN Y ENVIÓ CORREO', dataIndex: 'envioCorreo', width: 160, align: 'center' },
   { title: 'FECHA ACTUALIZACIÓN', dataIndex: 'updated_at', width: 140, align: 'center' },
-  { title: '', dataIndex: 'actions', width: 50, align: 'center', fixed: 'right'}
+
+  ...(storageRole[0].id != 2 ? [{ title: '', dataIndex: 'actions', width: 50, align: 'center', fixed: 'right' }] : []),
 ];
 
 const handleDeleteItem = async(record) => {
@@ -213,6 +216,10 @@ const handleSelectOption = async (value, record, name) => {
   }
   const data = await makeRequest({ url: `plans-action/edit-yes-no`, method: 'PUT', data: payload });
   if (data.status == 200) fetchData()
+  if (data.status == 400) {
+    message.warning(data.message)
+    fetchData()
+  }
 }
 const filterOption = (input, option) => {
   const normalizedInput = input.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "");
@@ -302,7 +309,7 @@ onMounted(() => {
     .ant-table-cell:nth-child(11),
     .ant-table-cell:nth-child(12),
     .ant-table-cell:nth-child(13) {
-      background-color: #f7f7f7 !important;
+      // background-color: #f7f7f7 !important;
     }
   }
 }
