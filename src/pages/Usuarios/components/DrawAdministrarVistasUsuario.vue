@@ -1,16 +1,8 @@
 <template>
-  <div>
-    <a-checkbox
-      v-model:checked="state.checkAll"
-      :indeterminate="state.indeterminate"
-      @change="onCheckAllChange">
-      {{ state.checkAll ? 'Desactivar' : 'Activar' }} todos
-    </a-checkbox>
-  </div>
-  <a-divider />
+  
 
   <a-spin :spinning="spinning">
-    <a-checkbox-group v-model:value="state.checkedList" :options="plainOptions" style="display: grid; grid-template-columns: repeat(2,1fr); gap: .5rem;" />
+    <a-checkbox-group v-model:value="state.checkedList" :options="plainOptions" class="views-list" />
   </a-spin>
 
   <br><br>
@@ -30,31 +22,62 @@ const emit = defineEmits(['closeDraw']);
 
 const spinning = ref(true);
 const loading = ref(false);
+// const plainOptions = [
+//   'home',
+//   'asesorias',
+//   'planes-accion',
+//   'asesorias-formalizaciones',
+//   'solicitudes',
+//   'solicitantes',
+//   'notarias',
+//   'asesores',
+//   'supervisores',
+//   'usuarios',
+//   'usuarios-nuevo',
+//   'usuarios-lista',
+//   'asesor-externo-notario',
+
+//   'drive-mis-archivos',
+//   'drive-subir-archivo',
+//   'drive-mis-carpetas',
+
+//   'convenios',
+//   'estado-convenio',
+
+//   'configuraciones',
+//   'tokens'
+// ];
 const plainOptions = [
-  'home',
-  'asesorias',
-  'planes-accion',
-  'asesorias-formalizaciones',
-  'solicitudes',
-  'solicitantes',
-  'notarias',
-  'asesores',
-  'supervisores',
-  'usuarios',
-  'usuarios-nuevo',
-  'usuarios-lista',
-  'asesor-externo-notario',
+  { label: 'Inicio', value: 'inicio' },
+  
+  { label: 'Drive Principal', value: 'drive' },
+  { label: 'Drive Carpetas', value: 'drive-mis-carpetas' },
+  { label: 'Drive Archivos', value: 'drive-mis-archivos' },
+  { label: 'Drive Subir Archivo', value: 'drive-subir-archivo' },
+  
+  { label: 'AF - Principal', value: 'asesorias' },
+  { label: 'AF - Registro', value: 'asesorias-formalizaciones' },
+  { label: 'AF - Reportes', value: 'asesorias' },
+  { label: 'AF - Planes de Acción', value: 'planes-accion' },
+  { label: 'AF - Solicitantes', value: 'solicitantes' },
+  { label: 'AF - Notarias', value: 'notarias' },
+  { label: 'AF - Asesores', value: 'asesores' },
 
-  'drive-mis-archivos',
-  'drive-subir-archivo',
-  'drive-mis-carpetas',
+  { label: 'Convenios Principal', value: 'convenios' },
+  { label: 'Convenios Lista', value: 'estado-convenio' },
 
-  'convenios',
-  'estado-convenio',
 
-  'configuraciones',
-  'tokens'
+  { label: 'Usuarios Principal', value: 'usuarios' },
+  { label: 'Usuarios Registrar', value: 'usuarios-nuevo' },
+  { label: 'Usuarios Externo', value: 'asesor-externo-notario' },
+  { label: 'Usuarios Lista', value: 'usuarios-lista' },
+
+
+  { label: 'Config. Principal', value: 'configuraciones' },
+  { label: 'Config. Token API', value: 'tokens' },
+
 ];
+
 
 onMounted(() => {
   if (props.idUser) {
@@ -118,3 +141,21 @@ const fetchData = async() => {
 </script>
 
 
+<style lang="scss">
+.views-list {
+  display: grid; 
+  grid-template-columns: repeat(2,1fr); 
+  gap: .5rem; 
+  span {
+    font-size: 13px;
+  }
+  label:nth-child(6),
+  label:nth-child(13),
+  label:nth-child(15),
+  label:nth-child(19)
+
+  {
+    grid-column: 1/3;
+  }
+}
+</style>

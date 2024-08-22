@@ -122,9 +122,9 @@ import { MoreOutlined, QuestionCircleOutlined } from '@ant-design/icons-vue';
 const storageRole = JSON.parse(localStorage.getItem('role'));
 const store = useCounterStore();
 
-store.$patch({ components: store.components });
+// store.$patch({ components: store.components });
 
-store.fetchComponents();
+// store.fetchComponents();
 
 const updateItem = ref(null);
 const acta_compromiso = ref(null);
