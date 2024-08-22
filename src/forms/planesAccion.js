@@ -41,14 +41,14 @@ const fields = {
     message: 'Seleccionar distrito',
     disabled: true
   },
-  gender_id: {
-    type: 'iSelect',
-    label: 'Género',
-    name: 'gender_id',
-    required: true,
-    message: 'Seleccionar género',
-    disabled: true,
-  },
+  // gender_id: {
+  //   type: 'iText',
+  //   label: 'Género',
+  //   name: 'gender_id',
+  //   required: true,
+  //   message: 'Seleccionar género',
+  //   disabled: true,
+  // },
   sick: {
     type: 'iSelect',
     label: '¿Tiene discapacidad?',
@@ -57,6 +57,12 @@ const fields = {
     message: 'Seleccionar estado',
     disabled: true,
   },
+  
+
+  divider: {
+    type: 'iDivider',
+  },
+
   ruc: {
     type: 'iSearch',
     label: 'Número de RUC',
@@ -65,10 +71,6 @@ const fields = {
     message: 'Escribe el número de RUC',
     disabled: false,
     max: 11
-  },
-
-  divider: {
-    type: 'iDivider',
   },
 
   component_1: {

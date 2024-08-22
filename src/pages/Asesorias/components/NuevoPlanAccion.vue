@@ -116,11 +116,11 @@ const emit = defineEmits(['closeDraw']);
 const props = defineProps(['info']);
 
 store.$patch({ cities: store.cities });
-store.$patch({ genders: store.genders });
-store.$patch({ components: store.components });
+// store.$patch({ genders: store.genders });
+// store.$patch({ components: store.components });
 
 store.fetchCities();
-store.fetchGenders();
+// store.fetchGenders();
 // store.fetchComponents();
 
 const dateFormat = 'DD/MM/YYYY';
@@ -246,7 +246,11 @@ const handleSearchApiInfo = async(name) => {
         formState.province_id = data.data.province_id;
         handleProvinces(data.data.province_id);
         formState.district_id = data.data.district_id;
-        formState.gender_id = data.data.gender_id;
+        // formState.gender_id = data.data.gender_id;
+
+        // formState.gender_id = 1
+
+        console.log("FormState", data.data.gender_id);
         formState.sick = data.data.sick;
       } 
     }
@@ -372,8 +376,11 @@ watch(() => props.info, (newValue) => {
   display: grid;
   grid-template-columns: 1.5fr 1.5fr;
   grid-gap: 0 1rem;
-  .ant-form-item:nth-child(13) {
+  .ant-form-item:nth-child(12) {
     grid-column: 1/2;
+  }
+  .ant-form-item:nth-child(13) {
+    // grid-column: 1/2;
   }
 }
 </style>
