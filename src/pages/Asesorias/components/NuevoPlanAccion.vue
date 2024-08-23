@@ -369,6 +369,8 @@ watch(() => props.info, (newValue) => {
     handleSetInfo(newValue);
   }
 });
+
+
 </script>
 
 <style lang="scss" scoped>

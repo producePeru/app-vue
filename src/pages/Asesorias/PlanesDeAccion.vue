@@ -151,6 +151,7 @@ const columns = [
 
   ...(storageRole[0].id != 2 ? [{ title: 'CENTRO TU EMPRESA', dataIndex: 'centro_empresa', fixed: 'left', width: 150 }] : []),
   ...(storageRole[0].id != 2 ? [{ title: 'ASESOR', dataIndex: 'asesor', fixed: 'left', width: 180 }] : []),
+  ...(storageRole[0].id != 2 ? [{ title: 'DNI ASESOR', dataIndex: 'asesor_dni', fixed: 'left', width: 100, align: 'center' }] : []),
 
   { title: 'RUC', dataIndex: 'ruc', width: 100, fixed: 'left', align: 'center' },
   { title: 'NOMBRE DEL EMPRENDEDOR O MYPE', fixed: 'left', dataIndex: 'emprendedor_nombres', width: 170 },
