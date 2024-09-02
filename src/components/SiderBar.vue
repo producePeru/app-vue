@@ -88,7 +88,7 @@
           <a-menu-item key="estado-convenio"> <router-link to="/admin/convenios/estado-convenio" v-if="views.includes('estado-convenio')">Estado de convenios</router-link> </a-menu-item>
         </a-sub-menu>
 
-        <!-- <a-sub-menu key="eventos" @click="handleCollapse('eventos')" v-if="views.includes('convenios')">
+        <a-sub-menu key="eventos" @click="handleCollapse('eventos')" v-if="views.includes('convenios')">
           <template #title>
             <span>
               <CalendarOutlined />
@@ -96,7 +96,7 @@
             </span>
           </template>
           <a-menu-item key="eventos-calendario-google"> <router-link to="/admin/eventos/calendario" v-if="views.includes('estado-convenio')">Calendario</router-link> </a-menu-item>
-        </a-sub-menu> -->
+        </a-sub-menu>
 
 
         <!-- Convenios  -->

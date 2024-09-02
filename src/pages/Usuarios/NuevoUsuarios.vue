@@ -198,7 +198,7 @@ const filterOption = (input, option) => {
 };
 const handleSelectSupervisor = (val) => {
 
-  console.log("handleSelectSupervisor", val);
+  // console.log("handleSelectSupervisor", val);
 
   const supervisor_id = {
     type: 'iSelect',

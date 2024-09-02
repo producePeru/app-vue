@@ -14,6 +14,11 @@ const router = createRouter({
       component: () => import('../pages/PoliticasPrivacidad.vue')
     },
     {
+      path: '/manual-asesorias',
+      name: 'manual-asesorias',
+      component: () => import('../pages/public/ManualAsesoria.vue')
+    },
+    {
       path: '/formalizacion-digital',
       name: 'formalizacion',
       component: () => import('../pages/FormalizacionDigital.vue')

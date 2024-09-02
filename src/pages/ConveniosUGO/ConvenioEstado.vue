@@ -2,8 +2,6 @@
   <div>
     <h3 class="title-produce">ESTADO DE CONVENIOS</h3>
 
-    <!-- <div class="filters"> -->
-      
     <a-row style="margin: 1rem 0;">
       <a-col :xs="24" :md="12" :lg="18">
         <a-button type="primary" @click="showDrawer" style="margin-right: .5rem;">NUEVO</a-button>
@@ -19,7 +17,6 @@
         </a-input-group>
       </a-col>
     </a-row>
-    <!-- </div> -->
 
     <a-table 
     bordered
@@ -41,7 +38,7 @@
           </div>
         </template>
 
-        <template v-if="column.dataIndex == 'denomination'">
+        <!-- <template v-if="column.dataIndex == 'denomination'">
           <div class="table-head">
             <span>DENOMINACIÓN</span>
             <div class="t-icons">
@@ -49,34 +46,12 @@
               <CaretDownOutlined :class="{'arrActive' : denominationascdesc == 'desc'}" class="ii" @click="handleSelectDenomination('desc')" />
             </div>
           </div>
-        </template>
+        </template> -->
       </template>
 
       <template v-slot:bodyCell="{ column, record, index }">
         <template v-if="column.dataIndex == 'idx'">
           {{ computeIndex(index) }}
-        </template>
-
-        <template v-if="column.dataIndex =='denomination'">
-          {{ record.denomination }}
-          <a-progress 
-          style="margin: 0;"
-          :percent="dateTrafficLight(record.endDate, record.startDate)" 
-          :size="4" 
-          :showInfo="false" 
-          :strokeColor="colorPeriodo(dateTrafficLight(record.endDate, record.startDate))" />
-        </template>
-
-        <template v-if="column.dataIndex == 'entities'">
-          <div v-for="(initial, index) in record.entities" :key="index">
-            <a-tag :color="handleColor(index)" style="margin: .2rem 0;">{{ initial }} </a-tag>
-          </div>
-        </template>
-
-        <template v-if="column.dataIndex == 'numbyears'">
-          <p style="line-height: 1.2; margin: 0; font-size: 12px;">
-            {{ restDate(record.endDate, record.startDate) }}
-          </p>
         </template>
 
         <template v-if="column.dataIndex == 'startDate'">
@@ -96,32 +71,25 @@
           <p v-else class="list-days">{{ dateTrafficLight(record.endDate, record.startDate) }} días vencidos</p>
         </template>
 
-        <template v-if="column.dataIndex == 'acciones'"> 
+        <!-- <template v-if="column.dataIndex == 'acciones'"> 
           <div class="accion-total">
             <MessageOutlined class="ico-acciones" @click="handleAcciones(record)" />
             <span class="accion-numb">{{ record.acciones.length }} MENSAJES</span>
           </div>
+        </template> -->
+           <!-- <template v-if="column.dataIndex =='denomination'">
+          {{ record.denomination }}
+          <a-progress 
+          style="margin: 0;"
+          :percent="dateTrafficLight(record.endDate, record.startDate)" 
+          :size="4" 
+          :showInfo="false" 
+          :strokeColor="colorPeriodo(dateTrafficLight(record.endDate, record.startDate))" />
+        </template> -->
+
+        <template v-if="column.dataIndex == 'observations'"> 
+          <MessageOutlined class="observation-icon" />
         </template>
-
-        <!--  -->
-        <!-- <template v-if="column.dataIndex == 'operatividad'">
-          {{ record?.estado_operatividad.name }}
-        </template> -->
-        <!-- <template v-if="column.dataIndex == 'convenio'">
-          {{ record?.estado_convenio.name }}
-        </template> -->
-
-        <!--  -->
-<!-- 
-        
-        
-         -->
-
-        <!--  -->
-
-        <!--  -->
-
-        <!--  -->
 
         <template v-if="column.dataIndex == 'actions'">
           <a-dropdown :trigger="['click']">
@@ -130,11 +98,11 @@
             </a>
             <template #overlay>
               <a-menu>
-                <!-- <a-menu-item>
-                  <a @click="handleEditSolicitante(record)">Editar</a>
-                </a-menu-item> -->
                 <a-menu-item>
                   <a @click="handleUpFile(record)">Archivos</a>
+                </a-menu-item>
+                <a-menu-item>
+                  <a @click="handleEditSolicitante(record)">Editar</a>
                 </a-menu-item>
                 <a-menu-item>
                   <a-popconfirm title="¿Seguro de eliminar?" @confirm="handleDelete(record)">
@@ -183,7 +151,7 @@ import { useRouter } from 'vue-router';
 import { makeRequest } from '@/utils/api.js';
 import { message } from 'ant-design-vue';
 import { useCounterStore } from '@/stores/selectes.js';
-// import { Modal } from 'ant-design-vue';
+
 import Cookies from 'js-cookie';
 import dayjs from 'dayjs';
 import 'dayjs/locale/es';
@@ -215,27 +183,25 @@ const openDrives = ref(false);
 const updateValues = ref(null);
 const city = ref(null);
 const valueY = ref(window.innerHeight - 100);
+
 const columns = [
-  { title: '#',                     dataIndex: 'idx', fixed: 'left', align: 'center', width: 70 },
-  { title: 'REGIÓN',                dataIndex: 'city', fixed: 'left', width: 120 },
-  { title: 'PROVINCIA',             dataIndex: 'province', fixed: 'left', width: 120 },
-  { title: 'DISTRITO',              dataIndex: 'district', fixed: 'left', width: 140 },
-  { title: 'DENOMINACIÓN',          dataIndex: 'denomination', fixed: 'left', width: 150 },
-  { title: 'ENTIDAD ALIADA',        dataIndex: 'entity', width: 170 },
-  { title: 'INICIO DE OPERACIONES', dataIndex: 'startOperations', align: 'center', width: 120 },
-  { title: 'DIRECCIÓN',             dataIndex: 'address', width: 180 },
-  { title: 'REFERENCIA',            dataIndex: 'references', width: 220 },
-  // { title: 'ASESORES EMPRESARIALES ASIGNADOS', dataIndex: 'districtxx', align: 'center', width: 125 },
-  { title: 'RESOLUCIÓN DE AUTORIZACIÓN PARA CONDICIÓN DE CDE', dataIndex: 'resolution', align: 'center', width: 150 },
-  { title: 'ESTADO DE OPERATIVIDAD',  dataIndex: 'statusOperations', align: 'center', width: 120 },
-  { title: 'ESTADO DEL CONVENIO',     dataIndex: 'statusConveny', align: 'center', width: 120 },
-  { title: 'ENTIDADES',               dataIndex: 'entities', align: 'center', width: 170 },
-  { title: 'INICIO CONVENIO VIGENTE', dataIndex: 'startDate', align: 'center', width: 120 },
-  { title: 'NUM. AÑOS DEL CONVENIO',  dataIndex: 'numbyears', align: 'center', width: 110 },
-  { title: 'FIN DEL CONVENIO',        dataIndex: 'endDate', align: 'center', width: 120 },
-  { title: 'DÍAS', dataIndex: 'numbrestantes', align: 'center', width: 70 },
-  { title: 'ACCIONES', dataIndex: 'acciones', align: 'center', width: 100 },
-  { title: '', dataIndex: 'actions', width: 50, align: 'center', fixed: 'right' }
+  { title: '#',                                   dataIndex: 'idx', fixed: 'left', align: 'center', width: 70 },
+  { title: 'REGIÓN',                              dataIndex: 'city', fixed: 'left', width: 120 },
+  { title: 'PROVINCIA',                           dataIndex: 'province', fixed: 'left', width: 120 },
+  { title: 'DISTRITO',                            dataIndex: 'district', fixed: 'left', width: 140 },
+  { title: 'ENTIDAD ALIADA',                      dataIndex: 'entity', width: 300 },
+
+  { title: 'FECHA DE SUSCRIPCIÓN DE CONVENIO',    dataIndex: 'startOperations', align: 'center', width: 180 },
+  { title: 'INICIO DE CONVENIO VIGENTE',          dataIndex: 'startDate', align: 'center', width: 180 },
+  { title: 'N° DE AÑOS VIGENTE',                  dataIndex: 'years', width: 120, align: 'center'},
+  { title: 'FIN DEL CONVENIO',                    dataIndex: 'endDate', align: 'center', width: 180 },
+
+  { title: 'ESTADO',                              dataIndex: 'status', align: 'center', width: 150 },
+  { title: 'FECHA RESTANTE',                      dataIndex: 'numbrestantes', align: 'center', width: 140 },
+  { title: 'OBSERVACIONES',                       dataIndex: 'observations', align: 'center', width: 140 },
+
+  { title: '',                                    dataIndex: 'actions', width: 60, align: 'center', fixed: 'right' }
+  // { title: 'ACCIONES', dataIndex: 'acciones', align: 'center', width: 100 },
 ];
 const formState = reactive({
   search: '',
@@ -267,11 +233,11 @@ const handleSelectOrder = (type) => {
   let params = { order: type }
   fetchData(params)
 }
-const handleSelectDenomination = (type) => {
-  denominationascdesc.value = type
-  let params = { date_diff_order : type }
-  fetchData(params)
-}
+// const handleSelectDenomination = (type) => {
+//   denominationascdesc.value = type
+//   let params = { date_diff_order : type }
+//   fetchData(params)
+// }
 const handleAcciones = (record) => {
   idConvenio.value = record.id;
   openAcciones.value = true;
@@ -487,6 +453,13 @@ onMounted(() => {
 }
 .ant-popover-inner {
   width: 200px;
+}
+.observation-icon {
+  font-size: 18px;
+  cursor: pointer;
+  &:hover {
+    color: var(--secondary);
+  }
 }
 
 .table-head {

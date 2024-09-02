@@ -95,12 +95,14 @@ const fields = {
     disabled: false
   },
   numbernotary: {
-    type: 'iText',
+    type: 'iNumber',
     label: 'Número solicitud constancia',
     name: 'numbernotary',
     required: true,
     message: 'Escribir número de solicitud de constancia',
-    disabled: false
+    disabled: false,
+    max: 8,
+    min: 8  
   },
   comercialactivity_id: {
     type: 'iSelectWrite',

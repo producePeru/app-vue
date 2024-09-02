@@ -83,7 +83,7 @@
 
             <a-form-item v-if="el.type === 'iNumber'" :name="el.name" :label="el.label"
               :rules="[{ required: el.required, message: el.message }]">
-              <a-input-number style="width: 100%;" v-model:value="formState[el.name]" :maxlength="11"
+              <a-input-number style="width: 100%;" v-model:value="formState[el.name]" :maxlength="el.max"
                 @change="onlyRUC(el.name)" />
             </a-form-item>
 
