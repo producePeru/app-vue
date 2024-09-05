@@ -96,7 +96,9 @@ const fields = {
     name: 'numbernotary',
     required: true,
     message: 'Escribir número de solicitud de constancia',
-    disabled: false
+    disabled: false,
+    max: 7,
+    min: 1  
   },
   dateReception: {
     type: 'iDate',

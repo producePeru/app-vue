@@ -13,7 +13,7 @@
           <a-select v-if="el.name == 'gender_id'" v-model:value="formState[el.name]" :options="store.genders" />
           <a-select v-if="el.name == 'sick'" v-model:value="formState[el.name]" :options="lessions" />
           <a-select v-if="el.name == 'hasSoon'" v-model:value="formState[el.name]" :options="hasSoon" />
-    
+          <a-select v-if="el.name == 'country_id'" v-model:value="formState[el.name]" :options="store.countries" show-search :filter-option="filterOption" />
         </a-form-item>
 
         <a-form-item v-if="el.type === 'iText'" :name="el.name" :label="el.label"
@@ -27,7 +27,13 @@
         </a-form-item>
       </template>
     </div>
-    <div>{{ update(props.updateValues) }}</div>
+
+
+    <!-- <div>{{ update(props.updateValues) }}</div> -->
+
+    <!-- <pre>{{ updateValues }}</pre> -->
+
+    
     <!-- <pre>{{ props.updateUser }}</pre> -->
     <a-form-item>
       <a-button class="btn-produce" type="primary" html-type="submit" :loading="loading">GUARDAR</a-button>
@@ -38,7 +44,7 @@
 </template>
 
 <script setup>
-import { reactive, ref, onMounted } from 'vue';
+import { reactive, ref, watch, onMounted } from 'vue';
 import { message } from 'ant-design-vue';
 import fields from '@/forms/actualizarPersona.js';
 import { useCounterStore } from '@/stores/selectes.js';
@@ -54,11 +60,14 @@ const storageData = JSON.parse(localStorage.getItem('profile'));
 const emit = defineEmits(['closeDraw']);
 const props = defineProps(['updateValues']);
 
+
 store.$patch({ typeDocuments: store.typeDocuments });
+store.$patch({ cities: store.countries });
 store.$patch({ cities: store.cities });
 store.$patch({ genders: store.genders });
 
 store.fetchTypeDocuments();
+store.fetchCountries();
 store.fetchCities()
 store.fetchGenders()
 
@@ -67,6 +76,7 @@ const loading = ref(false);
 const fieldx = ref(fields)
 const birthdateDate = ref(null);
 const dateFormat = 'DD/MM/YYYY';
+
 const formState = reactive({
   typedocument_id: null,
   documentnumber: null,
@@ -81,8 +91,45 @@ const formState = reactive({
   gender_id: null,
   birthday: null,
   sick: null,
+  country_id: null,
   // user_id : storageData.id,     //creador
 });
+
+onMounted(() => {
+  if (props.updateValues) {
+    fetchData(props.updateValues);
+  }
+});
+
+watch(() => props.updateValues, (newValue) => {
+  if (newValue) {
+    fetchData(newValue);
+  }
+});
+
+const fetchData = (val) => {
+  formState.typedocument_id = val.typedocument_id;
+  formState.documentnumber = val.documentnumber;
+  formState.lastname = val.lastname;
+  formState.middlename = val.middlename;
+  formState.name = val.name;
+  formState.city_id = val.city_id;
+  handleDepartaments(val.city_id);
+  handleProvinces(val.province_id);
+  formState.province_id = val.province_id;
+  formState.district_id = val.district_id;
+  formState.phone = val.phone;
+  formState.email = val.email;
+  formState.gender_id = val.gender_id;
+  formState.sick = val.sick;
+  formState.country_id = val.country_id ? val.country_id :  155
+  formState.address = val.address;
+  formState.hasSoon = val.hasSoon;
+  if(val.birthday) formState.birthday = dayjs(val.birthday, 'YYYY-MM-DD');
+  setTimeout(() => {
+    spinning.value = false;
+  }, 2000);
+}
 
 const hasSoon = [
   {value: 'SI', label: 'Si'},
@@ -93,29 +140,13 @@ const lessions = [
   {label: "No", value: "no"}
 ]
 const update = (val) => {
-  if (val) {
-    formState.typedocument_id = val.typedocument_id;
-    formState.documentnumber = val.documentnumber;
-    formState.lastname = val.lastname;
-    formState.middlename = val.middlename;
-    formState.name = val.name;
-    formState.city_id = val.city_id;
-    handleDepartaments(val.city_id);
-    handleProvinces(val.province_id);
-    formState.province_id = val.province_id;
-    formState.district_id = val.district_id;
-    formState.phone = val.phone;
-    formState.email = val.email;
-    formState.gender_id = val.gender_id;
-    // formState.birthday = val.birthday;
-    formState.sick = val.sick;
-    formState.country = val.country;
-    formState.address = val.address;
-    formState.hasSoon = val.hasSoon;
-    if(val.birthday) formState.birthday = dayjs(val.birthday, 'YYYY-MM-DD');
-  }
+  // if (val) {
 
-  if(store.genders?.length) spinning.value = false;
+ 
+   
+  // }
+
+  // 
 }
 
 const handleDepartaments = (id) => {
@@ -148,6 +179,7 @@ const onSubmit = async () => {
     birthday: formState.birthday ? dayjs(formState.birthday).format('YYYY-MM-DD') : null,
     sick: formState.sick,
     hasSoon: formState.hasSoon,
+    country_id: formState.country_id
     // user_id : storageData.id,     //creador
   }
   // delete payload.documentnumber 🚩

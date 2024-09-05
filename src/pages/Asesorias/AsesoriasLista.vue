@@ -23,7 +23,7 @@
 
         <div class="rango">
           <label>Buscar por rango de Fechas</label>
-          <a-range-picker v-model:value="byDateRange" :presets="rangePresets" />
+          <a-range-picker v-model:value="byDateRange" :presets="rangePresets"  :format="dateFormat" />
         </div>
 
         <div class="asesor" v-if="storageRole[0].id == 1" style="width: 300px;">
@@ -242,6 +242,7 @@ import EditarAsesoria from '@/pages/Asesorias/components/EditarAsesoria.vue';
 import EditarFormalizacion10 from '@/pages/Asesorias/components/EditarFormalizacionRUC10.vue';
 import EditarFormalizacion20 from '@/pages/Asesorias/components/EditarFormalizacionRUC20.vue';
 
+const dateFormat = 'DD/MM/YYYY';
 const open1 = ref(false);
 const open2 = ref(false);
 const open3 = ref(false);

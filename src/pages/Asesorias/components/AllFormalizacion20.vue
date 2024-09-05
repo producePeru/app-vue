@@ -93,11 +93,13 @@
                 :disabled="!props.documentnumber" :maxlength="el.max" :placeholder="el.placeholder" />
             </a-form-item>
 
-            <a-form-item v-if="el.type === 'iMoney'" :name="el.name" :label="el.label"
-              :rules="[{ required: el.required, message: el.message }]">
-              <a-input-number :min:="0" style="width: 100%;" v-model:value="formState[el.name]"
-                :formatter="value => `S/ ${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')"
-                :parser="value => value.replace(/S\/\s?|(,*)/g, '')" />
+            <a-form-item v-if="el.type === 'iMoney'" :name="el.name" :label="el.label" :rules="[{ required: el.required, message: el.message }]">
+              <a-input-number 
+              :min="1" 
+              style="width: 100%;" 
+              v-model:value="formState[el.name]"
+              :formatter="value => `S/ ${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')"
+              :parser="value => value.replace(/S\/\s?|(,*)/g, '')" />
             </a-form-item>
 
           </template>

@@ -5,6 +5,7 @@ export const useCounterStore = defineStore('counter', {
   state: () => {
     return { 
       count: 0,
+      countries: null,
       cities: null,
       provinces: null,
       districts: null,
@@ -34,6 +35,16 @@ export const useCounterStore = defineStore('counter', {
     increment() {
       this.count++
     },
+
+    async fetchCountries() {
+      try {
+        const { data } = await requestNoToken({ url: 'select/countries', method: 'GET' });
+        this.countries = data;
+      } catch (error) {
+        console.error('Error de red:', error);
+      }
+    },
+
     async fetchCities() {
       try {
         const { data } = await requestNoToken({ url: 'select/cities', method: 'GET' });

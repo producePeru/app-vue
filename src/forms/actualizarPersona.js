@@ -40,10 +40,10 @@ const fields = {
     message: 'Escribir nombre',
     disabled: false
   },
-  country: {
-    type: 'iText',
+  country_id: {
+    type: 'iSelect',
     label: 'País Origen',
-    name: 'country',
+    name: 'country_id',
     required: true,
     message: 'Escribir nombre',
     disabled: false

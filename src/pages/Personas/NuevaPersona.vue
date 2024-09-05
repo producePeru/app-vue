@@ -13,6 +13,10 @@
               :rules="[{ required: el.required, message: el.message }]">
               <a-select v-if="el.name == 'typedocument_id'" v-model:value="formState[el.name]"
                 :options="store.typeDocuments" :disabled="el.disabled" @change="handleSelectTypeDocument" />
+
+              <a-select v-if="el.name == 'country_id'" v-model:value="formState[el.name]" :options="store.countries"
+                show-search :filter-option="filterOption" />
+              
               <a-select v-if="el.name == 'city_id'" v-model:value="formState[el.name]" :options="store.cities"
                 show-search :filter-option="filterOption" @change="handleDepartaments" :disabled="el.disabled" />
               <a-select v-if="el.name == 'province_id'" v-model:value="formState[el.name]" :options="provinces"
@@ -56,6 +60,7 @@
       </a-form>
     </a-spin>
   </div>
+  <!-- <pre>{{ formState }}</pre> -->
 </template>
 
 <script setup>
@@ -75,12 +80,14 @@ const route = useRoute();
 const store = useCounterStore();
 
 store.$patch({ typeDocuments: store.typeDocuments });
+store.$patch({ cities: store.countries });
 store.$patch({ cities: store.cities });
 store.$patch({ provinces: store.provinces });
 store.$patch({ districts: store.districts });
 store.$patch({ genders: store.genders });
 
 store.fetchTypeDocuments();
+store.fetchCountries();
 store.fetchCities();
 store.fetchGenders();
 
@@ -109,7 +116,7 @@ const formState = reactive({
   lastname: null,
   middlename: null,
   name: null,
-  country: null,
+  country_id: 155,
   city_id: null,
   address: null,
   province_id: null,
@@ -190,7 +197,7 @@ const handleSearchApi = async (numberDocument) => {
       }
 
       if (response.status == 200) {
-        formState.country = 'PERÚ'
+        // formState.country = 'PERÚ'
         formState.lastname = response.data.apellidoPaterno;
         formState.middlename = response.data.apellidoMaterno;
         formState.name = response.data.nombres;
@@ -205,10 +212,6 @@ const handleSearchApi = async (numberDocument) => {
     return searchLoading.value = false
   }
 }
-
-
-
-
 
 // const handleSearchApi = async (val) => {
 //   searchLoading.value = true

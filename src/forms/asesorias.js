@@ -101,8 +101,8 @@ const fields = {
     required: true,
     message: 'Escribir número de solicitud de constancia',
     disabled: false,
-    max: 8,
-    min: 8  
+    max: 7,
+    min: 1  
   },
   comercialactivity_id: {
     type: 'iSelectWrite',
