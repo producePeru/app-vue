@@ -28,7 +28,7 @@
     :loading="loading" 
     size="small">
       <template #headerCell="{ column }">
-        <template v-if="column.dataIndex == 'city'">
+        <!-- <template v-if="column.dataIndex == 'city'">
           <div class="table-head">
             <span>REGIÓN</span>
             <div class="t-icons">
@@ -36,7 +36,7 @@
               <CaretDownOutlined :class="{'arrActive' : rowascdesc == 'desc'}" class="ii" @click="handleSelectOrder('desc')" />
             </div>
           </div>
-        </template>
+        </template> -->
 
         <!-- <template v-if="column.dataIndex == 'denomination'">
           <div class="table-head">
@@ -54,14 +54,14 @@
           {{ computeIndex(index) }}
         </template>
 
+        <template v-if="column.dataIndex == 'startOperations'">
+          {{ formatDate(record.startOperations) }}
+        </template>
+
         <template v-if="column.dataIndex == 'startDate'">
           {{ formatDate(record?.startDate) }}
         </template>
-
-        <template v-if="column.dataIndex == 'startOperations'">
-          {{ formatDate(record?.startOperations) }}
-        </template>
-
+        
         <template v-if="column.dataIndex == 'endDate'">
           {{ formatDate(record?.endDate) }}
         </template>
@@ -69,6 +69,15 @@
         <template v-if="column.dataIndex == 'numbrestantes'">
           <p v-if="dateTrafficLight(record.endDate, record.startDate) >= 1" class="list-days">{{ dateTrafficLight(record.endDate, record.startDate) }} días faltantes</p>
           <p v-else class="list-days">{{ dateTrafficLight(record.endDate, record.startDate) }} días vencidos</p>
+        </template>
+
+        <template v-if="column.dataIndex == 'status'">
+          <a-progress 
+          style="margin: 0;"
+          :percent="dateTrafficLight(record.endDate, record.startDate)" 
+          :size="4" 
+          :showInfo="false" 
+          :strokeColor="colorPeriodo(dateTrafficLight(record.endDate, record.startDate))" />
         </template>
 
         <!-- <template v-if="column.dataIndex == 'acciones'"> 
@@ -88,7 +97,7 @@
         </template> -->
 
         <template v-if="column.dataIndex == 'observations'"> 
-          <MessageOutlined class="observation-icon" />
+          <MessageOutlined v-if="record?.observations" class="observation-icon" @click="handleOpenObservations(record)" />
         </template>
 
         <template v-if="column.dataIndex == 'actions'">
@@ -124,8 +133,10 @@
     <a-pagination size="small" :total="total" :pageSize="pageSize" @change="handlePaginator" :showSizeChanger="false" />
   </div>
 
+  <!-- <pre>{{ idConvenio }}</pre> -->
+
   <a-drawer v-model:open="open" class="draw-notary" root-class-name="root-class-name" title="Convenios" placement="right" width="650" >
-    <NuevoConvenio @closeDraw="handleCloseDrawopen(1)" />
+    <NuevoConvenio :idConvenio="idConvenio" @closeDraw="handleCloseDrawopen(1)" />
   </a-drawer>
 
   <a-drawer v-model:open="openAcciones" title="Acciones" placement="right" width="550">
@@ -136,6 +147,10 @@
     <DrawFiles :idConvenio="idConvenio" @closeDraw="handleCloseDrawopen(3)" />
   </a-drawer>
 
+  <a-drawer v-model:open="openObservations" title="Observaciones" placement="right" width="550">
+    <DrawObservations :idConvenio="idConvenio" @closeDraw="handleCloseDrawopen(4)" @refreshTable="fetchData()" />
+  </a-drawer>
+
 </template>
 
 
@@ -144,6 +159,7 @@ import axios from 'axios';
 import { ref, onMounted, h, onBeforeUnmount, computed, reactive } from 'vue';
 import NuevoConvenio from './components/DrawConvenio.vue';
 import DrawAcciones from './components/DrawAcciones.vue';
+import DrawObservations from './components/DrawObservations.vue';
 import DrawFiles from './components/DrawFiles.vue';
 import { CaretUpOutlined, CaretDownOutlined, QuestionCircleOutlined, MessageOutlined } from '@ant-design/icons-vue';
 import { MoreOutlined } from '@ant-design/icons-vue';
@@ -179,6 +195,7 @@ const dataSource = ref([])
 const loading = ref(false)
 const open = ref(false);
 const openAcciones = ref(false);
+const openObservations = ref(false);
 const openDrives = ref(false);
 const updateValues = ref(null);
 const city = ref(null);
@@ -215,6 +232,10 @@ const handleResetSearch = () => {
     fetchData();
   }
 }
+const handleEditSolicitante = (record) => {
+  idConvenio.value = record;
+  open.value = true;
+}
 
 const handleColor = (idx) => {
   const colors = {
@@ -238,6 +259,10 @@ const handleSelectOrder = (type) => {
 //   let params = { date_diff_order : type }
 //   fetchData(params)
 // }
+const handleOpenObservations = (record) => {
+  idConvenio.value = record;
+  openObservations.value = true;
+}
 const handleAcciones = (record) => {
   idConvenio.value = record.id;
   openAcciones.value = true;
@@ -318,6 +343,9 @@ const handleCloseDrawopen = (draw) => {
   fetchData();
   draw == 1 && (open.value = false);
   draw == 2 && (openAcciones.value = false);
+  draw == 4 && (openObservations.value = false);
+
+  idConvenio.value = null;
 }
 const handleDelete = async (val) => {
   try {
@@ -330,10 +358,7 @@ const handleDelete = async (val) => {
     console.error('Error de red:', error);
   }
 }
-const handleEditSolicitante = (data) => {
-  updateValues.value = data
-  open.value = true;
-}
+
 const computeIndex = computed(() => (index) => {
   return  (params.value.page) * pageSize.value + index + 1;
 });
@@ -363,7 +388,7 @@ const handleDownload = async () => {
   try {
     const response = await axios({
       url: `${apiUrl}agreement/download`,
-      method: 'POST',
+      method: 'GET',
       responseType: 'blob',
       headers: {
         'Authorization': `Bearer ${token}`,

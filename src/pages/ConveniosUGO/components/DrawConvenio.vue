@@ -45,7 +45,10 @@
 
       </div>
       <a-form-item>
-        <a-button type="primary" html-type="submit" :loading="loading">GUARDAR</a-button>
+        <a-button type="primary" html-type="submit" :loading="loading">
+          <span v-if="idConvenio">ACTUALIZAR</span>
+          <span v-else>GUARDAR</span>
+        </a-button>
       </a-form-item>
 
     </a-form>
@@ -53,7 +56,7 @@
 </template>
 
 <script setup>
-import { reactive, ref, onMounted } from 'vue';
+import { reactive, ref, onMounted, watch } from 'vue';
 import fields from '@/forms/convenios.js';
 import { useCounterStore } from '@/stores/selectes.js';
 import { makeRequest } from '@/utils/api.js';
@@ -67,6 +70,7 @@ const storageData = JSON.parse(localStorage.getItem('profile'));
 const store = useCounterStore();
 const dateFormat = 'DD/MM/YYYY';
 const emit = defineEmits(['closeDraw']);
+const props = defineProps(['idConvenio']);
 
 store.$patch({ cities: store.cities });
 store.$patch({ provinces: store.provinces });
@@ -118,18 +122,15 @@ const update = () => {
   // spinning.value = false;
 }
 const clearFields = () => {
-  formState.denomination = null
-  formState.alliedEntity = null
-  formState.homeOperations = null
-  formState.address = null
-  formState.reference = null
-  formState.resolution = null
-  formState.initials = null
-  formState.startDate = null
-  formState.endDate = null
   formState.city_id = null
   formState.province_id = null
   formState.district_id = null
+  formState.alliedEntity = null
+  formState.homeOperations = null
+  formState.startDate = null
+  formState.years = null
+  formState.endDate = null
+  formState.observations = null
   formState.created_id = storageData.user_id
 }
 const onSubmit = async () => {
@@ -148,10 +149,12 @@ const onSubmit = async () => {
     created_id: storageData.user_id
   }
 
-  return console.log("xxx", payload)
-
   try {
-    const data = await makeRequest({ url: 'agreement/create', method: 'POST', data: payload });
+
+    const method = props.idConvenio ? 'PUT' : 'POST';
+    const url = props.idConvenio? `agreement/update-values/${props.idConvenio.id}` : 'agreement/create';
+
+    const data = await makeRequest({ url, method, data: payload });
 
     if(data.status == 200) {
       message.success(data.message);
@@ -169,6 +172,39 @@ const onSubmit = async () => {
 const onSubmitFail = () => {
   message.error('Debes de completar todos los espacios requeridos')
 };
+
+const fetchData = async() => {
+  if(props.idConvenio) {
+    spinning.value = true;
+    const data = props.idConvenio
+    formState.city_id = data.city_id
+    handleDepartaments(data.city_id)
+    formState.province_id = data.province_id
+    handleProvinces(data.province_id)
+    formState.district_id = data.district_id
+    formState.homeOperations = dayjs(data.startOperations, 'YYYY-MM-DD')
+    formState.startDate = dayjs(data.startDate, 'YYYY-MM-DD')
+    formState.years = data.years
+    formState.observations = data.observations
+    formState.alliedEntity = data.entity
+
+    formState.district_id && (spinning.value = false)
+  } else {
+    clearFields()
+  }
+}
+
+onMounted(() => {
+  if (props.idConvenio) {
+    fetchData(props.idConvenio);
+  }
+});
+
+watch(() => props.idConvenio, (newValue) => {
+  if (newValue) {
+    fetchData(newValue);
+  }
+});
 </script>
 
 <style lang="scss" scoped>
