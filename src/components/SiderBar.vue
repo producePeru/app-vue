@@ -18,7 +18,7 @@
 
         <a-menu-item key="inicio">
           <HomeOutlined />
-          <span><router-link to="/admin/inicio">inicio</router-link></span>
+          <span><router-link to="/admin/inicio" class="fs-13">inicio</router-link></span>
         </a-menu-item>
 
         <a-menu-item key="mypes" v-if="views.includes('mypes')">
@@ -36,15 +36,15 @@
           <template #title>
             <span>
               <CloudOutlined />
-              <span>Drive</span>
+              <span class="fs-13">Drive</span>
             </span>
           </template>
           <a-menu-item key="drive-mis-carpetas" v-if="views.includes('drive-mis-carpetas')"> <router-link
-              to="/admin/drive/mis-carpetas">Mis Carpetas</router-link> </a-menu-item>
+              to="/admin/drive/mis-carpetas" class="fs-13">Mis Carpetas</router-link> </a-menu-item>
           <a-menu-item key="drive-mis-archivos" v-if="views.includes('drive-mis-archivos')"> <router-link
-              to="/admin/drive/mis-archivos">Mis Archivos</router-link> </a-menu-item>
+              to="/admin/drive/mis-archivos" class="fs-13">Mis Archivos</router-link> </a-menu-item>
           <a-menu-item key="drive-subir-archivo" v-if="views.includes('drive-subir-archivo')"> <router-link
-              to="/admin/drive/subir-archivo">Subir Archivo</router-link> </a-menu-item>
+              to="/admin/drive/subir-archivo" class="fs-13">Subir Archivo</router-link> </a-menu-item>
         </a-sub-menu>
 
         <!-- Asesorias  -->
@@ -52,28 +52,28 @@
           <template #title>
             <span>
               <AuditOutlined />
-              <span>Formalizaciones</span>
+              <span class="fs-13">Formalizaciones</span>
             </span>
           </template>
           
           <a-menu-item key="asesorias-formalizaciones" v-if="views.includes('asesorias-formalizaciones')"> <router-link
-              to="/admin/asesorias/asesorias-formalizaciones">Registro</router-link> </a-menu-item>
+              to="/admin/asesorias/asesorias-formalizaciones" class="fs-13">Registro</router-link> </a-menu-item>
               
           <a-menu-item key="asesorias" v-if="views.includes('asesorias')"> <router-link
-              to="/admin/asesorias/asesorias">Reportes</router-link> </a-menu-item>
+              to="/admin/asesorias/asesorias" class="fs-13">Reportes</router-link> </a-menu-item>
           
           
           <a-menu-item key="planes-accion"  v-if="views.includes('planes-accion')"> <router-link
-              to="/admin/asesorias/planes-accion">Planes de Acción</router-link> </a-menu-item> 
+              to="/admin/asesorias/planes-accion" class="fs-13">Planes de Acción</router-link> </a-menu-item> 
 
 
           <a-menu-item key="solicitantes" v-if="views.includes('solicitantes')"> <router-link
-              to="/admin/asesorias/solicitantes">Solicitantes</router-link> </a-menu-item>
+              to="/admin/asesorias/solicitantes" class="fs-13">Solicitantes</router-link> </a-menu-item>
           <!-- <a-menu-item key="solicitudes" v-if="views.includes('asesorias')"> <router-link to="/admin/asesorias/solicitudes">Solicitudes F.D.</router-link> </a-menu-item>  -->
           <a-menu-item key="notarias" v-if="views.includes('notarias')"> <router-link
-              to="/admin/asesorias/notarias">Notarias</router-link> </a-menu-item>
+              to="/admin/asesorias/notarias" class="fs-13">Notarias</router-link> </a-menu-item>
           <a-menu-item key="asesores" v-if="views.includes('asesores')"> <router-link
-              to="/admin/asesorias/asesores">Asesores</router-link> </a-menu-item>
+              to="/admin/asesorias/asesores" class="fs-13">Asesores</router-link> </a-menu-item>
           <!-- <a-menu-item key="supervisores" v-if="views.includes('supervisores')"> <router-link to="/admin/asesorias/supervisores">Supervisores</router-link> </a-menu-item> -->
         </a-sub-menu>
 
@@ -82,20 +82,20 @@
             <span>
               
               <CopyOutlined />
-              <span>Convenios</span>
+              <span class="fs-13">Convenios</span>
             </span>
           </template>
-          <a-menu-item key="estado-convenio"> <router-link to="/admin/convenios/estado-convenio" v-if="views.includes('estado-convenio')">Estado de convenios</router-link> </a-menu-item>
+          <a-menu-item key="estado-convenio"> <router-link to="/admin/convenios/estado-convenio" v-if="views.includes('estado-convenio')" class="fs-13">Estado de convenios</router-link> </a-menu-item>
         </a-sub-menu>
 
-        <a-sub-menu key="eventos" @click="handleCollapse('eventos')" v-if="views.includes('convenios')">
+        <a-sub-menu key="eventos" @click="handleCollapse('eventos')" v-if="views.includes('eventos')">
           <template #title>
             <span>
               <CalendarOutlined />
-              <span>Eventos</span>
+              <span class="fs-13">Eventos</span>
             </span>
           </template>
-          <a-menu-item key="eventos-calendario-google"> <router-link to="/admin/eventos/calendario" v-if="views.includes('estado-convenio')">Calendario</router-link> </a-menu-item>
+          <a-menu-item key="eventos-calendario-google"> <router-link to="/admin/eventos/calendario" v-if="views.includes('eventos-calendario-google')" class="fs-13">Calendario</router-link> </a-menu-item>
         </a-sub-menu>
 
 
@@ -131,28 +131,28 @@
           <template #title>
             <span>
               <team-outlined />
-              <span>Personal</span>
+              <span class="fs-13">Personal</span>
             </span>
           </template>
           <a-menu-item key="usuarios-nuevo" v-if="views.includes('usuarios-nuevo')"> <router-link
-              to="/admin/usuarios/nuevo-usuario">Nuevo usuario</router-link> </a-menu-item>
+              to="/admin/usuarios/nuevo-usuario" class="fs-13">Nuevo usuario</router-link> </a-menu-item>
 
           <a-menu-item key="asesor-externo-notario" v-if="views.includes('asesor-externo-notario')"> <router-link
-              to="/admin/usuarios/asesor-externo-notario">Asesor externo</router-link> </a-menu-item>
+              to="/admin/usuarios/asesor-externo-notario" class="fs-13">Asesor externo</router-link> </a-menu-item>
 
           <a-menu-item key="usuarios-lista" v-if="views.includes('usuarios-lista')"> <router-link
-              to="/admin/usuarios/lista">Lista usuarios</router-link> </a-menu-item>
+              to="/admin/usuarios/lista" class="fs-13">Lista usuarios</router-link> </a-menu-item>
         </a-sub-menu>
 
         <a-sub-menu key="configuraciones" v-if="views.includes('configuraciones')" @click="handleCollapse('configuraciones')">
           <template #title>
             <span>
               <SettingOutlined />
-              <span>Configuraciones</span>
+              <span class="fs-13">Configuraciones</span>
             </span>
           </template>
           <a-menu-item key="tokens"> <router-link
-              to="/admin/configuraciones/tokens">Token</router-link> </a-menu-item>
+              to="/admin/configuraciones/tokens" class="fs-13">Token</router-link> </a-menu-item>
         </a-sub-menu>
 
       </a-menu>

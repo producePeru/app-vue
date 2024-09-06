@@ -4,7 +4,7 @@
     <a-row :gutter="30">
       <a-col :md="5" class="side-left">
         <div>
-          <h3>Calendario de eventos</h3>
+          <h3>CALENDARIO</h3>
 
           <a-button type="primary" :icon="h(PlusOutlined)" style="margin-top: .5rem;">CREAR</a-button>
 
@@ -12,18 +12,18 @@
             <a-calendar v-model:value="value" :fullscreen="false" />
           </div> -->
 
-          <div style="margin: 1.5rem 0;">
+          <!-- <div style="margin: 1.5rem 0;">
             <label>
               <input type='checkbox' :checked='calendarOptions.weekends' @change='handleWeekendsToggle' />
               toggle semana
             </label>
-          </div>
+          </div> -->
 
-
-          <div>
-            <a-flex justify="space-between" style="margin: 1rem 0;">
-              <h4>Filtrar por:</h4>
-              <PlusCircleOutlined class="icon-add-category" />
+  
+          <div style="margin: 2rem 0;">
+            <a-flex justify="space-between" >
+              <h5>CATEGORÍAS:</h5>
+              <PlusCircleOutlined class="icon-add-category" @click="toggleModalCategoria = true" />
             </a-flex>
 
             <div class="check-wrapper" :class="wow && 'item-check'">
@@ -70,6 +70,10 @@
     <a-modal v-model:open="toggleModal" title="Nuevo Evento" footer width="480px">
       <FormEvento :info="dateSelected" />
     </a-modal>
+
+    <a-modal v-model:open="toggleModalCategoria" title="Categoría" footer width="480px">
+      <FormCategoria />
+    </a-modal>
   </section>
 
 
@@ -88,6 +92,7 @@ import timeGridPlugin from '@fullcalendar/timegrid'
 import interactionPlugin from '@fullcalendar/interaction';
 
 import FormEvento from './components/FormEventos.vue';
+import FormCategoria from './components/FormCategorias.vue';
 
 let eventGuid = 0
 let todayStr = new Date().toISOString().replace(/T.*$/, '') // YYYY-MM-DD of today
@@ -113,6 +118,7 @@ const dateSelected = ref(null);
 const wow = ref(true);
 const value = ref();
 const toggleModal = ref(false);
+const toggleModalCategoria = ref(false);
 const currentEvents = ref([])
 
 const calendarOptions = ref({
@@ -151,14 +157,14 @@ function handleWeekendsToggle() {
 
 function handleDateSelect(selectInfo) {
 
-  const endDate = new Date(selectInfo.endStr);
-  endDate.setDate(endDate.getDate() - 1);
-  selectInfo.end = endDate;
-  const endStr = endDate.toISOString().split('T')[0];
+  // const endDate = new Date(selectInfo.endStr);
+  // endDate.setDate(endDate.getDate() - 1);
+  // selectInfo.end = endDate;
+  // const endStr = endDate.toISOString().split('T')[0];
 
   dateSelected.value = {
     start:  selectInfo.startStr,
-    end:    endStr,
+    end:    selectInfo.endStr,
     allDay: selectInfo.allDay
   };
 
@@ -242,8 +248,8 @@ function handleEvents(events) {
 
 .icon-add-category {
   cursor: pointer;
-  width: 15px;
-  height: 5px;
+  width: 16px;
+  height: 8px;
   display: inline-block;
   &:hover {
     color: var(--primary);

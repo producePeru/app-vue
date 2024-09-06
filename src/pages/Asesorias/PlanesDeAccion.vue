@@ -264,10 +264,12 @@ const fetchData = async (val) => {
     loading.value = true;
     const parx = params.value.page === 1 ? '' : params.value;
     const finalParams = val ? { ...parx, ...val } : parx;
-    const data = await makeRequest({ url: url.value, method: 'GET', params: finalParams });
+    const {data} = await makeRequest({ url: url.value, method: 'GET', params: finalParams });
+
     dataSource.value = data.data;
-    total.value = data.pagination.total;
-    pageSize.value = data.pagination.per_page;
+    total.value = data.total;
+    pageSize.value = data.per_page;
+
   } catch (error) {
     console.error('Error de red:', error);
   } finally {
