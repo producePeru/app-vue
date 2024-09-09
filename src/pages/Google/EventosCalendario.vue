@@ -26,34 +26,27 @@
               <PlusCircleOutlined class="icon-add-category" @click="toggleModalCategoria = true" />
             </a-flex>
 
-            <div class="check-wrapper" :class="wow && 'item-check'">
-              <div class="ckeck-box" :style="{ background: 'red' }">
-                <CheckOutlined class="check-icon" />
-              </div>
-              <div class="check-text">Cumpleaños</div>
-            </div>
+              <div 
+              v-for="(item, idx) in categories" 
+              :key="idx" 
+              class="check-wrapper" 
+              :class="item.status == 1 && 'item-check'" 
+              @click="handleToggleCategory(item)">
+                
+              <a-spin :indicator="indicator" :spinning="item.id == spinning ? true : false" style="margin-left: -3px; margin-top: 1px;">
+                <div class="ckeck-box" :style="{ background: item.status == 1 ? item.color : 'transparent' }">
+                  <CheckOutlined v-if="item.status == 0" style="color: #fff;" />
+                  <CheckOutlined v-else class="check-icon" :style="{ color: item.color === 'yellow' || item.color === 'white' ? '#606060' : 'white' }" />
+                </div>
+              </a-spin>
 
-            <div class="check-wrapper" :class="wow && 'item-check'">
-              <div class="ckeck-box" :style="{ background: 'orange' }">
-                <CheckOutlined class="check-icon" />
+                <div class="check-text">{{ item.name }}</div>
               </div>
-              <div class="check-text">Feria café</div>
-            </div>
-
-            <div class="check-wrapper">
-              <div class="ckeck-box" :style="{ background: '#fff' }">
-                <CheckOutlined class="check-icon" />
-              </div>
-              <div class="check-text">Cyber wow</div>
-            </div>
+            
           </div>
-
-
-
 
         </div>
       </a-col>
-
 
 
 
@@ -71,8 +64,8 @@
       <FormEvento :info="dateSelected" />
     </a-modal>
 
-    <a-modal v-model:open="toggleModalCategoria" title="Categoría" footer width="480px">
-      <FormCategoria />
+    <a-modal v-model:open="toggleModalCategoria" title="Categoría" footer width="350px">
+      <FormCategoria @closeDraw="closeDraw" />
     </a-modal>
   </section>
 
@@ -84,8 +77,9 @@
 </template>
 
 <script setup>
-import { h, ref } from 'vue';
-import { PlusOutlined, CheckOutlined, PlusCircleOutlined } from '@ant-design/icons-vue';
+import { h, ref, onMounted } from 'vue';
+import { makeRequest } from '@/utils/api.js';
+import { PlusOutlined, CheckOutlined, PlusCircleOutlined, LoadingOutlined } from '@ant-design/icons-vue';
 import FullCalendar from '@fullcalendar/vue3'
 import dayGridPlugin from '@fullcalendar/daygrid'
 import timeGridPlugin from '@fullcalendar/timegrid'
@@ -114,13 +108,21 @@ const INITIAL_EVENTS = [
   }
 ]
 
+const categories = ref(null);
+const loading = ref(true);
 const dateSelected = ref(null);
-const wow = ref(true);
+const categoryActive = ref(true);
 const value = ref();
 const toggleModal = ref(false);
 const toggleModalCategoria = ref(false);
-const currentEvents = ref([])
+const currentEvents = ref([]);
+const spinning = ref(0);
 
+const indicator = h(LoadingOutlined, {
+  style: {
+    fontSize: '18px',
+  }
+});
 const calendarOptions = ref({
   plugins: [
     dayGridPlugin,
@@ -151,17 +153,16 @@ const calendarOptions = ref({
   locale: 'es',
 })
 
+const closeDraw = () => {
+  toggleModalCategoria.value = false;
+  fetchData();
+}
+
 function handleWeekendsToggle() {
   calendarOptions.value.weekends = !calendarOptions.value.weekends
 }
 
 function handleDateSelect(selectInfo) {
-
-  // const endDate = new Date(selectInfo.endStr);
-  // endDate.setDate(endDate.getDate() - 1);
-  // selectInfo.end = endDate;
-  // const endStr = endDate.toISOString().split('T')[0];
-
   dateSelected.value = {
     start:  selectInfo.startStr,
     end:    selectInfo.endStr,
@@ -169,26 +170,6 @@ function handleDateSelect(selectInfo) {
   };
 
   toggleModal.value = true;
-
-
-  // const endDate = new Date(selectInfo.end);
-  // endDate.setDate(endDate.getDate() - 1);
-
-  // // Actualizar el selectInfo con la nueva fecha de fin
-  // dateSelected.value = {
-  //   start: selectInfo.start,
-  //   end: endDate,
-  //   allDay: selectInfo.allDay
-  // };
-
-  // toggleModal.value = true;
-
-  // console.log("select", selectInfo);
-
-  // let title = prompt('Please enter a new title for your event')
-  // let calendarApi = selectInfo.view.calendar
-
-  // calendarApi.unselect() // clear date selection
 
   // if (title) {
   //   calendarApi.addEvent({
@@ -201,6 +182,18 @@ function handleDateSelect(selectInfo) {
   // }
 }
 
+const handleToggleCategory = async(item) => {
+  try {
+    spinning.value = item.id;
+    const data = await makeRequest({ url: `event/status-categories/${item.id}`, method: 'PUT' });
+    if(data.status == 200) fetchData()
+  } catch (error) {
+    console.error('Error de red:', error);
+  } finally {
+    spinning.value = 0;
+  }
+}
+
 function handleEventClick(clickInfo) {
   if (confirm(`Are you sure you want to delete the event '${clickInfo.event.title}'`)) {
     clickInfo.event.remove()
@@ -210,6 +203,22 @@ function handleEventClick(clickInfo) {
 function handleEvents(events) {
   currentEvents.value = events
 }
+
+const fetchData = async() => {
+  try {
+    loading.value = true;
+    const {data} = await makeRequest({ url: 'event/list-categories', method: 'GET' });
+    categories.value = data;
+  } catch (error) {
+    console.error('Error de red:', error);
+  } finally {
+    loading.value = false;
+  }
+}
+
+onMounted(() => {
+  fetchData();
+});
 </script>
 
 <style lang="scss" scoped>

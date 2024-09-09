@@ -66,6 +66,8 @@ const plainOptions = [
   { label: 'Convenios Principal', value: 'convenios' },
   { label: 'Convenios Lista', value: 'estado-convenio' },
 
+  { label: 'Calendario Principal', value: 'eventos' },
+  { label: 'Eventos Lista', value: 'eventos-calendario-google' },
 
   { label: 'Usuarios Principal', value: 'usuarios' },
   { label: 'Usuarios Registrar', value: 'usuarios-nuevo' },

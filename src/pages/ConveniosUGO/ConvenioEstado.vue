@@ -135,7 +135,7 @@
 
   <!-- <pre>{{ idConvenio }}</pre> -->
 
-  <a-drawer v-model:open="open" class="draw-notary" root-class-name="root-class-name" title="Convenios" placement="right" width="650" >
+  <a-drawer v-model:open="open" root-class-name="root-class-name" title="Convenios" placement="right" width="650" >
     <NuevoConvenio :idConvenio="idConvenio" @closeDraw="handleCloseDrawopen(1)" />
   </a-drawer>
 
@@ -336,12 +336,18 @@ const actualizarAltura = () => {
 };
 
 const showDrawer = () => {
-  updateValues.value = null;
+  idConvenio.value = null;
   open.value = true;
 };
 const handleCloseDrawopen = (draw) => {
   fetchData();
-  draw == 1 && (open.value = false);
+  // draw == 1 && (open.value = false);
+
+  if(draw == 1) {
+    open.value = false;
+    idConvenio.value = null;
+  }
+
   draw == 2 && (openAcciones.value = false);
   draw == 4 && (openObservations.value = false);
 

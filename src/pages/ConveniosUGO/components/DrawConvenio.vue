@@ -50,7 +50,7 @@
           <span v-else>GUARDAR</span>
         </a-button>
       </a-form-item>
-
+      <!-- <pre>{{ idConvenio }}</pre> -->
     </a-form>
   </a-spin>
 </template>
@@ -83,7 +83,7 @@ store.fetchCities();
 // store.fetchOperationalStatus();
 
 const loading = ref(false);
-const spinning = ref(!true);
+const spinning = ref(false);
 // const plainOptions = ['UGO  - TU EMPRESA', 'TU EMPRESA - DVMYPE', 'DVMYPE-SG', 'SG-OGPPM', 'OGPPM-TU EMPRESA', 'TU EMPRESA-ALIADO'];
 const formState = reactive({});
 const years = [
@@ -173,10 +173,8 @@ const onSubmitFail = () => {
   message.error('Debes de completar todos los espacios requeridos')
 };
 
-const fetchData = async() => {
-  if(props.idConvenio) {
-    spinning.value = true;
-    const data = props.idConvenio
+const fetchData = async(data) => {
+  if(data.id) {
     formState.city_id = data.city_id
     handleDepartaments(data.city_id)
     formState.province_id = data.province_id
@@ -187,10 +185,6 @@ const fetchData = async() => {
     formState.years = data.years
     formState.observations = data.observations
     formState.alliedEntity = data.entity
-
-    formState.district_id && (spinning.value = false)
-  } else {
-    clearFields()
   }
 }
 
@@ -203,6 +197,8 @@ onMounted(() => {
 watch(() => props.idConvenio, (newValue) => {
   if (newValue) {
     fetchData(newValue);
+  } else {
+    clearFields();
   }
 });
 </script>
