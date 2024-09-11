@@ -36,6 +36,15 @@ const fields = {
     disabled: false
   },
 
+  allDay: {
+    type: 'iCheckbox',
+    label: '',
+    name: 'allDay',
+    required: false,
+    message: 'Escribe una descripción',
+    disabled: false
+  },
+
   linkVideo: {
     type: 'iLinkVideo',
     label: '',
@@ -49,16 +58,16 @@ const fields = {
     type: 'iSelect',
     label: 'Categoría',	
     name: 'category_id',
-    required: true,
+    required: false,
     message: '',
     disabled: false
   },
 
-  repeat: {
+  repetir: {
     type: 'iSelect',
     label: 'Repetir',	
     name: 'repeat',
-    required: true,
+    required: false,
     message: '',
     disabled: false
   },
@@ -68,7 +77,7 @@ const fields = {
     label: '',	
     name: 'color',
     required: false,
-    message: 'Repetir',
+    message: '',
     disabled: false
   },
 

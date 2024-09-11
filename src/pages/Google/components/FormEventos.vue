@@ -31,15 +31,18 @@
 
             <div style="display: flex; align-items: center; justify-content: space-between">
               <label class="form-label-1">Color de fondo</label>
-              <a-select v-model:value="selectedColor" style="width: 70px;">
+              <a-select v-model:value="formState[el.name]" style="width: 70px;">
                 <a-select-option v-for="color in colors" :key="color" :value="color">
                   <div :style="{ backgroundColor: color, }" class="bg-color"></div>
                 </a-select-option>
               </a-select>
             </div>
-
           </a-form-item>
 
+          
+          <a-form-item v-if="el.type === 'iCheckbox'" :name="el.name" :label="el.label" :rules="[{ required: el.required, message: el.message }]">
+            <a-checkbox v-model:checked="formState[el.name]">Todo el día</a-checkbox>
+          </a-form-item>
 
 
           <a-form-item class="item-max" v-if="el.type === 'iSelect'" :name="el.name" :label="el.label"
@@ -95,7 +98,7 @@ dayjs.locale('es');
 const storageProfile = JSON.parse(localStorage.getItem('profile'))
 
 const emit = defineEmits(['closeDraw']);
-const props = defineProps(['info']);
+const props = defineProps(['info', 'pcategories']);
 
 
 
@@ -110,13 +113,10 @@ const colors = [
 ];
 const repeats = [
   { label: "Cada Semana", value: "week" },
-  { label: "Cada Mes", value: "mont" },
+  { label: "Cada Mes", value: "month" },
   { label: "Cada Año", value: "year" }
 ];
-const categories = [
-  { label: "Si", value: "yes" },
-  { label: "No", value: "no" }
-];
+const categories = ref([]);
 const formState = reactive({
   startDate: null,
   endDate: null
@@ -128,18 +128,27 @@ const handleClear = () => {
 
 
 
-
-
 const disabledDate = (value, el) => {
-  console.log("Disabled", el);
+  const currentDate = new Date().setHours(0, 0, 0, 0);
+  
+  if (el === 'startDate') {
+    return value < currentDate;
+  }
 
-  if (el == 'startDate') {
-    return value < new Date().setHours(0, 0, 0, 0);
+  if (el === 'endDate') {
+    const startDate = formState.startDate ? new Date(formState.startDate) : null;
+    const endDate = new Date(value);
+
+    if (startDate) {
+      const isSameDay = startDate.toDateString() === endDate.toDateString();
+      if (isSameDay) {
+        return endDate <= startDate;
+      }
+    }
+
+    return startDate && endDate.getTime() <= startDate.getTime();
   }
-  if (el == 'endDate') {
-    const startDate = formState.startDate;
-    return startDate && value <= new Date(startDate).getTime();
-  }
+
   return false;
 };
 
@@ -147,36 +156,23 @@ const disabledDate = (value, el) => {
 const onSubmit = async () => {
   loading.value = true;
 
-  if (formState.ruc && validation.valid === false) {
-    loading.value = false;
-    return;
-  }
-
   const payload = {
-    people_id: formState.idPerson,
-    cde_id: storageProfile.cde_id,
-    component_1: formState.component_1,
-    component_2: formState.component_2,
-    component_3: formState.component_3,
-    ruc: formState.ruc,
-    startDate: dayjs(formState.startDate).format('YYYY-MM-DD'),
-    endDate: dayjs(formState.endDate).format('YYYY-MM-DD'),
-    ...(props.info && { idItem: props.info.id })
+    nameEvent: formState.nameEvent,
+    startDate:  dayjs(formState.startDate).format('YYYY-MM-DD HH:MM'),
+    endDate: dayjs(formState.endDate).format('YYYY-MM-DD HH:MM'),
+    description: formState.description,
+    linkVideo: formState.linkVideo,
+    category_id: formState.category_id,
+    repetir: formState.repetir,
+    color: formState.color,
   }
-
-  let rutaUrl = null;
-
-  props.info ? rutaUrl = `plans-action/update` : rutaUrl = `plans-action/create`;
 
   try {
-    const data = await makeRequest({ url: `${rutaUrl}`, method: 'POST', data: payload });
+    const data = await makeRequest({ url: `event/create-event`, method: 'POST', data: payload });
     if (data.status == 200) {
       message.success(data.message);
       handleClear()
       emit('closeDraw');
-    }
-    if (data.status == 400) {
-      message.warning(data.message);
     }
   } catch (error) {
     console.log("Failed to update record");
@@ -187,9 +183,19 @@ const onSubmit = async () => {
 
 function handleSetInfo(info) {
   if (info) {
-    // const endDatex = dayjs(info.end).subtract(1, 'day').set('hour', 23).set('minute', 59).toDate();
     formState.startDate = dayjs(info.start);
     formState.endDate = dayjs(info.end);
+
+    props.pcategories.map(item => {
+      const object = {
+        label: item.name,
+        value: item.id
+      }
+      const exists = categories.value.some(category => category.value === item.id);
+
+      if (!exists) categories.value = [...categories.value, object];
+    })
+
 
   } else {
     handleClear()
@@ -229,7 +235,8 @@ watch(() => props.info, (newValue) => {
   // .ant-form-item:nth-child(2),
   // .ant-form-item:nth-child(3),
   .ant-form-item:nth-child(4),
-  .ant-form-item:nth-child(5) {
+  .ant-form-item:nth-child(5),
+  .ant-form-item:nth-child(6) {
     grid-column: 1/3;
   }
 }

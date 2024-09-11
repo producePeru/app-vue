@@ -41,8 +41,16 @@ const fields = {
     disabled: true
   },
 
-  space: {
-    type: 'iSpace',
+  // space: {
+  //   type: 'iSpace',
+  // },
+  external: {
+    type: 'iSwitch',
+    label: 'CDE AGENTE EXTERNO',
+    name: 'external',
+    required: false,
+    message: 'Seleccionar',
+    disabled: true
   },
 
   startDate: {

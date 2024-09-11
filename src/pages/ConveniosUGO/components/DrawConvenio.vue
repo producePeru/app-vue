@@ -31,6 +31,10 @@
             <a-date-picker v-else :locale="locale" v-model:value="formState[el.name]" style="width: 100%;" :format="dateFormat" placeholder="día/mes/año" />
           </a-form-item>
 
+          <a-form-item v-if="el.type === 'iSwitch'" :name="el.name" :label="el.label" :rules="[{ required: el.required, message: el.message }]">
+            <a-switch v-model:checked="formState[el.name]" checked-children="si" un-checked-children="" :checkedValue="1" :unCheckedValue="0" />
+          </a-form-item>
+
           <!-- <a-form-item v-if="el.type === 'iCheckbox'" :name="el.name" :label="el.label" :rules="[{ required: el.required, message: el.message }]">
             <a-checkbox-group v-model:value="formState[el.name]" name="checkboxgroup" :options="plainOptions" style="display: grid; grid-gap: .2rem;" />
           </a-form-item> -->
@@ -50,7 +54,7 @@
           <span v-else>GUARDAR</span>
         </a-button>
       </a-form-item>
-      <!-- <pre>{{ idConvenio }}</pre> -->
+      <!-- <pre>{{ formState }}</pre> -->
     </a-form>
   </a-spin>
 </template>
@@ -128,6 +132,7 @@ const clearFields = () => {
   formState.alliedEntity = null
   formState.homeOperations = null
   formState.startDate = null
+  formState.external = null
   formState.years = null
   formState.endDate = null
   formState.observations = null
@@ -143,6 +148,7 @@ const onSubmit = async () => {
     alliedEntity: formState.alliedEntity,
     homeOperations: dayjs(formState.homeOperations).format('YYYY-MM-DD'),
     startDate: dayjs(formState.startDate).format('YYYY-MM-DD'),
+    external: formState.external,
     years: formState.years,
     endDate: dayjs(formState.startDate).add(formState.years, 'year').format('YYYY-MM-DD'),
     observations: formState.observations,
@@ -180,6 +186,7 @@ const fetchData = async(data) => {
     formState.province_id = data.province_id
     handleProvinces(data.province_id)
     formState.district_id = data.district_id
+    formState.external = data.external
     formState.homeOperations = dayjs(data.startOperations, 'YYYY-MM-DD')
     formState.startDate = dayjs(data.startDate, 'YYYY-MM-DD')
     formState.years = data.years
@@ -208,7 +215,6 @@ watch(() => props.idConvenio, (newValue) => {
   display: grid;
   grid-template-columns: 1.5fr 1.5fr;
   grid-gap: 0 1rem;
-  .ant-form-item:nth-child(6),
   .ant-form-item:nth-child(9) {
     grid-column: 1/3;
   }

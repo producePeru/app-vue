@@ -54,6 +54,11 @@
           {{ computeIndex(index) }}
         </template>
 
+        <template v-if="column.dataIndex == 'externo'">
+          <!-- {{ record.external }} -->
+          <a-tag v-if="record.external == 1" color="cyan">Externo</a-tag>
+        </template>
+
         <template v-if="column.dataIndex == 'startOperations'">
           {{ formatDate(record.startOperations) }}
         </template>
@@ -207,7 +212,7 @@ const columns = [
   { title: 'PROVINCIA',                           dataIndex: 'province', fixed: 'left', width: 120 },
   { title: 'DISTRITO',                            dataIndex: 'district', fixed: 'left', width: 140 },
   { title: 'ENTIDAD ALIADA',                      dataIndex: 'entity', width: 300 },
-
+  { title: 'CDE AGENTE EXTERNO',                  dataIndex: 'externo', width: 100, align: 'center'},
   { title: 'FECHA DE SUSCRIPCIÓN DE CONVENIO',    dataIndex: 'startOperations', align: 'center', width: 180 },
   { title: 'INICIO DE CONVENIO VIGENTE',          dataIndex: 'startDate', align: 'center', width: 180 },
   { title: 'N° DE AÑOS VIGENTE',                  dataIndex: 'years', width: 120, align: 'center'},

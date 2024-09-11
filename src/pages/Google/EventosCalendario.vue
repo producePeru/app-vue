@@ -53,20 +53,24 @@
       <a-col :md="19">
         <FullCalendar class='demo-app-calendar' :options='calendarOptions'>
           <template v-slot:eventContent='arg'>
-            <b>{{ arg.timeText }}</b>
-            <i>{{ arg.event.title }}</i>
+    
+              <b>{{ arg.timeText }}</b>
+              <i>{{ arg.event.title }}</i>
+            
           </template>
         </FullCalendar>
       </a-col>
     </a-row>
 
     <a-modal v-model:open="toggleModal" title="Nuevo Evento" footer width="480px">
-      <FormEvento :info="dateSelected" />
+      <FormEvento :info="dateSelected" :pcategories="categories" @closeDraw="closeDraw('create-event')" />
     </a-modal>
 
     <a-modal v-model:open="toggleModalCategoria" title="Categoría" footer width="350px">
       <FormCategoria @closeDraw="closeDraw" />
     </a-modal>
+    
+    <pre>{{INITIAL_EVENTS}}</pre>
   </section>
 
 
@@ -77,7 +81,8 @@
 </template>
 
 <script setup>
-import { h, ref, onMounted } from 'vue';
+import { h, ref, onMounted, watch } from 'vue';
+import dayjs from 'dayjs';
 import { makeRequest } from '@/utils/api.js';
 import { PlusOutlined, CheckOutlined, PlusCircleOutlined, LoadingOutlined } from '@ant-design/icons-vue';
 import FullCalendar from '@fullcalendar/vue3'
@@ -95,18 +100,34 @@ function createEventId() {
   return String(eventGuid++)
 }
 
-const INITIAL_EVENTS = [
-  {
-    id: createEventId(),
-    title: 'All-day event',
-    start: todayStr
-  },
-  {
-    id: createEventId(),
-    title: 'Timed event',
-    start: todayStr + 'T12:00:00'
-  }
-]
+const INITIAL_EVENTS = ref([
+
+  // {
+  //   id: 1,
+  //   title: 'Cumpleaños decc',
+  //   start: '2024-09-11 15:09:00',
+  //   backgroundColor: 'blue',
+  //   borderColor: 'blue',
+  //   color: 'blue',
+  //   textColor: 'white',
+  //   category: '0'
+  // },
+
+]);
+  // {
+  //   id: createEventId(),
+  //   title: 'Cumpleaños de la señora Mercedes Salinas',
+  //   start: '2024-09-11 15:09:00'
+  // },
+  // {
+  //   id: createEventId(),
+  //   title: 'Timed event',
+  //   start: '2024-09-12 05:05:00',
+  //   end: '2024-09-18 05:15:00',
+  //   color: 'yellow',
+  //   textColor: 'black' 
+  // }
+
 
 const categories = ref(null);
 const loading = ref(true);
@@ -127,7 +148,7 @@ const calendarOptions = ref({
   plugins: [
     dayGridPlugin,
     timeGridPlugin,
-    interactionPlugin // needed for dateClick
+    interactionPlugin
   ],
   headerToolbar: {
     left: 'prev,next today',
@@ -141,7 +162,7 @@ const calendarOptions = ref({
     day: 'Día'
   },
   initialView: 'dayGridMonth',
-  initialEvents: INITIAL_EVENTS, // alternatively, use the `events` setting to fetch from a feed
+  initialEvents: INITIAL_EVENTS, 
   editable: true,
   selectable: true,
   selectMirror: true,
@@ -151,9 +172,13 @@ const calendarOptions = ref({
   eventClick: handleEventClick,
   eventsSet: handleEvents,
   locale: 'es',
+  eventColor: '#ffcccb',
 })
 
-const closeDraw = () => {
+const closeDraw = (type) => {
+  if(type == 'create-event') {
+    toggleModal.value = false
+  }
   toggleModalCategoria.value = false;
   fetchData();
 }
@@ -163,9 +188,17 @@ function handleWeekendsToggle() {
 }
 
 function handleDateSelect(selectInfo) {
+  let endDate = selectInfo.end;
+
+  if (selectInfo.allDay) {
+    endDate = dayjs(selectInfo.end).subtract(1, 'day').format('YYYY-MM-DD');
+  } else {
+    endDate = dayjs(selectInfo.end).format('YYYY-MM-DDTHH:mm');
+  }
+
   dateSelected.value = {
-    start:  selectInfo.startStr,
-    end:    selectInfo.endStr,
+    start: dayjs(selectInfo.start).format('YYYY-MM-DDTHH:mm'),  
+    end: endDate,                                                 
     allDay: selectInfo.allDay
   };
 
@@ -201,7 +234,11 @@ function handleEventClick(clickInfo) {
 }
 
 function handleEvents(events) {
-  currentEvents.value = events
+  // currentEvents.value = events
+  console.log("hOOOLA", events);
+  
+  
+  
 }
 
 const fetchData = async() => {
@@ -209,6 +246,15 @@ const fetchData = async() => {
     loading.value = true;
     const {data} = await makeRequest({ url: 'event/list-categories', method: 'GET' });
     categories.value = data;
+
+
+    const events = await makeRequest({ url: 'event/list', method: 'GET' });
+    INITIAL_EVENTS.value = events.data
+
+    // console.log("Eventssss", events.data);
+    
+    
+
   } catch (error) {
     console.error('Error de red:', error);
   } finally {
@@ -218,6 +264,10 @@ const fetchData = async() => {
 
 onMounted(() => {
   fetchData();
+});
+
+watch(INITIAL_EVENTS, (newEvents) => {
+  calendarOptions.value.events = newEvents;
 });
 </script>
 
@@ -298,5 +348,10 @@ onMounted(() => {
 .fc-col-header-cell-cushion {
   font-weight: 400;
   font-size: 12px;
+}
+.fc-event {
+  b {
+    margin-right: 3px;
+  }
 }
 </style>
