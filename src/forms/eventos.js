@@ -36,14 +36,14 @@ const fields = {
     disabled: false
   },
 
-  allDay: {
-    type: 'iCheckbox',
-    label: '',
-    name: 'allDay',
-    required: false,
-    message: 'Escribe una descripción',
-    disabled: false
-  },
+  // allDay: {
+  //   type: 'iCheckbox',
+  //   label: '',
+  //   name: 'allDay',
+  //   required: false,
+  //   message: 'Escribe una descripción',
+  //   disabled: false
+  // },
 
   linkVideo: {
     type: 'iLinkVideo',
@@ -74,7 +74,7 @@ const fields = {
 
   color: {
     type: 'iColor',
-    label: '',	
+    label: 'Color evento',	
     name: 'color',
     required: false,
     message: '',

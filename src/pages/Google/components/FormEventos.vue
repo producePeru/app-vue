@@ -29,14 +29,20 @@
           <a-form-item v-if="el.type === 'iColor'" :name="el.name" :label="el.label"
             :rules="[{ required: el.required, message: el.message }]">
 
-            <div style="display: flex; align-items: center; justify-content: space-between">
+            <a-select v-model:value="formState[el.name]" style="width: 100%;">
+                <a-select-option v-for="color in colors" :key="color" :value="color">
+                  <div :style="{ backgroundColor: color, }" class="bg-color"></div>
+                </a-select-option>
+              </a-select>
+
+            <!-- <div style="display: flex; align-items: center; justify-content: space-between">
               <label class="form-label-1">Color de fondo</label>
               <a-select v-model:value="formState[el.name]" style="width: 70px;">
                 <a-select-option v-for="color in colors" :key="color" :value="color">
                   <div :style="{ backgroundColor: color, }" class="bg-color"></div>
                 </a-select-option>
               </a-select>
-            </div>
+            </div> -->
           </a-form-item>
 
           
@@ -76,7 +82,7 @@
     </a-form>
 
 
-    <pre>{{ formState }}</pre>
+    <!-- <pre>{{ formState }}</pre> -->
 
 
 
@@ -93,6 +99,8 @@ import { makeRequest } from '@/utils/api.js';
 import locale from 'ant-design-vue/es/date-picker/locale/es_ES';
 import dayjs from 'dayjs';
 import 'dayjs/locale/es';
+import isSameOrBefore from 'dayjs/plugin/isSameOrBefore';
+dayjs.extend(isSameOrBefore);
 dayjs.locale('es');
 
 const storageProfile = JSON.parse(localStorage.getItem('profile'))
@@ -109,10 +117,10 @@ const selectedColor = ref(null);
 
 
 const colors = [
-  'white', 'red', 'orange', 'yellow', 'green', 'blue', 'indigo', 'purple', 'pink', 'gray', 'black'
+  'red', 'orange', 'yellow', 'green', 'blue', 'indigo', 'purple', 'pink', 'gray', 'black'
 ];
 const repeats = [
-  { label: "Cada Semana", value: "week" },
+  // { label: "Cada Semana", value: "week" },
   { label: "Cada Mes", value: "month" },
   { label: "Cada Año", value: "year" }
 ];
@@ -123,10 +131,14 @@ const formState = reactive({
 });
 
 const handleClear = () => {
-
+  formState.nameEvent = null;
+  formState.description = null;
+  formState.linkVideo = null;
+  formState.category_id = null;
+  formState.repetir = null;
+  formState.color = null;
+  formState.allDay = null;
 }
-
-
 
 const disabledDate = (value, el) => {
   const currentDate = new Date().setHours(0, 0, 0, 0);
@@ -158,16 +170,22 @@ const onSubmit = async () => {
 
   const payload = {
     nameEvent: formState.nameEvent,
-    startDate:  dayjs(formState.startDate).format('YYYY-MM-DD HH:MM'),
-    endDate: dayjs(formState.endDate).format('YYYY-MM-DD HH:MM'),
+    start:  dayjs(formState.startDate).format('YYYY-MM-DD HH:mm'),
+    end: dayjs(formState.endDate).format('YYYY-MM-DD HH:mm'),
     description: formState.description,
     linkVideo: formState.linkVideo,
     category_id: formState.category_id,
-    repetir: formState.repetir,
+    repetir: formState.repeat,
     color: formState.color,
+    allDay: formState.color ? 1 : 0,
   }
 
   try {
+
+    if (dayjs(payload.end).isSameOrBefore(dayjs(payload.start))) {
+      return message.warning("La fecha y hora de fin no puede ser igual o menor");
+    } 
+
     const data = await makeRequest({ url: `event/create-event`, method: 'POST', data: payload });
     if (data.status == 200) {
       message.success(data.message);

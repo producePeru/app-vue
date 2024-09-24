@@ -30,7 +30,8 @@ const fields = {
     name: 'alliedEntity',
     required: true,
     message: 'Escribir la entidad aliada',
-    disabled: true
+    disabled: true,
+    max: 100
   },
   homeOperations: {
     type: 'iDate',

@@ -1,6 +1,6 @@
 <template>
   <div>
-    <h3 class="title-produce">ESTADO DE CONVENIOS</h3>
+    <h3 class="title-produce">CONVENIOS UGO</h3>
 
     <a-row style="margin: 1rem 0;">
       <a-col :xs="24" :md="12" :lg="18">
@@ -162,7 +162,7 @@
 <script setup>
 import axios from 'axios';
 import { ref, onMounted, h, onBeforeUnmount, computed, reactive } from 'vue';
-import NuevoConvenio from './components/DrawConvenio.vue';
+import NuevoConvenio from './components/DrawConvenioUGO.vue';
 import DrawAcciones from './components/DrawAcciones.vue';
 import DrawObservations from './components/DrawObservations.vue';
 import DrawFiles from './components/DrawFiles.vue';
@@ -382,7 +382,7 @@ const fetchData = async (val) => {
     parx = params.value.page == 0 ? '' : params.value;
     parx = val? {...parx,...val } : parx;
    
-    const {data} = await makeRequest({ url: `agreement/list`, method: 'GET', params: parx });
+    const {data} = await makeRequest({ url: `agreement/list/ugo`, method: 'GET', params: parx });
     dataSource.value = data?.data
     total.value = data.total
     pageSize.value = data.per_page;

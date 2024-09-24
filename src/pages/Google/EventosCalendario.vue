@@ -19,30 +19,28 @@
             </label>
           </div> -->
 
-  
+
           <div style="margin: 2rem 0;">
-            <a-flex justify="space-between" >
+            <a-flex justify="space-between">
               <h5>CATEGORÍAS:</h5>
               <PlusCircleOutlined class="icon-add-category" @click="toggleModalCategoria = true" />
             </a-flex>
 
-              <div 
-              v-for="(item, idx) in categories" 
-              :key="idx" 
-              class="check-wrapper" 
-              :class="item.status == 1 && 'item-check'" 
-              @click="handleToggleCategory(item)">
-                
-              <a-spin :indicator="indicator" :spinning="item.id == spinning ? true : false" style="margin-left: -3px; margin-top: 1px;">
+            <div v-for="(item, idx) in categories" :key="idx" class="check-wrapper"
+              :class="item.status == 1 && 'item-check'" @click="handleToggleCategory(item)">
+
+              <a-spin :indicator="indicator" :spinning="item.id == spinning ? true : false"
+                style="margin-left: -3px; margin-top: 1px;">
                 <div class="ckeck-box" :style="{ background: item.status == 1 ? item.color : 'transparent' }">
                   <CheckOutlined v-if="item.status == 0" style="color: #fff;" />
-                  <CheckOutlined v-else class="check-icon" :style="{ color: item.color === 'yellow' || item.color === 'white' ? '#606060' : 'white' }" />
+                  <CheckOutlined v-else class="check-icon"
+                    :style="{ color: item.color === 'yellow' || item.color === 'white' ? '#606060' : 'white' }" />
                 </div>
               </a-spin>
 
-                <div class="check-text">{{ item.name }}</div>
-              </div>
-            
+              <div class="check-text">{{ item.name }}</div>
+            </div>
+
           </div>
 
         </div>
@@ -51,14 +49,44 @@
 
 
       <a-col :md="19">
-        <FullCalendar class='demo-app-calendar' :options='calendarOptions'>
-          <template v-slot:eventContent='arg'>
-    
-              <b>{{ arg.timeText }}</b>
-              <i>{{ arg.event.title }}</i>
-            
-          </template>
-        </FullCalendar>
+        <a-spin :spinning="loading">
+
+
+          <FullCalendar class='demo-app-calendar' :options='calendarOptions'>
+            <template v-slot:eventContent='arg'>
+
+              <a-popover trigger="hover">
+
+
+
+
+
+                <template #content>
+                  <div class="event-tooltip">
+                    <span>{{ arg.event.title }}</span>
+                    <!-- <span>{{ arg.event.start }}</span> -->
+                     <span>{{ arg.event.backgroundColor }}</span>
+                     <span>{{ arg.event.extendedProps.description }}</span>
+                     <a :href="arg.event.extendedProps.linkVideo" >Link</a>
+                  </div>
+                </template>
+
+
+
+
+
+
+                <div>
+                  <b>{{ arg.timeText }}</b>
+                  <i>{{ arg.event.title }}</i>
+                </div>
+              </a-popover>
+
+            </template>
+          </FullCalendar>
+
+
+        </a-spin>
       </a-col>
     </a-row>
 
@@ -69,8 +97,8 @@
     <a-modal v-model:open="toggleModalCategoria" title="Categoría" footer width="350px">
       <FormCategoria @closeDraw="closeDraw" />
     </a-modal>
-    
-    <pre>{{INITIAL_EVENTS}}</pre>
+
+    <!-- <pre>{{INITIAL_EVENTS}}</pre> -->
   </section>
 
 
@@ -93,42 +121,10 @@ import interactionPlugin from '@fullcalendar/interaction';
 import FormEvento from './components/FormEventos.vue';
 import FormCategoria from './components/FormCategorias.vue';
 
-let eventGuid = 0
-let todayStr = new Date().toISOString().replace(/T.*$/, '') // YYYY-MM-DD of today
+const setMonth = ref(null);
+const setYear = ref(null);
 
-function createEventId() {
-  return String(eventGuid++)
-}
-
-const INITIAL_EVENTS = ref([
-
-  // {
-  //   id: 1,
-  //   title: 'Cumpleaños decc',
-  //   start: '2024-09-11 15:09:00',
-  //   backgroundColor: 'blue',
-  //   borderColor: 'blue',
-  //   color: 'blue',
-  //   textColor: 'white',
-  //   category: '0'
-  // },
-
-]);
-  // {
-  //   id: createEventId(),
-  //   title: 'Cumpleaños de la señora Mercedes Salinas',
-  //   start: '2024-09-11 15:09:00'
-  // },
-  // {
-  //   id: createEventId(),
-  //   title: 'Timed event',
-  //   start: '2024-09-12 05:05:00',
-  //   end: '2024-09-18 05:15:00',
-  //   color: 'yellow',
-  //   textColor: 'black' 
-  // }
-
-
+const INITIAL_EVENTS = ref([]);
 const categories = ref(null);
 const loading = ref(true);
 const dateSelected = ref(null);
@@ -153,7 +149,7 @@ const calendarOptions = ref({
   headerToolbar: {
     left: 'prev,next today',
     center: 'title',
-    right: 'dayGridMonth,timeGridWeek,timeGridDay'
+    right: ''
   },
   buttonText: {
     today: 'Hoy',
@@ -162,7 +158,7 @@ const calendarOptions = ref({
     day: 'Día'
   },
   initialView: 'dayGridMonth',
-  initialEvents: INITIAL_EVENTS, 
+  initialEvents: INITIAL_EVENTS,
   editable: true,
   selectable: true,
   selectMirror: true,
@@ -173,15 +169,36 @@ const calendarOptions = ref({
   eventsSet: handleEvents,
   locale: 'es',
   eventColor: '#ffcccb',
+  eventBorderColor: 'transparent',
+  datesSet: handleDatesSet
 })
 
 const closeDraw = (type) => {
-  if(type == 'create-event') {
+
+  console.log("ksksksksk", type);
+
+
+  if (type == 'create-event') {
     toggleModal.value = false
   }
   toggleModalCategoria.value = false;
-  fetchData();
+  fetchData(setMonth, setYear);         // al cerrar modal de crear evento
 }
+
+
+
+function handleDatesSet(dateInfo) {
+  const start = dateInfo.view.currentStart;
+  const monthNumber = start.getMonth() + 1;
+  const year = start.getFullYear();
+
+  setMonth.value = monthNumber;
+  setYear.value = year;
+
+  fetchData(monthNumber, year);
+
+}
+
 
 function handleWeekendsToggle() {
   calendarOptions.value.weekends = !calendarOptions.value.weekends
@@ -197,8 +214,8 @@ function handleDateSelect(selectInfo) {
   }
 
   dateSelected.value = {
-    start: dayjs(selectInfo.start).format('YYYY-MM-DDTHH:mm'),  
-    end: endDate,                                                 
+    start: dayjs(selectInfo.start).format('YYYY-MM-DDTHH:mm'),
+    end: endDate,
     allDay: selectInfo.allDay
   };
 
@@ -215,11 +232,11 @@ function handleDateSelect(selectInfo) {
   // }
 }
 
-const handleToggleCategory = async(item) => {
+const handleToggleCategory = async (item) => {
   try {
     spinning.value = item.id;
     const data = await makeRequest({ url: `event/status-categories/${item.id}`, method: 'PUT' });
-    if(data.status == 200) fetchData()
+    // if(data.status == 200) fetchData()
   } catch (error) {
     console.error('Error de red:', error);
   } finally {
@@ -228,32 +245,22 @@ const handleToggleCategory = async(item) => {
 }
 
 function handleEventClick(clickInfo) {
-  if (confirm(`Are you sure you want to delete the event '${clickInfo.event.title}'`)) {
-    clickInfo.event.remove()
-  }
+  // if (confirm(`Are you sure you want to delete the event '${clickInfo.event.title}'`)) {
+  //   clickInfo.event.remove()
+  // }
 }
 
 function handleEvents(events) {
   // currentEvents.value = events
-  console.log("hOOOLA", events);
-  
-  
-  
+  // console.log("hOOOLA", events);
 }
 
-const fetchData = async() => {
+const fetchData = async () => {
   try {
     loading.value = true;
-    const {data} = await makeRequest({ url: 'event/list-categories', method: 'GET' });
-    categories.value = data;
 
-
-    const events = await makeRequest({ url: 'event/list', method: 'GET' });
-    INITIAL_EVENTS.value = events.data
-
-    // console.log("Eventssss", events.data);
-    
-    
+    const events = await makeRequest({ url: `event/list?month=${setMonth.value}&year=${setYear.value}`, method: 'GET' });
+    INITIAL_EVENTS.value = events
 
   } catch (error) {
     console.error('Error de red:', error);
@@ -262,8 +269,17 @@ const fetchData = async() => {
   }
 }
 
+const fetchDataCategories = async () => {
+  try {
+    const { data } = await makeRequest({ url: 'event/list-categories', method: 'GET' });
+    categories.value = data;
+  } catch (error) {
+    console.error('Error de red:', error);
+  }
+}
+
 onMounted(() => {
-  fetchData();
+  fetchDataCategories();
 });
 
 watch(INITIAL_EVENTS, (newEvents) => {
@@ -310,6 +326,7 @@ watch(INITIAL_EVENTS, (newEvents) => {
   width: 16px;
   height: 8px;
   display: inline-block;
+
   &:hover {
     color: var(--primary);
   }
@@ -336,11 +353,15 @@ watch(INITIAL_EVENTS, (newEvents) => {
 </style>
 
 <style lang="scss">
-/* schaders */
+.event-tooltip {
+
+}
+
 .fc-col-header-cell-cushion,
 .fc-daygrid-day-number {
   color: #000000e0;
 }
+
 .fc-daygrid-day-number {
   font-size: 12px;
 }
@@ -349,9 +370,22 @@ watch(INITIAL_EVENTS, (newEvents) => {
   font-weight: 400;
   font-size: 12px;
 }
+
 .fc-event {
   b {
     margin-right: 3px;
+  }
+}
+
+
+.fc .fc-button {
+  background-color: var(--primary) !important;
+  font-size: 13px;
+  border: none !important;
+  cursor: pointer;
+
+  &:focus {
+    // box-shadow: rgba(40, 100, 90, 0.5) 0px 0px 0px 0.15rem;
   }
 }
 </style>

@@ -205,9 +205,15 @@ const router = createRouter({
           name: 'convenios',
           children: [
             {
-              path: 'estado-convenio',
-              name: 'estado-convenio',
+              path: 'ugo',
+              name: 'estado-convenio-ugo',
               component: () => import('../pages/ConveniosUGO/ConvenioEstado.vue'),
+              meta: { requiresAuth: true },
+            },
+            {
+              path: 'ugse',
+              name: 'estado-convenio-ugse',
+              component: () => import('../pages/ConveniosUGSE/ConvenioEstado.vue'),
               meta: { requiresAuth: true },
             }
           ]

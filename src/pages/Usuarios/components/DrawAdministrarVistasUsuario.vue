@@ -64,7 +64,9 @@ const plainOptions = [
   { label: 'AF - Asesores', value: 'asesores' },
 
   { label: 'Convenios Principal', value: 'convenios' },
-  { label: 'Convenios Lista', value: 'estado-convenio' },
+  { label: 'Convenios UGO', value: 'estado-convenio-ugo' },
+  { label: 'Convenios UGSE', value: 'estado-convenio-ugse' },
+
 
   { label: 'Calendario Principal', value: 'eventos' },
   { label: 'Eventos Lista', value: 'eventos-calendario-google' },

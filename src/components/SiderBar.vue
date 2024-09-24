@@ -85,7 +85,8 @@
               <span class="fs-13">Convenios</span>
             </span>
           </template>
-          <a-menu-item key="estado-convenio"> <router-link to="/admin/convenios/estado-convenio" v-if="views.includes('estado-convenio')" class="fs-13">Estado de convenios</router-link> </a-menu-item>
+          <a-menu-item key="estado-convenio-ugo"> <router-link to="/admin/convenios/ugo" v-if="views.includes('estado-convenio')" class="fs-13">Convenios UGO</router-link> </a-menu-item>
+          <a-menu-item key="estado-convenio-ugse"> <router-link to="/admin/convenios/ugse" v-if="views.includes('estado-convenio')" class="fs-13">Convenios UGSE</router-link> </a-menu-item>
         </a-sub-menu>
 
         <a-sub-menu key="eventos" @click="handleCollapse('eventos')" v-if="views.includes('eventos')">
