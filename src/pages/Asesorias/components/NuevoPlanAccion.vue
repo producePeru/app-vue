@@ -100,7 +100,7 @@ const components = [
   { label: "DESARROLLO PRODUCTIVO", value: 1 },
   { label: "DIGITALIZACIÓN", value: 2 },
   { label: "FINANZAS", value: 3 },
-  { label: "FORMALIZACIÓN", value: 4 },
+  { label: "FORMALIZACION", value: 4 },
   { label: "GESTIÓN EMPRESARIAL", value: 5 }
 ];
 const optionsTypeDocuments = [
