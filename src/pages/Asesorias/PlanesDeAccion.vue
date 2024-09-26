@@ -79,7 +79,7 @@
         </template>
 
         <template v-if="column.dataIndex == 'actions'">
-          <div v-if="record.status == 'observado' || storageRole[0].id == 1">
+          <div v-if="record.status == 'observado' || storageRole[0].id != 2">
             <a-dropdown :trigger="['click']">
               <a class="ant-dropdown-link" @click.prevent>
                 <a-button shape="circle" :icon="h(MoreOutlined)" size="small" />
@@ -110,7 +110,7 @@
         :showSizeChanger="false" />
     </div>
 
-    <a-drawer v-model:open="openDrawer" title="Agregar un nuevo Plan de Acción" placement="right" width="650">
+    <a-drawer v-model:open="openDrawer" title="Agregar Plan de Acción" placement="right" width="650">
       <NuevoPlanAccion @closeDraw="handleCloseDrawer" :info="updateItem" />
     </a-drawer>
 
