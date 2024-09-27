@@ -61,7 +61,7 @@
       <a-form-item>
         <a-button class="btn-produce" type="primary" html-type="submit" :loading="loading">GUARDAR</a-button>
       </a-form-item>
-      <!-- <pre>{{ store.components }}</pre> -->
+      <!-- <pre>{{ formState }}</pre> -->
     </a-form>
   </div>
 </template>
@@ -100,7 +100,7 @@ const components = [
   { label: "DESARROLLO PRODUCTIVO", value: 1 },
   { label: "DIGITALIZACIÓN", value: 2 },
   { label: "FINANZAS", value: 3 },
-  { label: "FORMALIZACION", value: 4 },
+  { label: "FORMALIZACIÓN", value: 4 },
   { label: "GESTIÓN EMPRESARIAL", value: 5 }
 ];
 const optionsTypeDocuments = [
@@ -137,17 +137,17 @@ const handleClear = () => {
 }
 
 const getFilteredComponents = (currentField) => {
-  const selectedValues = Object.keys(formState).reduce((acc, key) => {
+  const selectedValues = ['component_1', 'component_2', 'component_3'].reduce((acc, key) => {
     if (key !== currentField && formState[key] !== null) {
       acc.push(formState[key]);
     }
     return acc;
   }, []);
 
-  // Filter out selected components
+  // Filtrar los componentes seleccionados
   return components.filter(component => !selectedValues.includes(component.value));
-
 };
+
 
 const handleValidateRUC = () => {
   const ruc = formState.ruc;
@@ -323,6 +323,9 @@ function handleSetInfo(info) {
     formState.component_2 = info.component_2_id;
     formState.component_3 = info.component_3_id;
 
+    formState.startDate = info.startDate ? dayjs(info.startDate, 'DD/MM/YYYY') : null;
+    formState.endDate = info.endDate ? dayjs(info.endDate, 'DD/MM/YYYY') : null;
+    
   } else {
     handleClear()
   }
