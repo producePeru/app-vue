@@ -18,16 +18,9 @@
       </a-col>
     </a-row>
 
-    <a-table 
-    bordered 
-    :scroll="{ x: valueX, y: valueY }" 
-    class="table-actions" 
-    :columns="columns"
-    :data-source="dataSource" 
-    :pagination="false" 
-    :loading="loading" 
-    size="small">
-      
+    <a-table bordered :scroll="{ x: valueX, y: valueY }" class="table-actions" :columns="columns"
+      :data-source="dataSource" :pagination="false" :loading="loading" size="small">
+
       <template v-slot:bodyCell="{ column, record, index }">
         <template v-if="column.dataIndex === 'idx'">
           {{ computeIndex(index) }}
@@ -64,25 +57,48 @@
             @change="(value) => handleSelectOption(value, record, 'envioCorreo')" />
         </template>
 
+        <template v-if="column.dataIndex === 'status'">
+          <div v-if="storageRole[0].id != 2">
+            <a-select v-model:value="record.status" :options="optionsStatus" style="width: 90%"
+              @change="(value) => handleSelectStatus(value, record)" />
+          </div>
+          <div v-else>
+            <a-tag :color="record.status == 'observado' ? 'orange' : 'green'">{{ record.status }}</a-tag>
+          </div>
+        </template>
+
+        <template v-if="column.dataIndex === 'detalle'">
+          <div class="details-plans" v-if="storageRole[0].id != 2">
+            <a-textarea v-model:value="record.details" :rows="1" maxlength="255" />
+            <a-button class="details-plans-btn" type="text" :icon="h(SaveOutlined)"
+              @click="(value) => handleEditDetails(value, record)" />
+          </div>
+          <div v-else>
+            <p>{{ record.details }}</p>
+          </div>
+        </template>
+
         <template v-if="column.dataIndex == 'actions'">
-          <a-dropdown :trigger="['click']">
-            <a class="ant-dropdown-link" @click.prevent>
-              <a-button shape="circle" :icon="h(MoreOutlined)" size="small" />
-            </a>
-            <template #overlay>
-              <a-menu>
-                <a-menu-item>
-                  <a @click="handleEditIten(record)">Editar</a>
-                </a-menu-item>
-                <a-menu-item>
-                  <a-popconfirm title="¿Seguro de eliminar?" @confirm="handleDeleteItem(record)">
-                    <template #icon><question-circle-outlined style="color: red" /></template>
-                    <a>Eliminar</a>
-                  </a-popconfirm>
-                </a-menu-item>
-              </a-menu>
-            </template>
-          </a-dropdown>
+          <div v-if="record.status == 'observado' || storageRole[0].id != 2">
+            <a-dropdown :trigger="['click']">
+              <a class="ant-dropdown-link" @click.prevent>
+                <a-button shape="circle" :icon="h(MoreOutlined)" size="small" />
+              </a>
+              <template #overlay>
+                <a-menu>
+                  <a-menu-item>
+                    <a @click="handleEditIten(record)">Editar</a>
+                  </a-menu-item>
+                  <a-menu-item>
+                    <a-popconfirm title="¿Seguro de eliminar?" @confirm="handleDeleteItem(record)">
+                      <template #icon><question-circle-outlined style="color: red" /></template>
+                      <a>Eliminar</a>
+                    </a-popconfirm>
+                  </a-menu-item>
+                </a-menu>
+              </template>
+            </a-dropdown>
+          </div>
         </template>
 
       </template>
@@ -94,7 +110,7 @@
         :showSizeChanger="false" />
     </div>
 
-    <a-drawer v-model:open="openDrawer" title="Agregar un nuevo Plan de Acción" placement="right" width="650">
+    <a-drawer v-model:open="openDrawer" title="Agregar Plan de Acción" placement="right" width="650">
       <NuevoPlanAccion @closeDraw="handleCloseDrawer" :info="updateItem" />
     </a-drawer>
 
@@ -111,7 +127,7 @@ import { h, ref, onMounted, computed, reactive } from 'vue';
 import { useCounterStore } from '@/stores/selectes.js';
 import { message } from 'ant-design-vue';
 import { downloadExcel } from '@/utils/downloadExcel';
-import { MoreOutlined, QuestionCircleOutlined } from '@ant-design/icons-vue';
+import { MoreOutlined, QuestionCircleOutlined, SaveOutlined } from '@ant-design/icons-vue';
 
 // import { MoreOutlined } from '@ant-design/icons-vue';
 // import locale from 'ant-design-vue/es/date-picker/locale/es_ES';
@@ -125,7 +141,7 @@ const store = useCounterStore();
 // store.$patch({ components: store.components });
 
 // store.fetchComponents();
-
+const details = ref(null);
 const updateItem = ref(null);
 const acta_compromiso = ref(null);
 const loadingDownload = ref(false);
@@ -144,6 +160,10 @@ const dataItem = ref(null);
 const options = ref([
   { value: 'si', label: 'SI' },
   { value: 'no', label: 'NO' },
+]);
+const optionsStatus = ref([
+  { value: 'aprobado', label: 'Aprobado ✔' },
+  { value: 'observado', label: 'Observado ⚠' }
 ]);
 
 const columns = [
@@ -167,17 +187,50 @@ const columns = [
   { title: 'DÍA INICIO', dataIndex: 'startDate', width: 100, align: 'center' },
   { title: 'DÍA FIN', dataIndex: 'endDate', width: 100, align: 'center' },
   { title: 'TOTAL DE DÍAS', dataIndex: 'totalDate', width: 100, align: 'center' },
-  { title: 'ACTA DE COMPROMISO', dataIndex: 'acta', width: 160, align: 'center' },
-  { title: 'CULMINÓ EL PLAN Y ENVIÓ CORREO', dataIndex: 'envioCorreo', width: 160, align: 'center' },
+
+  ...(storageRole[0].id != 2 ? [{ title: 'ACTA DE COMPROMISO', dataIndex: 'acta', width: 160, align: 'center' }] : []),
+  ...(storageRole[0].id != 2 ? [{ title: 'CULMINÓ EL PLAN Y ENVIÓ CORREO', dataIndex: 'envioCorreo', width: 160, align: 'center' }] : []),
+
   { title: 'FECHA ACTUALIZACIÓN', dataIndex: 'updated_at', width: 140, align: 'center' },
 
-  ...(storageRole[0].id != 2 ? [{ title: '', dataIndex: 'actions', width: 50, align: 'center', fixed: 'right' }] : []),
+  { title: 'ESTADO', dataIndex: 'status', width: 160, align: 'center' },
+  { title: 'DETALLES', dataIndex: 'detalle', width: 220, align: 'center' },
+
+  { title: '', dataIndex: 'actions', width: 50, align: 'center', fixed: 'right' }
 ];
 
-const handleDeleteItem = async(record) => {
+const handleEditDetails = async (value, record) => {
+  try {
+    const payload = {
+      id: record.id,
+      details: record.details,
+    }
+    const data = await makeRequest({ url: `plans-action/details`, method: 'PUT', data: payload });
+    if (data.status == 200) {
+      message.success(data.message)
+      fetchData();
+    }
+  } catch (error) {
+    console.log("Failed to delete");
+  }
+}
+
+const handleSelectStatus = async (value, record) => {
+  try {
+    const data = await makeRequest({ url: `plans-action/status/${record.id}/${value}`, method: 'PUT' });
+    if (data.status == 200) {
+      message.success(data.message)
+      fetchData();
+    }
+  } catch (error) {
+    console.log("Failed to delete");
+  }
+}
+
+const handleDeleteItem = async (record) => {
   try {
     const data = await makeRequest({ url: `plans-action/delete/${record.id}`, method: 'DELETE' });
-    if(data.status == 200) {
+    if (data.status == 200) {
       message.success(data.message)
       fetchData()
     }
@@ -264,7 +317,7 @@ const fetchData = async (val) => {
     loading.value = true;
     const parx = params.value.page === 1 ? '' : params.value;
     const finalParams = val ? { ...parx, ...val } : parx;
-    const {data} = await makeRequest({ url: url.value, method: 'GET', params: finalParams });
+    const { data } = await makeRequest({ url: url.value, method: 'GET', params: finalParams });
 
     dataSource.value = data.data;
     total.value = data.total;
@@ -309,6 +362,7 @@ onMounted(() => {
 <style lang="scss">
 .table-actions {
   .ant-table-row {
+
     .ant-table-cell:nth-child(11),
     .ant-table-cell:nth-child(12),
     .ant-table-cell:nth-child(13) {
@@ -319,5 +373,18 @@ onMounted(() => {
 
 .ant-popconfirm-message {
   width: 180px;
+}
+
+.details-plans {
+  display: flex;
+
+  textarea {
+    font-size: 13px;
+    line-height: 1.2;
+  }
+
+  .details-plans-btn {
+    margin-left: 6px;
+  }
 }
 </style>

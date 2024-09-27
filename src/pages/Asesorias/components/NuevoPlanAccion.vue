@@ -4,88 +4,56 @@
 
       <div class="grid-planes">
         <template v-for="(el, idx) in fields" :key="idx">
-          
+
           <a-form-item v-if="el.type === 'iText'" :name="el.name" :label="el.label"
             :rules="[{ required: el.required, message: el.message, type: el.email }]">
             <a-input v-model:value="formState[el.name]" :maxlength="el.max" :disabled="el.disabled" />
           </a-form-item>
 
-          <a-form-item class="item-max" v-if="el.type === 'iSelect'" :name="el.name" :label="el.label" :rules="[{ required: el.required, message: el.message }]">
-            <a-select 
-            v-if="el.name == 'typeDocument'" 
-            v-model:value="formState[el.name]" 
-            :options="optionsTypeDocuments" />
+          <a-form-item class="item-max" v-if="el.type === 'iSelect'" :name="el.name" :label="el.label"
+            :rules="[{ required: el.required, message: el.message }]">
+            <a-select v-if="el.name == 'typeDocument'" v-model:value="formState[el.name]"
+              :options="optionsTypeDocuments" />
 
-            <a-select 
-            v-if="el.name == 'gender_id'" 
-            :disabled="el.disabled"
-            v-model:value="formState[el.name]" 
-            :options="store.genders" />
+            <a-select v-if="el.name == 'gender_id'" :disabled="el.disabled" v-model:value="formState[el.name]"
+              :options="store.genders" />
 
-            <a-select 
-            v-if="el.name == 'sick'" 
-            :disabled="el.disabled"
-            v-model:value="formState[el.name]" 
-            :options="lessions" />
+            <a-select v-if="el.name == 'sick'" :disabled="el.disabled" v-model:value="formState[el.name]"
+              :options="lessions" />
           </a-form-item>
 
-          <a-form-item v-if="el.type === 'iSearch'" class="item-max" :name="el.name" :label="el.label" :rules="[{ required: el.required, message: el.message }]">
-            <a-input-search 
-            :loading="searchLoading == el.name" 
-            v-model:value="formState[el.name]" 
-            @search="handleSearchApiInfo(el.name)"
-            @input="validateNumber(el.name)" 
-            @enterButton="handleSearchApiInfo(el.name)"
-            :maxlength="el.max" />
+          <a-form-item v-if="el.type === 'iSearch'" class="item-max" :name="el.name" :label="el.label"
+            :rules="[{ required: el.required, message: el.message }]">
+            <a-input-search :loading="searchLoading == el.name" v-model:value="formState[el.name]"
+              @search="handleSearchApiInfo(el.name)" @input="validateNumber(el.name)"
+              @enterButton="handleSearchApiInfo(el.name)" :maxlength="el.max" />
           </a-form-item>
 
-          <a-divider dashed v-if="el.type === 'iDivider'" style="grid-column: 1/3; margin: .5rem 0 1rem 0;"/>
+          <a-divider dashed v-if="el.type === 'iDivider'" style="grid-column: 1/3; margin: .5rem 0 1rem 0;" />
 
-          <a-form-item class="item-max" v-if="el.type === 'iSelectWrite'" :name="el.name" :label="el.label" :rules="[{ required: el.required, message: el.message }]">
-            <a-select 
-            v-if="el.name == 'city_id'" 
-            v-model:value="formState[el.name]" 
-            show-search 
-            :options="store.cities" 
-            :filter-option="filterOption" 
-            @change="handleDepartaments" />
-            
-            <a-select 
-            v-if="el.name == 'province_id'" 
-            v-model:value="formState[el.name]" 
-            show-search 
-            :options="store.provinces"
-            :filter-option="filterOption" 
-            @change="handleProvinces" 
-            :disabled="!formState.city_id" />
-            
-            <a-select 
-            v-if="el.name == 'district_id'" 
-            v-model:value="formState[el.name]" 
-            show-search 
-            :options="store.districts"
-            :filter-option="filterOption" 
-            :disabled="!formState.province_id" />
+          <a-form-item class="item-max" v-if="el.type === 'iSelectWrite'" :name="el.name" :label="el.label"
+            :rules="[{ required: el.required, message: el.message }]">
+            <a-select v-if="el.name == 'city_id'" v-model:value="formState[el.name]" show-search :options="store.cities"
+              :filter-option="filterOption" @change="handleDepartaments" />
 
-            <a-select 
-            v-if="el.is == 'component'" 
-            v-model:value="formState[el.name]" 
-            show-search 
-            :options="getFilteredComponents(el.name)" 
-            :filter-option="filterOption" 
-            @change="(value) => handleSelectComponent(value, el.name)" />
+            <a-select v-if="el.name == 'province_id'" v-model:value="formState[el.name]" show-search
+              :options="store.provinces" :filter-option="filterOption" @change="handleProvinces"
+              :disabled="!formState.city_id" />
 
-            
+            <a-select v-if="el.name == 'district_id'" v-model:value="formState[el.name]" show-search
+              :options="store.districts" :filter-option="filterOption" :disabled="!formState.province_id" />
+
+            <a-select v-if="el.is == 'component'" v-model:value="formState[el.name]" show-search
+              :options="getFilteredComponents(el.name)" :filter-option="filterOption"
+              @change="(value) => handleSelectComponent(value, el.name)" />
+
+
           </a-form-item>
 
-          <a-form-item v-if="el.type === 'iDate'" :name="el.name" :label="el.label" :rules="[{ required: el.required, message: el.message }]">
-            <a-date-picker 
-            :disabled-date="disabledDate"
-            :locale="locale" 
-            v-model:value="formState[el.name]" 
-            style="width: 100%;" 
-            :format="dateFormat" 
-            placeholder="día/mes/año" />
+          <a-form-item v-if="el.type === 'iDate'" :name="el.name" :label="el.label"
+            :rules="[{ required: el.required, message: el.message }]">
+            <a-date-picker :disabled-date="disabledDate" :locale="locale" v-model:value="formState[el.name]"
+              style="width: 100%;" :format="dateFormat" placeholder="día/mes/año" />
           </a-form-item>
         </template>
       </div>
@@ -130,18 +98,18 @@ const searchLoading = ref(null);
 
 const components = [
   { label: "DESARROLLO PRODUCTIVO", value: 1 },
-  { label: "DIGITALIZACIÓN",        value: 2 },
-  { label: "FINANZAS",              value: 3 },
-  { label: "FORMALIZACIÓN",         value: 4 },
-  { label: "GESTIÓN EMPRESARIAL",   value: 5 }
+  { label: "DIGITALIZACIÓN", value: 2 },
+  { label: "FINANZAS", value: 3 },
+  { label: "FORMALIZACION", value: 4 },
+  { label: "GESTIÓN EMPRESARIAL", value: 5 }
 ];
 const optionsTypeDocuments = [
   { value: 1, label: 'DNI' },
   { value: 2, label: 'RUC' },
 ];
 const lessions = [
-  {label: "Si", value: "yes"},
-  {label: "No", value: "no"}
+  { label: "Si", value: "yes" },
+  { label: "No", value: "no" }
 ];
 const formState = reactive({
   numberDocument: null,
@@ -170,31 +138,31 @@ const handleClear = () => {
 
 const getFilteredComponents = (currentField) => {
   const selectedValues = Object.keys(formState).reduce((acc, key) => {
-      if (key !== currentField && formState[key] !== null) {
-        acc.push(formState[key]);
-      }
-      return acc;
-    }, []);
-  
-    // Filter out selected components
-    return components.filter(component => !selectedValues.includes(component.value));
-  
+    if (key !== currentField && formState[key] !== null) {
+      acc.push(formState[key]);
+    }
+    return acc;
+  }, []);
+
+  // Filter out selected components
+  return components.filter(component => !selectedValues.includes(component.value));
+
 };
 
 const handleValidateRUC = () => {
   const ruc = formState.ruc;
 
   // Verificar si el RUC tiene exactamente 11 dígitos numéricos
- if(ruc) {
-  if (!/^\d{11}$/.test(ruc)) {
-    message.error("El número de RUC debe contener exactamente 11 dígitos numéricos.");
-    return { valid: false };
+  if (ruc) {
+    if (!/^\d{11}$/.test(ruc)) {
+      message.error("El número de RUC debe contener exactamente 11 dígitos numéricos.");
+      return { valid: false };
+    }
   }
- }
 
   // Verificar si el RUC comienza con 10, 15 o 20
   const validPrefix = /^(10|15|20)/;
-  if(ruc) {
+  if (ruc) {
     if (!validPrefix.test(ruc)) {
       message.error("El número de RUC debe comenzar con 10, 15 o 20.");
       return { valid: false };
@@ -208,9 +176,9 @@ const handleValidateRUC = () => {
 const disabledDate = (current) => {
   // return current && current > dayjs().endOf('day');
   if (!current) return false; // No date selected
-  
+
   const startDate = formState.startDate ? dayjs(formState.startDate) : null;
-  
+
   // Disable dates after the startDate and dates in the future
   return (startDate && current.isBefore(startDate, 'day')) || current.isAfter(dayjs().endOf('day'), 'day');
 };
@@ -224,21 +192,21 @@ const filterOption = (input, option) => {
   return normalizedLabel.includes(normalizedInput);
 };
 
-const handleSearchApiInfo = async(name) => {
-  
-  if(!formState.numberDocument) return message.warning("Ingrese un número a buscar...");
+const handleSearchApiInfo = async (name) => {
+
+  if (!formState.numberDocument) return message.warning("Ingrese un número a buscar...");
 
   try {
-    if(name == 'numberDocument') {
+    if (name == 'numberDocument') {
       searchLoading.value = name;
       const data = await makeRequest({ url: `person/data/${formState.numberDocument}`, method: 'GET' });
       // console.log("Searchingxxx", data);
-      if(data.status == 404) {
+      if (data.status == 404) {
         searchLoading.value = null;
         formState.numberDocument = null;
         return message.warning('Este usuario no fue registrado');
       }
-      if(data.status == 200) {
+      if (data.status == 200) {
         formState.idPerson = data.data.id;
         formState.namePerson = data.data.namePerson;
         formState.city_id = data.data.city_id;
@@ -252,13 +220,13 @@ const handleSearchApiInfo = async(name) => {
 
         console.log("FormState", data.data.gender_id);
         formState.sick = data.data.sick;
-      } 
+      }
     }
 
-    if(name == 'ruc') {
+    if (name == 'ruc') {
       searchLoading.value = name;
       const data = await makeRequest({ url: `plans-action/components/${formState.ruc}`, method: 'GET' });
-      if(data.status == 200) {
+      if (data.status == 200) {
         const resp = data.data
         resp.component_1 && (formState.component_1 = resp.component_1);
         resp.component_2 && (formState.component_2 = resp.component_2);
@@ -270,7 +238,7 @@ const handleSearchApiInfo = async(name) => {
         return message.warning('No se han registrado datos con ese número de RUC');
       }
     }
-    
+
   } catch (error) {
     console.log("Failed to update record");
   } finally {
@@ -301,21 +269,21 @@ const handleSelectComponent = (value, fieldName) => {
   // }
 }
 
-const onSubmit = async() => {
+const onSubmit = async () => {
   loading.value = true;
-  
+
   const validation = handleValidateRUC();
 
-  
+
   if (formState.ruc && validation.valid === false) {
     loading.value = false;
     return;
   }
 
   const payload = {
-    people_id: formState.idPerson, 
+    people_id: formState.idPerson,
     cde_id: storageProfile.cde_id,
-    component_1: formState.component_1, 
+    component_1: formState.component_1,
     component_2: formState.component_2,
     component_3: formState.component_3,
     ruc: formState.ruc,
@@ -330,14 +298,14 @@ const onSubmit = async() => {
 
   try {
     const data = await makeRequest({ url: `${rutaUrl}`, method: 'POST', data: payload });
-    if(data.status == 200) {
+    if (data.status == 200) {
       message.success(data.message);
       handleClear()
       emit('closeDraw');
-    } 
-    if(data.status == 400) {
+    }
+    if (data.status == 400) {
       message.warning(data.message);
-    } 
+    }
   } catch (error) {
     console.log("Failed to update record");
   } finally {
@@ -346,7 +314,7 @@ const onSubmit = async() => {
 }
 
 function handleSetInfo(info) {
-  if(info) {
+  if (info) {
     formState.numberDocument = info.emprendedor_dni;
     handleSearchApiInfo('numberDocument');
     formState.ruc = info.ruc;
@@ -378,9 +346,11 @@ watch(() => props.info, (newValue) => {
   display: grid;
   grid-template-columns: 1.5fr 1.5fr;
   grid-gap: 0 1rem;
+
   .ant-form-item:nth-child(12) {
     grid-column: 1/2;
   }
+
   .ant-form-item:nth-child(13) {
     // grid-column: 1/2;
   }
