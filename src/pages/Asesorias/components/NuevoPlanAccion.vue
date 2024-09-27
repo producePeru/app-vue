@@ -318,9 +318,13 @@ function handleSetInfo(info) {
     formState.numberDocument = info.emprendedor_dni;
     handleSearchApiInfo('numberDocument');
     formState.ruc = info.ruc;
-    formState.component_1 = info.component_1;
-    formState.component_2 = info.component_2;
-    formState.component_3 = info.component_3;
+
+
+    formState.component_1 = info.component_1_id;
+    formState.component_2 = info.component_2_id;
+    formState.component_3 = info.component_3_id;
+
+
   } else {
     handleClear()
   }
