@@ -18,7 +18,7 @@
           v-if="el.type === 'iText'" :name="el.name" 
           :label="el.label" 
           :rules="[{ required: el.required, message: el.message, max: el.max },
-                  ...(el.name === 'ruc' ? [{ type: 'string', len: 11, message: 'El RUC debe tener exactamente 11 caracteres.' }, { pattern: /^\d{11}$/, message: 'El RUC debe ser numérico.' }] : [])]">
+                  ...(el.name === 'ruc' ? [{ type: 'string', len: 11, message: el.message }, { pattern: /^\d{11}$/, message: 'El RUC debe ser numérico.' }] : [])]">
               <a-input v-model:value="formState[el.name]" :maxlength="el.max" />
           </a-form-item>
 
