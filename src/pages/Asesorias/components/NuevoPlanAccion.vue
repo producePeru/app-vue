@@ -319,11 +319,9 @@ function handleSetInfo(info) {
     handleSearchApiInfo('numberDocument');
     formState.ruc = info.ruc;
 
-
     formState.component_1 = info.component_1_id;
     formState.component_2 = info.component_2_id;
     formState.component_3 = info.component_3_id;
-
 
   } else {
     handleClear()
