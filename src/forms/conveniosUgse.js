@@ -103,7 +103,7 @@ const fields = {
     required: true,
     message: 'Escribir la entidad aliada',
     disabled: true,
-    max: 11
+    max: 9
   },
 
   focal: {
@@ -133,13 +133,13 @@ const fields = {
     required: true,
     message: 'Escribir el número de telf.',
     disabled: true,
-    max: 11
+    max: 9
   },
 
-  renovacion: {
+  renovation: {
     type: 'iSwitch',
     label: 'Renovación Automática',
-    name: 'renovacion',
+    name: 'renovation',
     required: false,
     message: 'Seleccionar',
     disabled: true

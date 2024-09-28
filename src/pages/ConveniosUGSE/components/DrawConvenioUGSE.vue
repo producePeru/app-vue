@@ -164,8 +164,10 @@ const clearFields = () => {
     'startDate', 
     'years',
     'aliado', 
+    'aliadoPhone',
     'focal',
     'focalCargo',
+    'focalPhone',
     'endDate',
     'observations'
   ];
@@ -191,8 +193,11 @@ const onSubmit = async () => {
     startDate: dayjs(formState.startDate).format('YYYY-MM-DD'),
     years: formState.years,
     aliado: formState.aliado,
+    aliadoPhone: formState.aliadoPhone,
     focal: formState.focal,
     focalCargo: formState.focalCargo,
+    focalPhone: formState.focalPhone,
+    renovation: formState.renovation,
     endDate: dayjs(formState.startDate).add(formState.years, 'year').format('YYYY-MM-DD'),
     observations: formState.observations,
     created_id: storageData.user_id,
@@ -224,8 +229,6 @@ const onSubmitFail = () => {
 };
 
 const fetchData = async(data) => {
-  console.log("uauauauau", data);
-  
   if(data.id) {
     formState.city_id = data.city_id
     handleDepartaments(data.city_id)
@@ -237,8 +240,10 @@ const fetchData = async(data) => {
     formState.startDate = dayjs(data.startDate, 'YYYY-MM-DD');
     formState.years = data.years;
     formState.aliado = data.aliado;
+    formState.aliadoPhone = data.aliadoPhone;
     formState.focal = data.focal;
     formState.focalCargo = data.focalCargo;
+    formState.focalPhone = data.focalPhone;
     formState.observations = data.observations;
     formState.alliedEntity = data.entity;
   }

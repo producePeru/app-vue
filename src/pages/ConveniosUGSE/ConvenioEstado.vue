@@ -159,8 +159,8 @@
     <DrawObservations :idConvenio="idConvenio" @closeDraw="handleCloseDrawopen(4)" @refreshTable="fetchData()" />
   </a-drawer>
 
-  <a-drawer v-model:open="openCompromisos" title="Compromisos" placement="right" width="850">
-    <DrawCompromisos :convenio="idConvenio" />
+  <a-drawer v-model:open="openCompromisos" title="Compromisos" placement="right" width="90%">
+    <!-- <DrawCompromisos :convenio="idConvenio" /> -->
   </a-drawer>
 
 </template>
@@ -173,7 +173,7 @@ import NuevoConvenio from './components/DrawConvenioUGSE.vue';
 import DrawAcciones from './components/DrawAcciones.vue';
 import DrawObservations from './components/DrawObservations.vue';
 import DrawFiles from './components/DrawFiles.vue';
-import DrawCompromisos from './components/DrawCompromisosUGSE.vue';
+// import DrawCompromisos from './components/DrawCompromisosUGSE.vue';
 import { CaretUpOutlined, CaretDownOutlined, QuestionCircleOutlined, MessageOutlined } from '@ant-design/icons-vue';
 import { MoreOutlined } from '@ant-design/icons-vue';
 import { useRouter } from 'vue-router';
