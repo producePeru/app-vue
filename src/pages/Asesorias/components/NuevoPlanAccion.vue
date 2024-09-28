@@ -61,7 +61,7 @@
       <a-form-item>
         <a-button class="btn-produce" type="primary" html-type="submit" :loading="loading">GUARDAR</a-button>
       </a-form-item>
-      <!-- <pre>{{ store.components }}</pre> -->
+      <pre>{{ formState }}</pre>
     </a-form>
   </div>
 </template>
@@ -100,7 +100,7 @@ const components = [
   { label: "DESARROLLO PRODUCTIVO", value: 1 },
   { label: "DIGITALIZACIÓN", value: 2 },
   { label: "FINANZAS", value: 3 },
-  { label: "FORMALIZACION", value: 4 },
+  { label: "FORMALIZACIÓN", value: 4 },
   { label: "GESTIÓN EMPRESARIAL", value: 5 }
 ];
 const optionsTypeDocuments = [
@@ -112,11 +112,11 @@ const lessions = [
   { label: "No", value: "no" }
 ];
 const formState = reactive({
-  numberDocument: null,
+  // numberDocument: null,
   component_1: null,
   component_2: null,
   component_3: null,
-  ruc: null
+  // ruc: null
 });
 
 const handleClear = () => {
@@ -137,16 +137,14 @@ const handleClear = () => {
 }
 
 const getFilteredComponents = (currentField) => {
-  const selectedValues = Object.keys(formState).reduce((acc, key) => {
-    if (key !== currentField && formState[key] !== null) {
-      acc.push(formState[key]);
-    }
-    return acc;
-  }, []);
+  // Gather all selected values from formState
+  const selectedValues = Object.values(formState).filter(value => value !== null);
 
-  // Filter out selected components
-  return components.filter(component => !selectedValues.includes(component.value));
-
+  // Map components to include disabled status based on selected values
+  return components.map(component => ({
+    ...component,
+    disabled: selectedValues.includes(component.value) // Disable if already selected
+  }));
 };
 
 const handleValidateRUC = () => {
@@ -318,9 +316,15 @@ function handleSetInfo(info) {
     formState.numberDocument = info.emprendedor_dni;
     handleSearchApiInfo('numberDocument');
     formState.ruc = info.ruc;
-    formState.component_1 = info.component_1;
-    formState.component_2 = info.component_2;
-    formState.component_3 = info.component_3;
+
+    console.log("Setting", info);
+
+
+    formState.component_1 = info.component_1_id;
+    formState.component_2 = info.component_2_id;
+    formState.component_3 = info.component_3_id;
+
+
   } else {
     handleClear()
   }

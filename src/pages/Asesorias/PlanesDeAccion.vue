@@ -69,7 +69,7 @@
 
         <template v-if="column.dataIndex === 'detalle'">
           <div class="details-plans" v-if="storageRole[0].id != 2">
-            <a-textarea v-model:value="record.details" :rows="1" maxlength="255" />
+            <a-textarea v-model:value="record.details" :rows="1" :maxlength="255" />
             <a-button class="details-plans-btn" type="text" :icon="h(SaveOutlined)"
               @click="(value) => handleEditDetails(value, record)" />
           </div>
