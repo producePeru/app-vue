@@ -18,7 +18,7 @@
           v-if="el.type === 'iText'" :name="el.name" 
           :label="el.label" 
           :rules="[{ required: el.required, message: el.message, max: el.max },
-                  ...(el.name === 'ruc' ? [{ type: 'string', len: 11, message: 'El RUC debe tener exactamente 11 caracteres.' }, { pattern: /^\d{11}$/, message: 'El RUC debe ser numérico.' }] : [])]">
+                  ...(el.name === 'ruc' ? [{ type: 'string', len: 11, message: el.message }, { pattern: /^\d{11}$/, message: 'El RUC debe ser numérico.' }] : [])]">
               <a-input v-model:value="formState[el.name]" :maxlength="el.max" />
           </a-form-item>
 
@@ -123,10 +123,11 @@ const years = [
 ];
 
 const components = [
+  {value: 'financiamiento', label: 'Acceso en Financiamiento'},
+  {value: 'desarrollo',     label: 'Desarrollo Productivo'},
   {value: 'digitalizacion', label: 'Digitalización'},
   {value: 'formalizacion',  label: 'Formalización'},
-  {value: 'gestion',        label: 'Gestión Empresarial'},
-  {value: 'desarrollo',     label: 'Desarrollo Productivo'}
+  {value: 'gestion',        label: 'Gestión Empresarial'}
 ];
 
 const disabledDate = current => {
@@ -151,19 +152,34 @@ const filterOption = (input, option) => {
 const update = () => {
   // spinning.value = false;
 }
+
 const clearFields = () => {
-  formState.city_id = null
-  formState.province_id = null
-  formState.district_id = null
-  formState.alliedEntity = null
-  formState.homeOperations = null
-  formState.startDate = null
-  formState.external = null
-  formState.years = null
-  formState.endDate = null
-  formState.observations = null
-  formState.created_id = storageData.user_id
-}
+  const fieldsToClear = [
+    'city_id', 
+    'province_id', 
+    'district_id', 
+    'alliedEntity',
+    'ruc', 
+    'components', 
+    'startDate', 
+    'years',
+    'aliado', 
+    'aliadoPhone',
+    'focal',
+    'focalCargo',
+    'focalPhone',
+    'endDate',
+    'observations'
+  ];
+
+  fieldsToClear.forEach(field => {
+    formState[field] = null;
+  });
+
+  formState.created_id = storageData.user_id;
+};
+
+
 const onSubmit = async () => {
   loading.value = true
 
@@ -177,8 +193,11 @@ const onSubmit = async () => {
     startDate: dayjs(formState.startDate).format('YYYY-MM-DD'),
     years: formState.years,
     aliado: formState.aliado,
+    aliadoPhone: formState.aliadoPhone,
     focal: formState.focal,
     focalCargo: formState.focalCargo,
+    focalPhone: formState.focalPhone,
+    renovation: formState.renovation,
     endDate: dayjs(formState.startDate).add(formState.years, 'year').format('YYYY-MM-DD'),
     observations: formState.observations,
     created_id: storageData.user_id,
@@ -215,13 +234,18 @@ const fetchData = async(data) => {
     handleDepartaments(data.city_id)
     formState.province_id = data.province_id
     handleProvinces(data.province_id)
-    formState.district_id = data.district_id
-    formState.external = data.external
-    formState.homeOperations = dayjs(data.startOperations, 'YYYY-MM-DD')
-    formState.startDate = dayjs(data.startDate, 'YYYY-MM-DD')
-    formState.years = data.years
-    formState.observations = data.observations
-    formState.alliedEntity = data.entity
+    formState.district_id = data.district_id;
+    formState.ruc = data.ruc;
+    formState.components = data.components;
+    formState.startDate = dayjs(data.startDate, 'YYYY-MM-DD');
+    formState.years = data.years;
+    formState.aliado = data.aliado;
+    formState.aliadoPhone = data.aliadoPhone;
+    formState.focal = data.focal;
+    formState.focalCargo = data.focalCargo;
+    formState.focalPhone = data.focalPhone;
+    formState.observations = data.observations;
+    formState.alliedEntity = data.entity;
   }
 }
 
@@ -245,7 +269,7 @@ watch(() => props.idConvenio, (newValue) => {
   display: grid;
   grid-template-columns: 1.5fr 1.5fr;
   grid-gap: 0 1rem;
-  .ant-form-item:nth-child(12) {
+  .ant-form-item:nth-child(15) {
     grid-column: 1/3;
   }
 }

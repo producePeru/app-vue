@@ -61,7 +61,7 @@
       <a-form-item>
         <a-button class="btn-produce" type="primary" html-type="submit" :loading="loading">GUARDAR</a-button>
       </a-form-item>
-      <pre>{{ formState }}</pre>
+      <!-- <pre>{{ formState }}</pre> -->
     </a-form>
   </div>
 </template>
@@ -137,15 +137,17 @@ const handleClear = () => {
 }
 
 const getFilteredComponents = (currentField) => {
-  // Gather all selected values from formState
-  const selectedValues = Object.values(formState).filter(value => value !== null);
+  const selectedValues = ['component_1', 'component_2', 'component_3'].reduce((acc, key) => {
+    if (key !== currentField && formState[key] !== null) {
+      acc.push(formState[key]);
+    }
+    return acc;
+  }, []);
 
-  // Map components to include disabled status based on selected values
-  return components.map(component => ({
-    ...component,
-    disabled: selectedValues.includes(component.value) // Disable if already selected
-  }));
+  // Filtrar los componentes seleccionados
+  return components.filter(component => !selectedValues.includes(component.value));
 };
+
 
 const handleValidateRUC = () => {
   const ruc = formState.ruc;
@@ -317,13 +319,12 @@ function handleSetInfo(info) {
     handleSearchApiInfo('numberDocument');
     formState.ruc = info.ruc;
 
-    console.log("Setting", info);
-
-
     formState.component_1 = info.component_1_id;
     formState.component_2 = info.component_2_id;
     formState.component_3 = info.component_3_id;
 
+    formState.startDate = info.startDate ? dayjs(info.startDate, 'DD/MM/YYYY') : null;
+    formState.endDate = info.endDate ? dayjs(info.endDate, 'DD/MM/YYYY') : null;
 
   } else {
     handleClear()

@@ -38,7 +38,7 @@ const fields = {
     label: 'Número de RUC',
     name: 'ruc',
     required: true,
-    message: 'Escribir la entidad aliada',
+    message: 'El RUC debe tener exactamente 11 caracteres.',
     disabled: true,
     min: 11,
     max: 11
@@ -67,14 +67,7 @@ const fields = {
   // space: {
   //   type: 'iSpace',
   // },
-  // external: {
-  //   type: 'iSwitch',
-  //   label: 'CDE AGENTE EXTERNO',
-  //   name: 'external',
-  //   required: false,
-  //   message: 'Seleccionar',
-  //   disabled: true
-  // },
+
 
   startDate: {
     type: 'iDate',
@@ -96,12 +89,21 @@ const fields = {
 
   aliado: {
     type: 'iText',
-    label: 'Representante Legal (nombres)',
+    label: 'Representante Legal (Nombres Apellidos)',
     name: 'aliado',
     required: true,
     message: 'Escribir la entidad aliada',
     disabled: true,
     max: 100
+  },
+  aliadoPhone: {
+    type: 'iText',
+    label: 'Representante Legal (número telf.)',
+    name: 'aliadoPhone',
+    required: true,
+    message: 'Escribir la entidad aliada',
+    disabled: true,
+    max: 9
   },
 
   focal: {
@@ -109,7 +111,7 @@ const fields = {
     label: 'PUNTO FOCAL - nombres',
     name: 'focal',
     required: true,
-    message: 'Escribir la entidad aliada',
+    message: 'Escribir datos del punto focal',
     disabled: true,
     max: 100
   },
@@ -124,11 +126,28 @@ const fields = {
     max: 50
   },
 
+  focalPhone: {
+    type: 'iText',
+    label: 'PUNTO FOCAL (número de telf.)',
+    name: 'focalPhone',
+    required: true,
+    message: 'Escribir el número de telf.',
+    disabled: true,
+    max: 9
+  },
 
+  renovation: {
+    type: 'iSwitch',
+    label: 'Renovación Automática',
+    name: 'renovation',
+    required: false,
+    message: 'Seleccionar',
+    disabled: true
+  },
 
   observations: {
     type: 'iTextarea',
-    label: 'Observaciones',
+    label: 'Comentarios',
     name: 'observations',
     required: false,
     message: 'Seleccionar',
