@@ -25,10 +25,8 @@
             <span>{{ formatDate(file.date) }}</span>
             <a v-if="spinerId != file.uid" @click="handleDownload(file)">Descargar</a>
             <a-spin v-else :indicator="indicator"> </a-spin>
-
-            <a-spin v-if="spinerzDeleteId == file.uid" :indicator="indicator"> </a-spin>
-            <a v-else @click="handleRemove(file)" style="color: var(--error);"><DeleteOutlined /></a>
-
+              <a-spin v-if="spinerzDeleteId == file.uid" :indicator="indicator"> </a-spin>
+              <a v-else @click="handleRemove(file)" style="color: var(--error);"><DeleteOutlined /></a>
           </div>
         </a-space>
       </template>

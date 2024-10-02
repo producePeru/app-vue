@@ -1,62 +1,5 @@
 <template>
-  <section class="compromisos">
-
-    <div class="compromisos-form">
-      <a-form layout="vertical" :model="formState" name="basic" autocomplete="off" @finish="onSubmit">
-
-        <h4>Registrar un nuevo item</h4>
-
-        <div class="">
-
-          <template v-for="(el, idx) in fields" :key="idx">
-            <a-form-item v-if="el.type === 'iText'" :name="el.name" :label="el.label"
-              :rules="[{ required: el.required, message: el.message, max: el.max }]">
-              <a-input v-model:value="formState[el.name]" :maxlength="el.max" />
-            </a-form-item>
-
-            <a-form-item v-if="el.type === 'iDate'" :name="el.name" :label="el.label"
-              :rules="[{ required: el.required, message: el.message }]">
-              <a-date-picker :locale="locale" v-model:value="formState[el.name]" style="width: 100%;"
-                :format="dateFormat" placeholder="día/mes/año" />
-            </a-form-item>
-
-            <a-form-item class="item-max" v-if="el.type === 'iSelect'" :name="el.name" :label="el.label"
-              :rules="[{ required: el.required, message: el.message }]">
-              <a-select v-model:value="formState[el.name]" :options="handleOptions(el.name)" show-search
-                :filter-option="filterOption" />
-            </a-form-item>
-
-            <a-form-item class="item-max" v-if="el.type === 'iNumber'" :name="el.name" :label="el.label"
-              :rules="[{ required: el.required, message: el.message }]">
-              <a-input-number v-model:value="formState[el.name]" :min="1" :max="200" />
-            </a-form-item>
-
-            <a-form-item class="item-max" v-if="el.type === 'iTextarea'" :name="el.name" :label="el.label"
-              :rules="[{ required: el.required, message: el.message }]">
-              <a-textarea v-model:value="formState[el.name]" :rows="el.rows" :maxlength="el.max" />
-            </a-form-item>
-
-            <a-form-item v-if="el.type === 'iFile'" :name="el.name" :label="el.label"
-              :rules="[{ required: el.required, message: el.message }]">
-              <a-upload :before-upload="beforeUpload" :custom-request="dummyRequest" :file-list="fileList"
-                :accept="acceptTypes" :multiple="true" :on-remove="handleRemove" show-upload-list>
-                <a-button>
-                  <CloudUploadOutlined />
-                  Cargar archivos
-                </a-button>
-              </a-upload>
-            </a-form-item>
-          </template>
-
-        </div>
-
-        <a-form-item>
-          <a-button type="primary" html-type="submit" :loading="loading">GUARDAR</a-button>
-        </a-form-item>
-
-      </a-form>
-    </div>
-
+  <section>
 
     <a-spin :spinning="spinning">
       <span>
@@ -65,23 +8,63 @@
         </router-link>
       </span>
 
-      <a-empty v-if="commitments.length < 1" />
+      <div class="conv-det" v-if="general">
+        
+        <a-flex align="center" gap="small">
+          <a-flex align="center" :gap="4">
+           <h3 style="margin: 0;">{{ general.alliedEntity }}</h3>
+          </a-flex>
+        </a-flex>
+      
+        <a-flex class="conv-city" align="center" gap="small">
+          <EnvironmentOutlined />
+          <p>{{ general.region.name }} - {{ general.provincia.name }} - {{ general.distrito.name }}</p>
+        </a-flex>
+
+        <div>
+          <span>RUC:</span> <span>{{ general.ruc }} </span>
+        </div>
+
+
+        <div>
+          <span>Componente:</span> <span style="text-transform: capitalize;">{{ general.components }} </span>
+        </div>
+        <a-flex align="center" gap="small">
+          <span>Inicio del convenio:</span> <span>{{ formatDate(general.startDate) }} </span> - 
+          <span>Fin del convenio:</span> <span>{{ formatDate(general.endDate) }} </span>
+        </a-flex>
+        <a-flex align="center" gap="small">
+          <span>Representante Legal:</span> <span>{{ general.aliado }} </span>
+          <span style="color: #00000073;"><PhoneOutlined /> <span>{{ general.aliadoPhone }}</span> </span>
+        </a-flex>
+        <div>
+          <span>Punto Focal:</span> <span>{{ general.focal }} | <span style="color: #00000073; font-size: 13px;">{{ general.focalCargo }}</span> | <span style="color: #00000073;"><PhoneOutlined /> {{ general.focalPhone }}</span></span>
+        </div>
+        <div>
+          <span>Comentarios:</span> <span>
+            <p style="margin: 0;">{{ general.observations }}</p>
+          </span>
+        </div>
+        <div>
+          <div class="conv-files">
+            <span v-for="(file, jx) in general.files_agreements" :key="jx">
+              <a @click="handleDownloadFile(file)"> <FileOutlined /> {{ file.name }}</a>
+            </span>
+          </div>
+        </div>
+      </div>
+
+
+      <div v-if="commitments.length < 1"> </div>
 
       <template v-else>
         <a-comment v-for="(item, idx) in commitments" :key="idx">
           <template #author>
             <div class="convenios-header">
               <span>{{ item.profile.name }} {{ item.profile.lastname }} {{ item.profile.middlename }}</span>
-              
-              <div v-if="profile.user_id == item.profile.id || role.some(r => r.id === 8)">
-                <span key="comment-nested-reply-to" class="ico-delete-comp"><DeleteOutlined @click="handleDelete(item.id)" /></span>
-              </div>
-            
             </div>
           </template>
-          <template #avatar>
-            <a-avatar>{{ item.profile.name.charAt(0) }}</a-avatar>
-          </template>
+
           <template #content>
             <div class="convenios-description">
               <div>
@@ -132,7 +115,6 @@
                   </template>
                 </template>
               </div>
-
             </div>
           </template>
         </a-comment>
@@ -147,7 +129,18 @@
 import { reactive, ref, onMounted, watch, h } from 'vue';
 import { makeRequest } from '@/utils/api.js';
 import { message } from 'ant-design-vue';
-import { CloudUploadOutlined, TeamOutlined, DeleteOutlined, EnvironmentOutlined, FileOutlined, SafetyOutlined, LeftOutlined, LoadingOutlined } from '@ant-design/icons-vue';
+import { 
+  BankOutlined,
+  CloudUploadOutlined, 
+  TeamOutlined, 
+  PhoneOutlined,
+  DeleteOutlined, 
+  EnvironmentOutlined, 
+  FileOutlined, 
+  SafetyOutlined, 
+  LeftOutlined, 
+  LoadingOutlined 
+} from '@ant-design/icons-vue';
 import { useRoute } from 'vue-router';
 import fields from '@/forms/conveniosUgseCompromiso.js';
 import axios from 'axios';
@@ -157,9 +150,6 @@ import locale from 'ant-design-vue/es/date-picker/locale/es_ES';
 import dayjs from 'dayjs';
 import 'dayjs/locale/es';
 dayjs.locale('es');
-
-const role = JSON.parse(localStorage.getItem('role'));
-const profile = JSON.parse(localStorage.getItem('profile'));
 
 const token = Cookies.get('token');
 const prod = import.meta.env.VITE_APP_API_URL_PRODUCTION
@@ -173,6 +163,7 @@ const spinning = ref(false);
 const route = useRoute();
 const spinName = ref(null);
 
+const general = ref(null);
 const commitments = ref([]);
 
 const modalities = [
@@ -191,65 +182,30 @@ const formatDate = (date) => {
   return dayjs(date).format('DD/MM/YYYY');
 }
 
-const handleClear = () => {
-  formState.accion = null;
-  formState.date = null;
-  formState.modality = null;
-  formState.address = null;
-  formState.participants = null;
-  formState.file1 = null;
-  formState.file2 = null;
-  formState.file3 = null;
-  formState.details = null;
-
-  fileList.value = [];
-};
-
-const handleOptions = (name) => {
-  if (name === 'modality') {
-    return modalities;
-  }
-  return [];
-};
-
-const filterOption = (input, option) => {
-  const normalizedInput = input.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "");
-  const normalizedLabel = option.label.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "");
-  return normalizedLabel.includes(normalizedInput);
-};
-
-const onSubmit = async () => {
-  loading.value = true;
-
-  const payload = {
-    accion: formState.accion,
-    date: dayjs(formState.date).format('YYYY-MM-DD'),
-    modality: formState.modality,
-    address: formState.address,
-    participants: formState.participants,
-    file1: formState.file1,
-    file2: formState.file2,
-    file3: formState.file3,
-    details: formState.details,
-    agreement_id: route.params.id
-  }
-
+const handleDownloadFile = async (file) => {
+  // spinerId.value = file.uid;
   try {
-    const response = await axios.post(`${apiUrl}agreement/commitments`, payload, {
+    const response = await axios({
+      url: `${apiUrl}agreement/file-download/${file.id}`,
+      method: 'POST',
+      responseType: 'blob',
       headers: {
-        'Content-Type': 'multipart/form-data',
-        'Authorization': `Bearer ${token}`
+        'Authorization': `Bearer ${token}`,
       },
     });
-    if (response.data.status == 200) {
-      message.success(response.data.message);
-      fetchData();
-      handleClear();
-    }
+
+    const url = window.URL.createObjectURL(new Blob([response.data]));
+    const link = document.createElement('a');
+    link.href = url;
+    link.setAttribute('download', file.name); 
+    document.body.appendChild(link);
+    link.click();
+    window.URL.revokeObjectURL(url);
+    document.body.removeChild(link);
   } catch (error) {
-    message.error("Error al subir");
+    console.error('Error downloading file:', error);
   } finally {
-    loading.value = false
+    // spinerId.value = null;
   }
 };
 
@@ -279,26 +235,16 @@ const handleDownload = async (path, name) => {
   }
 };
 
-const handleDelete = async (id) => {
-  try {
-
-    const response = await makeRequest({ url: `/agreement/commitment-delete/${id}`, method: 'DELETE' });
-    if(response.status == 200) fetchData()
-    
-  } catch (error) {
-    console.error('Error de red:', error);
-  }
-}
-
 const fetchData = async () => {
   try {
     spinning.value = true;
 
     const id = route.params.id;
 
-    const response = await makeRequest({ url: `/agreement/commitments/${id}`, method: 'GET' });
+    const response = await makeRequest({ url: `/agreement/general/${id}`, method: 'GET' });
 
-    commitments.value = response.data
+    general.value = response;
+    commitments.value = response.commitments
 
   } catch (error) {
     console.error('Error de red:', error);
@@ -366,22 +312,20 @@ onMounted(() => {
 </script>
 
 <style lang="scss">
-.compromisos {
-  display: grid;
-  grid-template-columns: 350px auto;
-  gap: 3rem;
-}
-
-.compromiso-box {}
-
-.compromisos-form {
-  form {
-    padding: 1rem;
-    border: 1px solid #efefef;
-    border-radius: 4px;
-    background-color: #f1f1f147;
+.conv-det {
+  margin-top: 1rem;
+  line-height: 1.3;
+  .conv-city {
+    margin: 4px 0;
+    color: #00000073;
+    p {
+      font-size: 13px;
+      margin: 0;
+    }
   }
 }
+
+
 
 .compromiso-user {
   color: #777;
@@ -422,8 +366,8 @@ onMounted(() => {
     display: flex;
     gap: 1rem;
   }
-
-  .conv-files {
+}
+.conv-files {
     margin-top: 5px;
 
     a {
@@ -435,5 +379,4 @@ onMounted(() => {
       }
     }
   }
-}
 </style>

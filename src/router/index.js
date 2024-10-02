@@ -221,6 +221,12 @@ const router = createRouter({
               name: 'estado-convenio-ugse-compromisos',
               component: () => import('../pages/ConveniosUGSE/PageCompromisosUGSE.vue'),
               meta: { requiresAuth: false },
+            },
+            {
+              path: 'ugse/detalle-general/:id',
+              name: 'estado-convenio-ugse-detalles',
+              component: () => import('../pages/ConveniosUGSE/PageDetalleGeneralUGSE.vue'),
+              meta: { requiresAuth: false },
             }
           ]
         },

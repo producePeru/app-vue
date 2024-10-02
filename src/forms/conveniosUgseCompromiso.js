@@ -56,7 +56,7 @@ const fields = {
     required: false,
     message: 'Escribir la acción',
     disabled: true,
-    max: 255,
+    max: 240,
     rows: 3
   }
 }

@@ -116,7 +116,10 @@
                   <a @click="handleUpFile(record)">Archivos</a>
                 </a-menu-item>
                 <a-menu-item>
-                  <a @click="handleCompromisos(record)">Compromisos</a>
+                  <router-link :to="`/admin/convenios/ugse/compromisos/${record.id}`">Compromisos</router-link>
+                </a-menu-item>
+                <a-menu-item>
+                  <router-link :to="`/admin/convenios/ugse/detalle-general/${record.id}`">Resumen</router-link>
                 </a-menu-item>
                 <a-menu-item>
                   <a @click="handleEditSolicitante(record)">Editar</a>
@@ -298,8 +301,8 @@ const handleUpFile = (record) => {
 }
 
 const handleCompromisos = (record) => {
-  idConvenio.value = record;
-  openCompromisos.value = true;
+  // idConvenio.value = record;
+  // openCompromisos.value = true;
 }
 
 const dateTrafficLight = (end, start) => {
