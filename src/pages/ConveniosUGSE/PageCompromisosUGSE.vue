@@ -1,364 +1,152 @@
 <template>
-  <section class="compromisos">
+  <section>
+    <a-flex align="center" :gap="8">
+      <router-link to="/admin/convenios/ugse">
+        <LeftOutlined /> Atrás
+      </router-link>
+      <h4 style="margin: 0;"> - COMPROMISOS - </h4>
+      <span>{{ $router.currentRoute.value.params.name }}</span>
+ 
+    </a-flex>
+    <br>
+    <a-button type="primary" @click="showDrawer">NUEVO</a-button>
+    
+    <br>
+    <br>
+  
+    
+    <a-table 
+    bordered
+    :scroll="{ x: 200 }" 
+    class="table-compromisos" 
+    :columns="columns"
+    :data-source="dataSource" 
+    :pagination="false" 
+    :loading="loading" 
+    size="small">
+      <template v-slot:bodyCell="{ column, record, index }">
+        <template v-if="column.dataIndex == 'idx'">
+          {{ computeIndex(index) }}
+        </template>
+        <template v-if="column.dataIndex == 'type'">
+          <a-tag><span style="text-transform: uppercase;">{{ record.type }}</span></a-tag>
+        </template>
 
-    <div class="compromisos-form">
-      <a-form layout="vertical" :model="formState" name="basic" autocomplete="off" @finish="onSubmit">
+        <template v-if="column.dataIndex == 'avances'">
+          <span>{{ record.commitments.length }}</span>
+        </template>
 
-        <h4>Registrar un nuevo item</h4>
+        <template v-if="column.dataIndex == 'actions'">
+          <a-dropdown :trigger="['click']">
+            <a class="ant-dropdown-link" @click.prevent>
+              <a-button shape="circle" :icon="h(MoreOutlined)" />
+            </a>
+            <template #overlay>
+              <a-menu>
+                <a-menu-item>
+                  <a @click="handleOpenDrawAcion(record)">Nueva acción</a>
+                </a-menu-item>
+                <a-menu-item>
+                  <a @click="handleOpenAcciones(record)">Ver Acciones</a>
+                </a-menu-item>
+                <!-- <a-menu-item>
+                  <a-popconfirm title="¿Seguro de eliminar?" @confirm="handleDelete(record)">
+                    <template #icon><question-circle-outlined style="color: red" /></template>
+                    <a>Eliminar</a>
+                  </a-popconfirm>
+                </a-menu-item> -->
+              </a-menu>
+            </template>
+          </a-dropdown>
+        </template>
 
-        <div class="">
-
-          <template v-for="(el, idx) in fields" :key="idx">
-            <a-form-item v-if="el.type === 'iText'" :name="el.name" :label="el.label"
-              :rules="[{ required: el.required, message: el.message, max: el.max }]">
-              <a-input v-model:value="formState[el.name]" :maxlength="el.max" />
-            </a-form-item>
-
-            <a-form-item v-if="el.type === 'iDate'" :name="el.name" :label="el.label"
-              :rules="[{ required: el.required, message: el.message }]">
-              <a-date-picker :locale="locale" v-model:value="formState[el.name]" style="width: 100%;"
-                :format="dateFormat" placeholder="día/mes/año" />
-            </a-form-item>
-
-            <a-form-item class="item-max" v-if="el.type === 'iSelect'" :name="el.name" :label="el.label"
-              :rules="[{ required: el.required, message: el.message }]">
-              <a-select v-model:value="formState[el.name]" :options="handleOptions(el.name)" show-search
-                :filter-option="filterOption" />
-            </a-form-item>
-
-            <a-form-item class="item-max" v-if="el.type === 'iNumber'" :name="el.name" :label="el.label"
-              :rules="[{ required: el.required, message: el.message }]">
-              <a-input-number v-model:value="formState[el.name]" :min="1" :max="200" />
-            </a-form-item>
-
-            <a-form-item class="item-max" v-if="el.type === 'iTextarea'" :name="el.name" :label="el.label"
-              :rules="[{ required: el.required, message: el.message }]">
-              <a-textarea v-model:value="formState[el.name]" :rows="el.rows" :maxlength="el.max" />
-            </a-form-item>
-
-            <a-form-item v-if="el.type === 'iFile'" :name="el.name" :label="el.label"
-              :rules="[{ required: el.required, message: el.message }]">
-              <a-upload :before-upload="beforeUpload" :custom-request="dummyRequest" :file-list="fileList"
-                :accept="acceptTypes" :multiple="true" :on-remove="handleRemove" show-upload-list>
-                <a-button>
-                  <CloudUploadOutlined />
-                  Cargar archivos
-                </a-button>
-              </a-upload>
-            </a-form-item>
-          </template>
-
-        </div>
-
-        <a-form-item>
-          <a-button type="primary" html-type="submit" :loading="loading">GUARDAR</a-button>
-        </a-form-item>
-
-      </a-form>
-    </div>
-
-
-    <a-spin :spinning="spinning">
-      <span>
-        <router-link to="/admin/convenios/ugse">
-          <LeftOutlined /> Atrás
-        </router-link>
-      </span>
-
-      <a-empty v-if="commitments.length < 1" />
-
-      <template v-else>
-        <a-comment v-for="(item, idx) in commitments" :key="idx">
-          <template #author>
-            <div class="convenios-header">
-              <span>{{ item.profile.name }} {{ item.profile.lastname }} {{ item.profile.middlename }}</span>
-              
-              <div v-if="profile.user_id == item.profile.id || role.some(r => r.id === 8)">
-                <span key="comment-nested-reply-to" class="ico-delete-comp"><DeleteOutlined @click="handleDelete(item.id)" /></span>
-              </div>
-            
-            </div>
-          </template>
-          <template #avatar>
-            <a-avatar>{{ item.profile.name.charAt(0) }}</a-avatar>
-          </template>
-          <template #content>
-            <div class="convenios-description">
-              <div>
-                <b>{{ item.accion }} </b>
-                <span> - {{ formatDate(item.date) }}</span>
-              </div>
-              <p style="white-space: normal;"> {{ item.details }} </p>
-              <div class="conv-part" v-if="item.address">
-                <EnvironmentOutlined /> {{ item.address }}
-              </div>
-
-              <div class="conv-part const-mod" v-if="item.participants">
-                <div>
-                  <TeamOutlined /> {{ item.participants }} participantes
-                </div>
-                <div>
-                  <SafetyOutlined />
-                  <span> Modalidad: </span>{{ item.modality == 'v' ? 'Virtual' : 'Presencial' }}
-                </div>
-              </div>
-
-              <div class="conv-files">
-                <template v-if="item.file1_name">
-                  <a-spin v-if="spinName == item.file1_name" :indicator="indicator"> </a-spin>
-                  <template v-else>
-                    <a @click="handleDownload(item.file1_path, item.file1_name)">
-                      <FileOutlined /> {{ item.file1_name }}
-                    </a>
-                  </template>
-                </template>
-
-
-                <template v-if="item.file2_name">
-                  <a-spin v-if="spinName == item.file2_name" :indicator="indicator"> </a-spin>
-                  <template v-else>
-                    <a @click="handleDownload(item.file2_path, item.file2_name)">
-                      <FileOutlined /> {{ item.file2_name }}
-                    </a>
-                  </template>
-                </template>
-
-                <template v-if="item.file3_name">
-                  <a-spin v-if="spinName == item.file2_name" :indicator="indicator"> </a-spin>
-                  <template v-else>
-                    <a @click="handleDownload(item.file3_path, item.file3_name)">
-                      <FileOutlined /> {{ item.file3_name }}
-                    </a>
-                  </template>
-                </template>
-              </div>
-
-            </div>
-          </template>
-        </a-comment>
       </template>
+    </a-table>
 
-    </a-spin>
+
+    <!-- <pre>{{ dataSource }}</pre> -->
+    <a-drawer v-model:open="open" title="Registrar un compromiso" placement="right" width="450px">
+      <Compromisos @closeDraw="closeDrawer" /> 
+    </a-drawer>
+
+    <a-drawer v-model:open="drawAcion" title="Registrar un acción" placement="right" width="450px">
+      <Acciones :dataRow="dataRow" @closeDraw="closeDrawer" />
+    </a-drawer>
+
+    <a-drawer v-model:open="openDetails" title="Detalles" placement="right" width="600px">
+      <AccionesDetalles :dataRow="dataRow" />
+    </a-drawer>
 
   </section>
 </template>
 
 <script setup>
-import { reactive, ref, onMounted, watch, h } from 'vue';
+import { h, ref, onMounted, computed } from 'vue';
 import { makeRequest } from '@/utils/api.js';
-import { message } from 'ant-design-vue';
-import { CloudUploadOutlined, TeamOutlined, DeleteOutlined, EnvironmentOutlined, FileOutlined, SafetyOutlined, LeftOutlined, LoadingOutlined } from '@ant-design/icons-vue';
-import { useRoute } from 'vue-router';
-import fields from '@/forms/conveniosUgseCompromiso.js';
-import axios from 'axios';
-import Cookies from 'js-cookie';
+import { useRoute, useRouter } from 'vue-router';
+import { MoreOutlined, LeftOutlined } from '@ant-design/icons-vue';
+import Compromisos from './components/DrawCompromisos.vue';
+import Acciones from './components/DrawAccionesUgse.vue';
+import AccionesDetalles from './components/DrawAccionesDetalle.vue';
 
-import locale from 'ant-design-vue/es/date-picker/locale/es_ES';
-import dayjs from 'dayjs';
-import 'dayjs/locale/es';
-dayjs.locale('es');
-
-const role = JSON.parse(localStorage.getItem('role'));
-const profile = JSON.parse(localStorage.getItem('profile'));
-
-const token = Cookies.get('token');
-const prod = import.meta.env.VITE_APP_API_URL_PRODUCTION
-const dev = import.meta.env.VITE_APP_API_URL_LOCAL
-const apiUrl = window.location.hostname == 'localhost' || window.location.hostname == '127.0.0.1' ? dev : prod;
-
-const formState = reactive({});
-const loading = ref(false);
-const dateFormat = 'DD/MM/YYYY';
-const spinning = ref(false);
+const open = ref(false);
+const openDetails = ref(false);
+const dataRow = ref(null);
+const pageSize = 50;
 const route = useRoute();
-const spinName = ref(null);
+const router = useRouter();
+const loading = ref(false);
+const dataSource = ref([]);
+const drawAcion = ref(false);
 
-const commitments = ref([]);
-
-const modalities = [
-  { label: 'Virtual', value: 'v' },
-  { label: 'Presencial', value: 'p' }
+const columns = [
+  { title: '#',                             dataIndex: 'idx', align: 'center', width: 70 },
+  { title: 'TÍTULO',                        dataIndex: 'title', width: 120 },
+  { title: 'TIPO',                          dataIndex: 'type', width: 120, align: 'center' },
+  { title: 'DESCRIPCIÓN',                   dataIndex: 'description', width: 180 },
+  { title: 'BENEFICIARIOS',                 dataIndex: 'meta', width: 140, align: 'center' },
+  { title: 'AVANCES',                       dataIndex: 'avances', width: 80, align: 'center' },
+  { title: '',                              dataIndex: 'actions', width: 50, align: 'center', fixed: 'right' }
+  // { title: 'ACCIONES', dataIndex: 'acciones', align: 'center', width: 100 },
 ];
-const indicator = h(LoadingOutlined, {
-  style: {
-    fontSize: '18px',
-  },
-  spin: true,
+
+const handleOpenAcciones = (data) => {
+  dataRow.value = data;
+  openDetails.value = true;
+}
+const handleOpenDrawAcion = (data) => {
+  dataRow.value = data;
+  drawAcion.value = true;
+}
+const closeDrawer = () => {
+  fetchData();
+  open.value = false;
+  drawAcion.value = false;
+}
+const showDrawer = () => {
+  open.value = true;
+};
+const params = ref({
+  page: 1
 });
 
-// funciones
-const formatDate = (date) => {
-  return dayjs(date).format('DD/MM/YYYY');
-}
+const computeIndex = computed(() => (index) => {
+  return (params.value.page - 1) * pageSize + index + 1;
+});
 
-const handleClear = () => {
-  formState.accion = null;
-  formState.date = null;
-  formState.modality = null;
-  formState.address = null;
-  formState.participants = null;
-  formState.file1 = null;
-  formState.file2 = null;
-  formState.file3 = null;
-  formState.details = null;
-
-  fileList.value = [];
-};
-
-const handleOptions = (name) => {
-  if (name === 'modality') {
-    return modalities;
-  }
-  return [];
-};
-
-const filterOption = (input, option) => {
-  const normalizedInput = input.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "");
-  const normalizedLabel = option.label.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "");
-  return normalizedLabel.includes(normalizedInput);
-};
-
-const onSubmit = async () => {
+const fetchData = async() => {
   loading.value = true;
-
-  const payload = {
-    accion: formState.accion,
-    date: dayjs(formState.date).format('YYYY-MM-DD'),
-    modality: formState.modality,
-    address: formState.address,
-    participants: formState.participants,
-    file1: formState.file1,
-    file2: formState.file2,
-    file3: formState.file3,
-    details: formState.details,
-    agreement_id: route.params.id
-  }
-
   try {
-    const response = await axios.post(`${apiUrl}agreement/commitments`, payload, {
-      headers: {
-        'Content-Type': 'multipart/form-data',
-        'Authorization': `Bearer ${token}`
-      },
-    });
-    if (response.data.status == 200) {
-      message.success(response.data.message);
-      fetchData();
-      handleClear();
+    const data = await makeRequest({ url: `agreement/all-commitments/${route.params.id}`, method: 'GET' });
+    if (data.status == 200) {
+      dataSource.value = data.data;
     }
   } catch (error) {
-    message.error("Error al subir");
-  } finally {
-    loading.value = false
-  }
-};
-
-const handleDownload = async (path, name) => {
-  spinName.value = name;
-  try {
-    const response = await axios.get(`${apiUrl}agreement/commitment-download/${path}`, {
-      responseType: 'blob',
-      headers: {
-        'Accept': 'application/json',
-        'Authorization': `Bearer ${token}`
-      }
-    });
-
-    const url = window.URL.createObjectURL(new Blob([response.data]));
-    const link = document.createElement('a');
-    link.href = url;
-    link.setAttribute('download', name);
-    document.body.appendChild(link);
-    link.click();
-    document.body.removeChild(link);
-
-  } catch (error) {
-    console.error('Error al descargar el archivo', error);
-  } finally {
-    spinName.value = null;
-  }
-};
-
-const handleDelete = async (id) => {
-  try {
-
-    const response = await makeRequest({ url: `/agreement/commitment-delete/${id}`, method: 'DELETE' });
-    if(response.status == 200) fetchData()
     
-  } catch (error) {
-    console.error('Error de red:', error);
+  } finally {
+    loading.value = false;
   }
 }
-
-const fetchData = async () => {
-  try {
-    spinning.value = true;
-
-    const id = route.params.id;
-
-    const response = await makeRequest({ url: `/agreement/commitments/${id}`, method: 'GET' });
-
-    commitments.value = response.data
-
-  } catch (error) {
-    console.error('Error de red:', error);
-  } finally {
-    spinning.value = false;
-  }
-};
-
-
-
-// START archivos ***
-const maxFiles = 3;
-const fileList = ref([]);
-const acceptTypes = '.pdf, .doc, .docx, .xls, .xlsx';
-
-const dummyRequest = ({ onSuccess }) => {
-  setTimeout(() => {
-    onSuccess("ok");
-  }, 0);
-};
-
-const beforeUpload = (file) => {
-  if (fileList.value.length >= maxFiles) {
-    message.error('Solo puedes cargar un máximo de 3 archivos');
-    return false; // Evitar cargar más de maxFiles
-  }
-
-  // Almacenar el archivo directamente en el formState
-  if (!formState.file1) {
-    formState.file1 = file;
-  } else if (!formState.file2) {
-    formState.file2 = file;
-  } else if (!formState.file3) {
-    formState.file3 = file;
-  }
-
-  // Agregar el archivo a la lista de archivos
-  fileList.value.push({
-    uid: file.uid, // Identificador único para cada archivo
-    name: file.name,
-    status: 'done',
-  });
-
-  return false; // Evita la carga automática, usaremos nuestra lógica
-};
-
-// Elimina el archivo correspondiente del formState
-const handleRemove = (file) => {
-  const index = fileList.value.findIndex(item => item.uid === file.uid);
-  if (index === 0) {
-    formState.file1 = null;
-  } else if (index === 1) {
-    formState.file2 = null;
-  } else if (index === 2) {
-    formState.file3 = null;
-  }
-  fileList.value.splice(index, 1); // Eliminar el archivo de fileList
-};
-// END archivos ***
-
 
 onMounted(() => {
   fetchData();
@@ -366,74 +154,12 @@ onMounted(() => {
 </script>
 
 <style lang="scss">
-.compromisos {
-  display: grid;
-  grid-template-columns: 350px auto;
-  gap: 3rem;
-}
-
-.compromiso-box {}
-
-.compromisos-form {
-  form {
-    padding: 1rem;
-    border: 1px solid #efefef;
-    border-radius: 4px;
-    background-color: #f1f1f147;
+.table-compromisos {
+  tr {
+    font-size: 13px;
   }
-}
-
-.compromiso-user {
-  color: #777;
-}
-
-.ant-comment-content-author-name {
-  width: 100%;
-}
-
-.convenios-header {
-  display: flex;
-  justify-content: space-between;
-
-  .ico-delete-comp {
-    cursor: pointer;
-
-    &:hover {
-      color: var(--secondary) !important;
-    }
-  }
-}
-
-
-.convenios-description {
-  font-size: 13px;
-
-  b {
-    font-weight: 600;
-  }
-
-  .conv-part {
-    margin-top: 5px;
-    color: #00000073;
-    font-size: 12px;
-  }
-
-  .const-mod {
-    display: flex;
-    gap: 1rem;
-  }
-
-  .conv-files {
-    margin-top: 5px;
-
-    a {
-      margin-right: 14px;
-      color: #009ed0;
-
-      &:hover {
-        text-decoration: underline;
-      }
-    }
+  .ant-empty-description {
+    font-size: 13px;
   }
 }
 </style>

@@ -116,7 +116,7 @@
                   <a @click="handleUpFile(record)">Archivos</a>
                 </a-menu-item>
                 <a-menu-item>
-                  <router-link :to="`/admin/convenios/ugse/compromisos/${record.id}`">Compromisos</router-link>
+                  <router-link :to="`/admin/convenios/ugse/compromisos/${record.id}/${record.entity}`">Compromisos</router-link>
                 </a-menu-item>
                 <a-menu-item>
                   <router-link :to="`/admin/convenios/ugse/detalle-general/${record.id}`">Resumen</router-link>

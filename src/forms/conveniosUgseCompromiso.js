@@ -1,12 +1,13 @@
 const fields = {
   accion: {
     type: 'iText',
-    label: 'Acción',
+    label: 'Nombre de la capacitación',
     name: 'accion',
     required: true,
     message: 'Escribir la acción',
     disabled: true,
-    max: 100
+    max: 100,
+    visible: true
   },
   date: {
     type: 'iDate',
@@ -31,7 +32,8 @@ const fields = {
     required: false,
     message: 'Escribir la acción',
     disabled: true,
-    max: 100
+    max: 100,
+    visible: false
   },
   participants: {
     type: 'iNumber',
@@ -43,7 +45,7 @@ const fields = {
   },
   files: {
     type: 'iFile',
-    label: 'Archivos (máximo 3 - pdf,word,excel)',
+    label: 'Archivos (máximo 3 archivos)',
     name: 'files',
     required: false,
     message: 'Subir archivos',

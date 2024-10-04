@@ -1,128 +1,124 @@
 <template>
   <section>
+    <h4>Resumen General del convenio</h4>
 
-    <a-spin :spinning="spinning">
-      <span>
-        <router-link to="/admin/convenios/ugse">
-          <LeftOutlined /> Atrás
-        </router-link>
-      </span>
+    <h1 class="info-h1">{{ info.alliedEntity }}</h1>
 
-      <div class="conv-det" v-if="general">
-        
-        <a-flex align="center" gap="small">
-          <a-flex align="center" :gap="4">
-           <h3 style="margin: 0;">{{ general.alliedEntity }}</h3>
-          </a-flex>
-        </a-flex>
-      
-        <a-flex class="conv-city" align="center" gap="small">
-          <EnvironmentOutlined />
-          <p>{{ general.region.name }} - {{ general.provincia.name }} - {{ general.distrito.name }}</p>
-        </a-flex>
-
-        <div>
-          <span>RUC:</span> <span>{{ general.ruc }} </span>
-        </div>
+    <div>
+      <a-button class="btn-excel" @click="handleDownloadReport" :loading="loadingFile" type="primary">
+        <img width="20" style="margin: -2px 0 0 0;" src="@/assets/img/icoexcel.png" /> 
+      </a-button>
+    </div>
 
 
-        <div>
-          <span>Componente:</span> <span style="text-transform: capitalize;">{{ general.components }} </span>
-        </div>
-        <a-flex align="center" gap="small">
-          <span>Inicio del convenio:</span> <span>{{ formatDate(general.startDate) }} </span> - 
-          <span>Fin del convenio:</span> <span>{{ formatDate(general.endDate) }} </span>
-        </a-flex>
-        <a-flex align="center" gap="small">
-          <span>Representante Legal:</span> <span>{{ general.aliado }} </span>
-          <span style="color: #00000073;"><PhoneOutlined /> <span>{{ general.aliadoPhone }}</span> </span>
-        </a-flex>
-        <div>
-          <span>Punto Focal:</span> <span>{{ general.focal }} | <span style="color: #00000073; font-size: 13px;">{{ general.focalCargo }}</span> | <span style="color: #00000073;"><PhoneOutlined /> {{ general.focalPhone }}</span></span>
-        </div>
-        <div>
-          <span>Comentarios:</span> <span>
-            <p style="margin: 0;">{{ general.observations }}</p>
-          </span>
-        </div>
-        <div>
-          <div class="conv-files">
-            <span v-for="(file, jx) in general.files_agreements" :key="jx">
-              <a @click="handleDownloadFile(file)"> <FileOutlined /> {{ file.name }}</a>
-            </span>
+    <a-descriptions bordered size="small">
+      <a-descriptions-item label="Región">{{ info.region?.name }}</a-descriptions-item>
+      <a-descriptions-item label="Provincia">{{ info.provincia?.name }}</a-descriptions-item>
+      <a-descriptions-item label="Distrito">{{ info.distrito?.name }}</a-descriptions-item>
+
+      <a-descriptions-item label="Inicio convenio">{{ formatDate(info.startDate) }}</a-descriptions-item>
+      <a-descriptions-item label="Fin convenio">{{ formatDate(info.endDate) }}</a-descriptions-item>
+      <a-descriptions-item label="Renovación Automática" style="width: 200px;">{{ info.renovation
+        }}</a-descriptions-item>
+
+      <a-descriptions-item label="Punto Focal">{{ info.focal }}</a-descriptions-item>
+      <a-descriptions-item label="Focal cargo">{{ info.focalCargo }}</a-descriptions-item>
+      <a-descriptions-item label="Focal Num. celular">{{ info.focalPhone }}</a-descriptions-item>
+
+      <a-descriptions-item label="Representante Legal">{{ info.aliado }}</a-descriptions-item>
+      <a-descriptions-item label="Num. celular" :span="2">{{ info.aliadoPhone }}</a-descriptions-item>
+
+      <a-descriptions-item label="Comentarios" style="width: 200px;">
+        <p>{{ info.observations }}</p>
+      </a-descriptions-item>
+
+    </a-descriptions>
+
+    <br>
+
+    <div class="accioness">
+      <h4>Compromisos</h4>
+      <div class="acciones-box" v-for="(compromiso, i) in info.compromisos" :key="i" style="margin: 1rem 0;">
+        <a-flex :gap="10">
+          <b>{{ i + 1 }}</b>
+          <div style="width: 100%;">
+            <div style="margin-bottom: 6px;">Título: <b>{{ compromiso.title }}</b></div>
+            <div>Tipo: <span style="text-transform: capitalize;">{{ compromiso.type }}</span></div>
+            <div v-if="compromiso.meta">Meta: {{ compromiso.meta }}</div>
+            <div v-if="compromiso.description">Descripción: {{ compromiso.description }}</div>
+            <div style="color: #00000073;">Registrado por: {{ compromiso.profile.name }} {{ compromiso.profile.lastname }} {{compromiso.profile.middlename }}</div>
+          
+
+            <div class="acciones" v-if="compromiso.acciones.length >= 1">
+              <h4>Acciones</h4>
+              <div class="acciones-box acciones-bg" v-for="(accion, j) in compromiso.acciones" :key="j">
+                <a-flex>
+                  <div style="width: 20px;">{{ j + 1 }}</div>
+                  <div style="width: 100%;">
+                    <div>Conferencia: {{ accion.accion }}</div>
+                    <div>Fecha: {{formatDate(accion.date)}}</div>
+                    <div>Modalidad: {{ accion.modality == 'v' ? 'Virtual' : 'Presencial' }}</div>
+                    <div v-if="accion.address"><EnvironmentOutlined /> {{ accion.address }}</div>
+                    <div><TeamOutlined /> {{ accion.participants }} participantes</div>
+                    <div v-if="accion.details">Detalle: {{ accion.details }}</div>
+                    <div>Registrado por: {{ accion.profile.name }} {{ accion.profile.lastname }} {{ accion.profile.middlename }}</div>
+                    
+                    
+                    
+                    
+                    <div class="conv-files">
+                      <template v-if="accion.file1_name">
+                        <a-spin v-if="spinName == accion.file1_name" :indicator="indicator"> </a-spin>
+                        <template v-else>
+                          <a @click="handleDownload(accion.file1_path, accion.file1_name)">
+                            <FileOutlined /> {{ accion.file1_name }}
+                          </a>
+                        </template>
+                      </template>
+
+
+                      <template v-if="accion.file2_name">
+                        <a-spin v-if="spinName == accion.file2_name" :indicator="indicator"> </a-spin>
+                        <template v-else>
+                          <a @click="handleDownload(accion.file2_path, accion.file2_name)">
+                            <FileOutlined /> {{ accion.file2_name }}
+                          </a>
+                        </template>
+                      </template>
+
+                      <template v-if="accion.file3_name">
+                        <a-spin v-if="spinName == accion.file3_name" :indicator="indicator"> </a-spin>
+                        <template v-else>
+                          <a @click="handleDownload(accion.file3_path, accion.file3_name)">
+                            <FileOutlined /> {{ accion.file3_name }}
+                          </a>
+                        </template>
+                      </template>
+                    </div>
+
+
+
+                  </div>
+                </a-flex>
+              </div>
+            </div>
+          
           </div>
-        </div>
+        </a-flex>
       </div>
+    </div>
 
 
-      <div v-if="commitments.length < 1"> </div>
-
-      <template v-else>
-        <a-comment v-for="(item, idx) in commitments" :key="idx">
-          <template #author>
-            <div class="convenios-header">
-              <span>{{ item.profile.name }} {{ item.profile.lastname }} {{ item.profile.middlename }}</span>
-            </div>
-          </template>
-
-          <template #content>
-            <div class="convenios-description">
-              <div>
-                <b>{{ item.accion }} </b>
-                <span> - {{ formatDate(item.date) }}</span>
-              </div>
-              <p style="white-space: normal;"> {{ item.details }} </p>
-              <div class="conv-part" v-if="item.address">
-                <EnvironmentOutlined /> {{ item.address }}
-              </div>
-
-              <div class="conv-part const-mod" v-if="item.participants">
-                <div>
-                  <TeamOutlined /> {{ item.participants }} participantes
-                </div>
-                <div>
-                  <SafetyOutlined />
-                  <span> Modalidad: </span>{{ item.modality == 'v' ? 'Virtual' : 'Presencial' }}
-                </div>
-              </div>
-
-              <div class="conv-files">
-                <template v-if="item.file1_name">
-                  <a-spin v-if="spinName == item.file1_name" :indicator="indicator"> </a-spin>
-                  <template v-else>
-                    <a @click="handleDownload(item.file1_path, item.file1_name)">
-                      <FileOutlined /> {{ item.file1_name }}
-                    </a>
-                  </template>
-                </template>
-
-
-                <template v-if="item.file2_name">
-                  <a-spin v-if="spinName == item.file2_name" :indicator="indicator"> </a-spin>
-                  <template v-else>
-                    <a @click="handleDownload(item.file2_path, item.file2_name)">
-                      <FileOutlined /> {{ item.file2_name }}
-                    </a>
-                  </template>
-                </template>
-
-                <template v-if="item.file3_name">
-                  <a-spin v-if="spinName == item.file2_name" :indicator="indicator"> </a-spin>
-                  <template v-else>
-                    <a @click="handleDownload(item.file3_path, item.file3_name)">
-                      <FileOutlined /> {{ item.file3_name }}
-                    </a>
-                  </template>
-                </template>
-              </div>
-            </div>
-          </template>
-        </a-comment>
-      </template>
-
-    </a-spin>
 
   </section>
+
+
+
+
+
+
+
+
 </template>
 
 <script setup>
@@ -156,58 +152,21 @@ const prod = import.meta.env.VITE_APP_API_URL_PRODUCTION
 const dev = import.meta.env.VITE_APP_API_URL_LOCAL
 const apiUrl = window.location.hostname == 'localhost' || window.location.hostname == '127.0.0.1' ? dev : prod;
 
-const formState = reactive({});
-const loading = ref(false);
-const dateFormat = 'DD/MM/YYYY';
-const spinning = ref(false);
+const loadingFile = ref(false);
 const route = useRoute();
-const spinName = ref(null);
+const activeKey = ref([]);
 
-const general = ref(null);
-const commitments = ref([]);
-
-const modalities = [
-  { label: 'Virtual', value: 'v' },
-  { label: 'Presencial', value: 'p' }
-];
 const indicator = h(LoadingOutlined, {
   style: {
     fontSize: '18px',
   },
   spin: true,
 });
-
-// funciones
-const formatDate = (date) => {
-  return dayjs(date).format('DD/MM/YYYY');
+const spinName = ref(null);
+const info = ref([]);
+const formatDate = (dateString) => {
+  return dayjs(dateString).format('DD-MM-YYYY');
 }
-
-const handleDownloadFile = async (file) => {
-  // spinerId.value = file.uid;
-  try {
-    const response = await axios({
-      url: `${apiUrl}agreement/file-download/${file.id}`,
-      method: 'POST',
-      responseType: 'blob',
-      headers: {
-        'Authorization': `Bearer ${token}`,
-      },
-    });
-
-    const url = window.URL.createObjectURL(new Blob([response.data]));
-    const link = document.createElement('a');
-    link.href = url;
-    link.setAttribute('download', file.name); 
-    document.body.appendChild(link);
-    link.click();
-    window.URL.revokeObjectURL(url);
-    document.body.removeChild(link);
-  } catch (error) {
-    console.error('Error downloading file:', error);
-  } finally {
-    // spinerId.value = null;
-  }
-};
 
 const handleDownload = async (path, name) => {
   spinName.value = name;
@@ -235,76 +194,26 @@ const handleDownload = async (path, name) => {
   }
 };
 
+const handleDownloadReport = async () => {
+
+}
+
 const fetchData = async () => {
   try {
-    spinning.value = true;
+    // spinning.value = true;
 
     const id = route.params.id;
 
     const response = await makeRequest({ url: `/agreement/general/${id}`, method: 'GET' });
 
-    general.value = response;
-    commitments.value = response.commitments
+    info.value = response
 
   } catch (error) {
     console.error('Error de red:', error);
   } finally {
-    spinning.value = false;
+    // spinning.value = false;
   }
 };
-
-
-
-// START archivos ***
-const maxFiles = 3;
-const fileList = ref([]);
-const acceptTypes = '.pdf, .doc, .docx, .xls, .xlsx';
-
-const dummyRequest = ({ onSuccess }) => {
-  setTimeout(() => {
-    onSuccess("ok");
-  }, 0);
-};
-
-const beforeUpload = (file) => {
-  if (fileList.value.length >= maxFiles) {
-    message.error('Solo puedes cargar un máximo de 3 archivos');
-    return false; // Evitar cargar más de maxFiles
-  }
-
-  // Almacenar el archivo directamente en el formState
-  if (!formState.file1) {
-    formState.file1 = file;
-  } else if (!formState.file2) {
-    formState.file2 = file;
-  } else if (!formState.file3) {
-    formState.file3 = file;
-  }
-
-  // Agregar el archivo a la lista de archivos
-  fileList.value.push({
-    uid: file.uid, // Identificador único para cada archivo
-    name: file.name,
-    status: 'done',
-  });
-
-  return false; // Evita la carga automática, usaremos nuestra lógica
-};
-
-// Elimina el archivo correspondiente del formState
-const handleRemove = (file) => {
-  const index = fileList.value.findIndex(item => item.uid === file.uid);
-  if (index === 0) {
-    formState.file1 = null;
-  } else if (index === 1) {
-    formState.file2 = null;
-  } else if (index === 2) {
-    formState.file3 = null;
-  }
-  fileList.value.splice(index, 1); // Eliminar el archivo de fileList
-};
-// END archivos ***
-
 
 onMounted(() => {
   fetchData();
@@ -312,61 +221,34 @@ onMounted(() => {
 </script>
 
 <style lang="scss">
-.conv-det {
-  margin-top: 1rem;
-  line-height: 1.3;
-  .conv-city {
-    margin: 4px 0;
-    color: #00000073;
-    p {
-      font-size: 13px;
-      margin: 0;
-    }
-  }
+.minuscula {
+  text-transform: lowercase;
 }
 
-
-
-.compromiso-user {
-  color: #777;
-}
-
-.ant-comment-content-author-name {
-  width: 100%;
-}
-
-.convenios-header {
-  display: flex;
-  justify-content: space-between;
-
-  .ico-delete-comp {
-    cursor: pointer;
-
-    &:hover {
-      color: var(--secondary) !important;
-    }
-  }
-}
-
-
-.convenios-description {
+.ant-descriptions-view table span {
   font-size: 13px;
-
-  b {
-    font-weight: 600;
+}
+.acciones {
+  margin: 1rem 0;
+  line-height: 1.4;
+  h4 {
+    margin-top: 0;
   }
-
-  .conv-part {
-    margin-top: 5px;
-    color: #00000073;
-    font-size: 12px;
+  &-box {
+    border: 1px solid rgba(12, 12, 12, 0.14);
+    width: 100%;
+    margin-bottom: .7rem;
+    border-radius: 8px;
+    padding: .5rem;
+    div {
+      font-size: 13px;
+    }
   }
-
-  .const-mod {
-    display: flex;
-    gap: 1rem;
+  &-bg {
+    background-color: rgba(0, 0, 0, 0.02);
   }
 }
+
 .conv-files {
     margin-top: 5px;
 
@@ -379,4 +261,17 @@ onMounted(() => {
       }
     }
   }
+
+.info-h1 {
+  text-transform: uppercase;
+  margin: 1rem 0;
+  color: var(--primary);
+  font-size: 16px;
+}
+
+.info-h4 {
+  color: var(--secondary);
+  margin: 0;
+  font-size: 14px;
+}
 </style>

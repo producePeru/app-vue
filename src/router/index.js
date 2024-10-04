@@ -217,7 +217,7 @@ const router = createRouter({
               meta: { requiresAuth: true },
             },
             {
-              path: 'ugse/compromisos/:id',
+              path: 'ugse/compromisos/:id/:name',
               name: 'estado-convenio-ugse-compromisos',
               component: () => import('../pages/ConveniosUGSE/PageCompromisosUGSE.vue'),
               meta: { requiresAuth: false },
