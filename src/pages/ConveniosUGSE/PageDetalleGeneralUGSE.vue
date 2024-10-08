@@ -6,7 +6,7 @@
 
     <div>
       <a-button class="btn-excel" @click="handleDownloadReport" :loading="loadingFile" type="primary">
-        <img width="20" style="margin: -2px 0 0 0;" src="@/assets/img/icoexcel.png" /> 
+        <img width="20" style="margin: -2px 0 0 0;" src="@/assets/img/icoexcel.png" />
       </a-button>
     </div>
 
@@ -46,8 +46,9 @@
             <div>Tipo: <span style="text-transform: capitalize;">{{ compromiso.type }}</span></div>
             <div v-if="compromiso.meta">Meta: {{ compromiso.meta }}</div>
             <div v-if="compromiso.description">Descripción: {{ compromiso.description }}</div>
-            <div style="color: #00000073;">Registrado por: {{ compromiso.profile.name }} {{ compromiso.profile.lastname }} {{compromiso.profile.middlename }}</div>
-          
+            <div style="color: #00000073;">Registrado por: {{ compromiso.profile.name }} {{ compromiso.profile.lastname
+              }} {{ compromiso.profile.middlename }}</div>
+
 
             <div class="acciones" v-if="compromiso.acciones.length >= 1">
               <h4>Acciones</h4>
@@ -56,16 +57,21 @@
                   <div style="width: 20px;">{{ j + 1 }}</div>
                   <div style="width: 100%;">
                     <div>Conferencia: {{ accion.accion }}</div>
-                    <div>Fecha: {{formatDate(accion.date)}}</div>
+                    <div>Fecha: {{ formatDate(accion.date) }}</div>
                     <div>Modalidad: {{ accion.modality == 'v' ? 'Virtual' : 'Presencial' }}</div>
-                    <div v-if="accion.address"><EnvironmentOutlined /> {{ accion.address }}</div>
-                    <div><TeamOutlined /> {{ accion.participants }} participantes</div>
+                    <div v-if="accion.address">
+                      <EnvironmentOutlined /> {{ accion.address }}
+                    </div>
+                    <div>
+                      <TeamOutlined /> {{ accion.participants }} participantes
+                    </div>
                     <div v-if="accion.details">Detalle: {{ accion.details }}</div>
-                    <div>Registrado por: {{ accion.profile.name }} {{ accion.profile.lastname }} {{ accion.profile.middlename }}</div>
-                    
-                    
-                    
-                    
+                    <div>Registrado por: {{ accion.profile.name }} {{ accion.profile.lastname }} {{
+                      accion.profile.middlename }}</div>
+
+
+
+
                     <div class="conv-files">
                       <template v-if="accion.file1_name">
                         <a-spin v-if="spinName == accion.file1_name" :indicator="indicator"> </a-spin>
@@ -102,7 +108,7 @@
                 </a-flex>
               </div>
             </div>
-          
+
           </div>
         </a-flex>
       </div>
@@ -125,17 +131,17 @@
 import { reactive, ref, onMounted, watch, h } from 'vue';
 import { makeRequest } from '@/utils/api.js';
 import { message } from 'ant-design-vue';
-import { 
+import {
   BankOutlined,
-  CloudUploadOutlined, 
-  TeamOutlined, 
+  CloudUploadOutlined,
+  TeamOutlined,
   PhoneOutlined,
-  DeleteOutlined, 
-  EnvironmentOutlined, 
-  FileOutlined, 
-  SafetyOutlined, 
-  LeftOutlined, 
-  LoadingOutlined 
+  DeleteOutlined,
+  EnvironmentOutlined,
+  FileOutlined,
+  SafetyOutlined,
+  LeftOutlined,
+  LoadingOutlined
 } from '@ant-design/icons-vue';
 import { useRoute } from 'vue-router';
 import fields from '@/forms/conveniosUgseCompromiso.js';
@@ -194,9 +200,40 @@ const handleDownload = async (path, name) => {
   }
 };
 
-const handleDownloadReport = async () => {
 
+
+
+const handleDownloadReport = async () => {
+  try {
+
+    const id = route.params.id;
+
+    const response = await axios.get(`${apiUrl}pdf/agreements-general/${id}`, {
+      responseType: 'blob',
+      headers: {
+        'Accept': 'application/json',
+        'Authorization': `Bearer ${token}`
+      }
+    });
+
+    const url = window.URL.createObjectURL(new Blob([response.data]));
+    const link = document.createElement('a');
+    link.href = url;
+    link.setAttribute('download', 'ejemplo.pdf');
+    document.body.appendChild(link);
+    link.click();
+
+  } catch (error) {
+    console.error('Error descargando el PDF:', error);
+  }
 }
+
+
+
+
+
+
+
 
 const fetchData = async () => {
   try {
@@ -228,39 +265,44 @@ onMounted(() => {
 .ant-descriptions-view table span {
   font-size: 13px;
 }
+
 .acciones {
   margin: 1rem 0;
   line-height: 1.4;
+
   h4 {
     margin-top: 0;
   }
+
   &-box {
     border: 1px solid rgba(12, 12, 12, 0.14);
     width: 100%;
     margin-bottom: .7rem;
     border-radius: 8px;
     padding: .5rem;
+
     div {
       font-size: 13px;
     }
   }
+
   &-bg {
     background-color: rgba(0, 0, 0, 0.02);
   }
 }
 
 .conv-files {
-    margin-top: 5px;
+  margin-top: 5px;
 
-    a {
-      margin-right: 14px;
-      color: #009ed0;
+  a {
+    margin-right: 14px;
+    color: #009ed0;
 
-      &:hover {
-        text-decoration: underline;
-      }
+    &:hover {
+      text-decoration: underline;
     }
   }
+}
 
 .info-h1 {
   text-transform: uppercase;
