@@ -28,7 +28,7 @@
 
         <template v-if="column.dataIndex === 'ruc'">
           <span v-if="record.ruc">{{ record.ruc }}</span>
-          <span v-else style="color: #1677ff;">En trámite</span>
+          <span v-else style="color: #00c98a;">En trámite</span>
         </template>
 
 
