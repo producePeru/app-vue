@@ -1,7 +1,7 @@
 <template>
   <div>
 
-    <h3 class="title-produce">REPORTE GENERAL</h3>
+    <h3 class="title-produce"> REPORTE GENERAL </h3>
 
     <a-flex align="center" justify="space-between">
       <div class="header-rep">
