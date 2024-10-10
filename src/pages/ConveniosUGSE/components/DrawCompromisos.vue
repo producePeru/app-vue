@@ -42,11 +42,11 @@
     </template>
 
     <a-form-item>
-      <a-button type="primary" html-type="submit" :loading="loading">GUARDAR</a-button>
+      <a-button type="primary" html-type="submit" :loading="loading">{{ dataRow ? 'ACTUALIZAR' : 'GUARDAR' }}</a-button>
     </a-form-item>
 
   </a-form>
-  <!-- <pre>{{ route.params.id }}</pre> -->
+  <!-- <pre>{{ dataRow }}</pre> -->
 </template>
 
 <script setup>
@@ -55,6 +55,7 @@ import { makeRequest } from '@/utils/api.js';
 import { useRoute } from 'vue-router';
 import { message } from 'ant-design-vue';
 
+const props = defineProps(['dataRow']);
 const emit = defineEmits(['closeDraw']);
 const route = useRoute();
 const formState = reactive({
@@ -76,7 +77,7 @@ const fields = {
   },
   type: {
     type: 'iSelect',
-    label: 'Tipo convenio',
+    label: 'Tipo compromiso',
     name: 'type',
     required: true,
     message: 'Seleccionar una opción',
@@ -93,7 +94,7 @@ const fields = {
   },
   meta: {
     type: 'iNumber',
-    label: 'Beneficiario',
+    label: 'Meta',
     name: 'meta',
     required: false,
     message: 'Escribir la acción',
@@ -125,7 +126,11 @@ const onSubmit = async () => {
   }
 
   try {
-    const response = await makeRequest({ url: '/agreement/create-commitment', method: 'POST', data: payload });
+    
+    const method = props.dataRow ? 'PUT' : 'POST';
+    const url = props.dataRow ? `agreement/update-commitment/${props.dataRow.id}` : '/agreement/create-commitment';
+    
+    const response = await makeRequest({ url , method, data: payload });
     if(response.status == 200) {
       message.success(response.message);
       emit('closeDraw');
@@ -143,4 +148,25 @@ const validateTrim = (field) => {
   const trimmedValue = formState[field] ? formState[field].trim() : '';
   formState[field] = trimmedValue;
 };
+
+function handleSetInfo(info) {
+  formState.title = info.title;
+  formState.type = info.type;
+  formState.description = info.description;
+  formState.meta = info.meta;
+}
+
+onMounted(() => {
+  if (props.dataRow) {
+    handleSetInfo(props.dataRow);
+  }
+});
+
+watch(() => props.dataRow, (newValue) => {
+  if (newValue) {
+    handleSetInfo(newValue);
+  } else {
+    clear();
+  }
+});
 </script>

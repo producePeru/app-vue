@@ -19,7 +19,7 @@
           :label="el.label" 
           :rules="[{ required: el.required, message: el.message, max: el.max },
                   ...(el.name === 'ruc' ? [{ type: 'string', len: 11, message: el.message }, { pattern: /^\d{11}$/, message: 'El RUC debe ser numérico.' }] : [])]">
-              <a-input v-model:value="formState[el.name]" :maxlength="el.max" />
+              <a-input v-model:value="formState[el.name]" :maxlength="el.max" @blur="validateTrim(el.name)" />
           </a-form-item>
 
           <a-form-item class="item-max" v-if="el.type === 'iSelect'" :name="el.name" :label="el.label" :rules="[{ required: el.required, message: el.message }]">
@@ -108,7 +108,7 @@ store.fetchCities();
 const loading = ref(false);
 const spinning = ref(false);
 // const plainOptions = ['UGO  - TU EMPRESA', 'TU EMPRESA - DVMYPE', 'DVMYPE-SG', 'SG-OGPPM', 'OGPPM-TU EMPRESA', 'TU EMPRESA-ALIADO'];
-const formState = reactive({});
+const formState = reactive({ });
 const years = [
   {value: 1, label: '1 Año'},
   {value: 2, label: '2 Años'},
@@ -129,6 +129,11 @@ const components = [
   {value: 'formalizacion',  label: 'Formalización'},
   {value: 'gestion',        label: 'Gestión Empresarial'}
 ];
+
+const validateTrim = (field) => {
+  const trimmedValue = formState[field] ? formState[field].trim() : '';
+  formState[field] = trimmedValue;
+};
 
 const disabledDate = current => {
   const startDate = dayjs(formState.startDate).add(1, 'day').startOf('day');
@@ -246,12 +251,15 @@ const fetchData = async(data) => {
     formState.focalPhone = data.focalPhone;
     formState.observations = data.observations;
     formState.alliedEntity = data.entity;
-  }
+  } 
 }
 
 onMounted(() => {
   if (props.idConvenio) {
     fetchData(props.idConvenio);
+  } else {
+    formState.city_id = 15
+    handleDepartaments(15)
   }
 });
 

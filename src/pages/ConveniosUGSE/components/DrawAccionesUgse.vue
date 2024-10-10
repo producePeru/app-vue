@@ -4,13 +4,11 @@
 
       <div class="form-action">
         <template v-for="(el, idx) in fields" :key="idx">
-          
- 
           <a-form-item 
           v-if="el.type === 'iText' && el.visible" :name="el.name" :label="el.label"
             :rules="[{ required: el.required, message: el.message, max: el.max }]">
 
-            <a-input v-model:value="formState[el.name]" :maxlength="el.max" />
+            <a-input v-model:value="formState[el.name]" :maxlength="el.max" @blur="validateTrim(el.name)" />
 
           </a-form-item>
 
@@ -58,7 +56,7 @@
 </template>
 
 <script setup>
-import { reactive, ref } from 'vue';
+import { reactive, ref, watch, onMounted } from 'vue';
 import { message } from 'ant-design-vue';
 import { useRoute } from 'vue-router';
 import fieldx from '@/forms/conveniosUgseCompromiso.js';
@@ -89,6 +87,11 @@ const modalities = [
 ];
 
 // funciones
+
+const validateTrim = (field) => {
+  const trimmedValue = formState[field] ? formState[field].trim() : '';
+  formState[field] = trimmedValue;
+};
 
 const handleClear = () => {
   formState.accion = null;

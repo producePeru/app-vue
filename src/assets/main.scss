@@ -292,3 +292,10 @@ $color-background: #F7F7FA;
     background-color: #0f7840 !important;
   }
 }
+.btn-pdf {
+  background-color: #e5252a;
+  border-color: #e5252a !important;
+  &:hover {
+    background-color: darken(#e5252a, 6%) !important;
+  }
+}

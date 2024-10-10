@@ -1,28 +1,5 @@
 const fields = {
-  city_id: {
-    type: 'iSelect',
-    label: 'Región',
-    name: 'city_id',
-    required: true,
-    message: 'Seleccionar una región',
-    disabled: true
-  },
-  province_id: {
-    type: 'iSelect',
-    label: 'Provincia',
-    name: 'province_id',
-    required: true,
-    message: 'Seleccionar provincia',
-    disabled: true
-  },
-  district_id: {
-    type: 'iSelect',
-    label: 'Distrito',
-    name: 'district_id',
-    required: true,
-    message: 'Seleccionar distrito',
-    disabled: true
-  },
+  
 
   alliedEntity: {
     type: 'iText',
@@ -49,10 +26,34 @@ const fields = {
     label: 'Componente',
     name: 'components',
     required: true,
-    message: 'Seleccionar una región',
+    message: 'Seleccionar un componente',
     disabled: true
   },
 
+  city_id: {
+    type: 'iSelect',
+    label: 'Región',
+    name: 'city_id',
+    required: true,
+    message: 'Seleccionar una región',
+    disabled: true
+  },
+  province_id: {
+    type: 'iSelect',
+    label: 'Provincia',
+    name: 'province_id',
+    required: true,
+    message: 'Seleccionar provincia',
+    disabled: true
+  },
+  district_id: {
+    type: 'iSelect',
+    label: 'Distrito',
+    name: 'district_id',
+    required: true,
+    message: 'Seleccionar distrito',
+    disabled: true
+  },
 
 
   // homeOperations: {
@@ -92,7 +93,7 @@ const fields = {
     label: 'Representante Legal (Nombres Apellidos)',
     name: 'aliado',
     required: true,
-    message: 'Escribir la entidad aliada',
+    message: 'Escribir los nombres y apellidos',
     disabled: true,
     max: 100
   },
@@ -101,7 +102,7 @@ const fields = {
     label: 'Representante Legal (número telf.)',
     name: 'aliadoPhone',
     required: true,
-    message: 'Escribir la entidad aliada',
+    message: 'Escribir el número',
     disabled: true,
     max: 9
   },
@@ -121,7 +122,7 @@ const fields = {
     label: 'PUNTO FOCAL - cargo',
     name: 'focalCargo',
     required: true,
-    message: 'Escribir la entidad aliada',
+    message: 'Escribir cargo del Punto Focal',
     disabled: true,
     max: 50
   },

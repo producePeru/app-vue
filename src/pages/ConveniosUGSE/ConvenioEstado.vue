@@ -5,9 +5,9 @@
     <a-row style="margin: 1rem 0;">
       <a-col :xs="24" :md="12" :lg="18">
         <a-button type="primary" @click="showDrawer" style="margin-right: .5rem;">NUEVO</a-button>
-        <a-button class="btn-excel" @click="handleDownload" :loading="loadingFile" type="primary">
+        <!-- <a-button class="btn-excel" @click="handleDownload" :loading="loadingFile" type="primary">
           <img width="20" style="margin: -2px 0 0 0;" src="@/assets/img/icoexcel.png" /> 
-        </a-button>
+        </a-button> -->
       </a-col>
 
       <a-col :xs="24" :md="12" :lg="6">
@@ -21,7 +21,7 @@
     <a-table 
     bordered
     :scroll="{ x: valueX, y: valueY }" 
-    class="table-agreements" 
+    class="table-agreements-ugse" 
     :columns="columns"
     :data-source="dataSource" 
     :pagination="false" 
@@ -85,22 +85,6 @@
           :strokeColor="colorPeriodo(dateTrafficLight(record.endDate, record.startDate))" />
         </template>
 
-        <!-- <template v-if="column.dataIndex == 'acciones'"> 
-          <div class="accion-total">
-            <MessageOutlined class="ico-acciones" @click="handleAcciones(record)" />
-            <span class="accion-numb">{{ record.acciones.length }} MENSAJES</span>
-          </div>
-        </template> -->
-           <!-- <template v-if="column.dataIndex =='denomination'">
-          {{ record.denomination }}
-          <a-progress 
-          style="margin: 0;"
-          :percent="dateTrafficLight(record.endDate, record.startDate)" 
-          :size="4" 
-          :showInfo="false" 
-          :strokeColor="colorPeriodo(dateTrafficLight(record.endDate, record.startDate))" />
-        </template> -->
-
         <template v-if="column.dataIndex == 'observations'"> 
           <MessageOutlined v-if="record?.observations" class="observation-icon" @click="handleOpenObservations(record)" />
         </template>
@@ -144,7 +128,7 @@
     <a-pagination size="small" :total="total" :pageSize="pageSize" @change="handlePaginator" :showSizeChanger="false" />
   </div>
 
-  <!-- <pre>{{ idConvenio }}</pre> -->
+  <!-- <pre>{{ dataSource }}</pre> -->
 
   <a-drawer v-model:open="open" root-class-name="root-class-name" title="Convenios" placement="right" width="650" >
     <NuevoConvenio :idConvenio="idConvenio" @closeDraw="handleCloseDrawopen(1)" />
@@ -220,10 +204,8 @@ const valueY = ref(window.innerHeight - 100);
 
 const columns = [
   { title: '#',                                   dataIndex: 'idx', fixed: 'left', align: 'center', width: 70 },
-  { title: 'REGIÓN',                              dataIndex: 'city', fixed: 'left', width: 120 },
-  { title: 'PROVINCIA',                           dataIndex: 'province', fixed: 'left', width: 120 },
-  { title: 'DISTRITO',                            dataIndex: 'district', fixed: 'left', width: 140 },
-  { title: 'ENTIDAD ALIADA',                      dataIndex: 'entity', width: 220 },
+  { title: 'ENTIDAD ALIADA',                      dataIndex: 'entity', fixed: 'left', width: 220 },
+  { title: 'RUC',                                 dataIndex: 'ruc', width: 100 },
   // { title: 'CDE AGENTE EXTERNO',                  dataIndex: 'externo', width: 100, align: 'center'},
   // { title: 'FECHA DE SUSCRIPCIÓN DE CONVENIO',    dataIndex: 'startOperations', align: 'center', width: 180 },
   { title: 'INICIO DE CONVENIO VIGENTE',          dataIndex: 'startDate', align: 'center', width: 180 },
@@ -232,6 +214,14 @@ const columns = [
   { title: 'ESTADO',                              dataIndex: 'status', align: 'center', width: 150 },
   { title: 'FECHA RESTANTE',                      dataIndex: 'numbrestantes', align: 'center', width: 140 },
   { title: 'OBSERVACIONES',                       dataIndex: 'observations', align: 'center', width: 140 },
+  { title: 'REGIÓN',                              dataIndex: 'city', width: 120 },
+  { title: 'PROVINCIA',                           dataIndex: 'province', width: 150 },
+  { title: 'DISTRITO',                            dataIndex: 'district', width: 150 },
+  { title: 'COMPONENTE',                          dataIndex: 'components', align: 'center', width: 120 },
+  { title: 'PUNTO FOCAL',                         dataIndex: 'focal', align: 'center', width: 150 },
+  { title: 'PUNTO FOCAL TELF.',                   dataIndex: 'focalPhone', align: 'center', width: 140 },
+  { title: 'ALIADO',                              dataIndex: 'aliado', align: 'center', width: 150 },
+  { title: 'ALIADO TELF.',                        dataIndex: 'aliadoPhone', align: 'center', width: 120 },
   { title: '',                                    dataIndex: 'actions', width: 60, align: 'center', fixed: 'right' }
   // { title: 'ACCIONES', dataIndex: 'acciones', align: 'center', width: 100 },
 ];
@@ -467,18 +457,11 @@ onMounted(() => {
     font-size: 10px;
   }
 }
-.table-agreements {
+.table-agreements-ugse {
   tr {
     font-size: 13px;
   }
-  .ant-table-row {
-    .ant-table-cell:nth-child(16) {
-      background-color: #feffe2 !important;
-    }
-    .ant-table-cell:nth-child(18) {
-      background-color: #f5f5ff !important;
-    }
-  }
+  
 }
 
 //**** 

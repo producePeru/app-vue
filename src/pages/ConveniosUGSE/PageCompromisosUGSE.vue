@@ -1,14 +1,16 @@
 <template>
   <section>
-    <a-flex align="center" :gap="8">
-      <router-link to="/admin/convenios/ugse">
-        <LeftOutlined /> Atrás
-      </router-link>
-      <h4 style="margin: 0;"> - COMPROMISOS - </h4>
-      <span>{{ $router.currentRoute.value.params.name }}</span>
+    
+    <a-breadcrumb>
+      <a-breadcrumb-item><router-link to="/admin/convenios/ugse">Lista de convenios</router-link></a-breadcrumb-item>
+      <a-breadcrumb-item>
+        <h4>COMPROMISOS</h4>
+      </a-breadcrumb-item>
+    </a-breadcrumb>
  
-    </a-flex>
-    <br>
+    <h3 style="margin: .5rem 0 1rem 0; color: var(--secondary);">{{ $router.currentRoute.value.params.name }}</h3>
+
+
     <a-button type="primary" @click="showDrawer">NUEVO</a-button>
     
     <br>
@@ -44,10 +46,13 @@
             <template #overlay>
               <a-menu>
                 <a-menu-item>
-                  <a @click="handleOpenDrawAcion(record)">Nueva acción</a>
+                  <a @click="handleOpenDrawAcion(record)">Nuevo avance</a>
                 </a-menu-item>
                 <a-menu-item>
-                  <a @click="handleOpenAcciones(record)">Ver Acciones</a>
+                  <a @click="handleOpenAcciones(record)">Ver Avances</a>
+                </a-menu-item>
+                <a-menu-item>
+                  <a @click="handleUpdate(record)">Editar</a>
                 </a-menu-item>
                 <!-- <a-menu-item>
                   <a-popconfirm title="¿Seguro de eliminar?" @confirm="handleDelete(record)">
@@ -63,14 +68,13 @@
       </template>
     </a-table>
 
-
     <!-- <pre>{{ dataSource }}</pre> -->
-    <a-drawer v-model:open="open" title="Registrar un compromiso" placement="right" width="450px">
-      <Compromisos @closeDraw="closeDrawer" /> 
+    <a-drawer v-model:open="open" :title="isUpdate ? 'Editar compromiso' : 'Nuevo compromiso'" placement="right" width="450px">
+      <Compromisos @closeDraw="closeDrawer" :dataRow="dataRow" /> 
     </a-drawer>
 
-    <a-drawer v-model:open="drawAcion" title="Registrar un acción" placement="right" width="450px">
-      <Acciones :dataRow="dataRow" @closeDraw="closeDrawer" />
+    <a-drawer v-model:open="drawAcion" title="Registrar un Avance" placement="right" width="450px">
+      <Acciones @closeDraw="closeDrawer" :dataRow="dataRow" />
     </a-drawer>
 
     <a-drawer v-model:open="openDetails" title="Detalles" placement="right" width="600px">
@@ -89,6 +93,7 @@ import Compromisos from './components/DrawCompromisos.vue';
 import Acciones from './components/DrawAccionesUgse.vue';
 import AccionesDetalles from './components/DrawAccionesDetalle.vue';
 
+const isUpdate = ref(false);
 const open = ref(false);
 const openDetails = ref(false);
 const dataRow = ref(null);
@@ -100,16 +105,21 @@ const dataSource = ref([]);
 const drawAcion = ref(false);
 
 const columns = [
-  { title: '#',                             dataIndex: 'idx', align: 'center', width: 70 },
-  { title: 'TÍTULO',                        dataIndex: 'title', width: 120 },
-  { title: 'TIPO',                          dataIndex: 'type', width: 120, align: 'center' },
-  { title: 'DESCRIPCIÓN',                   dataIndex: 'description', width: 180 },
-  { title: 'BENEFICIARIOS',                 dataIndex: 'meta', width: 140, align: 'center' },
-  { title: 'AVANCES',                       dataIndex: 'avances', width: 80, align: 'center' },
-  { title: '',                              dataIndex: 'actions', width: 50, align: 'center', fixed: 'right' }
+  { title: '#',                   dataIndex: 'idx', align: 'center', width: 50 },
+  { title: 'COMPROMISO',          dataIndex: 'title', width: 120 },
+  { title: 'TIPO',                dataIndex: 'type', width: 100, align: 'center' },
+  { title: 'META',                dataIndex: 'meta', width: 100, align: 'center' },
+  { title: 'CATEGORÍA',           dataIndex: 'description', width: 180 },
+  { title: 'AVANCES',             dataIndex: 'avances', width: 80, align: 'center' },
+  { title: '',                    dataIndex: 'actions', width: 50, align: 'center', fixed: 'right' }
   // { title: 'ACCIONES', dataIndex: 'acciones', align: 'center', width: 100 },
 ];
 
+const handleUpdate = (data) => {
+  isUpdate.value = true;
+  dataRow.value = data;
+  open.value = true;
+}
 const handleOpenAcciones = (data) => {
   dataRow.value = data;
   openDetails.value = true;
@@ -122,8 +132,11 @@ const closeDrawer = () => {
   fetchData();
   open.value = false;
   drawAcion.value = false;
+  isUpdate.value = false;
 }
 const showDrawer = () => {
+  isUpdate.value = false;
+  dataRow.value = null;
   open.value = true;
 };
 const params = ref({

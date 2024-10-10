@@ -162,11 +162,7 @@ const clearFields = () => {
   formState.office_id  = null,
   formState.email = null,
   formState.password = null
-  formState.role_id = null
-  
-}
-const modeTrim = (event) => {
-    event.target.value = event.target.value.trim();
+  formState.role_id = null  
 }
 
 

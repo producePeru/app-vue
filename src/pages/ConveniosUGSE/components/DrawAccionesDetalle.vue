@@ -311,7 +311,9 @@ watch(() => props.dataRow, (newValue) => {
 
   .conv-files {
     margin-top: 5px;
-
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
     a {
       margin-right: 14px;
       color: #009ed0;
