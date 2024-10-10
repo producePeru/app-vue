@@ -16,7 +16,7 @@
 
               <a-select v-if="el.name == 'country_id'" v-model:value="formState[el.name]" :options="store.countries"
                 show-search :filter-option="filterOption" />
-              
+
               <a-select v-if="el.name == 'city_id'" v-model:value="formState[el.name]" :options="store.cities"
                 show-search :filter-option="filterOption" @change="handleDepartaments" :disabled="el.disabled" />
               <a-select v-if="el.name == 'province_id'" v-model:value="formState[el.name]" :options="provinces"
@@ -39,17 +39,27 @@
 
             <a-form-item v-if="el.type === 'iText'" :name="el.name" :label="el.label"
               :rules="[{ required: el.required, message: el.message, type: el.email, max: el.max, min: el.min }]">
-
               <a-input v-if="el.name == 'phone'" v-model:value="formState[el.name]" :disabled="el.disabled"
                 :maxlength="el.max" @input="validateNumberPhone" />
-              <a-input v-else v-model:value="formState[el.name]" :disabled="el.disabled" :maxlength="el.max" />
+              <a-input v-else v-model:value="formState[el.name]" :disabled="el.disabled" :maxlength="el.max"
+                @blur="validateTrim(el.name)" />
             </a-form-item>
 
-            <a-form-item v-if="el.type === 'iDate'" :name="el.name" :label="el.label"
+
+            <!-- <a-form-item v-if="el.type === 'iDate'" :name="el.name" :label="el.label"
               :rules="[{ required: el.required, message: el.message }]">
               <a-date-picker :locale="locale" v-model:value="birthdateDate" style="width: 100%;" :format="dateFormat"
                 placeholder="día/mes/año" @change="formState.birthday = birthdateDate" :disabled="el.disabled" />
+            </a-form-item> -->
+
+            <a-form-item v-if="el.type === 'iDate'" :name="el.name" :label="el.label" :rules="[
+              { required: el.required, message: el.message },
+              { validator: validateAge, message: 'La edad debe estar entre 18 y 99 años' }
+            ]">
+              <a-date-picker :locale="locale" v-model:value="formState[el.name]" style="width: 100%;"
+                :format="dateFormat" placeholder="día/mes/año" :disabled="el.disabled" />
             </a-form-item>
+
           </template>
         </div>
         <div>{{ update() }}</div>
@@ -102,7 +112,7 @@ const dateFormat = 'DD/MM/YYYY';
 const loading = ref(false);
 const spinning = ref(true);
 const sicks = [
-  { value: 'yes', label: 'SI' },
+  { value: 'si', label: 'SI' },
   { value: 'no', label: 'NO' }
 ]
 const hasSoon = [
@@ -129,6 +139,33 @@ const formState = reactive({
   people_id: storageData.user_id,
   from_id: 1
 });
+
+const validateTrim = (field) => {
+  const trimmedValue = formState[field] ? formState[field].trim() : '';
+  formState[field] = trimmedValue;
+};
+
+const validateAge = (rule, value) => {
+  if (!value) {
+    return Promise.reject('La fecha es requerida');
+  }
+
+  const currentDate = new Date();
+  const birthDate = new Date(value);
+  let age = currentDate.getFullYear() - birthDate.getFullYear();
+  const monthDiff = currentDate.getMonth() - birthDate.getMonth();
+
+  // Ajuste para meses y días
+  if (monthDiff < 0 || (monthDiff === 0 && currentDate.getDate() < birthDate.getDate())) {
+    age--;
+  }
+
+  if (age < 18 || age > 99) {
+    return Promise.reject('La edad debe estar entre 18 y 99 años');
+  }
+
+  return Promise.resolve();
+};
 
 const fetchProvinces = async (id) => {
   try {
@@ -300,10 +337,29 @@ const disablesInputs = () => {
 const onSubmit = async () => {
   loading.value = true
 
-  formState.birthday = birthdateDate.value ? dayjs(birthdateDate.value).format('YYYY-MM-DD') : null;
+  const payload = {
+    documentnumber: formState.documentnumber,
+    lastname: formState.lastname,
+    middlename: formState.middlename,
+    name: formState.name,
+    country_id: formState.country_id,
+    phone: formState.phone,
+    email: formState.email,
+    birthday: dayjs(formState.birthday).format('YYYY-MM-DD'),
+    sick: formState.sick,
+    city_id: formState.city_id,
+    province_id: formState.province_id,
+    district_id: formState.district_id,
+    address: formState.address,
+    typedocument_id: formState.typedocument_id,
+    gender_id: formState.gender_id,
+    hasSoon: formState.hasSoon,
+    people_id: storageData.user_id,
+    from_id: 1
+  }
 
   try {
-    const data = await makeRequest({ url: 'person/create', method: 'POST', data: formState });
+    const data = await makeRequest({ url: 'person/create', method: 'POST', data: payload });
 
     if (data.status == 400) {
       return message.error("El correo electrónico ya está registrado. Por favor, ingresa uno válido.");

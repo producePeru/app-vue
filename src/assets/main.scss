@@ -7,23 +7,28 @@
 h1 {
   margin: 0;
 }
+
 .text-center {
   text-align: center;
 }
+
 .ant-form-item-explain-error {
   font-size: 12px;
 }
+
 .flex-baseline {
   display: flex;
   align-items: baseline;
 }
+
 .flex-between {
   display: flex;
   justify-content: space-between;
   align-items: center;
 }
+
 .center-center {
-  display: flex;  
+  display: flex;
   align-items: center;
   justify-content: center;
 }
@@ -31,15 +36,19 @@ h1 {
 .mb-1 {
   margin-bottom: 1rem;
 }
+
 .w-100 {
   width: 100% !important;
 }
+
 .fs-13 {
   font-size: 13px !important;
 }
+
 .color-primary {
   color: var(--primary);
 }
+
 .color-secondary {
   color: var(--secondary);
 }
@@ -47,18 +56,22 @@ h1 {
 .pointer {
   cursor: pointer;
 }
+
 .relative {
   position: relative;
 }
+
 .wrapper-search {
   display: grid;
   grid-template-columns: 170px 1fr 270px;
   margin: 1rem 0 1.5rem;
 }
+
 .ant-table-thead .ant-table-cell {
   background-color: #e9e9e9 !important;
 }
-.ant-table-tbody >tr.ant-table-row:hover>td {
+
+.ant-table-tbody>tr.ant-table-row:hover>td {
   background-color: #f8f8f8 !important;
 }
 
@@ -67,6 +80,7 @@ h1 {
 .ant-input-disabled {
   color: #4e4e4ee0 !important;
 }
+
 .ant-select-disabled .ant-select-selection-item {
   color: #4e4e4ee0 !important;
 }
@@ -75,6 +89,7 @@ h1 {
   font-size: 13px !important;
   color: #606060 !important;
 }
+
 .ant-btn-primary {
   font-weight: 400;
   font-size: 13px;
@@ -106,9 +121,11 @@ h1 {
 .uppercase {
   text-transform: uppercase;
 }
+
 .lowercase {
   text-transform: lowercase;
 }
+
 // :where(.css-dev-only-do-not-override-185kyl0).ant-input-search .ant-input:hover, :where(.css-dev-only-do-not-override-185kyl0).ant-input-search .ant-input:focus {
 //   border-color: var(--color-3)!important;
 // }
@@ -121,10 +138,12 @@ $color-background: #F7F7FA;
 .c-primary {
   color: #cd1616;
 }
+
 .details-modal {
   display: grid;
   grid-template-columns: .6fr 1fr;
   grid-gap: .2rem .5rem;
+
   b {
     font-weight: 500;
     font-size: 13px;
@@ -175,25 +194,30 @@ $color-background: #F7F7FA;
   border-color: var(--primary);
   cursor: pointer;
 }
+
 .title-produce {
   font-weight: 500;
   color: #000;
   font-size: 14px;
 }
-.ant-select-selection-item, .ant-input {
+
+.ant-select-selection-item,
+.ant-input {
   // font-size: 13px !important;
 }
+
 :where(.css-dev-only-do-not-override-ju8ixa).ant-tabs .ant-tabs-tab.ant-tabs-tab-active .ant-tabs-tab-btn {
   font-weight: 500;
 }
 
 
-.radio-produce{
+.radio-produce {
   .ant-radio-inner {
     // border-color: #BA0F0F !important;
     // background-color: #BA0F0F !important;
   }
-} 
+}
+
 .search-produce {
   // .ant-btn-primary {
   //   background-color: var(--primary);
@@ -202,6 +226,7 @@ $color-background: #F7F7FA;
   //   }
   // }
 }
+
 // :where(.css-dev-only-do-not-override-1qb1s0s).ant-radio-wrapper .ant-radio-checked .ant-radio-inner {
 //   background-color: var(--primary);
 //   border-color: var(--primary);
@@ -246,6 +271,7 @@ $color-background: #F7F7FA;
     // width: 600px !important;
   }
 }
+
 .quill-editor {
   .ql-editor {
     height: 100px;
@@ -256,46 +282,56 @@ $color-background: #F7F7FA;
   display: flex;
   align-items: end;
   gap: .5rem;
+
   div {
     width: 200px;
   }
+
   label {
     font-size: 13px;
     display: block;
     margin-bottom: 5px;
   }
+
   @media screen and (max-width: 750px) {
     flex-direction: column;
   }
 }
+
 .filters-center-produce {
   display: flex;
   align-items: center;
 }
 
 .ant-table-body::-webkit-scrollbar {
-  width: 10px; 
-  height: 12px; 
+  width: 10px;
+  height: 12px;
 }
+
 .ant-table-body::-webkit-scrollbar-thumb {
-  background: #ccc; 
-  border-radius: 0px; 
+  background: #ccc;
+  border-radius: 0px;
 }
+
 .ant-table-body::-webkit-scrollbar-track {
-  background: #e1e1e1; 
-  border-radius: 0px; 
+  background: #e1e1e1;
+  border-radius: 0px;
 }
+
 .btn-excel {
   background-color: #209e62;
   border-color: #249157 !important;
+
   &:hover {
     background-color: #0f7840 !important;
   }
 }
+
 .btn-pdf {
   background-color: #e5252a;
   border-color: #e5252a !important;
+
   &:hover {
-    background-color: darken(#e5252a, 6%) !important;
+    background-color: #c0151b !important;
   }
 }

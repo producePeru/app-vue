@@ -26,7 +26,7 @@ const fields = {
     message: 'Escribir número de RUC',
     disabled: false,
     max: 11,
-    min: 11  
+    min: 11
   },
   nameMype: {
     type: 'iText',
@@ -85,7 +85,7 @@ const fields = {
     message: 'Seleccionar el régimen societario',
     disabled: false
   },
-  
+
   economicsector_id: {
     type: 'iSelectWrite',
     label: 'Sector económico',
@@ -102,7 +102,7 @@ const fields = {
     message: 'Escribir número de solicitud de constancia',
     disabled: false,
     max: 7,
-    min: 1  
+    min: 1
   },
   comercialactivity_id: {
     type: 'iSelectWrite',
@@ -112,7 +112,7 @@ const fields = {
     message: 'Seleccionar la actividad comercial',
     disabled: false
   },
-  
+
   notary_id: {
     type: 'iSelect',
     label: 'Notaría',
@@ -121,7 +121,7 @@ const fields = {
     message: 'Seleccionar una notaría',
     disabled: false
   },
-  
+
   dateReception: {
     type: 'iDate',
     label: 'Fecha de Recepcion todo OK',
@@ -138,7 +138,7 @@ const fields = {
     message: 'Escribir el código SID sunarp',
     disabled: false
   },
-  
+
 
   isbic: {
     type: 'iSelect',
@@ -168,7 +168,7 @@ const fields = {
 
 const acto = {};
 const final = {
-  
+
 };
 
 const ructen = {
