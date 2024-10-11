@@ -278,6 +278,12 @@ $color-background: #F7F7FA;
   }
 }
 
+.quill-height-200 {
+  .ql-editor {
+    height: 200px;
+  }
+}
+
 .filters-produce {
   display: flex;
   align-items: end;

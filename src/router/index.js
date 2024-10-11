@@ -146,6 +146,31 @@ const router = createRouter({
         },
 
         {
+          path: 'ferias',
+          name: 'ferias',
+          children: [
+            {
+              path: 'empresariales',
+              name: 'ferias-empresariales',
+              component: () => import('../pages/Ferias/IndexFerias.vue'),
+              meta: { requiresAuth: false },
+            },
+            // {
+            //   path: 'subir-archivo',
+            //   name: 'drive-subir-archivo',
+            //   component: () => import('../pages/Drive/DriveSubirArchivo.vue'),
+            //   meta: { requiresAuth: true },
+            // },
+            // {
+            //   path: 'mis-archivos',
+            //   name: 'drive-mis-archivos',
+            //   component: () => import('../pages/Drive/DriveVerMisArchivos.vue'),
+            //   meta: { requiresAuth: true },
+            // }
+          ]
+        },
+
+        {
           path: 'asesorias',
           name: 'asesorias',
           children: [

@@ -47,6 +47,22 @@
               to="/admin/drive/subir-archivo" class="fs-13">Subir Archivo</router-link> </a-menu-item>
         </a-sub-menu>
 
+        
+        
+        <!-- FERIAS  -->
+        <a-sub-menu key="drive" @click="handleCollapse('drive')" >
+          <template #title>
+            <span>
+              <ShoppingCartOutlined />
+              <span class="fs-13">Ferias</span>
+            </span>
+          </template>
+          <a-menu-item > <router-link
+              to="/admin/ferias/empresariales" class="fs-13">Ferias Empresariales</router-link> </a-menu-item>
+        </a-sub-menu>
+
+
+
         <!-- Asesorias  -->
         <a-sub-menu key="asesorias" v-if="views.includes('asesorias')" @click="handleCollapse('asesorias')">
           <template #title>
@@ -176,7 +192,8 @@ import {
   CloudOutlined,
   CopyOutlined,
   SettingOutlined,
-  CalendarOutlined
+  CalendarOutlined,
+  ShoppingCartOutlined
 } from '@ant-design/icons-vue';
 
 const route = useRoute();
