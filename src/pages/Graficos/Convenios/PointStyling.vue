@@ -168,7 +168,7 @@ const fetchData = async () => {
     color: #fff;
   }
   .conv-end {
-    background-color: #e60013;
+    background-color: #ff5462;
     color: #fff;
   }
 

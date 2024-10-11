@@ -73,7 +73,7 @@ const plainOptions = [
 
   { label: 'Usuarios Principal', value: 'usuarios' },
   { label: 'Usuarios Registrar', value: 'usuarios-nuevo' },
-  { label: 'Usuarios Externo', value: 'asesor-externo-notario' },
+  { label: 'Usuarios - Notarios', value: 'asesor-externo-notario' },
   { label: 'Usuarios Lista', value: 'usuarios-lista' },
 
 

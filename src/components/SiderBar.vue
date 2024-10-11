@@ -139,7 +139,7 @@
               to="/admin/usuarios/nuevo-usuario" class="fs-13">Nuevo usuario</router-link> </a-menu-item>
 
           <a-menu-item key="asesor-externo-notario" v-if="views.includes('asesor-externo-notario')"> <router-link
-              to="/admin/usuarios/asesor-externo-notario" class="fs-13">Asesor externo</router-link> </a-menu-item>
+              to="/admin/usuarios/asesor-externo-notario" class="fs-13">Asesor - Notario</router-link> </a-menu-item>
 
           <a-menu-item key="usuarios-lista" v-if="views.includes('usuarios-lista')"> <router-link
               to="/admin/usuarios/lista" class="fs-13">Lista usuarios</router-link> </a-menu-item>
