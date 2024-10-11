@@ -1,11 +1,16 @@
 <template>
   <section>
     <Formalizaciones v-if="includesRole([1, 2, 7])" />
+
+    <Convenios  v-if="includesRole([6, 8, 9])" />
+
+
   </section>
 </template>
 
 <script setup>
 import Formalizaciones from './InicioFormalizaciones.vue';
+import Convenios from './InicioConvenios.vue';
 
 const storageRole = JSON.parse(localStorage.getItem('role')) || [];
 

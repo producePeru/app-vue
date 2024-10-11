@@ -153,18 +153,13 @@
 </template>
 
 <script setup>
-import { reactive, ref, onMounted, watch, h } from 'vue';
+import { ref, onMounted, h } from 'vue';
 import { makeRequest } from '@/utils/api.js';
 import { message } from 'ant-design-vue';
 import {
-  BankOutlined,
-  CloudUploadOutlined,
   TeamOutlined,
-  PhoneOutlined,
-  DeleteOutlined,
   EnvironmentOutlined,
   FileOutlined,
-  SafetyOutlined,
   VerticalAlignBottomOutlined,
   LoadingOutlined
 } from '@ant-design/icons-vue';
@@ -183,6 +178,7 @@ const prod = import.meta.env.VITE_APP_API_URL_PRODUCTION
 const dev = import.meta.env.VITE_APP_API_URL_LOCAL
 const apiUrl = window.location.hostname == 'localhost' || window.location.hostname == '127.0.0.1' ? dev : prod;
 
+const dateSelected = ref(null);
 const dateFormat = 'DD/MM/YYYY';
 const filterDate = ref();
 const spinerId = ref(null);
@@ -265,7 +261,7 @@ const handleDownloadReportPDF = async (name, date) => {
     loadingFile.value = true;
     const id = route.params.id;
 
-    const urlApi = date ? `${apiUrl}pdf/agreements-general/${id}?start=${date.start}&end=${date.end}` : `${apiUrl}pdf/agreements-general/${id}`
+    const urlApi = dateSelected.value ? `${apiUrl}pdf/agreements-general/${id}?start=${dateSelected.value.start}&end=${dateSelected.value.end}` : `${apiUrl}pdf/agreements-general/${id}`
 
     const response = await axios.get(urlApi, {
       responseType: 'blob',
@@ -293,6 +289,7 @@ const handleFilterDate = async (date) => {
   if (!Array.isArray(date) || date === null) {
     console.warn("Invalid date array provided.");
     await fetchData(); 
+    dateSelected.value = null;  
     return; 
   }
 
@@ -302,6 +299,7 @@ const handleFilterDate = async (date) => {
       end: dayjs(date[1]).format('YYYY/MM/DD')
     };
     await fetchData(value);
+    dateSelected.value = value;
   } 
 };
 
