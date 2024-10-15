@@ -136,7 +136,7 @@ const fields = {
     name: 'dateTramite',
     required: false,
     message: 'Escribir el código SID sunarp',
-    disabled: false
+    disabled: true
   },
 
 

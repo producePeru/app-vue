@@ -35,9 +35,13 @@
             <a-form-item v-if="el.type === 'iDate'" :name="el.name" :label="el.label"
               :rules="[{ required: el.required, message: el.message }]">
 
-              <a-date-picker :locale="locale" v-model:value="formState[el.name]" style="width: 100%;"
+              <!-- <a-date-picker :locale="locale" v-model:value="formState[el.name]" style="width: 100%;"
                 :format="dateFormat" placeholder="día/mes/año" :disabled-date="disabledDate" :disabled="el.disabled"
-                @change="formState.birthday = birthdateDate" />
+                @change="formState.birthday = birthdateDate" /> -->
+
+                <a-date-picker :locale="locale" v-model:value="formState[el.name]" style="width: 100%;"
+                :format="dateFormat" placeholder="día/mes/año" :disabled-date="disabledDate" :disabled="el.disabled"
+                @change="handleChangeDate(el.name)" />
 
             </a-form-item>
 
@@ -176,9 +180,26 @@ const bic = [
   {value: 'NO', label: 'NO'}
 ];
 
+const handleChangeDate = (name) => {
+  console.log("jsjsjsjs", name);
+  
+
+  if(name == 'dateReception') {
+   
+    formState.dateTramite = null;
+
+    fields2.value.dateTramite.disabled = false;
+  }
+  
+}
+
 const disabledDate = (current) => {
-  return current && current > dayjs().endOf('day');
+  const dateReception = formState.dateReception;
+  return current && (current > dayjs().endOf('day') || (dateReception && current.isBefore(dayjs(dateReception).startOf('day'))));
 };
+
+
+
 const onlyRUC = (name) => {
   if(name == 'ruc') {
     const value = formState.ruc;
