@@ -33,6 +33,13 @@ const router = createRouter({
       name: 'lasnotarias',
       component: () => import('../pages/Landing/NotariasPage.vue')
     },
+
+    // FERIAS EMPRESARIALES
+    {
+      path: '/feria-empresarial',
+      name: 'feria-empresarial',
+      component: () => import('../pages/Ferias/PageFormMypeRegister.vue')
+    },
   
     // {
     //   path: '/formalizacion-digital-mapa',
