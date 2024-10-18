@@ -203,7 +203,7 @@ if (!window.dataLayer) {
     box-shadow: 0px 1px 10px #999;
     height: 60px;
     position: sticky;
-    top: 0;
+    // top: 0;
     z-index: 99;
   }
 

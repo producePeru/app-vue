@@ -38,7 +38,7 @@ const router = createRouter({
     {
       path: '/feria-empresarial',
       name: 'feria-empresarial',
-      component: () => import('../pages/Ferias/PageFormMypeRegister.vue')
+      component: () => import('../pages/Ferias/PaginaRegistrarmeFeria.vue')
     },
   
     // {

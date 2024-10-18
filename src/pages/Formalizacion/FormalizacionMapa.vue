@@ -186,7 +186,7 @@ $color-background: #F7F7FA;
 header {
   z-index: 90;
   position: sticky;
-  margin-bottom: 10px;
+  // margin-bottom: 10px;
   top: 0;
   background: #fff;
 
