@@ -3,9 +3,9 @@
     <a-form layout="vertical" :model="formState" name="basic" autocomplete="off" @finish="onSubmit"
       @finishFailed="onSubmitFail">
       <div class="grid-convenios">
-        
+
         <template v-for="(el, idx) in fields" :key="idx">
-          
+
           <!-- <a-form-item 
           v-if="el.type === 'iText'" 
           :name="el.name" 
@@ -14,44 +14,58 @@
             <a-input v-model:value="formState[el.name]" :maxlength="el.max" />
           </a-form-item> -->
 
-          <a-form-item 
-          v-if="el.type === 'iText'" :name="el.name" 
+          <a-form-item v-if="el.type === 'iText'" :name="el.name" :label="el.label" :rules="[
+            { required: el.required, message: el.message, max: el.max },
+            ...(el.name === 'ruc'
+              ? [
+                { type: 'string', len: 11, message: el.message },
+                { pattern: /^\d{11}$/, message: 'El RUC debe ser numérico.' },
+                { pattern: /^(10|15|20)\d{9}$/, message: 'El RUC debe empezar con 10, 15 o 20.' }
+              ]
+              : [])
+          ]">
+            <a-input v-model:value="formState[el.name]" :maxlength="el.max" @blur="validateTrim(el.name)" />
+          </a-form-item>
+
+
+          <a-form-item
+          v-if="el.type === 'iNumber'"
+          :name="el.name" 
           :label="el.label" 
-          :rules="[{ required: el.required, message: el.message, max: el.max },
-                  ...(el.name === 'ruc' ? [{ type: 'string', len: 11, message: el.message }, { pattern: /^\d{11}$/, message: 'El RUC debe ser numérico.' }] : [])]">
-              <a-input v-model:value="formState[el.name]" :maxlength="el.max" @blur="validateTrim(el.name)" />
+          :rules="[{ required: el.required, message: el.message }]">
+            <a-input-number v-model:value="formState[el.name]" :maxlength="el.max" style="width: 100%;" />
           </a-form-item>
 
-          <a-form-item class="item-max" v-if="el.type === 'iSelect'" :name="el.name" :label="el.label" :rules="[{ required: el.required, message: el.message }]">
-            <a-select 
-              v-if="el.name == 'city_id'" v-model:value="formState[el.name]" :options="store.cities" show-search :filter-option="filterOption"
-              @change="handleDepartaments" />
-            <a-select 
-              v-if="el.name == 'province_id'" v-model:value="formState[el.name]" :options="store.provinces" show-search :filter-option="filterOption"
-              @change="handleProvinces" :disabled="!formState.city_id" />
-            <a-select 
-              v-if="el.name == 'district_id'" v-model:value="formState[el.name]" :options="store.districts" show-search :filter-option="filterOption"
-              :disabled="!formState.province_id" />
+          <a-form-item class="item-max" v-if="el.type === 'iSelect'" :name="el.name" :label="el.label"
+            :rules="[{ required: el.required, message: el.message }]">
+            <a-select v-if="el.name == 'city_id'" v-model:value="formState[el.name]" :options="store.cities" show-search
+              :filter-option="filterOption" @change="handleDepartaments" />
+            <a-select v-if="el.name == 'province_id'" v-model:value="formState[el.name]" :options="store.provinces"
+              show-search :filter-option="filterOption" @change="handleProvinces" :disabled="!formState.city_id" />
+            <a-select v-if="el.name == 'district_id'" v-model:value="formState[el.name]" :options="store.districts"
+              show-search :filter-option="filterOption" :disabled="!formState.province_id" />
 
-            <a-select v-if="el.name == 'years'" v-model:value="formState[el.name]" :options="years" show-search :filter-option="filterOption" />
-            
-            <a-select 
-            v-if="el.name == 'components'" 
-            v-model:value="formState[el.name]" 
-            :options="components" 
-            show-search 
-            :filter-option="filterOption" />
+            <a-select v-if="el.name == 'years'" v-model:value="formState[el.name]" :options="years" show-search
+              :filter-option="filterOption" />
+
+            <a-select v-if="el.name == 'components'" v-model:value="formState[el.name]" :options="components"
+              show-search :filter-option="filterOption" />
 
           </a-form-item>
 
-          <a-form-item v-if="el.type === 'iDate'" :name="el.name" :label="el.label" :rules="[{ required: el.required, message: el.message }]">
-            <a-date-picker v-if="el.name == 'endDate'" :disabled-date="disabledDate" :locale="locale" :disabled="!formState.startDate"
-            v-model:value="formState[el.name]" style="width: 100%;" :format="dateFormat" placeholder="día/mes/año" />
-            <a-date-picker v-else :locale="locale" v-model:value="formState[el.name]" style="width: 100%;" :format="dateFormat" placeholder="día/mes/año" />
+          <a-form-item v-if="el.type === 'iDate'" :name="el.name" :label="el.label"
+            :rules="[{ required: el.required, message: el.message }]">
+            <a-date-picker v-if="el.name == 'endDate'" :disabled-date="disabledDate" :locale="locale"
+              :disabled="!formState.startDate" v-model:value="formState[el.name]" style="width: 100%;"
+              :format="dateFormat" placeholder="día/mes/año" />
+            <a-date-picker v-else :locale="locale" v-model:value="formState[el.name]" style="width: 100%;"
+              :format="dateFormat" placeholder="día/mes/año" />
           </a-form-item>
 
-          <a-form-item v-if="el.type === 'iSwitch'" :name="el.name" :label="el.label" :rules="[{ required: el.required, message: el.message }]">
-            <a-switch v-model:checked="formState[el.name]" checked-children="si" un-checked-children="" :checkedValue="1" :unCheckedValue="0" />
+          <a-form-item v-if="el.type === 'iSwitch'" :name="el.name" :label="el.label"
+            :rules="[{ required: el.required, message: el.message }]">
+            <a-switch v-model:checked="formState[el.name]" checked-children="si" un-checked-children=""
+              :checkedValue="1" :unCheckedValue="0" />
           </a-form-item>
 
           <!-- <a-form-item v-if="el.type === 'iCheckbox'" :name="el.name" :label="el.label" :rules="[{ required: el.required, message: el.message }]">
@@ -108,26 +122,26 @@ store.fetchCities();
 const loading = ref(false);
 const spinning = ref(false);
 // const plainOptions = ['UGO  - TU EMPRESA', 'TU EMPRESA - DVMYPE', 'DVMYPE-SG', 'SG-OGPPM', 'OGPPM-TU EMPRESA', 'TU EMPRESA-ALIADO'];
-const formState = reactive({ });
+const formState = reactive({});
 const years = [
-  {value: 1, label: '1 Año'},
-  {value: 2, label: '2 Años'},
-  {value: 3, label: '3 Años'},
-  {value: 4, label: '4 Años'},
-  {value: 5, label: '5 Años'},
-  {value: 6, label: '6 Años'},
-  {value: 7, label: '7 Años'},
-  {value: 8, label: '8 Años'},
-  {value: 9, label: '9 Años'},
-  {value: 10, label: '10 Años'}
+  { value: 1, label: '1 Año' },
+  { value: 2, label: '2 Años' },
+  { value: 3, label: '3 Años' },
+  { value: 4, label: '4 Años' },
+  { value: 5, label: '5 Años' },
+  { value: 6, label: '6 Años' },
+  { value: 7, label: '7 Años' },
+  { value: 8, label: '8 Años' },
+  { value: 9, label: '9 Años' },
+  { value: 10, label: '10 Años' }
 ];
 
 const components = [
-  {value: 'financiamiento', label: 'Acceso en Financiamiento'},
-  {value: 'desarrollo',     label: 'Desarrollo Productivo'},
-  {value: 'digitalizacion', label: 'Digitalización'},
-  {value: 'formalizacion',  label: 'Formalización'},
-  {value: 'gestion',        label: 'Gestión Empresarial'}
+  { value: 'financiamiento', label: 'Acceso en Financiamiento' },
+  { value: 'desarrollo', label: 'Desarrollo Productivo' },
+  { value: 'digitalizacion', label: 'Digitalización' },
+  { value: 'formalizacion', label: 'Formalización' },
+  { value: 'gestion', label: 'Gestión Empresarial' }
 ];
 
 const validateTrim = (field) => {
@@ -160,15 +174,15 @@ const update = () => {
 
 const clearFields = () => {
   const fieldsToClear = [
-    'city_id', 
-    'province_id', 
-    'district_id', 
+    'city_id',
+    'province_id',
+    'district_id',
     'alliedEntity',
-    'ruc', 
-    'components', 
-    'startDate', 
+    'ruc',
+    'components',
+    'startDate',
     'years',
-    'aliado', 
+    'aliado',
     'aliadoPhone',
     'focal',
     'focalCargo',
@@ -212,11 +226,11 @@ const onSubmit = async () => {
   try {
 
     const method = props.idConvenio ? 'PUT' : 'POST';
-    const url = props.idConvenio? `agreement/update-values/${props.idConvenio.id}` : 'agreement/create-ugse';
+    const url = props.idConvenio ? `agreement/update-values/${props.idConvenio.id}` : 'agreement/create-ugse';
 
     const data = await makeRequest({ url, method, data: payload });
 
-    if(data.status == 200) {
+    if (data.status == 200) {
       message.success(data.message);
       emit('closeDraw', true)
       clearFields();
@@ -233,8 +247,8 @@ const onSubmitFail = () => {
   message.error('Por favor corrige los valores con errores')
 };
 
-const fetchData = async(data) => {
-  if(data.id) {
+const fetchData = async (data) => {
+  if (data.id) {
     formState.city_id = data.city_id
     handleDepartaments(data.city_id)
     formState.province_id = data.province_id
@@ -251,7 +265,7 @@ const fetchData = async(data) => {
     formState.focalPhone = data.focalPhone;
     formState.observations = data.observations;
     formState.alliedEntity = data.entity;
-  } 
+  }
 }
 
 onMounted(() => {
@@ -277,6 +291,7 @@ watch(() => props.idConvenio, (newValue) => {
   display: grid;
   grid-template-columns: 1.5fr 1.5fr;
   grid-gap: 0 1rem;
+
   .ant-form-item:nth-child(15) {
     grid-column: 1/3;
   }

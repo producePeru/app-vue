@@ -90,7 +90,7 @@ const fields = {
 
   aliado: {
     type: 'iText',
-    label: 'Representante Legal (Nombres Apellidos)',
+    label: 'REPRESENTANTE LEGAL - NOMBRES',
     name: 'aliado',
     required: true,
     message: 'Escribir los nombres y apellidos',
@@ -98,8 +98,8 @@ const fields = {
     max: 100
   },
   aliadoPhone: {
-    type: 'iText',
-    label: 'Representante Legal (número telf.)',
+    type: 'iNumber',
+    label: 'REPRESENTANTE LEGAL - CELULAR',
     name: 'aliadoPhone',
     required: true,
     message: 'Escribir el número',
@@ -109,7 +109,7 @@ const fields = {
 
   focal: {
     type: 'iText',
-    label: 'PUNTO FOCAL - nombres',
+    label: 'PUNTO FOCAL - NOMBRES',
     name: 'focal',
     required: true,
     message: 'Escribir datos del punto focal',
@@ -119,7 +119,7 @@ const fields = {
 
   focalCargo: {
     type: 'iText',
-    label: 'PUNTO FOCAL - cargo',
+    label: 'PUNTO FOCAL - CARGO',
     name: 'focalCargo',
     required: true,
     message: 'Escribir cargo del Punto Focal',
@@ -128,8 +128,8 @@ const fields = {
   },
 
   focalPhone: {
-    type: 'iText',
-    label: 'PUNTO FOCAL (número de telf.)',
+    type: 'iNumber',
+    label: 'PUNTO FOCAL - NUM. CELULAR',
     name: 'focalPhone',
     required: true,
     message: 'Escribir el número de telf.',
