@@ -33,41 +33,24 @@
           {{ computeIndex(index) }}
         </template>
 
-        <template v-if="column.dataIndex == 'externo'">
-          <!-- {{ record.external }} -->
-          <a-tag v-if="record.external == 1" color="cyan">Externo</a-tag>
+        <template v-if="column.dataIndex == 'slug'">
+          <router-link :to="`/feria/${record.slug}`" target="_blank"><CloudOutlined class="fair-link" /></router-link>
         </template>
 
-        <template v-if="column.dataIndex == 'startOperations'">
-          {{ formatDate(record.startOperations) }}
+        <template v-if="column.dataIndex == 'modality'">
+          <a-tag color="blue" v-if="record.modality == 'p'">PRESENCIAL</a-tag>
+          <a-tag color="orange" v-if="record.modality == 'v'">VIRTUAL</a-tag>
         </template>
-
         <template v-if="column.dataIndex == 'startDate'">
           {{ formatDate(record?.startDate) }}
         </template>
-        
         <template v-if="column.dataIndex == 'endDate'">
           {{ formatDate(record?.endDate) }}
         </template>
-
-        <template v-if="column.dataIndex == 'numbrestantes'">
-          <p v-if="dateTrafficLight(record.endDate, record.startDate) >= 1" class="list-days">{{ dateTrafficLight(record.endDate, record.startDate) }} días faltantes</p>
-          <p v-else class="list-days">{{ dateTrafficLight(record.endDate, record.startDate) }} días vencidos</p>
+        <template v-if="column.dataIndex == 'dateDiff'">
+          {{ handleCountDays(record.startDate, record.endDate) }}
         </template>
-
-        <template v-if="column.dataIndex == 'status'">
-          <a-progress 
-          style="margin: 0;"
-          :percent="dateTrafficLight(record.endDate, record.startDate)" 
-          :size="4" 
-          :showInfo="false" 
-          :strokeColor="colorPeriodo(dateTrafficLight(record.endDate, record.startDate))" />
-        </template>
-
-        <template v-if="column.dataIndex == 'observations'"> 
-          <MessageOutlined v-if="record?.observations" class="observation-icon" @click="handleOpenObservations(record)" />
-        </template>
-
+        
         <template v-if="column.dataIndex == 'actions'">
           <a-dropdown :trigger="['click']">
             <a class="ant-dropdown-link" @click.prevent>
@@ -107,7 +90,7 @@
 
   <!-- <pre>{{ dataSource }}</pre> -->
 
-  <a-drawer v-model:open="drawNuevaFeria" title="Nueva Feria" placement="right" width="650" >
+  <a-drawer v-model:open="drawFeria" title="Nueva Feria" placement="right" width="650" >
     <NuevaFeria />
   </a-drawer>
 
@@ -137,7 +120,7 @@ import axios from 'axios';
 import { ref, onMounted, h, onBeforeUnmount, computed, reactive } from 'vue';
 import NuevaFeria from './components/NuevaFeria.vue';
 
-import { CaretUpOutlined, CaretDownOutlined, QuestionCircleOutlined, MessageOutlined } from '@ant-design/icons-vue';
+import { CaretUpOutlined, CaretDownOutlined, QuestionCircleOutlined, CloudOutlined } from '@ant-design/icons-vue';
 import { MoreOutlined } from '@ant-design/icons-vue';
 import { useRouter } from 'vue-router';
 import { makeRequest } from '@/utils/api.js';
@@ -147,6 +130,7 @@ import { useCounterStore } from '@/stores/selectes.js';
 import Cookies from 'js-cookie';
 import dayjs from 'dayjs';
 import 'dayjs/locale/es';
+import { Link } from 'ant-design-vue/es/anchor';
 dayjs.locale('es');
 
 const storageData = JSON.parse(localStorage.getItem('profile'))
@@ -158,7 +142,7 @@ const dev = import.meta.env.VITE_APP_API_URL_LOCAL;
 const apiUrl = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1' ? dev : prod;
 
 
-const drawNuevaFeria = ref(false);
+const drawFeria = ref(false);
 
 
 const denominationascdesc = ref(null);
@@ -180,31 +164,34 @@ const city = ref(null);
 const valueY = ref(window.innerHeight - 100);
 
 const columns = [
-  { title: '#',                                   dataIndex: 'idx', fixed: 'left', align: 'center', width: 70 },
-  { title: 'NOMBRE',                      dataIndex: 'entity', fixed: 'left', width: 220 },
-  { title: 'TÍTULO',                                 dataIndex: 'ruc', width: 100 },
-  { title: 'LINK',                                 dataIndex: 'ruc', width: 100 },
-  { title: 'DESCRIPCIÓN',          dataIndex: 'startDate', align: 'center', width: 180 },
-  { title: 'META MYPES',                  dataIndex: 'years', width: 120, align: 'center'},
-  { title: 'META VENTAS',                    dataIndex: 'endDate', align: 'center', width: 180 },
-  { title: 'FECHA DE INICIO',                              dataIndex: 'status', align: 'center', width: 150 },
-  { title: 'FECHA DE FIN',                      dataIndex: 'numbrestantes', align: 'center', width: 140 },
-  { title: 'TRANSCURSO',                              dataIndex: 'status', align: 'center', width: 150 },
-  { title: 'MODALIDAD',                       dataIndex: 'observations', align: 'center', width: 140 },
-  { title: 'REGIÓN',                              dataIndex: 'city', width: 120 },
-  { title: 'PROVINCIA',                           dataIndex: 'province', width: 150 },
-  { title: 'DISTRITO',                            dataIndex: 'district', width: 150 },
+  { title: '#',                   dataIndex: 'idx', fixed: 'left', align: 'center', width: 70 },
+  { title: 'FERIA',               dataIndex: 'title', width: 200 },
+  { title: 'LINK',                dataIndex: 'slug', width: 100, align: 'center' },
+  // { title: 'DESCRIPCIÓN',          dataIndex: 'description', align: 'center', width: 180 },
+  { title: 'META MYPES',          dataIndex: 'metaMypes', width: 120, align: 'center'},
+  { title: 'META VENTAS',         dataIndex: 'metaSales', align: 'center', width: 180 },
+  { title: 'FECHA DE INICIO',     dataIndex: 'startDate', align: 'center', width: 150 },
+  { title: 'FECHA DE FIN',        dataIndex: 'endDate', align: 'center', width: 140 },
+  { title: 'DÍAS RESTANTES',      dataIndex: 'dateDiff', align: 'center', width: 150 },
+  { title: 'MODALIDAD',           dataIndex: 'modality', align: 'center', width: 140 },
+  { title: 'REGIÓN',              dataIndex: 'city', width: 120 },
+  { title: 'PROVINCIA',           dataIndex: 'province', width: 150 },
+  { title: 'DISTRITO',            dataIndex: 'district', width: 150 },
+  { title: 'CREADO POR',          dataIndex: 'profile', width: 170 },
+  { title: '',                    dataIndex: 'actions', width: 60, align: 'center', fixed: 'right' }
 
-  { title: '',                                    dataIndex: 'actions', width: 60, align: 'center', fixed: 'right' }
 ];
 const formState = reactive({
   search: '',
 });
 
 const handleNuevaFeria = () => {
-  drawNuevaFeria.value = true;
+  drawFeria.value = true;
 }
-
+const handleCountDays = (start, end) => {
+  const diffDays = dayjs(end).diff(dayjs(start), 'days');
+  return diffDays;
+}
 
 
 const handleSearchData = () => {
@@ -316,7 +303,7 @@ const fetchData = async (val) => {
     parx = params.value.page == 0 ? '' : params.value;
     parx = val? {...parx,...val } : parx;
    
-    const {data} = await makeRequest({ url: `agreement/list/ugse`, method: 'GET', params: parx });
+    const {data} = await makeRequest({ url: `fair/list`, method: 'GET', params: parx });
     dataSource.value = data?.data
     total.value = data.total
     pageSize.value = data.per_page;
@@ -367,6 +354,16 @@ onMounted(() => {
 </script>
 
 <style lang="scss">
+
+.fair-link {
+  font-size: 22px;
+  cursor: pointer;
+  // color: var(--primary);
+  &:hover {
+    color: var(--secondary);
+  }
+}
+
 .paginator {
   display: flex;
   justify-content: flex-end;

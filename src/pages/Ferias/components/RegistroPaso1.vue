@@ -58,16 +58,56 @@
             show-search :filter-option="filterOption" :disabled="!formState.province_id" />
         </a-form-item>
 
-        <a-form-item v-if="el.type === 'iFile'" :name="el.name" :label="el.label"
+        
+        
+        
+        <!-- <pre>{{ el['filePDF'] }}</pre> -->
+        
+        <!-- <a-form-item v-if="el.type === 'iFile'" :name="el.name" :label="el.label"
           :rules="[{ required: el.required, message: el.message }]">
           <a-upload :before-upload="beforeUpload" :custom-request="dummyRequest" :file-list="fileList"
             :accept="acceptTypes" :multiple="true" :on-remove="handleRemove" show-upload-list>
             <a-button>
               <CloudUploadOutlined />
-              Cargar archivos
+              {{ el.span }}
             </a-button>
           </a-upload>
-        </a-form-item>
+        </a-form-item> -->
+        
+        <div v-if="el['filePDF']">
+       
+          <pre>{{ el['filePDF'] }}</pre>
+          <pre>{{ el['logo'] }}</pre>
+          
+            <a-form-item v-if="el['filePDF'].type === 'iFile'" :name="el['filePDF'].name" :label="el['filePDF'].label"
+            :rules="[{ required: el['filePDF'].required, message: el['filePDF'].message }]">
+            <a-upload 
+              :before-upload="(file) => beforeUpload(file, el['filePDF'].name)" 
+              :custom-request="dummyRequest" 
+              :file-list="el['filePDF'].name === 'filePDF' ? fileList : fileListLogo"
+              :accept="el['filePDF'].name === 'filePDF' ? '.pdf' : '.png,.jpeg,.jpg'" 
+              :multiple="false" 
+              :on-remove="(file) => handleRemove(file, el['filePDF'].name)" 
+              show-upload-list>
+              <a-button>
+                <CloudUploadOutlined />
+                {{ el['filePDF'].span }}
+              </a-button>
+            </a-upload>
+          </a-form-item>
+
+
+
+
+        
+        </div>
+
+
+
+
+
+
+
 
         <a-form-item v-if="el.type === 'iFileImg'" :name="el.name" :label="el.label"
           :rules="[{ required: el.required, message: el.message }]">
@@ -350,17 +390,33 @@ const mype = ref({
     max: 200,
     disabled: true
   },
-  filePDF: {
-    type: 'iFile',
-    label: 'Adjuntar reporte tributario',
-    name: 'filePDF',
-    required: true,
-    message: 'Adjuntar Reporte',
-    disabled: true
+  
+  files: {
+   
+    filePDF: {
+      type: 'iFile',
+      label: 'Adjuntar reporte tributario',
+      name: 'filePDF',
+      required: true,
+      message: 'Adjuntar Reporte',
+      disabled: true,
+      span: 'Reporte Tributario PDF'
+    },
+    logo: {
+      type: 'iFile',
+      label: 'LOGO DE LA EMPRESA (OPCIONAL)',
+      name: 'logo',
+      required: false,
+      message: 'Logo',
+      disabled: true,
+      span: 'Logo de la Empresa'
+    }
   },
+
   space7: {
     type: 'space7'
   },
+
   fileImgs: {
     type: 'iFileImg',
     label: 'CARGAR IMAGENES DE TUS PRODUCTOS (Max 3 productos)',
@@ -368,7 +424,8 @@ const mype = ref({
     required: false,
     message: 'Adjuntar Reporte',
     disabled: true
-  }
+  },
+  
 });
 
 const handleSearchRUC = () => {
@@ -476,6 +533,7 @@ const onSubmit = async () => {
 // START archivos ***
 const maxFiles = 1;
 const fileList = ref([]);
+const fileListLogo = ref([]);
 const acceptTypes = '.pdf';
 
 const dummyRequest = ({ onSuccess }) => {
@@ -484,39 +542,57 @@ const dummyRequest = ({ onSuccess }) => {
   }, 0);
 };
 
-const beforeUpload = (file) => {
-  if (fileList.value.length >= maxFiles) {
-    message.error('Solo puedes cargar un máximo de 3 archivos');
-    return false; // Evitar cargar más de maxFiles
+const beforeUpload = (file, name) => {
+
+  if(name == 'logo') {
+    if (fileListLogo.value.length >= maxFiles) {
+      message.error('Solo puedes cargar un archivo');
+      return false; 
+    }
+  }
+  if(name == 'filePDF') {
+    if (fileList.value.length >= maxFiles) {
+      message.error('Solo puedes cargar un archivo');
+      return false; 
+    }
   }
 
-  // Almacenar el archivo directamente en el formState
-  if (!formState.filePDF) {
-    formState.filePDF = file;
-  } else if (!formState.file2) {
-    formState.file2 = file;
-  } else if (!formState.file3) {
-    formState.file3 = file;
+  const isPDF = name === 'filePDF' && file.type === 'application/pdf';
+  const isImage = name === 'logo' && (file.type === 'image/png' || file.type === 'image/jpeg' || file.type === 'image/jpg');
+
+  if (!isPDF && !isImage) {
+    message.error('Formato de archivo no permitido');
+    return false; 
   }
 
-  // Agregar el archivo a la lista de archivos
-  fileList.value.push({
-    uid: file.uid, // Identificador único para cada archivo
-    name: file.name,
-    status: 'done',
-  });
+  formState[name] = file;
 
-  return false; // Evita la carga automática, usaremos nuestra lógica
+  if(name == 'logo') {
+    fileListLogo.value.push({
+      uid: file.uid,
+      name: file.name,
+      status: 'done',
+    });
+  }
+
+  if(name == 'filePDF') {
+    fileList.value.push({
+      uid: file.uid, 
+      name: file.name,
+      status: 'done',
+    });
+  }
+  
+  return false; 
 };
 
-const handleRemove = (file) => {
+const handleRemove = (file, name) => {
   const index = fileList.value.findIndex(item => item.uid === file.uid);
-  if (index === 0) {
-    formState.filePDF = null;
-  }
+  formState[name] = null; 
   fileList.value.splice(index, 1);
 };
 // END archivos ***
+
 
 
 // ---------  INICIO CARGAR IMAGEN 

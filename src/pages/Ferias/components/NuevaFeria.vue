@@ -53,7 +53,7 @@
       <a-button type="primary" html-type="submit" :loading="loading">{{ dataRow ? 'ACTUALIZAR' : 'GUARDAR' }}</a-button>
     </a-form-item>
 
-    <pre>{{ formState }}</pre>
+    <!-- <pre>{{ formState }}</pre> -->
 
   </a-form>
 </template>
@@ -276,9 +276,17 @@ const handleProvinces = (id) => {
 
 const clear = () => {
   formState.title = null;
-  formState.type = null;
-  formState.description = null;
-  formState.meta = null;
+  formState.description = '</span>';
+  formState.metaMypes = null;
+  formState.metaSales = null;
+  formState.startDate = null;
+  formState.endDate = null;
+  formState.modality = null;
+  formState.powerBy = null;
+  formState.typeFair = null;
+  formState.city_id = null;
+  formState.province_id = null;
+  formState.district_id = null;
 }
 
 const onSubmit = async () => {
@@ -299,11 +307,12 @@ const onSubmit = async () => {
     district_id: formState.district_id,
   }
 
-
   try {
 
+    //  `agreement/update-commitment/${props.dataRow.id}`
+
     const method = props.dataRow ? 'PUT' : 'POST';
-    const url = props.dataRow ? `agreement/update-commitment/${props.dataRow.id}` : '/agreement/create-commitment';
+    const url = props.dataRow ? '' : 'fair/create';
 
     const response = await makeRequest({ url, method, data: payload });
     if (response.status == 200) {
