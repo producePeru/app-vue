@@ -124,10 +124,10 @@ const fields = {
 
   dateReception: {
     type: 'iDate',
-    label: 'Fecha de Recepcion todo OK',
+    label: 'Fecha de Recepcion PNTE',
     name: 'dateReception',
     required: false,
-    message: 'Escribir el código SID sunarp',
+    message: 'Fecha de Recepcion del PNTE, no puede ser mayor a la del trámite de la SUNARP - SUNAT',
     disabled: false
   },
   dateTramite: {
@@ -135,8 +135,8 @@ const fields = {
     label: 'Fec. trámite SID SUNARP-SUNAT',
     name: 'dateTramite',
     required: false,
-    message: 'Escribir el código SID sunarp',
-    disabled: true
+    message: 'La fecha de trámite no puede ser menor que la fecha de recepción del PNTE ni más de 30 días',
+    disabled: false
   },
 
 

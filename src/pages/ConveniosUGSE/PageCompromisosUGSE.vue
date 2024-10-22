@@ -78,7 +78,7 @@
     </a-drawer>
 
     <a-drawer v-model:open="openDetails" title="Detalles" placement="right" width="600px">
-      <AccionesDetalles :dataRow="dataRow" />
+      <AccionesDetalles :dataRow="dataRow" @closeDraw="handleFresh" />
     </a-drawer>
 
   </section>
@@ -133,6 +133,11 @@ const closeDrawer = () => {
   open.value = false;
   drawAcion.value = false;
   isUpdate.value = false;
+}
+const handleFresh = () => {
+  console.log("Fresh");
+  
+  fetchData();
 }
 const showDrawer = () => {
   isUpdate.value = false;

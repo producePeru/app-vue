@@ -1,7 +1,7 @@
 <template>
   <section>
     <a-spin :spinning="spinning">
-     
+
       <a-empty v-if="commitments.length < 1" />
 
       <template v-else>
@@ -10,11 +10,31 @@
             <div class="convenios-header">
               <span>{{ item.profile.name }} {{ item.profile.lastname }} {{ item.profile.middlename }}</span>
 
+
+
+
+
+
+
+
+
               <div v-if="profile.user_id == item.profile.id || role.some(r => r.id === 8)">
                 <span key="comment-nested-reply-to" class="ico-delete-comp">
-                  <DeleteOutlined @click="handleDelete(item.id)" />
+
+                  <a-popconfirm placement="leftTop" title="¿Estás seguro de que deseas eliminar este ítem?" ok-text="Si" cancel-text="No" @confirm="handleDelete(item.id)"
+                    >
+
+                    <DeleteOutlined />
+                  </a-popconfirm>
                 </span>
               </div>
+
+
+
+
+
+
+
 
             </div>
           </template>
@@ -104,6 +124,7 @@ const token = Cookies.get('token');
 const prod = import.meta.env.VITE_APP_API_URL_PRODUCTION
 const dev = import.meta.env.VITE_APP_API_URL_LOCAL
 const apiUrl = window.location.hostname == 'localhost' || window.location.hostname == '127.0.0.1' ? dev : prod;
+const emit = defineEmits(['closeDraw']);
 
 const formState = reactive({});
 const loading = ref(false);
@@ -157,18 +178,22 @@ const handleDelete = async (id) => {
   try {
 
     const response = await makeRequest({ url: `/agreement/commitment-delete/${id}`, method: 'DELETE' });
-    if(response.status == 200) fetchData()
-    
+    if (response.status == 200) {
+      fetchData(props.dataRow);
+      emit('closeDraw');
+    }
+
   } catch (error) {
     console.error('Error de red:', error);
   }
 }
 
 const fetchData = async (row) => {
+
   try {
     spinning.value = true;
 
-    const id = route.params.id;
+    // const id = route.params.id;
 
     const response = await makeRequest({ url: `/agreement/commitments/${row.id}`, method: 'GET' });
 
@@ -252,6 +277,7 @@ watch(() => props.dataRow, (newValue) => {
 .ant-empty-description {
   font-size: 13px;
 }
+
 .compromisos {
   display: grid;
   grid-template-columns: 350px auto;
@@ -314,6 +340,7 @@ watch(() => props.dataRow, (newValue) => {
     display: flex;
     flex-direction: column;
     gap: 6px;
+
     a {
       margin-right: 14px;
       color: #009ed0;

@@ -45,7 +45,7 @@ const fields = {
     label: 'País Origen',
     name: 'country_id',
     required: true,
-    message: 'Escribir nombre',
+    message: 'Seleccionar país de origen',
     disabled: false
   },
   city_id: {

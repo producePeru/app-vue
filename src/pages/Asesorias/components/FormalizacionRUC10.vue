@@ -15,13 +15,37 @@
               <!-- <a-select v-if="el.name == 'economicsector_id'" v-model:value="formState[el.name]" :options="store.economicSectors" /> -->
             </a-form-item>
 
-            <a-form-item v-if="el.type === 'iText'" :name="el.name" :label="el.label" :rules="[
+
+
+            <!-- <a-form-item v-if="el.type === 'iText'" :name="el.name" :label="el.label" :rules="[
               { required: el.required, message: el.message, type: 'string', max: el.max },
               ... (el.name === 'ruc' ? [{ validator: rucValidator }] : [])
             ]">
               <a-input v-model:value="formState[el.name]" :disabled="el.name === 'dni' && !!formState[el.name]"
                 :maxlength="el.max" :placeholder="el.placeholder" />
-            </a-form-item>
+            </a-form-item> -->
+
+            <a-form-item v-if="el.type === 'iText'" :name="el.name" :label="el.label" :rules="[ 
+              { required: el.required, message: el.message, type: 'string', max: el.max },
+              ...(el.name === 'ruc' ? [{ 
+                  validator: (rule, value, callback) => {
+                    const regex = /^(10|15)\d*$/;
+                    if (!regex.test(value)) {
+                      return callback(new Error('El RUC debe comenzar con 10 o 15 y solo contener números'));
+                    }
+                    callback(); // Validación exitosa
+                  }
+              }] : [])
+            ]">
+  <a-input v-model:value="formState[el.name]" :disabled="el.name === 'dni' && !!formState[el.name]"
+    :maxlength="el.max" :placeholder="el.placeholder" />
+</a-form-item>
+
+
+
+
+
+
 
             <a-form-item class="item-max" v-if="el.type === 'iSelectWrite'" :name="el.name" :label="el.label"
               :rules="[{ required: el.required, message: el.message }]">

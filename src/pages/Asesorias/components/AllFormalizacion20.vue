@@ -17,7 +17,7 @@
                 :options="store.typeCapital" />
 
               <a-select v-if="el.name == 'isbic'" v-model:value="formState[el.name]" :options="bic" />
-              
+
 
               <a-select v-if="el.name == 'notary_id'" :disabled="el.disabled" v-model:value="formState[el.name]"
                 :options="notaries" option-label-prop="name" show-search :filter-option="filterNotaries">
@@ -29,21 +29,21 @@
                   </div>
                 </template>
               </a-select>
-            
+
             </a-form-item>
+
+
 
             <a-form-item v-if="el.type === 'iDate'" :name="el.name" :label="el.label"
-              :rules="[{ required: el.required, message: el.message }]">
+              :rules="[{ required: el.required, message: el.message, validator: (rule, value) => validateDates(el.name, value) }]">
 
-              <!-- <a-date-picker :locale="locale" v-model:value="formState[el.name]" style="width: 100%;"
-                :format="dateFormat" placeholder="día/mes/año" :disabled-date="disabledDate" :disabled="el.disabled"
-                @change="formState.birthday = birthdateDate" /> -->
-
-                <a-date-picker :locale="locale" v-model:value="formState[el.name]" style="width: 100%;"
-                :format="dateFormat" placeholder="día/mes/año" :disabled-date="disabledDate" :disabled="el.disabled"
-                @change="handleChangeDate(el.name)" />
-
+              <a-date-picker :locale="locale" v-model:value="formState[el.name]" style="width: 100%;"
+                :format="dateFormat" placeholder="día/mes/año" :disabled="el.disabled" />
             </a-form-item>
+
+
+
+
 
             <a-form-item class="item-max" v-if="el.type === 'iSelectWrite'" :name="el.name" :label="el.label"
               :rules="[{ required: el.required, message: el.message }]">
@@ -85,10 +85,17 @@
                 :maxlength="el.max" :placeholder="el.placeholder" />
             </a-form-item>
 
-            <a-form-item v-if="el.type === 'iNumber'" :name="el.name" :label="el.label"
+            <!-- <a-form-item v-if="el.type === 'iNumber'" :name="el.name" :label="el.label"
               :rules="[{ required: el.required, message: el.message }]">
               <a-input-number style="width: 100%;" v-model:value="formState[el.name]" :maxlength="el.max"
                 @change="onlyRUC(el.name)" />
+            </a-form-item> -->
+
+            <a-form-item v-if="el.type === 'iNumber'" :name="el.name" :label="el.label" :rules="[
+              { required: el.required, message: el.message },
+              ...(el.name === 'ruc' ? [{ validator: validateRUC, message: 'El RUC debe empezar por 20', trigger: 'change' }] : [])
+            ]">
+              <a-input-number style="width: 100%;" v-model:value="formState[el.name]" :maxlength="11" />
             </a-form-item>
 
             <a-form-item v-if="el.type === 'iTextLol'" :name="el.name" :label="el.label"
@@ -97,13 +104,11 @@
                 :disabled="!props.documentnumber" :maxlength="el.max" :placeholder="el.placeholder" />
             </a-form-item>
 
-            <a-form-item v-if="el.type === 'iMoney'" :name="el.name" :label="el.label" :rules="[{ required: el.required, message: el.message }]">
-              <a-input-number 
-              :min="1" 
-              style="width: 100%;" 
-              v-model:value="formState[el.name]"
-              :formatter="value => `S/ ${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')"
-              :parser="value => value.replace(/S\/\s?|(,*)/g, '')" />
+            <a-form-item v-if="el.type === 'iMoney'" :name="el.name" :label="el.label"
+              :rules="[{ required: el.required, message: el.message }]">
+              <a-input-number :min="1" style="width: 100%;" v-model:value="formState[el.name]"
+                :formatter="value => `S/ ${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')"
+                :parser="value => value.replace(/S\/\s?|(,*)/g, '')" />
             </a-form-item>
 
           </template>
@@ -176,21 +181,53 @@ store.fetchTypeCapital();
 store.fetchCities();
 
 const bic = [
-  {value: 'SI', label: 'SI'},
-  {value: 'NO', label: 'NO'}
+  { value: 'SI', label: 'SI' },
+  { value: 'NO', label: 'NO' }
 ];
+
+
+const validateDates = (fieldName, value) => {
+  const dateReception = formState.dateReception ? dayjs(formState.dateReception) : null;
+  const dateTramite = formState.dateTramite ? dayjs(formState.dateTramite) : null;
+
+  // Validación para dateReception
+  if (fieldName === 'dateReception' && dateTramite) {
+    // La fecha de recepción no puede ser mayor que la fecha de trámite
+    if (dayjs(value).isAfter(dateTramite)) {
+      return Promise.reject('La fecha de recepción no puede ser mayor que la fecha de trámite');
+    }
+  }
+
+  // Validación para dateTramite
+  if (fieldName === 'dateTramite' && dateReception) {
+    const maxDate = dateReception.add(30, 'days');
+    
+    // Permitir que las fechas sean iguales
+    if (dayjs(value).isBefore(dateReception) && !dayjs(value).isSame(dateReception)) {
+      return Promise.reject('La fecha de trámite no puede ser menor que la fecha de recepción');
+    }
+
+    // La fecha de trámite no puede ser más de 30 días después de la fecha de recepción
+    if (dayjs(value).isAfter(maxDate)) {
+      return Promise.reject('La fecha de trámite no puede ser más de 30 días después de la fecha de recepción');
+    }
+  }
+
+  return Promise.resolve(); // Si pasa las validaciones
+};
+
 
 const handleChangeDate = (name) => {
   console.log("jsjsjsjs", name);
-  
 
-  if(name == 'dateReception') {
-   
+
+  if (name == 'dateReception') {
+
     formState.dateTramite = null;
 
     fields2.value.dateTramite.disabled = false;
   }
-  
+
 }
 
 const disabledDate = (current) => {
@@ -199,15 +236,22 @@ const disabledDate = (current) => {
 };
 
 
-
-const onlyRUC = (name) => {
-  if(name == 'ruc') {
-    const value = formState.ruc;
-    if (value < 20000000000 || value > 20999999999) {
-      formState.ruc = null;
-    }
+const validateRUC = (rule, value) => {
+  const regex = /^20\d{9}$/;
+  if (regex.test(value)) {
+    return Promise.resolve();
+  } else {
+    return Promise.reject('El RUC debe comenzar por 20');
   }
-};
+}
+// const onlyRUC = (name) => {
+//   if(name == 'ruc') {
+//     const value = formState.ruc;
+//     if (value < 20000000000 || value > 20999999999) {
+//       formState.ruc = null;
+//     }
+//   }
+// };
 const validateOnlyNumber = (val) => {
   if (val == 'ruc' || val == 'montocapital') {
     formState[val] = formState[val].replace(/\D/g, '');
@@ -223,9 +267,9 @@ const filterNotaries = (input, option) => {
   const normalizedDistrict = option.district.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "");
 
   return normalizedName.includes(normalizedInput) ||
-         normalizedCity.includes(normalizedInput) ||
-         normalizedProvince.includes(normalizedInput) ||
-         normalizedDistrict.includes(normalizedInput);
+    normalizedCity.includes(normalizedInput) ||
+    normalizedProvince.includes(normalizedInput) ||
+    normalizedDistrict.includes(normalizedInput);
 };
 
 const handleAddItem = async () => {
@@ -319,7 +363,7 @@ function handleSetInfo(info) {
 const onSubmit = async () => {
   loading.value = true;
 
-  if(!props.info.id) return message.error("Error al registrar, actualiza la página");
+  if (!props.info.id) return message.error("Error al registrar, actualiza la página");
 
   const payload = {
     codesunarp: formState.codesunarp,
@@ -407,19 +451,23 @@ watch(() => props.info, (newValue) => {
 
 <style scoped lang="scss">
 .grid-ruc20 {
-  @media (width >= 820px) {
+  @media (width >=820px) {
     display: grid;
     grid-template-columns: repeat(4, 1fr);
     grid-gap: 0 1rem;
+
     .ant-form-item:nth-child(3) {
       grid-column: 3/5;
     }
+
     .ant-form-item:nth-child(12) {
       grid-column: 1/3;
     }
+
     .ant-form-item:nth-child(13) {
       grid-column: 3/5;
     }
+
     .ant-form-item:nth-child(18) {
       grid-column: 1/3;
     }

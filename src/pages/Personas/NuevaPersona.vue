@@ -2,7 +2,7 @@
   <div class="agreement-wrapper">
     <h3>Formulario de registro</h3>
     <br>
-
+    
     <a-spin :spinning="searchLoading">
       <a-form layout="vertical" :model="formState" name="basic" autocomplete="off" @finish="onSubmit"
         @finishFailed="onSubmitFail">
@@ -126,7 +126,7 @@ const formState = reactive({
   lastname: null,
   middlename: null,
   name: null,
-  country_id: 155,
+  country_id: route.query.type == 1 ? 155 : null,
   city_id: null,
   address: null,
   province_id: null,
