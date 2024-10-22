@@ -68,11 +68,11 @@
             <!-- formulario -->
             <section>
 
-              <a-steps @change="handleSteepState" v-model:current="current" status="error" :items="[
+              <!-- <a-steps @change="handleSteepState" v-model:current="current" status="error" :items="[
                 { title: 'Empresa' },
                 { title: 'Representante Legal' },
                 { title: 'Participar' }
-              ]" />
+              ]" /> -->
 
               <div style="margin-top: 2rem;">
                 <RegistroPaso1 v-if="current == 0" />
@@ -99,7 +99,7 @@ import RegistroPaso1 from './components/RegistroPaso1.vue';
 import RegistroPaso2 from './components/RegistroPaso2.vue';
 import RegistroPaso3 from './components/RegistroPaso3.vue';
 
-const caducated = ref(true);
+const caducated = ref(!true);
 const current = ref(0);
 const navBar = ref(null);
 const isFloating = ref(false);

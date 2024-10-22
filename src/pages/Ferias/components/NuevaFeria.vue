@@ -2,89 +2,48 @@
   <a-form layout="vertical" :model="formState" name="basic" autocomplete="off" @finish="onSubmit">
     <div class="form-fair">
       <template v-for="(el, idx) in fields" :key="idx">
-        <a-form-item 
-        v-if="el.type === 'iText'" 
-        :name="el.name" 
-        :label="el.label" 
-        :rules="[{ required: el.required, message: el.message, max: el.max }]">
+        <a-form-item v-if="el.type === 'iText'" :name="el.name" :label="el.label"
+          :rules="[{ required: el.required, message: el.message, max: el.max }]">
           <a-input v-model:value="formState[el.name]" :maxlength="el.max" @blur="validateTrim(el.name)" />
-        </a-form-item> 
-
-        <a-form-item 
-        class="item-max" 
-        v-if="el.type === 'iSelect'" 
-        :name="el.name" 
-        :label="el.label" 
-        :rules="[{ required: el.required, message: el.message }]">
-          <a-select 
-          v-model:value="formState[el.name]" 
-          :options="handleSelect(el.name)" />
         </a-form-item>
 
-        <a-form-item 
-        v-if="el.type === 'iTextarea'" 
-        :name="el.name" 
-        :label="el.label"
-        :rules="[{ required: el.required, message: el.message }]">
+        <a-form-item class="item-max" v-if="el.type === 'iSelect'" :name="el.name" :label="el.label"
+          :rules="[{ required: el.required, message: el.message }]">
+          <a-select v-model:value="formState[el.name]" :options="handleSelect(el.name)" />
+        </a-form-item>
+
+        <a-form-item v-if="el.type === 'iTextarea'" :name="el.name" :label="el.label"
+          :rules="[{ required: el.required, message: el.message }]">
           <a-textarea v-model:value="formState[el.name]" :rows="3" :maxlength="el.max" />
         </a-form-item>
 
-        <a-form-item 
-        class="item-max" 
-        v-if="el.type === 'iNumber'" 
-        :name="el.name" 
-        :label="el.label"
-        :rules="[{ required: el.required, message: el.message }]">
+        <a-form-item class="item-max" v-if="el.type === 'iNumber'" :name="el.name" :label="el.label"
+          :rules="[{ required: el.required, message: el.message }]">
           <a-input-number v-model:value="formState[el.name]" :min="1" :max="500" style="width: 100%" />
         </a-form-item>
 
-        <a-form-item 
-        v-if="el.type === 'iQuillEditor'" 
-        :name="el.name" 
-        :label="el.label" 
-        :rules="[{ required: el.required, message: el.message }]">
-          <QuillEditor 
-          class="quill-height-200" 
-          v-model:content="formState[el.name]" 
-          :options="editorOptions" 
-          contentType="html" />
+        <a-form-item v-if="el.type === 'iQuillEditor'" :name="el.name" :label="el.label"
+          :rules="[{ required: el.required, message: el.message }]">
+          <QuillEditor class="quill-height-200" v-model:content="formState[el.name]" :options="editorOptions"
+            contentType="html" />
         </a-form-item>
 
-        <a-form-item 
-        v-if="el.type === 'iDate'" 
-        :name="el.name" 
-        :label="el.label"
-        :rules="[{ required: el.required, message: el.message }]">
-          <a-date-picker 
-          :locale="locale" 
-          v-model:value="formState[el.name]" 
-          style="width: 100%;" 
-          :format="dateFormat"
-          placeholder="día/mes/año" />
+
+        <a-form-item v-if="el.type === 'iDate'" :name="el.name" :label="el.label"
+          :rules="[{ required: el.required, message: el.message }]">
+          <a-date-picker :locale="locale" v-model:value="formState[el.name]" style="width: 100%;" :format="dateFormat"
+            placeholder="día/mes/año" :disabled-date="disabledDate(el.name)" />
         </a-form-item>
 
-        <a-form-item class="item-max" v-if="el.type === 'iSelectWrite'" :name="el.name" :label="el.label" :rules="[{ required: el.required, message: el.message }]">
-          <a-select 
-            v-if="el.name == 'city_id'" 
-            v-model:value="formState[el.name]" 
-            :options="store.cities" 
-            show-search 
-            :filter-option="filterOption"
-            @change="handleDepartaments" />
-          <a-select 
-            v-if="el.name == 'province_id'" 
-            v-model:value="formState[el.name]" 
-            :options="store.provinces" 
-            show-search :filter-option="filterOption"
-            @change="handleProvinces" 
-            :disabled="!formState.city_id" />
-          <a-select 
-            v-if="el.name == 'district_id'" 
-            v-model:value="formState[el.name]" 
-            :options="store.districts" 
-            show-search 
-            :filter-option="filterOption"
-            :disabled="!formState.province_id" />
+
+        <a-form-item class="item-max" v-if="el.type === 'iSelectWrite'" :name="el.name" :label="el.label"
+          :rules="[{ required: el.required, message: el.message }]">
+          <a-select v-if="el.name == 'city_id'" v-model:value="formState[el.name]" :options="store.cities" show-search
+            :filter-option="filterOption" @change="handleDepartaments" />
+          <a-select v-if="el.name == 'province_id'" v-model:value="formState[el.name]" :options="store.provinces"
+            show-search :filter-option="filterOption" @change="handleProvinces" :disabled="!formState.city_id" />
+          <a-select v-if="el.name == 'district_id'" v-model:value="formState[el.name]" :options="store.districts"
+            show-search :filter-option="filterOption" :disabled="!formState.province_id" />
         </a-form-item>
 
       </template>
@@ -93,6 +52,8 @@
     <a-form-item>
       <a-button type="primary" html-type="submit" :loading="loading">{{ dataRow ? 'ACTUALIZAR' : 'GUARDAR' }}</a-button>
     </a-form-item>
+
+    <pre>{{ formState }}</pre>
 
   </a-form>
 </template>
@@ -133,14 +94,14 @@ const editorOptions = {
       ['clean'],
     ],
   },
-  contentType: 'html', 
+  contentType: 'html',
 };
 
 const props = defineProps(['dataRow']);
 const emit = defineEmits(['closeDraw']);
 const route = useRoute();
 
-const formState = reactive({ }); 
+const formState = reactive({});
 
 const fields = {
   title: {
@@ -164,15 +125,15 @@ const fields = {
     type: 'iNumber',
     label: 'Meta MYPEs Participantes',
     name: 'metaMypes',
-    required: false,
-    message: 'Escribir la meta',
+    required: true,
+    message: 'Meta MYPEs Participantes',
     disabled: true
   },
   metaSales: {
     type: 'iNumber',
     label: 'Meta en ventas',
     name: 'metaSales',
-    required: false,
+    required: true,
     message: 'Escribir le meta en ventas',
     disabled: true
   },
@@ -181,7 +142,7 @@ const fields = {
     label: 'Fecha Inicio de la Feria',
     name: 'startDate',
     required: true,
-    message: 'Seleccionar fecha',
+    message: 'Seleccionar fecha de Inicio',
     disabled: false
   },
   endDate: {
@@ -189,7 +150,7 @@ const fields = {
     label: 'Fecha Fin de la Feria',
     name: 'endDate',
     required: true,
-    message: 'Seleccionar fecha',
+    message: 'Seleccionar fecha de Fin',
     disabled: false
   },
   modality: {
@@ -243,35 +204,63 @@ const fields = {
 };
 
 const types = [
-  { label: 'PRESENCIAL',  value: 'p' },
-  { label: 'VIRTUAL',     value: 'v' },
+  { label: 'PRESENCIAL', value: 'p' },
+  { label: 'VIRTUAL', value: 'v' },
 ];
 const pertenece = [
-  { label: 'PP093',   value: 'pp093' },
-  { label: 'PUNCHE',  value: 'punche' },
-  { label: 'APNOP',   value: 'apnop' }
+  { label: 'PP093', value: 'pp093' },
+  { label: 'PUNCHE', value: 'punche' },
+  { label: 'APNOP', value: 'apnop' }
 ];
 const typeFair = [
-  { label: 'PERÚ PRODUCE',        value: 'pp' },
-  { label: 'PERÚ IMPARABLE',      value: 'pi' },
-  { label: 'GAMARRA IMPARABLE',   value: 'gi' },
-  { label: 'FESTI PRODUCE',       value: 'fp' },
-  { label: 'MUJER PRODUCE',       value: 'mp' },
-  { label: 'MACRO EVENTO',        value: 'me' }
+  { label: 'PERÚ PRODUCE', value: 'pp' },
+  { label: 'PERÚ IMPARABLE', value: 'pi' },
+  { label: 'GAMARRA IMPARABLE', value: 'gi' },
+  { label: 'FESTI PRODUCE', value: 'fp' },
+  { label: 'MUJER PRODUCE', value: 'mp' },
+  { label: 'MACRO EVENTO', value: 'me' }
 ];
+
+
+const disabledDate = (fieldName) => {
+  return (current) => {
+    const today = new Date().setHours(0, 0, 0, 0);
+    if (fieldName === 'startDate') {
+      return current && current.valueOf() < today;
+    } else if (fieldName === 'endDate') {
+      const startDate = formState.startDate ? new Date(formState.startDate).setHours(0, 0, 0, 0) : null;
+      return current && (current.valueOf() < today || (startDate && current.valueOf() < startDate));
+    }
+    return current && current.valueOf() < today;
+  };
+};
+
+watch(() => formState.startDate, (newStartDate) => {
+  if (formState.endDate && new Date(newStartDate) > new Date(formState.endDate)) {
+    formState.endDate = null;
+  }
+});
+
+watch(() => formState.endDate, (newEndDate) => {
+  if (formState.startDate && new Date(newEndDate) < new Date(formState.startDate)) {
+    formState.startDate = null;
+  }
+});
+
+
 const filterOption = (input, option) => {
   const normalizedInput = input.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "");
   const normalizedLabel = option.label.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "");
   return normalizedLabel.includes(normalizedInput);
 };
 const handleSelect = (name) => {
-  if(name == 'modality') {
+  if (name == 'modality') {
     return types;
   }
-  if(name == 'powerBy') {
+  if (name == 'powerBy') {
     return pertenece;
   }
-  if(name == 'typeFair') {
+  if (name == 'typeFair') {
     return typeFair;
   }
 }
@@ -294,26 +283,35 @@ const clear = () => {
 
 const onSubmit = async () => {
   loading.value = true;
+
   const payload = {
     title: formState.title,
-    type: formState.type,
     description: formState.description,
-    meta: formState.meta,
-    agreement_id: route.params.id
+    metaMypes: formState.metaMypes,
+    metaSales: formState.metaSales,
+    startDate: dayjs(formState.startDate).format('YYYY-MM-DD'),
+    endDate: dayjs(formState.endDate).format('YYYY-MM-DD'),
+    modality: formState.modality,
+    powerBy: formState.powerBy,
+    typeFair: formState.typeFair,
+    city_id: formState.city_id,
+    province_id: formState.province_id,
+    district_id: formState.district_id,
   }
 
+
   try {
-    
+
     const method = props.dataRow ? 'PUT' : 'POST';
     const url = props.dataRow ? `agreement/update-commitment/${props.dataRow.id}` : '/agreement/create-commitment';
-    
-    const response = await makeRequest({ url , method, data: payload });
-    if(response.status == 200) {
+
+    const response = await makeRequest({ url, method, data: payload });
+    if (response.status == 200) {
       message.success(response.message);
       emit('closeDraw');
       clear();
     }
-    
+
   } catch (error) {
     message.error('Se presentó un error, los valores son requeridos',);
   } finally {
@@ -352,7 +350,8 @@ watch(() => props.dataRow, (newValue) => {
 .form-fair {
   display: grid;
   grid-gap: 0 1rem;
-  grid-template-columns: 1.5fr 1.5fr;  
+  grid-template-columns: 1.5fr 1.5fr;
+
   .ant-form-item:nth-child(1),
   .ant-form-item:nth-child(2) {
     grid-column: 1/3;

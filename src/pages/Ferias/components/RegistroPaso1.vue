@@ -1,42 +1,57 @@
 <template>
   <a-form layout="vertical" :model="formState" name="basic" autocomplete="off" @finish="onSubmit">
-    
-    <!-- <h2 style="margin-bottom: 1.5rem;">EMPRESA</h2> -->
+
+    <h2>DATOS DE LA EMPRESA</h2>
 
     <div class="fair-form">
       <template v-for="(el, idx) in mype" :key="idx">
 
-        <a-form-item v-if="el.type === 'iSearch'" :name="el.name" :label="el.label"
-          :rules="[{ required: el.required, message: el.message, max: el.max }]">
+        <a-form-item v-if="el.type === 'iSearch'" :name="el.name" :label="el.label" :rules="[
+          {
+            required: el.required,
+            message: el.message,
+            max: el.max
+          },
+          {
+            pattern: /^(10|15|20)\d{9,}$/,
+            message: 'El número debe comenzar con 10, 15 o 20, tener solo números, y al menos 11 caracteres',
+          }
+        ]">
           <a-input-search v-model:value="formState[el.name]" placeholder="Ingresar RUC" enter-button="BUSCAR"
             :maxlength="el.max" @search="handleSearchRUC" />
         </a-form-item>
 
+
         <a-form-item v-if="el.type === 'iText'" :name="el.name" :label="el.label"
-          :rules="[{ required: el.required, message: el.message, max: el.max }]">
-          <a-input v-model:value="formState[el.name]" :maxlength="el.max" @blur="validateTrim(el.name)" />
+          :rules="[{ required: el.required, message: el.message, max: el.max }]" :style="{ display: el.display }">
+          <a-input v-model:value="formState[el.name]" :maxlength="el.max" @blur="validateTrim(el.name)"
+            :disabled="el.disabled" />
         </a-form-item>
 
 
         <a-form-item class="item-max" v-if="el.type === 'iSelect'" :name="el.name" :label="el.label"
           :rules="[{ required: el.required, message: el.message }]">
-          <a-select v-model:value="formState[el.name]" :options="handleSelectOptions(el.name)" />
+          <a-select v-model:value="formState[el.name]" :options="handleSelectOptions(el.name)"
+            :disabled="el.disabled" @change="handleChangeEvent(el.name)" />
         </a-form-item>
 
         <a-form-item v-if="el.type === 'iTextarea'" :name="el.name" :label="el.label"
           :rules="[{ required: el.required, message: el.message }]">
-          <a-textarea v-model:value="formState[el.name]" :rows="4" :maxlength="el.max" />
+          <a-textarea v-model:value="formState[el.name]" :rows="4" :maxlength="el.max" :disabled="el.disabled" />
         </a-form-item>
 
+
         <a-form-item class="item-max" v-if="el.type === 'iNumber'" :name="el.name" :label="el.label"
-          :rules="[{ required: el.required, message: el.message }]">
-          <a-input-number v-model:value="formState[el.name]" :min="1" :max="el.max" style="width: 180px;" />
+          :rules="[{ required: el.required, message: el.message }]" :style="{ display: el.display }">
+          <a-input-number v-model:value="formState[el.name]" :min="1" :max="el.max" style="width: 180px;"
+            :disabled="el.disabled" />
         </a-form-item>
+
 
         <a-form-item class="item-max" v-if="el.type === 'iSelectWrite'" :name="el.name" :label="el.label"
           :rules="[{ required: el.required, message: el.message }]">
           <a-select v-if="el.name == 'city_id'" v-model:value="formState[el.name]" :options="store.cities" show-search
-            :filter-option="filterOption" @change="handleDepartaments" />
+            :filter-option="filterOption" @change="handleDepartaments" :disabled="el.disabled" />
           <a-select v-if="el.name == 'province_id'" v-model:value="formState[el.name]" :options="store.provinces"
             show-search :filter-option="filterOption" @change="handleProvinces" :disabled="!formState.city_id" />
           <a-select v-if="el.name == 'district_id'" v-model:value="formState[el.name]" :options="store.districts"
@@ -75,7 +90,8 @@
           el.type === 'space4' ||
           el.type === 'space5' ||
           el.type === 'space6' ||
-          el.type === 'space7' ">
+          el.type === 'space7' ||
+          el.type === 'space8'">
         </div>
 
       </template>
@@ -116,6 +132,19 @@ const sino = [
   { label: 'NO', value: 'no' }
 ];
 
+const rubros = [
+  {label: 'Alimentos y bebidas', value: 'alimentos'},
+  {label: 'Artesanía', value: 'artesania'},
+  {label: 'Cosmética orgánica', value: 'cosmetica'},
+  {label: 'Cuero calzado', value: 'cuero'},
+  {label: 'Decoración', value: 'decoracion'},
+  {label: 'Gastronomía', value: 'gastronomia'},
+  {label: 'Joyería', value: 'joyeria'},
+  {label: 'Madera', value: 'madera'},
+  {label: 'Metalmecánica', value: 'metalm'},
+  {label: 'Textil confecciones', value: 'textil'}
+];
+
 const handleSelectOptions = (name) => {
   if (name === 'economicSector') {
     return sectorEconomico;
@@ -128,7 +157,7 @@ const handleSelectOptions = (name) => {
   }
 }
 
-const mype = {
+const mype = ref({
   ruc: {
     type: 'iSearch',
     label: 'NÚMERO DE RUC',
@@ -171,7 +200,7 @@ const mype = {
     name: 'city_id',
     required: true,
     message: 'Seleccionar región',
-    disabled: false
+    disabled: true
   },
   province_id: {
     type: 'iSelectWrite',
@@ -179,7 +208,7 @@ const mype = {
     name: 'province_id',
     required: true,
     message: 'Seleccionar provincia',
-    disabled: false
+    disabled: true
   },
   district_id: {
     type: 'iSelectWrite',
@@ -198,14 +227,15 @@ const mype = {
     disabled: true,
     max: 100
   },
-  economicSector: {
-    type: 'iSelect',
-    label: 'SECTOR ECONÓMICO',
-    name: 'economicSector',
-    required: true,
-    message: 'Seleccionar sector económico',
-    disabled: true
-  },
+  // economicSector: {
+  //   type: 'iSelect',
+  //   label: 'SECTOR ECONÓMICO',
+  //   name: 'economicSector',
+  //   required: true,
+  //   message: 'Seleccionar sector económico',
+  //   disabled: true
+  // },
+
   businessSector: {
     type: 'iText',
     label: 'RUBRO DEL NEGOCIO',
@@ -214,6 +244,9 @@ const mype = {
     message: 'Seleccionar rubro del negocio',
     disabled: true,
     max: 11
+  },
+  space8: {
+    type: 'space8'
   },
   percentageOwnPlan: {
     type: 'iNumber',
@@ -256,7 +289,8 @@ const mype = {
     name: 'nameGremio',
     required: false,
     message: 'Escribir nombre del gremio',
-    disabled: true
+    disabled: false,
+    display: 'none'
   },
   space6: {
     type: 'space6'
@@ -274,9 +308,10 @@ const mype = {
     label: '¿Cuántos puntos de venta?',
     name: 'numberPointSale',
     required: false,
-    message: 'Escribir el RUC',
-    disabled: true,
-    max: 1000
+    message: '¿Cuántos puntos de venta?',
+    disabled: false,
+    max: 1000,
+    display: 'none'
   },
   space4: {
     type: 'space4'
@@ -312,7 +347,8 @@ const mype = {
     required: false,
     message: 'Escribir la descripción',
     disabled: false,
-    max: 200
+    max: 200,
+    disabled: true
   },
   filePDF: {
     type: 'iFile',
@@ -333,11 +369,67 @@ const mype = {
     message: 'Adjuntar Reporte',
     disabled: true
   }
-}
+});
 
 const handleSearchRUC = () => {
+  const ruc = formState.ruc;
+  const isValid = /^\d{11}$/.test(ruc) && /^(10|15|20)/.test(ruc);
 
-}
+  const fieldsToToggle = [
+    'comercialName',
+    'socialReason',
+    'city_id',
+    'address',
+    'businessSector',
+    'percentageOwnPlan',
+    'percentageMaquila',
+    'capacityProdMounth',
+    'isGremio',
+    'pointSale',
+    'web',
+    'facebook',
+    'instagram',
+    'description'
+  ];
+
+  const toggleFields = (disabled) => {
+    fieldsToToggle.forEach(field => {
+      mype.value[field].disabled = disabled;
+    });
+  };
+
+  if (!isValid) {
+    console.error('El RUC debe tener 11 caracteres, comenzar con 11, 15 o 20, y contener solo números.');
+    toggleFields(true);
+  } else {
+    toggleFields(false);
+  }
+};
+const validateTrim = (field) => {
+  const trimmedValue = formState[field] ? formState[field].trim() : '';
+  formState[field] = trimmedValue;
+};
+const handleChangeEvent = (name) => {
+  if(name == 'isGremio') {
+    if(formState.isGremio == 'si') {
+      mype.value.nameGremio.display = 'block';
+      mype.value.nameGremio.required = true;
+    } else {
+      mype.value.nameGremio.display = 'none';
+      mype.value.nameGremio.required = false;
+    }
+  }
+  if(name == 'pointSale') {
+    if(formState.pointSale == 'si') {
+      mype.value.numberPointSale.display = 'block';
+      mype.value.numberPointSale.required = true;
+    } else {
+      mype.value.numberPointSale.display = 'none';
+      mype.value.numberPointSale.required = false;
+    }
+  }
+};
+
 const filterOption = (input, option) => {
   const normalizedInput = input.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "");
   const normalizedLabel = option.label.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "");
@@ -354,13 +446,37 @@ const handleProvinces = (id) => {
   store.fetchDistricts(id)
 }
 const onSubmit = async () => {
-
+  const payload = {
+    ruc: formState.ruc,
+    comercialName: formState.comercialName,
+    socialReason: formState.socialReason,
+    city_id: formState.city_id,
+    province_id: formState.province_id,
+    district_id: formState.district_id,
+    address: formState.address,
+    businessSector: formState.businessSector,
+    percentageOwnPlan: formState.percentageOwnPlan,
+    percentageMaquila: formState.percentageMaquila,
+    capacityProdMounth: formState.capacityProdMounth,
+    isGremio: formState.isGremio,
+    nameGremio: formState.isGremio == 'si' ? formState.nameGremio : null,
+    pointSale: formState.pointSale,
+    numberPointSale: formState.pointSale == 'si' ? formState.numberPointSale : null,
+    web: formState.web,
+    facebook: formState.facebook,
+    instagram: formState.instagram,
+    description: formState.description,
+    filePDF: formState.filePDF,
+    img1: formState.img1,
+    img2: formState.img2,
+    img3: formState.img3
+  }
 };
 
 // START archivos ***
 const maxFiles = 1;
 const fileList = ref([]);
-const acceptTypes = '.pdf, .doc, .docx';
+const acceptTypes = '.pdf';
 
 const dummyRequest = ({ onSuccess }) => {
   setTimeout(() => {
@@ -497,8 +613,9 @@ const handleBeforeUpload = (file) => {
 }
 
 .fair-form {
-  margin-top: 3rem;
+  margin-top: 2rem;
 }
+
 @media screen and (min-width: 900px) {
   .fair-form {
     display: grid;
