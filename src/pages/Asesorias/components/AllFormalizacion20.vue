@@ -93,10 +93,12 @@
 
             <a-form-item v-if="el.type === 'iNumber'" :name="el.name" :label="el.label" :rules="[
               { required: el.required, message: el.message },
-              ...(el.name === 'ruc' ? [{ validator: validateRUC, message: 'El RUC debe empezar por 20', trigger: 'change' }] : [])
+              ...(el.name === 'ruc' ? [{ validator: validateRUC, trigger: 'change' }] : [])
             ]">
               <a-input-number style="width: 100%;" v-model:value="formState[el.name]" :maxlength="11" />
             </a-form-item>
+
+
 
             <a-form-item v-if="el.type === 'iTextLol'" :name="el.name" :label="el.label"
               :rules="[{ required: el.required, message: el.message }]">
@@ -201,7 +203,7 @@ const validateDates = (fieldName, value) => {
   // Validación para dateTramite
   if (fieldName === 'dateTramite' && dateReception) {
     const maxDate = dateReception.add(30, 'days');
-    
+
     // Permitir que las fechas sean iguales
     if (dayjs(value).isBefore(dateReception) && !dayjs(value).isSame(dateReception)) {
       return Promise.reject('La fecha de trámite no puede ser menor que la fecha de recepción');
@@ -237,13 +239,17 @@ const disabledDate = (current) => {
 
 
 const validateRUC = (rule, value) => {
+  if (!value) {
+    // If no value is provided, validation passes (not required)
+    return Promise.resolve();
+  }
   const regex = /^20\d{9}$/;
   if (regex.test(value)) {
     return Promise.resolve();
   } else {
     return Promise.reject('El RUC debe comenzar por 20');
   }
-}
+};
 // const onlyRUC = (name) => {
 //   if(name == 'ruc') {
 //     const value = formState.ruc;
