@@ -22,21 +22,16 @@
 
           <div style="padding-top: 3rem;">
             <div class="fair-title">
-              <h1>POSTULACIONES PERÚ PRODUCE BARRANCA</h1>
+              <h1>{{ fair?.title }}</h1>
               <h4>PLAZA DE ARMAS DE BARRANCA</h4>
             </div>
 
             <div class="fair-header">
               <img class="fair-header-img"
-                src="https://www.mediasource.mx/hs-fs/hubfs/tipos-de-empresas-definicion-y-clasificacion.png?width=950&name=tipos-de-empresas-definicion-y-clasificacion.png"
+                src="https://img.freepik.com/vector-gratis/ilustracion-concepto-buen-equipo_114360-4225.jpg?t=st=1729730698~exp=1729734298~hmac=46e52e8192a794b1851dfef70a4925f3a7ce5694bbfdbe91908a80b9d2b774f0&w=826"
                 alt="">
               <div class="tag-html">
-                <p>
-                  Lorem ipsum dolor sit amet consectetur adipisicing elit. Atque omnis assumenda, aut repudiandae
-                  consequatur blanditiis! Blanditiis ratione aliquid consequuntur, vel sequi natus. Inventore itaque
-                  totam
-                  autem nulla nobis nihil enim.
-                </p>
+                <div v-html="fair?.description"></div>
               </div>
             </div>
           </div>
@@ -59,6 +54,8 @@
           </div>
         </div>
       </section>
+
+      <!-- <pre>{{ fair }}</pre> -->
 
 
       <section class="form-x fair">
@@ -94,15 +91,19 @@
 
 <script setup>
 import { ref, onUnmounted, onMounted } from 'vue';
+import { makeRequest } from '@/utils/api.js';
+import { useRoute } from 'vue-router';
 import FooterFormalization from '@/pages/Formalizacion/FormalizacionFooter.vue'
 import RegistroPaso1 from './components/RegistroPaso1.vue';
 import RegistroPaso2 from './components/RegistroPaso2.vue';
 import RegistroPaso3 from './components/RegistroPaso3.vue';
 
+const fair = ref(null);
 const caducated = ref(!true);
 const current = ref(0);
 const navBar = ref(null);
 const isFloating = ref(false);
+const route = useRoute();
 
 const handleScroll = () => {
   if (window.pageYOffset > 10) {
@@ -112,13 +113,32 @@ const handleScroll = () => {
   }
 };
 
-const handleSteepState = () => {
-  console.log("Steep state");
 
-}
+
+const fetchData = async () => {
+  try {
+
+    const slug = route.params.slug;
+
+    const response = await makeRequest({ url: `fair/data/${slug}`, method: 'GET' });
+    console.log("response", response);
+
+    if (response.status == 200) {
+      fair.value = response.data
+    }
+
+
+
+  } catch (error) {
+    console.error('Error de red:', error);
+  } finally {
+    // loading.value = false;
+  }
+};
 
 onMounted(() => {
   window.addEventListener('scroll', handleScroll);
+  fetchData();
 });
 onUnmounted(() => {
   window.removeEventListener('scroll', handleScroll);
@@ -167,11 +187,12 @@ header {
 
   .fair-title {
     text-align: center;
-    margin-bottom: 2rem;
+    margin-bottom: 1rem;
 
     h1 {
       margin-bottom: .6rem;
       font-weight: 700;
+      font-size: 30px;
     }
 
     h4 {
@@ -185,10 +206,45 @@ header {
 
     .tag-html {
       margin: 1.5rem 0 .5rem 0;
+
+      br {
+        display: none;
+      }
+
+      p {
+        line-height: 1 !important;
+        margin-bottom: 5px;
+      }
+
+      strong {
+        margin: 10px 0 !important;
+        line-height: 2;
+      }
+
+      ul {
+        margin: 0;
+
+        li {
+          margin-bottom: 5px;
+
+          &:last-child {
+            margin: 0 !important;
+          }
+        }
+
+
+      }
+
+      p,
+      ul li {
+        font-size: 13px !important;
+      }
     }
 
-    img {
+    .fair-header-img {
       width: 100%;
+      max-height: 380px;
+      object-fit: contain;
     }
 
     p {

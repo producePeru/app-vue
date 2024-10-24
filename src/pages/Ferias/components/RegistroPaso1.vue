@@ -1,5 +1,6 @@
 <template>
-  <a-form layout="vertical" :model="formState" name="basic" autocomplete="off" @finish="onSubmit">
+  <a-form layout="vertical" :model="formState" name="basic" autocomplete="off" @finish="onSubmit"
+    @finishFailed="onFinishFailed">
 
     <h2>DATOS DE LA EMPRESA</h2>
 
@@ -21,18 +22,23 @@
             :maxlength="el.max" @search="handleSearchRUC" />
         </a-form-item>
 
-
         <a-form-item v-if="el.type === 'iText'" :name="el.name" :label="el.label"
           :rules="[{ required: el.required, message: el.message, max: el.max }]" :style="{ display: el.display }">
           <a-input v-model:value="formState[el.name]" :maxlength="el.max" @blur="validateTrim(el.name)"
             :disabled="el.disabled" />
         </a-form-item>
 
+        <a-form-item v-if="el.type === 'iLink'" :name="el.name" :label="el.label" :rules="[
+          { required: el.required, message: el.message },
+          { validator: validateURL, message: 'Por favor, introduce una URL válida.' } // Validator without message, handled inside the function
+        ]">
+          <a-input v-model:value="formState[el.name]" @blur="validateTrim(el.name)" :disabled="el.disabled" />
+        </a-form-item>
 
         <a-form-item class="item-max" v-if="el.type === 'iSelect'" :name="el.name" :label="el.label"
           :rules="[{ required: el.required, message: el.message }]">
-          <a-select v-model:value="formState[el.name]" :options="handleSelectOptions(el.name)"
-            :disabled="el.disabled" @change="handleChangeEvent(el.name)" />
+          <a-select v-model:value="formState[el.name]" :options="handleSelectOptions(el.name)" :disabled="el.disabled"
+            @change="handleChangeEvent(el.name)" />
         </a-form-item>
 
         <a-form-item v-if="el.type === 'iTextarea'" :name="el.name" :label="el.label"
@@ -56,13 +62,14 @@
             show-search :filter-option="filterOption" @change="handleProvinces" :disabled="!formState.city_id" />
           <a-select v-if="el.name == 'district_id'" v-model:value="formState[el.name]" :options="store.districts"
             show-search :filter-option="filterOption" :disabled="!formState.province_id" />
+
+          <a-select v-if="el.name == 'businessSector'" v-model:value="formState[el.name]" :options="rubros" show-search
+            :filter-option="filterOption" :disabled="el.disabled" />
         </a-form-item>
 
-        
-        
-        
+
         <!-- <pre>{{ el['filePDF'] }}</pre> -->
-        
+
         <!-- <a-form-item v-if="el.type === 'iFile'" :name="el.name" :label="el.label"
           :rules="[{ required: el.required, message: el.message }]">
           <a-upload :before-upload="beforeUpload" :custom-request="dummyRequest" :file-list="fileList"
@@ -73,22 +80,13 @@
             </a-button>
           </a-upload>
         </a-form-item> -->
-        
-        <div v-if="el['filePDF']">
-       
-          <pre>{{ el['filePDF'] }}</pre>
-          <pre>{{ el['logo'] }}</pre>
-          
-            <a-form-item v-if="el['filePDF'].type === 'iFile'" :name="el['filePDF'].name" :label="el['filePDF'].label"
+
+        <div v-if="el['filePDF']" class="ellipsis">
+          <a-form-item v-if="el['filePDF'].name === 'filePDF'" :name="el['filePDF'].name" :label="el['filePDF'].label"
             :rules="[{ required: el['filePDF'].required, message: el['filePDF'].message }]">
-            <a-upload 
-              :before-upload="(file) => beforeUpload(file, el['filePDF'].name)" 
-              :custom-request="dummyRequest" 
-              :file-list="el['filePDF'].name === 'filePDF' ? fileList : fileListLogo"
-              :accept="el['filePDF'].name === 'filePDF' ? '.pdf' : '.png,.jpeg,.jpg'" 
-              :multiple="false" 
-              :on-remove="(file) => handleRemove(file, el['filePDF'].name)" 
-              show-upload-list>
+            <a-upload :before-upload="(file) => beforeUpload(file, el['filePDF'].name)" :custom-request="dummyRequest"
+              :file-list="fileList" :accept="'.pdf'" :multiple="false"
+              :on-remove="(file) => handleRemove(file, 'filePDF')" show-upload-list>
               <a-button>
                 <CloudUploadOutlined />
                 {{ el['filePDF'].span }}
@@ -96,18 +94,18 @@
             </a-upload>
           </a-form-item>
 
-
-
-
-        
+          <a-form-item v-if="el['logo'].name === 'logo'" :name="el['logo'].name" :label="el['logo'].label"
+            :rules="[{ required: el['logo'].required, message: el['logo'].message }]">
+            <a-upload :before-upload="(file) => beforeUpload(file, el['logo'].name)" :custom-request="dummyRequest"
+              :file-list="fileListLogo" :accept="'.png,.jpeg,.jpg'" :multiple="false"
+              :on-remove="(file) => handleRemove(file, 'logo')" show-upload-list>
+              <a-button>
+                <CloudUploadOutlined />
+                {{ el['logo'].span }}
+              </a-button>
+            </a-upload>
+          </a-form-item>
         </div>
-
-
-
-
-
-
-
 
         <a-form-item v-if="el.type === 'iFileImg'" :name="el.name" :label="el.label"
           :rules="[{ required: el.required, message: el.message }]">
@@ -142,22 +140,33 @@
     </a-form-item>
 
 
-    <pre>{{ formState }}</pre>
+    <!-- <pre>{{ formState }}</pre> -->
 
   </a-form>
 </template>
 
 
 <script setup>
-import { ref, onUnmounted, onMounted, reactive } from 'vue';
+import { ref, reactive } from 'vue';
 import { useCounterStore } from '@/stores/selectes.js';
 import { CloudUploadOutlined, PlusOutlined } from '@ant-design/icons-vue';
+import { message } from 'ant-design-vue';
+import axios from 'axios';
+import Cookies from 'js-cookie';
+import { makeRequest } from '@/utils/api.js';
+
+const emit = defineEmits(['nextStep']);
 
 const store = useCounterStore();
 store.$patch({ cities: store.cities });
 store.$patch({ provinces: store.provinces });
 store.$patch({ districts: store.districts });
 store.fetchCities();
+
+const token = Cookies.get('token');
+const prod = import.meta.env.VITE_APP_API_URL_PRODUCTION
+const dev = import.meta.env.VITE_APP_API_URL_LOCAL
+const apiUrl = window.location.hostname == 'localhost' || window.location.hostname == '127.0.0.1' ? dev : prod;
 
 const loading = ref(false);
 const formState = reactive({});
@@ -173,16 +182,16 @@ const sino = [
 ];
 
 const rubros = [
-  {label: 'Alimentos y bebidas', value: 'alimentos'},
-  {label: 'Artesanía', value: 'artesania'},
-  {label: 'Cosmética orgánica', value: 'cosmetica'},
-  {label: 'Cuero calzado', value: 'cuero'},
-  {label: 'Decoración', value: 'decoracion'},
-  {label: 'Gastronomía', value: 'gastronomia'},
-  {label: 'Joyería', value: 'joyeria'},
-  {label: 'Madera', value: 'madera'},
-  {label: 'Metalmecánica', value: 'metalm'},
-  {label: 'Textil confecciones', value: 'textil'}
+  { label: 'Alimentos y bebidas', value: 'alimentos' },
+  { label: 'Artesanía', value: 'artesania' },
+  { label: 'Cosmética orgánica', value: 'cosmetica' },
+  { label: 'Cuero calzado', value: 'cuero' },
+  { label: 'Decoración', value: 'decoracion' },
+  { label: 'Gastronomía', value: 'gastronomia' },
+  { label: 'Joyería', value: 'joyeria' },
+  { label: 'Madera', value: 'madera' },
+  { label: 'Metalmecánica', value: 'metalm' },
+  { label: 'Textil confecciones', value: 'textil' }
 ];
 
 const handleSelectOptions = (name) => {
@@ -277,7 +286,7 @@ const mype = ref({
   // },
 
   businessSector: {
-    type: 'iText',
+    type: 'iSelectWrite',
     label: 'RUBRO DEL NEGOCIO',
     name: 'businessSector',
     required: true,
@@ -357,28 +366,31 @@ const mype = ref({
     type: 'space4'
   },
   web: {
-    type: 'iText',
+    type: 'iLink',
     label: 'LINK DE PÁGINA WEB',
     name: 'web',
     required: false,
     message: 'Link de Página web',
-    disabled: true
+    disabled: true,
+    isLink: true
   },
   facebook: {
-    type: 'iText',
+    type: 'iLink',
     label: 'LINK DE PÁGINA DE FACEBOOK',
     name: 'facebook',
     required: false,
     message: 'Link de Página de Facebook',
-    disabled: true
+    disabled: true,
+    isLink: true
   },
   instagram: {
-    type: 'iText',
+    type: 'iLink',
     label: 'LINK DE INSTAGRAM',
     name: 'instagram',
     required: false,
     message: 'Link de Página de Instagram',
-    disabled: true
+    disabled: true,
+    isLink: true
   },
   description: {
     type: 'iTextarea',
@@ -386,13 +398,11 @@ const mype = ref({
     name: 'description',
     required: false,
     message: 'Escribir la descripción',
-    disabled: false,
     max: 200,
     disabled: true
   },
-  
+
   files: {
-   
     filePDF: {
       type: 'iFile',
       label: 'Adjuntar reporte tributario',
@@ -412,11 +422,9 @@ const mype = ref({
       span: 'Logo de la Empresa'
     }
   },
-
   space7: {
     type: 'space7'
   },
-
   fileImgs: {
     type: 'iFileImg',
     label: 'CARGAR IMAGENES DE TUS PRODUCTOS (Max 3 productos)',
@@ -424,11 +432,27 @@ const mype = ref({
     required: false,
     message: 'Adjuntar Reporte',
     disabled: true
-  },
-  
+  }
 });
 
-const handleSearchRUC = () => {
+const validateURL = (rule, value) => {
+  return new Promise((resolve, reject) => {
+    const urlPattern = /^(https?:\/\/)?(www\.)?([a-z0-9-]+\.)+[a-z]{2,}([\/\w \.-]*)*\/?$/i;
+
+    if (!value) {
+      resolve(); // If the field is empty, validation passes
+    } else if (!urlPattern.test(value)) {
+      reject(new Error('Por favor, introduce una URL válida.')); // Reject if invalid
+    } else {
+      resolve(); // The URL is valid
+    }
+  });
+};
+
+
+
+const handleSearchRUC = async () => {
+
   const ruc = formState.ruc;
   const isValid = /^\d{11}$/.test(ruc) && /^(10|15|20)/.test(ruc);
 
@@ -459,16 +483,37 @@ const handleSearchRUC = () => {
     console.error('El RUC debe tener 11 caracteres, comenzar con 11, 15 o 20, y contener solo números.');
     toggleFields(true);
   } else {
-    toggleFields(false);
+
+    try {
+
+      const response = await makeRequest({ url: `mype/search-api/${formState.ruc}`, method: 'GET' });
+
+      if (response.status == 200) {
+        formState.address = response.data.address;
+        formState.comercialName = response.data.comercialName;
+        formState.description = response.data.description;
+        formState.facebook = response.data.facebook;
+        formState.instagram = response.data.instagram;
+        formState.web = response.data.web;
+        formState.socialReason = response.data.socialReason;
+      }
+
+    } catch (error) {
+      console.error('Error de red:', error);
+    } finally {
+      toggleFields(false);
+    }
+
   }
 };
+
 const validateTrim = (field) => {
   const trimmedValue = formState[field] ? formState[field].trim() : '';
   formState[field] = trimmedValue;
 };
 const handleChangeEvent = (name) => {
-  if(name == 'isGremio') {
-    if(formState.isGremio == 'si') {
+  if (name == 'isGremio') {
+    if (formState.isGremio == 'si') {
       mype.value.nameGremio.display = 'block';
       mype.value.nameGremio.required = true;
     } else {
@@ -476,8 +521,8 @@ const handleChangeEvent = (name) => {
       mype.value.nameGremio.required = false;
     }
   }
-  if(name == 'pointSale') {
-    if(formState.pointSale == 'si') {
+  if (name == 'pointSale') {
+    if (formState.pointSale == 'si') {
       mype.value.numberPointSale.display = 'block';
       mype.value.numberPointSale.required = true;
     } else {
@@ -502,6 +547,11 @@ const handleProvinces = (id) => {
   formState.district_id = null
   store.fetchDistricts(id)
 }
+
+const onFinishFailed = () => {
+  window.scrollTo({ top: document.documentElement.scrollHeight / 4, behavior: 'smooth' });
+}
+
 const onSubmit = async () => {
   const payload = {
     ruc: formState.ruc,
@@ -524,17 +574,40 @@ const onSubmit = async () => {
     instagram: formState.instagram,
     description: formState.description,
     filePDF: formState.filePDF,
+    logo: formState.logo,
     img1: formState.img1,
     img2: formState.img2,
     img3: formState.img3
+  };
+
+  loading.value = true;
+
+  try {
+    const response = await axios.post(`${apiUrl}fair/first-or-new`, payload, {
+      headers: {
+        'Content-Type': 'multipart/form-data',
+        'Authorization': `Bearer ${token}`
+      },
+    });
+
+    if (response.data.status == 200) {
+      emit('nextStep', response.data.id_mype);
+    }
+
+    console.log("Success", response);
+
+  } catch (error) {
+    message.error("Error al subir");
+  } finally {
+    loading.value = false;
   }
+
 };
 
 // START archivos ***
 const maxFiles = 1;
 const fileList = ref([]);
 const fileListLogo = ref([]);
-const acceptTypes = '.pdf';
 
 const dummyRequest = ({ onSuccess }) => {
   setTimeout(() => {
@@ -544,16 +617,16 @@ const dummyRequest = ({ onSuccess }) => {
 
 const beforeUpload = (file, name) => {
 
-  if(name == 'logo') {
+  if (name == 'logo') {
     if (fileListLogo.value.length >= maxFiles) {
-      message.error('Solo puedes cargar un archivo');
-      return false; 
+      message.error('Solo puedes cargar un archivo, elimina el que está cargado');
+      return false;
     }
   }
-  if(name == 'filePDF') {
+  if (name == 'filePDF') {
     if (fileList.value.length >= maxFiles) {
-      message.error('Solo puedes cargar un archivo');
-      return false; 
+      message.error('Solo puedes cargar un archivo, elimina el que está cargado');
+      return false;
     }
   }
 
@@ -562,12 +635,12 @@ const beforeUpload = (file, name) => {
 
   if (!isPDF && !isImage) {
     message.error('Formato de archivo no permitido');
-    return false; 
+    return false;
   }
 
   formState[name] = file;
 
-  if(name == 'logo') {
+  if (name == 'logo') {
     fileListLogo.value.push({
       uid: file.uid,
       name: file.name,
@@ -575,21 +648,29 @@ const beforeUpload = (file, name) => {
     });
   }
 
-  if(name == 'filePDF') {
+  if (name == 'filePDF') {
     fileList.value.push({
-      uid: file.uid, 
+      uid: file.uid,
       name: file.name,
       status: 'done',
     });
   }
-  
-  return false; 
+
+  return false;
 };
 
 const handleRemove = (file, name) => {
-  const index = fileList.value.findIndex(item => item.uid === file.uid);
-  formState[name] = null; 
-  fileList.value.splice(index, 1);
+
+  if (name == 'filePDF') {
+    const index = fileList.value.findIndex(item => item.uid === file.uid);
+    formState[name] = null;
+    fileList.value.splice(index, 1);
+  }
+  if (name == 'logo') {
+    const index = fileListLogo.value.findIndex(item => item.uid === file.uid);
+    formState[name] = null;
+    fileListLogo.value.splice(index, 1);
+  }
 };
 // END archivos ***
 
@@ -698,8 +779,19 @@ const handleBeforeUpload = (file) => {
     grid-gap: 0 2rem;
     grid-template-columns: 1fr 1fr 1fr;
 
+    .ellipsis {
+      overflow: hidden;
+      white-space: nowrap;
+      text-overflow: ellipsis;
+    }
+
     .ant-form-item:nth-child(25) {
       grid-column: 1/4;
+    }
+
+    .ant-form-item:nth-child(26) {
+      background-color: red;
+      border: 3px solid red;
     }
   }
 }
