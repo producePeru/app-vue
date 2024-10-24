@@ -247,7 +247,7 @@ const validateRUC = (rule, value) => {
   if (regex.test(value)) {
     return Promise.resolve();
   } else {
-    return Promise.reject('El RUC debe comenzar por 20');
+    return Promise.reject('El RUC debe comenzar por 20 y ser 11 carácteres');
   }
 };
 // const onlyRUC = (name) => {

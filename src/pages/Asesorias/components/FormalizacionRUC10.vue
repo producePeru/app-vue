@@ -25,21 +25,25 @@
                 :maxlength="el.max" :placeholder="el.placeholder" />
             </a-form-item> -->
 
-            <a-form-item v-if="el.type === 'iText'" :name="el.name" :label="el.label" :rules="[ 
+            <a-form-item v-if="el.type === 'iText'" :name="el.name" :label="el.label" :rules="[
               { required: el.required, message: el.message, type: 'string', max: el.max },
-              ...(el.name === 'ruc' ? [{ 
-                  validator: (rule, value, callback) => {
-                    const regex = /^(10|15)\d*$/;
-                    if (!regex.test(value)) {
-                      return callback(new Error('El RUC debe comenzar con 10 o 15 y solo contener números'));
-                    }
-                    callback(); // Validación exitosa
+              ...(el.name === 'ruc' ? [{
+                validator: (rule, value, callback) => {
+                  const regex = /^(10|15)\d{9}$/; // Must start with 10 or 15 and contain exactly 9 digits after that
+                  if (!value) {
+                    callback(); // Optional field, so no validation if empty
+                  } else if (!regex.test(value)) {
+                    callback(new Error('El RUC debe comenzar con 10 o 15 y tener 11 caracteres en total'));
+                  } else {
+                    callback(); // Successful validation
                   }
+                }
               }] : [])
             ]">
-  <a-input v-model:value="formState[el.name]" :disabled="el.name === 'dni' && !!formState[el.name]"
-    :maxlength="el.max" :placeholder="el.placeholder" />
-</a-form-item>
+              <a-input v-model:value="formState[el.name]" :disabled="el.name === 'dni' && !!formState[el.name]"
+                :maxlength="el.max" :placeholder="el.placeholder" />
+            </a-form-item>
+
 
 
 
